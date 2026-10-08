@@ -16,7 +16,7 @@ Pflege ist Beziehungsarbeit. Du begleitest Menschen in verletzlichen Lebenssitua
 
 Psychische Gesundheit im Pflegeberuf zu stärken bedeutet deshalb nicht, einfach „noch belastbarer“ zu werden. Es bedeutet, Warnsignale wahrzunehmen, die eigenen Grenzen ernst zu nehmen, Unterstützung zu organisieren und gemeinsam auf bessere Arbeitsbedingungen hinzuwirken. Die folgenden Schritte sind als Reflexions- und Alltagshilfe gedacht. Sie ersetzen keine ärztliche, psychotherapeutische oder psychosoziale Beratung.
 
-> **E-Book als PDF:** [Die vollständige Handreichung herunterladen](./psychische-gesundheit-im-pflegeberuf.pdf)
+> **Die eigene psychische Gesundheit im Pflegeberuf stärken:** [Vollständige Handreichung als PDF herunterladen](./psychische-gesundheit-im-pflegeberuf.pdf)
 >
 > **Key Takeaways**
 > - Selbstfürsorge ist ein wichtiger Baustein, kann aber Personalmangel, schlechte Dienstplanung oder fehlende Pausen nicht ausgleichen.
