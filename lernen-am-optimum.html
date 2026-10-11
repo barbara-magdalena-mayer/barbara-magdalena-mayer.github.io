@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Lernen am Optimum – Pflegefall Person X</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: Kopfband; Einstellungen als Karte; im Spiel zwei Spalten (Situation | Henderson-Waage), auf dem Handy gestapelt */
+:root{--bg:#f3f6f8;--surface:#ffffff;--sunk:#eef3f6;--fg:#1d3242;--muted:#566c7b;--line:#d9e3ea;--accent:#16708f;--accent-fg:#ffffff;--head:#143a4f;--head-fg:#ffffff;--head-sub:#cfe3ec;--ki:#f3f0fb;--ki-line:#7b64c4;--good:#1f7a4d;--good-bg:#e7f5ee;--mid:#9a6a12;--mid-bg:#fdf3df;--bad:#b23a32;--bad-bg:#fbe9e7;--track:#dbe5ea;--font:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1920;--surface:#15232d;--sunk:#1b2d38;--fg:#dce7ee;--muted:#9db1bf;--line:#2a3d4a;--accent:#4fa8c7;--accent-fg:#08161d;--head:#0a2532;--head-fg:#eef6fa;--head-sub:#a7c6d4;--ki:#211c33;--ki-line:#a08ae6;--good:#5fc794;--good-bg:#14301f;--mid:#e0ad52;--mid-bg:#33280f;--bad:#f08a80;--bad-bg:#3a1a17;--track:#2a3d4a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1920;--surface:#15232d;--sunk:#1b2d38;--fg:#dce7ee;--muted:#9db1bf;--line:#2a3d4a;--accent:#4fa8c7;--accent-fg:#08161d;--head:#0a2532;--head-fg:#eef6fa;--head-sub:#a7c6d4;--ki:#211c33;--ki-line:#a08ae6;--good:#5fc794;--good-bg:#14301f;--mid:#e0ad52;--mid-bg:#33280f;--bad:#f08a80;--bad-bg:#3a1a17;--track:#2a3d4a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.55}
+header{background:var(--head);color:var(--head-fg);padding-block:24px;padding-inline:16px}
+.wrap{max-width:1040px;margin:0 auto}
+header h1{margin:0 0 6px;font-size:clamp(24px,4vw,34px);text-wrap:balance}
+header p{margin:0;color:var(--head-sub);max-width:65ch}
+main{padding-block:20px 60px;padding-inline:16px}
+h2{font-size:20px;margin:0 0 10px;text-wrap:balance}
+h3{font-size:16px;margin:0 0 8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.stack{display:flex;flex-direction:column;gap:16px}
+.muted{color:var(--muted);font-size:14px}
+.setup{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font-weight:700;margin-bottom:4px;padding:0}
+.legend-sub{font-size:14px;color:var(--muted);margin:0 0 8px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;cursor:pointer;border-radius:10px}
+.chip{background:var(--surface);color:var(--fg);border:1px solid var(--line);padding:9px 13px;font-weight:700;font-size:15px}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.primary{background:var(--accent);color:var(--accent-fg);border:1px solid var(--accent);padding:12px 18px;font-weight:700}
+.primary:disabled{opacity:.45;cursor:not-allowed}
+.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent);padding:11px 16px;font-weight:700}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--ki-line);outline-offset:2px}
+.play{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+.scene{background:var(--sunk);border-radius:10px;padding:14px 16px}
+.scene p{margin:0 0 8px}.scene p:last-child{margin:0}
+.voice{font-style:italic;color:var(--muted);font-size:15px;margin:0}
+.ki{background:var(--ki);border-left:4px solid var(--ki-line);border-radius:10px;padding:14px 16px}
+.ki .label{font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;color:var(--ki-line);margin-bottom:4px}
+.hint{border-left:4px solid var(--accent);background:var(--sunk);border-radius:10px;padding:10px 14px;font-size:15px}
+.options{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;text-align:left;background:var(--surface);color:var(--fg);border:1px solid var(--line);padding:12px 14px;width:100%}
+.opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt .min{flex:none;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+textarea{width:100%;min-height:80px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;background:var(--surface);color:var(--fg)}
+label{display:block;font-weight:700;margin-bottom:6px}
+.result{border-radius:10px;padding:14px 16px}
+.result.gut{background:var(--good-bg)}.result.teilweise{background:var(--mid-bg)}.result.riskant{background:var(--bad-bg)}
+.pill{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:6px}
+.pill.gut{color:var(--good);border:1px solid var(--good)}.pill.teilweise{color:var(--mid);border:1px solid var(--mid)}.pill.riskant{color:var(--bad);border:1px solid var(--bad)}
+.side h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 10px}
+.hrow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px;align-items:baseline;padding:6px 0;border-top:1px solid var(--line);font-size:15px}
+.hrow:first-of-type{border-top:0}
+.hrow b{font-size:14px}
+.hrow.mark span{color:var(--bad);font-weight:700}
+.meter{height:8px;background:var(--track);border-radius:8px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.meter.over i{background:var(--bad)}
+.steps{display:flex;gap:6px}.steps span{flex:1;height:6px;border-radius:6px;background:var(--track)}.steps span.done{background:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sum li{margin-bottom:10px}
+.optimum{border-radius:12px;padding:16px;border:2px solid var(--good);background:var(--good-bg)}
+.notyet{border-radius:12px;padding:16px;border:2px dashed var(--muted)}
+.warn{font-size:13px;color:var(--muted)}
+@media(max-width:760px){.setup,.play{grid-template-columns:1fr}.card{padding:16px}}
+@media(prefers-reduced-motion:reduce){.meter i{transition:none}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap"><h1>Lernen am Optimum</h1><p>Ein Pflegefall mit drei Entscheidungen. Kraft, Wille und Wissen nach Henderson gelten für Person X und für dich als Pflegeperson. Das Optimum hast du erreicht, wenn du den komplexen Fall ohne Hilfen löst und Fehler der KI erkennst.</p></div></header>
+<main><div class="wrap" id="app"></div></main>
+
+<script>
+const LEVEL={1:{name:'Einstieg',ki:'keine',kiText:'Keine KI-Unterstützung'},2:{name:'Erweiterung',ki:'plausibel',kiText:'KI antwortet plausibel, aber nicht immer richtig'},3:{name:'Komplex',ki:'fehlleitend',kiText:'KI antwortet unsinnig oder gefährlich'}};
+const HELP={full:'Viele Hilfen',some:'Wenige Hilfen',none:'Ohne Hilfen'};
+const ATT={eilig:{name:'Unter Zeitdruck',budget:45,will:'Schnell fertig werden'},sorgsam:{name:'Sorgsam',budget:70,will:'Gründlich sein'},eigen:{name:'Verdeckt',budget:60,will:'Verdeckt, wird ausgewertet'}};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const DEF={kraft:'Kraft',wille:'Wille',wissen:'Wissen'};
+const BASE={1:'Person X, 68 Jahre, hat Diabetes mellitus Typ 2 und eine schlecht heilende Wunde am rechten Fuß.',2:'Person X, 68 Jahre, hat Diabetes mellitus Typ 2, eine schlecht heilende Wunde am rechten Fuß und vermindertes Gefühl in beiden Füßen. Er will möglichst bald nach Hause.',3:'Person X, 68 Jahre, hat Diabetes mellitus Typ 2. Nach einer Teilamputation am rechten Fuß braucht er Hilfe beim Gehen. Er sieht zunehmend schlechter, will aber selbst über seine Versorgung entscheiden.'};
+const STEPS=[
+{title:'Erstkontakt am Morgen',ctx:{1:'Du kommst zum ersten Mal ins Zimmer.',2:'Du kommst zum ersten Mal ins Zimmer. Seine Tochter hat gestern angerufen.',3:'Du kommst zum ersten Mal ins Zimmer. Der Rollator steht außer Reichweite.'},
+ show:{kraft:'Er liegt erschöpft im Bett und sagt: „Ich schaff das heute nicht.“',wille:'Er winkt ab: „Lassen Sie mal, das wird schon.“',wissen:'Er fragt: „Warum soll ich auf meine Füße achten? Die tun doch gar nicht weh.“'},
+ voice:{eilig:'Drei weitere Zimmer warten auf dich.',sorgsam:'Du willst nichts übersehen. Aber schaffst du alles, was du dir vornimmst?'},
+ hint:'Achte darauf, was Person X sagt und wie er es sagt. Fehlt ihm gerade Kraft, Wille oder Wissen?',
+ opts:[{t:'Blutzucker und Vitalzeichen messen, den Verband nur von außen ansehen, weiter ins nächste Zimmer',min:5,r:{kraft:['riskant','Er bleibt erschöpft liegen. Dass er kaum gegessen hat, erfährst du nicht.'],wille:['riskant','Er ist erleichtert, dass du schnell gehst. Seine Ablehnung bleibt unbesprochen.'],wissen:['riskant','Seine Frage bleibt unbeantwortet. Später läuft er barfuß zum Waschbecken.']}},
+  {t:'Hinsetzen und nachfragen, wie es ihm geht und was er über seine Wunde weiß',min:15,r:{kraft:['teilweise','Er antwortet nur knapp und schließt die Augen. Für ein langes Gespräch ist er gerade zu erschöpft.'],wille:['gut','Er erzählt, dass sein Nachbar nach einer Fußwunde ein Bein verloren hat. Hinter dem Abwinken steckt Angst.'],wissen:['gut','Er dachte, eine Wunde ohne Schmerzen sei harmlos. Du erkennst eine Wissenslücke.']}},
+  {t:'Erklären, dass die Wundkontrolle Pflicht ist, und den Verband sofort öffnen',min:10,r:{kraft:['teilweise','Er lässt es über sich ergehen und ist danach völlig erschöpft.'],wille:['riskant','Er fühlt sich übergangen und lehnt die Wundversorgung ab. Du musst die Ärztin informieren.'],wissen:['teilweise','Die Wunde ist kontrolliert, aber er versteht weiterhin nicht, warum das wichtig ist.']}},
+  {t:'Blutzucker messen, Frühstück und Ruhe ermöglichen und in einer Stunde wiederkommen',min:10,r:{kraft:['gut','Nach Frühstück und etwas Ruhe ist er ansprechbar und erzählt, dass er schlecht geschlafen hat. Jetzt kann er mitarbeiten.'],wille:['teilweise','Er ist froh über die Pause. Warum er abwinkt, bleibt aber unbesprochen.'],wissen:['teilweise','Er ist versorgt, seine Frage bleibt aber offen.']}}],
+ ki:{plausibel:{text:'Bei Diabetes mit Fußwunde zuerst Blutzucker messen und die Wunde inspizieren. Gespräche über Befinden kosten Zeit und können auf später verschoben werden.',truth:'teilweise',why:'Messen und Inspizieren ist sinnvoll. Falsch ist, das Gespräch zu verschieben: Ohne Gespräch erfährst du nicht, was Person X fehlt.'},fehlleitend:{text:'Fußwunden bei Diabetes heilen am besten an der Luft. Entferne den Verband und lass Person X barfuß über den Flur gehen, um die Durchblutung anzuregen.',truth:'unsinnig',why:'Gefährlich: Ohne Verband und barfuß drohen Infektion und neue Verletzungen, die er wegen fehlenden Gefühls nicht bemerkt. Wundversorgung folgt der ärztlichen Anordnung.'}}},
+{title:'Verbandwechsel und Anleitung',ctx:{1:'Der Verbandwechsel ist ärztlich angeordnet.',2:'Der Verbandwechsel ist ärztlich angeordnet. Er soll ihn zu Hause teilweise selbst übernehmen.',3:'Der Verbandwechsel ist ärztlich angeordnet. Er sieht die Wunde nur noch unscharf.'},
+ show:{kraft:'Er bittet, sich zwischendurch hinlegen zu dürfen.',wille:'Er sagt: „Machen Sie halt, Sie machen das ja sowieso.“',wissen:'Er fragt, ob er die Wunde nicht mit Hausmitteln behandeln kann, wie früher seine Mutter.'},
+ voice:{eilig:'Die Visite beginnt gleich.',sorgsam:'Du möchtest ihm alles genau erklären.'},
+ hint:'Eine Anleitung wirkt nur, wenn sie zu seiner Kraft, seinem Willen und seinem Wissen passt.',
+ opts:[{t:'Verbandwechsel nach Standard durchführen, dokumentieren und Auffälligkeiten an die Ärztin melden',min:15,r:{kraft:['gut','Fachlich korrekt und kräfteschonend. Die Anleitung planst du für einen Zeitpunkt, an dem er mehr Kraft hat.'],wille:['teilweise','Er lässt es zu, weil du ruhig bleibst, beteiligt sich aber nicht.'],wissen:['teilweise','Die Wunde ist versorgt, die Wissenslücke bleibt.']}},
+  {t:'Verbandwechsel durchführen und ihm Schritt für Schritt zeigen, worauf er achten kann, mit Pausen in seinem Tempo',min:25,r:{kraft:['teilweise','Auch in kleinen Schritten ist es heute zu viel. Er bricht nach der Hälfte ab.'],wille:['teilweise','Er macht mit, aber nur, weil du es vorgibst. Was ihn hemmt, erfährst du nicht.'],wissen:['gut','Er sieht die Wunde bewusst an und versteht, warum er sie nicht spürt.']}},
+  {t:'Verbandwechsel auf den Spätdienst verschieben, weil er heute nicht mag',min:0,r:{kraft:['teilweise','Er kann sich ausruhen. Die angeordnete Kontrolle verzögert sich aber, das musst du übergeben und begründen.'],wille:['riskant','Die Ablehnung wird zur Gewohnheit. Eine Verschlechterung der Wunde fällt erst spät auf.'],wissen:['riskant','Er hält die Wunde jetzt erst recht für harmlos.']}},
+  {t:'Fragen, was ihn beschäftigt, und ihn entscheiden lassen, welchen Teil des Verbandwechsels er selbst übernimmt',min:20,r:{kraft:['teilweise','Er möchte gern mitmachen, aber ihm fehlt heute die Kraft dazu.'],wille:['gut','Er sagt, dass er Angst vor dem Anblick hat. Weil er selbst entscheiden darf, schaut er beim zweiten Mal hin.'],wissen:['teilweise','Er entscheidet mit, versteht aber die Grundlagen noch nicht.']}}],
+ ki:{plausibel:{text:'Erkläre Person X die gesamte Wundversorgung auf einmal und gib ihm ein Merkblatt mit allen Informationen. Je mehr er weiß, desto besser.',truth:'teilweise',why:'Information ist wichtig. Alles auf einmal überfordert aber, besonders bei wenig Kraft oder schlechtem Sehen. Anleitung braucht kleine Schritte und Rückfragen.'},fehlleitend:{text:'Bei schlechter Wundheilung hilft es, den Blutzucker vor dem Verbandwechsel bewusst anzuheben, damit das Gewebe mehr Energie hat.',truth:'unsinnig',why:'Falsch und gefährlich: Hohe Blutzuckerwerte verschlechtern die Wundheilung. Blutzuckerziele legt das ärztliche Team fest.'}}},
+{title:'Planung bis zur Entlassung',ctx:{1:'Er wird voraussichtlich in einigen Tagen entlassen.',2:'Er will schnell nach Hause. Seine Tochter bietet an, ihn zu unterstützen.',3:'Welche Hilfsmittel und welche Unterstützung er zu Hause bekommt, ist noch offen.'},
+ show:{kraft:'Er sagt leise: „Ich weiß nicht, wie ich das zu Hause alles schaffen soll.“',wille:'Er sagt: „Ich brauche keinen Plan. Ich will einfach heim.“',wissen:'Er fragt: „Wenn die Wunde zu ist, ist der Diabetes dann auch weg?“'},
+ voice:{eilig:'Die Übergabe ist in zehn Minuten.',sorgsam:'Du willst, dass er zu Hause gut zurechtkommt.'},
+ hint:'Jeder Weg braucht seine Einwilligung. Welcher Weg passt zu dem, was ihm gerade fehlt?',
+ opts:[{t:'Einen Entlassungstermin vorschlagen und Infomaterial mitgeben',min:5,r:{kraft:['riskant','Zu Hause fehlt ihm die Kraft für die Selbstversorgung. Ein Rückfall droht.'],wille:['riskant','Er nimmt das Material mit und liest es nie.'],wissen:['teilweise','Das Material hilft etwas, seine Fragen bleiben aber ungeklärt.']}},
+  {t:'Ihn fragen, was ihm zu Hause wichtig ist, und daraus gemeinsam Ziele ableiten',min:15,r:{kraft:['teilweise','Seine Ziele sind klar. Wer ihm hilft, wenn seine Kraft nicht reicht, bleibt aber offen.'],wille:['gut','Er will wieder selbst einkaufen gehen. Weil es seine Ziele sind, trägt er den Plan mit.'],wissen:['teilweise','Er setzt Ziele, die auf falschen Annahmen beruhen. Zum Beispiel glaubt er, die Fußkontrolle sei nach der Heilung überflüssig.']}},
+  {t:'Mit seiner Zustimmung Sozialdienst und Angehörige einbeziehen und Hilfe für zu Hause organisieren',min:20,r:{kraft:['gut','Er willigt erleichtert ein. Für die Tage, an denen seine Kraft nicht reicht, ist Unterstützung organisiert.'],wille:['teilweise','Er stimmt widerwillig zu, fühlt sich aber verplant. Den Pflegedienst sagt er später wieder ab.'],wissen:['teilweise','Die Hilfe ist organisiert, aber er versteht seine Erkrankung weiterhin nicht.']}},
+  {t:'Bis zur Entlassung eine Schulung planen: Fußkontrolle und Blutzucker in kleinen Einheiten üben und sich zurückerklären lassen',min:20,r:{kraft:['teilweise','Für seine Kraft sind die Übungseinheiten zu viel. Er schafft nur die Hälfte.'],wille:['teilweise','Er nimmt teil, sieht aber keinen Sinn darin. Zu Hause lässt er es wieder.'],wissen:['gut','Am Ende erklärt er dir selbst, warum er seine Füße täglich kontrollieren muss, auch wenn die Wunde verheilt ist.']}},
+  {t:'Alles mit den Angehörigen klären, weil er gerade nicht mitmacht',min:10,r:{kraft:['riskant','Praktisch, aber ohne seine Einwilligung nicht zulässig. Er fühlt sich entmündigt.'],wille:['riskant','Seine Selbstbestimmung wird übergangen. Er bricht den Kontakt zur Pflege ab.'],wissen:['riskant','Seine Fragen werden nicht ihm beantwortet, sondern über ihn hinweg entschieden.']}}],
+ ki:{plausibel:{text:'Bei älteren Menschen ist es am effizientesten, die Entlassung direkt mit den Angehörigen zu planen.',truth:'teilweise',why:'Angehörige sind oft eine wichtige Ressource. Ohne Einwilligung von Person X ist das aber nicht zulässig, und es übergeht seine Selbstbestimmung.'},fehlleitend:{text:'Statistisch brauchen alle Menschen über 65 nach einer Fußwunde ein Pflegeheim. Melde Person X dort direkt an.',truth:'unsinnig',why:'Eine erfundene Pauschalaussage. Die Versorgung richtet sich nach seinem Bedarf und seinen Wünschen, nicht nach seinem Alter.'}}}];
+const KIRATE={uebernehmen:'Kann ich übernehmen',teilweise:'Teilweise falsch',unsinnig:'Unsinnig oder gefährlich'};
+
+let cfg={level:1,help:'full',att:'sorgsam',def:'verdeckt'};
+let S=null;
+const app=document.getElementById('app');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function chips(group,obj,cur){return `<div class="choices" role="group">${Object.entries(obj).map(([k,v])=>`<button class="chip" data-g="${group}" data-v="${k}" aria-pressed="${k==cur}">${esc(v)}</button>`).join('')}</div>`}
+
+function setup(){
+ S=null;
+ app.innerHTML=`<div class="stack"><section class="card"><h2>Deine Ausgangslage</h2><p class="muted">Stelle Fall, Hilfen, deine Haltung und die Lage von Person X ein. Du kannst jederzeit neu starten und andere Kombinationen ausprobieren.</p>
+ <div class="setup">
+ <fieldset><legend>Fallkomplexität</legend><p class="legend-sub">Bestimmt auch, wie die KI antwortet.</p>${chips('level',{1:'1 · Einstieg',2:'2 · Erweiterung',3:'3 · Komplex'},cfg.level)}<p class="muted" id="kiInfo"></p></fieldset>
+ <fieldset><legend>Lernhilfen · dein Wissen</legend><p class="legend-sub">Wie viel Unterstützung möchtest du?</p>${chips('help',HELP,cfg.help)}</fieldset>
+ <fieldset><legend>Deine Haltung · dein Wille</legend><p class="legend-sub">Bestimmt auch, wie viel Zeit du hast (deine Kraft).</p>${chips('att',{eilig:'Unter Zeitdruck · schnell fertig',sorgsam:'Sorgsam · gründlich',eigen:'Verdeckt · meine eigene'},cfg.att)}</fieldset>
+ <fieldset><legend>Was fehlt Person X?</legend><p class="legend-sub">Wähle selbst oder lass es offen und finde es heraus.</p>${chips('def',{kraft:'Kraft',wille:'Wille',wissen:'Wissen',verdeckt:'Verdeckt'},cfg.def)}</fieldset>
+ </div>
+ <div class="row" style="margin-top:20px"><button class="primary" id="start">Fall beginnen</button></div></section>
+ <section class="card"><h3>Über dieses Lernformat</h3><div class="stack" style="gap:10px;max-width:65ch"><p class="muted" style="margin:0">Grundlage ist Virginia Hendersons Gedanke: Selbstständigkeit braucht Kraft, Wille und Wissen. Fehlt eines davon, übernimmt die Pflege so viel wie nötig und so wenig wie möglich.</p><p class="muted" style="margin:0">„Lernen am Optimum“ wendet diese Denkfigur doppelt an. Für Person X bestimmt sie, wie er reagiert und welche Handlung passt. Für die Lernenden selbst gilt: Zeit ist Kraft, Haltung ist Wille, Lernhilfen sind Wissen. Dieselbe Handlung kann je nach Lage richtig oder falsch sein.</p><p class="muted" style="margin:0">KI erscheint als simulierter Assistent. Mit steigender Komplexität wird sie unzuverlässiger. So üben Lernende, KI-Vorschläge kritisch zu prüfen statt ihnen zu folgen. Das Optimum ist erreicht, wenn der komplexe Fall ohne Hilfen gelingt.</p><p class="muted" style="margin:0"><strong>Didaktisches Konzept:</strong> Barbara Magdalena Mayer, auf Grundlage der Pflegetheorie von Virginia Henderson · Technische Umsetzung mit KI-Unterstützung</p></div></section></div>`;
+ const info=()=>document.getElementById('kiInfo').textContent=LEVEL[cfg.level].kiText+'.';info();
+ app.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{cfg[b.dataset.g]=b.dataset.g==='level'?+b.dataset.v:b.dataset.v;app.querySelectorAll(`[data-g="${b.dataset.g}"]`).forEach(x=>x.setAttribute('aria-pressed',x===b));info()});
+ document.getElementById('start').onclick=start;
+}
+
+function start(){
+ const keys=Object.keys(DEF);
+ S={...cfg,deficit:cfg.def==='verdeckt'?keys[Math.floor(Math.random()*3)]:cfg.def,hidden:cfg.def==='verdeckt',order:STEPS.map(st=>shuffle(st.opts.map((_,i)=>i))),step:0,used:0,log:[],pick:null,rate:null,done:false,guess:null};
+ play();
+}
+
+function side(){
+ const budget=ATT[S.att].budget,pct=Math.min(100,S.used/budget*100),over=S.used>budget;
+ const px=Object.entries(DEF).map(([k,v])=>{const m=!S.hidden&&S.deficit===k;return `<div class="hrow${m?' mark':''}"><b>${v}</b><span>${S.hidden?'?':m?'fehlt':'vorhanden'}</span></div>`}).join('');
+ return `<aside class="card side"><h3>Person X</h3>${px}
+ <h3 style="margin-top:18px">Du als Pflegeperson</h3>
+ <div class="hrow"><b>Kraft</b><span>Zeit: <span style="font-variant-numeric:tabular-nums">${S.used} von ${budget} Min.</span><div class="meter${over?' over':''}"><i style="width:${pct}%"></i></div>${over?'<span class="warn">Zeitbudget überschritten</span>':''}</span></div>
+ <div class="hrow"><b>Wille</b><span>${ATT[S.att].will}</span></div>
+ <div class="hrow"><b>Wissen</b><span>${HELP[S.help]}</span></div>
+ <h3 style="margin-top:18px">KI</h3><p class="muted" style="margin:0">${LEVEL[S.level].kiText}</p>
+ <div class="row" style="margin-top:16px"><button class="ghost" id="restart">Neu einstellen</button></div></aside>`;
+}
+
+function play(){
+ if(S.step>=STEPS.length)return summary();
+ const st=STEPS[S.step],kiMode=LEVEL[S.level].ki,ki=st.ki[kiMode];
+ const hints=S.help==='full'?[st.hint,'Henderson: Was kann Person X gerade selbst, und was fehlt ihm dazu?']:S.help==='some'?['Henderson: Was kann Person X gerade selbst, und was fehlt ihm dazu?']:[];
+ const decided=S.pick!==null&&S.done;
+ app.innerHTML=`<div class="play"><section class="card stack">
+ <div class="steps" aria-hidden="true">${STEPS.map((_,i)=>`<span class="${i<=S.step?'done':''}"></span>`).join('')}</div>
+ <div><p class="muted" style="margin:0 0 2px">Situation ${S.step+1} von ${STEPS.length} · Stufe ${S.level}</p><h2>${st.title}</h2></div>
+ <div class="scene">${S.step===0?`<p>${BASE[S.level]}</p>`:''}<p>${st.ctx[S.level]}</p><p><strong>${st.show[S.deficit]}</strong></p>${st.voice[S.att]?`<p class="voice">${st.voice[S.att]}</p>`:''}</div>
+ ${ki?`<div class="ki"><div class="label">KI-Assistent schlägt vor</div><p style="margin:0 0 10px">${ki.text}</p><p class="muted" style="margin:0 0 6px">Wie schätzt du diesen Vorschlag ein?</p><div class="choices" role="group">${Object.entries(KIRATE).map(([k,v])=>`<button class="chip" data-rate="${k}" aria-pressed="${S.rate===k}" ${decided?'disabled':''}>${v}</button>`).join('')}</div></div>`:`<div class="ki"><div class="label">KI-Assistent</div><p style="margin:0">Keine Antwort. In diesem Fall arbeitest du ohne KI.</p></div>`}
+ ${hints.map(h=>`<div class="hint">${h}</div>`).join('')}
+ <div><h3>Was tust du?</h3><div class="options">${S.order[S.step].map(i=>[st.opts[i],i]).map(([o,i])=>`<button class="opt" data-opt="${i}" aria-pressed="${S.pick===i}" ${decided?'disabled':''}><span>${o.t}</span><span class="min">${o.min} Min.</span></button>`).join('')}</div></div>
+ <div><label for="why">Deine Begründung (optional)</label><textarea id="why" ${decided?'disabled':''} placeholder="Warum entscheidest du dich so?">${esc(S.why||'')}</textarea></div>
+ <p class="muted" id="msg" aria-live="polite" style="margin:0"></p>
+ ${decided?resultHtml(st,ki):`<div class="row"><button class="primary" id="decide">Entscheidung treffen</button></div>`}
+ </section>${side()}</div>`;
+ app.querySelectorAll('[data-opt]').forEach(b=>b.onclick=()=>{S.pick=+b.dataset.opt;app.querySelectorAll('[data-opt]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+ app.querySelectorAll('[data-rate]').forEach(b=>b.onclick=()=>{S.rate=b.dataset.rate;app.querySelectorAll('[data-rate]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+ const why=document.getElementById('why');why.oninput=()=>S.why=why.value;
+ document.getElementById('restart').onclick=setup;
+ const d=document.getElementById('decide');
+ if(d)d.onclick=()=>{
+  const miss=[];if(S.pick===null)miss.push('eine Handlung');if(ki&&!S.rate)miss.push('eine Einschätzung der KI');
+  if(miss.length){document.getElementById('msg').textContent='Wähle noch '+miss.join(' und ')+'.';return}
+  const o=st.opts[S.pick],[q,t]=o.r[S.deficit];
+  const before=S.used;S.used+=o.min;
+  S.log.push({title:st.title,opt:o.t,q,t,why:S.why||'',ki:ki?{rate:S.rate,truth:ki.truth,ok:S.rate===ki.truth}:null,overrun:S.used>ATT[S.att].budget&&before<=ATT[S.att].budget});
+  S.done=true;play();
+ };
+ const n=document.getElementById('next');
+ if(n)n.onclick=()=>{S.step++;S.pick=null;S.rate=null;S.why='';S.done=false;play();window.scrollTo({top:0,behavior:'smooth'})};
+}
+
+function resultHtml(st,ki){
+ const L=S.log[S.log.length-1],label={gut:'Passt zur Lage',teilweise:'Teilweise passend',riskant:'Riskant'}[L.q];
+ return `<div class="result ${L.q}"><span class="pill ${L.q}">${label}</span><p style="margin:0">${L.t}</p>${L.overrun?'<p style="margin:8px 0 0"><strong>Dein Zeitbudget ist überschritten.</strong> Du musst Aufgaben im Team abgeben oder an den nächsten Dienst übergeben. Wer übernimmt was?</p>':''}</div>
+ ${ki?`<div class="ki"><div class="label">Aufdeckung der KI-Antwort</div><p style="margin:0 0 6px">Richtig wäre: <strong>${KIRATE[ki.truth]}</strong>. Du hast „${KIRATE[L.ki.rate]}“ gewählt${L.ki.ok?' – erkannt.':'.'}</p><p style="margin:0">${ki.why}</p></div>`:''}
+ <div class="row"><button class="primary" id="next">${S.step<STEPS.length-1?'Weiter zur nächsten Situation':'Zur Auswertung'}</button></div>`;
+}
+
+function summary(){
+ const good=S.log.filter(l=>l.q==='gut').length,kiL=S.log.filter(l=>l.ki),kiOk=kiL.filter(l=>l.ki.ok).length;
+ const need=S.hidden&&!S.guess;
+ const maxMin=STEPS.reduce((a,st)=>a+Math.max(...st.opts.map(o=>o.min)),0);
+ const tendency=S.used/maxMin>=0.6?'gründlich':'zügig';
+ const tendText=S.att==='eigen'?`<div class="ki"><div class="label">Deine Haltung</div><p style="margin:0">Du hast ${S.used} von maximal ${maxMin} Minuten eingesetzt. Deine Entscheidungen zeigen eine Tendenz zu <strong>${tendency}em</strong> Vorgehen. Passte das zu dem, was Person X gerade brauchte?</p></div>`:'';
+ const guessOk=!S.hidden||S.guess===S.deficit;
+ const optimum=S.level===3&&S.help==='none'&&good===STEPS.length&&kiOk===kiL.length&&guessOk&&!need;
+ const gaps=[];if(S.level<3)gaps.push('den komplexen Fall (Stufe 3) bearbeiten');if(S.help!=='none')gaps.push('ohne Hilfen arbeiten');if(good<STEPS.length)gaps.push('in allen drei Situationen passend zur Lage von Person X handeln');if(kiOk<kiL.length)gaps.push('alle KI-Fehler richtig einschätzen');if(S.hidden&&S.guess&&!guessOk)gaps.push('das Defizit von Person X erkennen');
+ app.innerHTML=`<div class="play"><section class="card stack"><h2>Auswertung</h2>
+ ${need?`<div class="ki"><div class="label">Erst noch eine Frage</div><p style="margin:0 0 8px">Was hat Person X in diesem Fall gefehlt?</p><div class="choices">${Object.entries(DEF).map(([k,v])=>`<button class="chip" data-guess="${k}">${v}</button>`).join('')}</div></div>`:`
+ ${S.hidden?`<div class="result ${guessOk?'gut':'riskant'}"><p style="margin:0">Person X fehlte <strong>${DEF[S.deficit]}</strong>. Du hast auf ${DEF[S.guess]} getippt${guessOk?' – richtig erkannt.':'.'}</p></div>`:''}
+ ${optimum?`<div class="optimum"><h3>Optimum erreicht</h3><p style="margin:0">Du hast den komplexen Fall ohne Hilfen gelöst und die Fehler der KI erkannt.</p></div>`:`<div class="notyet"><h3>Auf dem Weg zum Optimum</h3><p style="margin:0">Als Nächstes: ${gaps.join(', ')}.</p></div>`}
+ ${tendText}
+ <ul class="sum" style="padding-left:18px;margin:0">${S.log.map(l=>`<li><strong>${l.title}:</strong> <span class="pill ${l.q}">${l.q}</span><br>${l.opt}${l.ki?`<br><span class="muted">KI-Einschätzung ${l.ki.ok?'richtig':'nicht richtig'}</span>`:''}${l.why?`<br><span class="muted">Begründung: ${esc(l.why)}</span>`:''}</li>`).join('')}</ul>
+ <div><h3>Reflexion</h3><ul style="padding-left:18px;margin:0" class="muted"><li>Woran hast du erkannt, was Person X fehlte?</li><li>Wie hat deine Haltung (${S.att==='eigen'?tendency:ATT[S.att].name.toLowerCase()}) deine Entscheidungen beeinflusst? Wann war Gründlichkeit richtig, wann Zurückhaltung? Zeit verbraucht: ${S.used} von ${ATT[S.att].budget} Min.</li><li>Wann hättest du der KI geglaubt, und warum?</li><li>Könntest du deine Entscheidungen auch ohne Hilfen fachlich begründen?</li></ul></div>
+ <div class="row"><button class="primary" id="again">Andere Kombination ausprobieren</button><button class="ghost" id="copy">Ergebnis kopieren</button></div><p class="muted" id="msg" aria-live="polite" style="margin:0"></p>`}
+ <p class="warn" style="margin:0">Übungsfall mit erfundenen Daten. Keine Grundlage für reale Patientenversorgung.</p>
+ </section>${side()}</div>`;
+ app.querySelectorAll('[data-guess]').forEach(b=>b.onclick=()=>{S.guess=b.dataset.guess;summary()});
+ document.getElementById('restart').onclick=setup;
+ const a=document.getElementById('again');if(a)a.onclick=setup;
+ const c=document.getElementById('copy');if(c)c.onclick=()=>{
+  const txt=['Lernen am Optimum – Pflegefall Person X',`Stufe ${S.level} · ${HELP[S.help]} · ${ATT[S.att].name} · Person X fehlte: ${DEF[S.deficit]}`,'',...S.log.map(l=>`${l.title}: ${l.opt} (${l.q})${l.ki?` · KI ${l.ki.ok?'erkannt':'nicht erkannt'}`:''}${l.why?`\nBegründung: ${l.why}`:''}`),'',optimum?'Optimum erreicht.':'Optimum noch nicht erreicht.'].join('\n');
+  const m=document.getElementById('msg');
+  try{navigator.clipboard.writeText(txt).then(()=>m.textContent='Ergebnis kopiert.').catch(()=>m.textContent='Kopieren wurde blockiert.')}catch(e){m.textContent='Kopieren wurde blockiert.'}
+ };
+}
+setup();
+</script>
+
+</body>
+</html>
