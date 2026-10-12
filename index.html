@@ -12,18 +12,13 @@
 <style>
 /* Layout: one calm reading column; a left-ruled "Bildungsweg" ladder with DQR levels is the signature element */
 :root{
-  --bg:#F4F6F6; --surface:#FFFFFF; --fg:#1C2629; --muted:#5A6A6E; --line:#D5DEDF;
-  --accent:#1F5E68; --accent-soft:#E2EEEF; --warm:#A8782A;
+  --bg:#F9EEF1; --surface:#FFFFFF; --fg:#24382C; --muted:#5E5459; --line:#EAD5DB;
+  --accent:#2F5240; --accent-soft:#D5E2D6; --warm:#A8486A; --pink:#B04E6B; --pink-soft:#F3DCE3;
   --display:"Literata",Georgia,"Times New Roman",serif;
   --body:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#121A1C; --surface:#182226; --fg:#E6EDEE; --muted:#9AAAAE; --line:#2B3A3E;
-  --accent:#7FC2CC; --accent-soft:#1D3236; --warm:#D9AE63; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#121A1C; --surface:#182226; --fg:#E6EDEE; --muted:#9AAAAE; --line:#2B3A3E;
-  --accent:#7FC2CC; --accent-soft:#1D3236; --warm:#D9AE63; color-scheme:dark}
+:root{color-scheme:light}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6;margin:0;padding-inline:20px}
@@ -81,6 +76,17 @@ footer{font-size:.85rem;color:var(--muted)}
   .wrap{gap:52px;padding-block:36px 56px}
 }
 @media (prefers-reduced-motion:no-preference){button{transition:opacity .15s}button:hover{opacity:.88}}
+
+/* Auffällige Handlungs-Buttons */
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+.cta{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:1.02rem;text-decoration:none;border-radius:999px;padding:12px 22px;background:var(--pink);color:#fff;box-shadow:0 3px 0 #8A3A52}
+.cta.alt{background:var(--accent);box-shadow:0 3px 0 #1E3729}
+.cta:hover{filter:brightness(1.06)}
+@keyframes wackeln{0%,100%{transform:rotate(0)}20%{transform:rotate(-3deg)}40%{transform:rotate(3deg)}60%{transform:rotate(-2deg)}80%{transform:rotate(1deg)}}
+@media (prefers-reduced-motion:no-preference){
+  .cta{animation:wackeln .7s ease-in-out 1.2s 2}
+  .cta:hover,button:hover{animation:wackeln .5s ease-in-out}
+}
 </style>
 
 </head>
@@ -105,7 +111,7 @@ footer{font-size:.85rem;color:var(--muted)}
     <span class="eyebrow">Neuer Fachartikel</span>
     <h2 id="h-artikel">Psychische Gesundheit im Pflegeberuf stärken</h2>
     <p class="muted">Eine praxisnahe Handreichung mit acht Schritten für Selbstfürsorge, professionelle Grenzen und passende Unterstützung im Pflegealltag.</p>
-    <p><a href="artikel/psychische-gesundheit-im-pflegeberuf/">Artikel lesen →</a> · <a href="artikel/psychische-gesundheit-im-pflegeberuf/psychische-gesundheit-im-pflegeberuf.pdf">Handreichung als PDF herunterladen</a></p>
+    <div class="cta-row"><a class="cta" href="artikel/psychische-gesundheit-im-pflegeberuf/psychische-gesundheit-im-pflegeberuf.pdf" download>⬇ Handreichung als PDF</a><a class="cta alt" href="artikel/psychische-gesundheit-im-pflegeberuf/">Artikel lesen →</a></div>
   </section>
 
   <section aria-labelledby="h-optimum">
@@ -113,7 +119,7 @@ footer{font-size:.85rem;color:var(--muted)}
     <h2 id="h-optimum">Lernen am Optimum – digitale Lernfälle nach Henderson</h2>
     <p class="muted">Ein didaktisches Konzept zum Erstellen digitaler Lernfälle für Pflegeausbildung und Praxisanleitung, gezeigt an einem interaktiven Beispielfall. Grundlage ist Virginia Hendersons Gedanke, dass Selbstständigkeit Kraft, Wille und Wissen braucht. Das Konzept wendet diese Denkfigur doppelt an: auf den Patienten, dessen Reaktionen sich je nach fehlender Ressource verändern, und auf die Lernenden selbst. Bei ihnen steht Zeit für Kraft, die eigene Haltung für Willen und die gewählten Lernhilfen für Wissen.</p>
     <p class="muted">Dieselbe pflegerische Handlung kann deshalb je nach Lage passend oder riskant sein. Ein simulierter KI-Assistent wird mit steigender Fallkomplexität unzuverlässiger und muss kritisch geprüft werden. Das „Optimum“ ist erreicht, wenn der komplexe Fall ohne Hilfen fachlich begründet gelöst wird.</p>
-    <p><a href="lernen-am-optimum.html">Beispielfall öffnen →</a></p>
+    <div class="cta-row"><a class="cta" href="lernen-am-optimum.html">▶ Beispielfall spielen</a></div>
     <p class="muted"><small>Didaktisches Konzept: Barbara Magdalena Mayer · Technische Umsetzung mit KI-Unterstützung · Beispielfall mit erfundenen Daten</small></p>
   </section>
 
