@@ -82,9 +82,10 @@ footer{font-size:.85rem;color:var(--muted)}
 .cta{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:1.02rem;text-decoration:none;border-radius:999px;padding:12px 22px;background:var(--pink);color:#fff;box-shadow:0 3px 0 #8A3A52}
 .cta.alt{background:var(--accent);box-shadow:0 3px 0 #1E3729}
 .cta:hover{filter:brightness(1.06)}
-@keyframes wackeln{0%,100%{transform:rotate(0)}20%{transform:rotate(-3deg)}40%{transform:rotate(3deg)}60%{transform:rotate(-2deg)}80%{transform:rotate(1deg)}}
+@keyframes wackeln{0%,6%{transform:rotate(0)}1.5%{transform:rotate(-3deg)}3%{transform:rotate(3deg)}4.5%{transform:rotate(-2deg)}6%{transform:rotate(0)}100%{transform:rotate(0)}}
 @media (prefers-reduced-motion:no-preference){
-  .cta{animation:wackeln .7s ease-in-out 1.2s 2}
+  .cta{animation:wackeln 4.8s ease-in-out 1.2s infinite}
+  .case-cta{animation:wackeln 5.6s ease-in-out 2s infinite}
   .cta:hover,button:hover{animation:wackeln .5s ease-in-out}
 }
 /* Eigenständiges digitales Bildungsformat */

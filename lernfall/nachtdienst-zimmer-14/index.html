@@ -303,6 +303,9 @@ const bun=new THREE.Mesh(new THREE.SphereGeometry(.05,12,10),hair);bun.position.
   limb(torso,sh,el,.045,top);limb(torso,el,ha,.04,top);
   const hand=new THREE.Mesh(new THREE.SphereGeometry(.048,10,8),skin);hand.position.copy(ha);hand.scale.set(1.2,.8,1);torso.add(hand);});
 const xState={lean:.12,leanT:.12,headY:0,headYT:0,headX:.45,headXT:.45,nod:0,base:.12,back:-.12};
+const heartTex=tex(180,180,(g,w,h)=>{g.clearRect(0,0,w,h);g.save();g.translate(w/2,h/2+8);g.scale(.78,.78);g.beginPath();g.moveTo(0,58);g.bezierCurveTo(-18,38,-62,10,-62,-24);g.bezierCurveTo(-62,-54,-26,-68,0,-40);g.bezierCurveTo(26,-68,62,-54,62,-24);g.bezierCurveTo(62,10,18,38,0,58);g.closePath();g.fillStyle="#ff5d72";g.shadowColor="#ff5d72";g.shadowBlur=22;g.fill();g.restore();});
+const heart=new THREE.Sprite(new THREE.SpriteMaterial({map:heartTex,transparent:true,depthTest:false,opacity:0}));heart.scale.set(.42,.42,1);heart.position.set(0,1.45,.05);xg.add(heart);
+const successLight=new THREE.PointLight(0xff5d72,0,2.8,2);successLight.position.set(0,1.1,.1);xg.add(successLight);
 
 /* ---------- Inhalte ---------- */
 const CAT={kraft:"Kraft",wille:"Wille",wissen:"Wissen"}, ART={zeichen:"Zeichen",symbol:"Symbol"};
@@ -321,10 +324,10 @@ const FINDS=[
   ];
   const BY=Object.fromEntries(FINDS.map(f=>[f.id,f]));
   const hintMarkers=[];
-  const hintOffsets={x:[0,.62,0],bett:[0,.78,0],handy:[0,.18,0],tablett:[0,.98,0],stapel:[0,.24,0],foto:[0,.18,0],powerbank:[0,.18,0],kalender:[0,.45,.02],krisenplan:[0,.42,.02],notizbuch:[0,.18,0],stadtplan:[0,.45,.02]};
-  FINDS.forEach(f=>{const g=roots[f.id];if(!g)return;const m=new THREE.Mesh(new THREE.SphereGeometry(.055,12,8),new THREE.MeshBasicMaterial({color:0xf0c98a,transparent:true,opacity:.9}));const o=hintOffsets[f.id]||[0,.2,0];m.position.set(o[0],o[1],o[2]);m.userData.findId=f.id;m.visible=false;g.add(m);hintMarkers.push(m);});
+  const hintOffsets={x:[0,.9,0],bett:[0,.78,0],handy:[0,.18,0],tablett:[0,.98,0],stapel:[0,.24,0],foto:[0,.18,0],powerbank:[0,.18,0],kalender:[0,.45,.02],krisenplan:[0,.42,.02],notizbuch:[0,.18,0],stadtplan:[0,.45,.02]};
+  FINDS.forEach(f=>{const g=roots[f.id];if(!g)return;const m=new THREE.Mesh(new THREE.SphereGeometry(f.id==="x"?.085:.055,12,8),new THREE.MeshBasicMaterial({color:f.id==="x"?0xff6f78:0xf0c98a,transparent:true,opacity:.9}));const o=hintOffsets[f.id]||[0,.2,0];m.position.set(o[0],o[1],o[2]);m.userData.findId=f.id;m.visible=false;g.add(m);hintMarkers.push(m);});
   function syncHintMarkers(){hintMarkers.forEach(m=>{m.visible=S.phase==="room"&&S.priorityDone&&!S.found[m.userData.findId];});}
-const S={found:{},tips:0,lamp:true,near:0,light:0,place:null,started:false,phase:"corridor",auto:null,priorityDone:false,priorityChoice:null,placeOpen:false};
+const S={found:{},tips:0,lamp:true,near:0,light:0,place:null,started:false,phase:"corridor",auto:null,priorityDone:false,priorityChoice:null,placeOpen:false,finished:false};
 
 /* ---------- Platzwahl ---------- */
 const PLACES=[
@@ -412,7 +415,7 @@ function act(t){
   if(t.type==="door"){knocked=true;knock();thought("Halb drei. Mein Kaffee ist längst kalt, und ich habe noch elf Zimmer.",3800,"Auch nachts anklopfen. X soll nicht erschrecken.");
     setTimeout(()=>{doorTarget=1;},1500);
     setTimeout(()=>{S.auto={t:0,dur:2.6,from:{x:P.x,z:P.z,yaw:P.yaw,pitch:P.pitch},to:{x:1.55,z:-.95,yaw:.2,pitch:-.12},enter:true};},2400);return;}
-  if(t.type==="find")openFind(t.id);
+  if(S.finished)return;if(t.type==="find")openFind(t.id);
   if(t.type==="place")openPlace(PLACES.find(p=>p.id===t.id));
 }
 
@@ -472,9 +475,14 @@ function openPlace(p){
   card.onclick=e=>{const b=e.target.closest("button");if(!b)return;
     if(b.hasAttribute("data-back")){xState.leanT=xState.base;placeChooser();}
     else if(b.hasAttribute("data-close"))closeDlg();
-    else if(b.hasAttribute("data-take")){S.place=p;onClose=null;summary();}};
+    else if(b.hasAttribute("data-take")){S.place=p;onClose=null;if(p.good&&Object.keys(S.found).length===FINDS.length)finishGame();else summary();}};
 }
 $("#bPlace").onclick=placeChooser;
+function finishGame(){
+  S.finished=true;S.placeOpen=false;markers.forEach(m=>m.g.visible=false);$("#bPlace").hidden=true;$("#bTip").disabled=true;syncHintMarkers();heart.material.opacity=1;successLight.intensity=1.1;
+  openDlg(`<p class="eyebrow">Lernfall abgeschlossen</p><h2 id="dTitle">Du hast dein Ziel erreicht.</h2><p class="see">Du hast alle elf Hinweise erkundet, die aktuelle Sicherheit priorisiert und einen geeigneten Gesprächsplatz gewählt.</p><div class="sumgrid"><div><b>11 / 11</b><span>Hinweise erkundet</span></div><div><b>${S.place.label}</b><span>geeignete Gesprächsposition</span></div></div><p><strong>Dein nächster pflegerischer Schritt:</strong> ruhig Kontakt aufnehmen, direkt nach aktuellen Suizidgedanken fragen und die weitere Sicherheit nach den Standards deiner Einrichtung klären.</p><p class="good" style="font-family:var(--f-display);font-weight:700">Das pulsierende Herz markiert: Die Begegnung kann jetzt beginnen.</p><div class="actions"><button type="button" class="primary" data-finish-close>Spiel beenden</button><button type="button" data-restart>Neu beginnen</button></div>`);
+  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-restart"))location.reload();if(b.hasAttribute("data-finish-close"))closeDlg();};
+}
 function summary(){
   const all=FINDS.length, examined=Object.keys(S.found).length;
   openDlg(`<p class="eyebrow">Reflexion · Ende der Probe</p><h2 id="dTitle">Was hatte Vorrang?</h2>
@@ -509,6 +517,7 @@ function updateGuide(){
   const T=isTouch;let s,h;
   if(S.auto&&S.auto.enter){s="Du gehst ins Zimmer.";h="Einen Moment.";}
   else if(S.auto){s="Tipp: Dein Blick dreht sich zu einem Hinweis.";h="Achte auf das, was sich bewegt.";}
+  else if(S.finished){s="Lernfall abgeschlossen.";h="Du hast alle Hinweise erkundet und einen geeigneten Gesprächsplatz gewählt.";}
   else if(S.placeOpen){s="Wähle einen Gesprächsplatz oder erkunde die elf markierten Hinweise.";h=T?"<b>Tippe</b> auf einen leuchtenden Punkt.":"<b>Klick</b> auf einen leuchtenden Punkt. Sitzplätze wählst du unten oder über „Platz wählen“.";}
   else if(S.phase==="corridor"&&!knocked){s="Klopf an die Tür von Zimmer 14.";h=T?"<b>Tippe auf die Tür.</b>":"<b>Klick auf die Tür.</b>";}
   else if(S.phase==="corridor"){s="Du hast angeklopft.";h="Die Tür geht gleich auf.";}
@@ -560,6 +569,7 @@ function loop(){
     if(wig[id]<=0){delete wig[id];if(id!=="x"){g.rotation.z=0;g.position.y=g.userData.base.y;}xState.nod=0;}}
   if(S.placeOpen)markers.forEach(m=>{m.ring.material.opacity=.45+Math.sin(t*3)*.25;});
   hintMarkers.forEach((m,i)=>{if(m.visible){const pulse=.75+Math.sin(t*4+i*.6)*.22;m.scale.setScalar(pulse);m.material.opacity=.6+Math.sin(t*4+i*.6)*.2;}});
+  if(S.finished){const pulse=1+Math.sin(t*4)*.08;heart.scale.set(.42*pulse,.42*pulse,1);heart.material.opacity=.82+Math.sin(t*4)*.18;successLight.intensity=1.0+Math.sin(t*4)*.25;}
   if(S.started)updateGuide();
   (fx||renderer).render(scene,camera);
 }
