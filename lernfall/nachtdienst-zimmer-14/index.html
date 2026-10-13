@@ -303,9 +303,9 @@ const bun=new THREE.Mesh(new THREE.SphereGeometry(.05,12,10),hair);bun.position.
   limb(torso,sh,el,.045,top);limb(torso,el,ha,.04,top);
   const hand=new THREE.Mesh(new THREE.SphereGeometry(.048,10,8),skin);hand.position.copy(ha);hand.scale.set(1.2,.8,1);torso.add(hand);});
 const xState={lean:.12,leanT:.12,headY:0,headYT:0,headX:.45,headXT:.45,nod:0,base:.12,back:-.12};
-const heartTex=tex(180,180,(g,w,h)=>{g.clearRect(0,0,w,h);g.save();g.translate(w/2,h/2+8);g.scale(.78,.78);g.beginPath();g.moveTo(0,58);g.bezierCurveTo(-18,38,-62,10,-62,-24);g.bezierCurveTo(-62,-54,-26,-68,0,-40);g.bezierCurveTo(26,-68,62,-54,62,-24);g.bezierCurveTo(62,10,18,38,0,58);g.closePath();g.fillStyle="#ff5d72";g.shadowColor="#ff5d72";g.shadowBlur=22;g.fill();g.restore();});
-const heart=new THREE.Sprite(new THREE.SpriteMaterial({map:heartTex,transparent:true,depthTest:false,opacity:0}));heart.scale.set(.42,.42,1);heart.position.set(0,1.45,.05);xg.add(heart);
-const successLight=new THREE.PointLight(0xff5d72,0,2.8,2);successLight.position.set(0,1.1,.1);xg.add(successLight);
+const heartTex=tex(180,180,(g,w,h)=>{g.clearRect(0,0,w,h);g.save();g.translate(w/2,h/2+8);g.scale(.78,.78);g.beginPath();g.moveTo(0,58);g.bezierCurveTo(-18,38,-62,10,-62,-24);g.bezierCurveTo(-62,-54,-26,-68,0,-40);g.bezierCurveTo(26,-68,62,-54,62,-24);g.bezierCurveTo(62,10,18,38,0,58);g.closePath();g.fillStyle="#f3b5c0";g.shadowColor="#f3b5c0";g.shadowBlur=22;g.fill();g.restore();});
+const heart=new THREE.Sprite(new THREE.SpriteMaterial({map:heartTex,transparent:true,depthTest:false,opacity:0}));heart.scale.set(.34,.34,1);heart.position.set(0,.78,.22);xg.add(heart);
+const successLight=new THREE.PointLight(0xf3b5c0,0,2.2,2);successLight.position.set(0,1.1,.1);xg.add(successLight);
 
 /* ---------- Inhalte ---------- */
 const CAT={kraft:"Kraft",wille:"Wille",wissen:"Wissen"}, ART={zeichen:"Zeichen",symbol:"Symbol"};
@@ -444,11 +444,16 @@ function openFind(id){
     if(b.dataset.cat){sel.cat=b.dataset.cat;card.innerHTML=form();}
     else if(b.dataset.art){sel.art=b.dataset.art;card.innerHTML=form();}
     else if(b.hasAttribute("data-check")){const r={cat:sel.cat,art:sel.art,catOk:f.cat.includes(sel.cat),artOk:sel.art===f.art};S.found[id]=r;justDone=true;updHud();
-      syncHintMarkers();card.innerHTML=head+resultHTML(f,r)+`<div class="actions"><button type="button" class="primary" data-close>Zurück ins Zimmer</button></div>`;card.querySelector("[data-close]").focus();}
+      syncHintMarkers();
+      const allFound=Object.keys(S.found).length===FINDS.length;
+      const nextStep=allFound?`<div class="next-step"><strong>Alle elf Hinweise sind erkundet.</strong><span>Jetzt wählst du noch den geeigneten Gesprächsplatz.</span></div><div class="actions"><button type="button" class="primary" data-place>Gesprächsplatz wählen</button><button type="button" data-close>Zurück ins Zimmer</button></div>`:`<div class="actions"><button type="button" class="primary" data-close>Zurück ins Zimmer</button></div>`;
+      card.innerHTML=head+resultHTML(f,r)+nextStep;
+      const focus=card.querySelector(allFound?"[data-place]":"[data-close]");if(focus)focus.focus();}
+    else if(b.hasAttribute("data-place")){afterFind();placeChooser();}
     else if(b.hasAttribute("data-close"))closeDlg();};
 }
-function afterFind(){if(S.priorityDone&&!S.placeOpen){S.placeOpen=true;markers.forEach(m=>m.g.visible=true);$("#bPlace").hidden=false;$("#bTip").disabled=true;
-  thought("Wie kann ich sicher und respektvoll mit X ins Gespräch kommen?",7000);}}
+function afterFind(){if(S.priorityDone&&!S.placeOpen){S.placeOpen=true;markers.forEach(m=>m.g.visible=true);$("#bPlace").hidden=false;$("#bPlace").textContent=Object.keys(S.found).length===FINDS.length?"Gesprächsplatz wählen":"Platz wählen";$("#bTip").disabled=true;
+  thought(Object.keys(S.found).length===FINDS.length?"Alle elf Hinweise sind erkundet. Jetzt noch den geeigneten Gesprächsplatz wählen.":"Wie kann ich sicher und respektvoll mit X ins Gespräch kommen?",7000);}}
 function updHud(){$("#hFound").textContent=Object.keys(S.found).length+" / "+FINDS.length;$("#hTips").textContent=S.tips;}
 
 /* ---------- Wackeln und Tipp ---------- */
@@ -465,7 +470,7 @@ $("#bTip").onclick=tip;
 
 /* ---------- Platzwahl & Abschluss ---------- */
 function placeChooser(){
-  openDlg(`<p class="eyebrow">Platzwahl</p><h2 id="dTitle">Wo sprichst du mit X?</h2><p>Wähle einen der hellen Kreise am Boden – oder schließe das Fenster und erkunde weiter.</p><div class="actions" style="justify-content:flex-start">${PLACES.map(p=>`<button type="button" data-pl="${p.id}">${p.label}</button>`).join("")}<button type="button" data-close>Zurück ins Zimmer</button></div>`);
+  openDlg(`<p class="eyebrow">Platzwahl</p><h2 id="dTitle">Wo sprichst du mit X?</h2><p><strong>Letzter Schritt:</strong> Setze dich für das Gespräch zu X. Empfohlen ist <strong>„Auf dem Boden“</strong>: mit Abstand, seitlich und auf Augenhöhe.</p><div class="actions" style="justify-content:flex-start">${PLACES.map(p=>`<button type="button" data-pl="${p.id}">${p.label}</button>`).join("")}<button type="button" data-close>Zurück ins Zimmer</button></div>`);
   card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-pl"))openPlace(PLACES.find(p=>p.id===b.dataset.pl));if(b.hasAttribute("data-close"))closeDlg();};
 }
 function openPlace(p){
@@ -518,6 +523,7 @@ function updateGuide(){
   if(S.auto&&S.auto.enter){s="Du gehst ins Zimmer.";h="Einen Moment.";}
   else if(S.auto){s="Tipp: Dein Blick dreht sich zu einem Hinweis.";h="Achte auf das, was sich bewegt.";}
   else if(S.finished){s="Lernfall abgeschlossen.";h="Du hast alle Hinweise erkundet und einen geeigneten Gesprächsplatz gewählt.";}
+  else if(S.placeOpen&&Object.keys(S.found).length===FINDS.length){s="Alle Hinweise gefunden. Jetzt Gesprächsplatz wählen.";h="<b>Wähle „Auf dem Boden“</b> für den Abschluss – mit Abstand und auf Augenhöhe.";}
   else if(S.placeOpen){s="Wähle einen Gesprächsplatz oder erkunde die elf markierten Hinweise.";h=T?"<b>Tippe</b> auf einen leuchtenden Punkt.":"<b>Klick</b> auf einen leuchtenden Punkt. Sitzplätze wählst du unten oder über „Platz wählen“.";}
   else if(S.phase==="corridor"&&!knocked){s="Klopf an die Tür von Zimmer 14.";h=T?"<b>Tippe auf die Tür.</b>":"<b>Klick auf die Tür.</b>";}
   else if(S.phase==="corridor"){s="Du hast angeklopft.";h="Die Tür geht gleich auf.";}
