@@ -318,8 +318,12 @@ const FINDS=[
  {id:"krisenplan",name:"Formular neben der Tür",cat:["wissen"],art:"zeichen",see:"Neben der Tür hängt der Vordruck „Mein Krisenplan“. Alle Felder sind leer.",text:"X weiß vielleicht noch nicht, was ihr in einer Krise hilft und wen sie erreichen kann. Ein Krisenplan wird gemeinsam erarbeitet, nicht ausgehändigt."},
  {id:"notizbuch",name:"Notizbuch",cat:["wissen","kraft"],art:"symbol",see:"Auf der Fensterbank liegt ein aufgeschlagenes Notizbuch „Was mir guttut“. Die Seiten sind leer.",text:"Ein Bild für fehlendes Wissen über eigene Ressourcen. Es kann auch heißen, dass gerade die Kraft zum Schreiben fehlt."},
  {id:"stadtplan",name:"Stadtplan",cat:["wissen"],art:"symbol",see:"An der Wand hängt ein Plan einer Stadt, die X noch neu ist. Nichts ist markiert.",text:"X kennt die Hilfe vor Ort noch nicht: Beratungsstellen, Selbsthilfegruppen, Praxen. Hier können Pflegende mit Information und Vernetzung ansetzen."}
-];
-const BY=Object.fromEntries(FINDS.map(f=>[f.id,f]));
+  ];
+  const BY=Object.fromEntries(FINDS.map(f=>[f.id,f]));
+  const hintMarkers=[];
+  const hintOffsets={x:[0,.62,0],bett:[0,.78,0],handy:[0,.18,0],tablett:[0,.98,0],stapel:[0,.24,0],foto:[0,.18,0],powerbank:[0,.18,0],kalender:[0,.45,.02],krisenplan:[0,.42,.02],notizbuch:[0,.18,0],stadtplan:[0,.45,.02]};
+  FINDS.forEach(f=>{const g=roots[f.id];if(!g)return;const m=new THREE.Mesh(new THREE.SphereGeometry(.055,12,8),new THREE.MeshBasicMaterial({color:0xf0c98a,transparent:true,opacity:.9}));const o=hintOffsets[f.id]||[0,.2,0];m.position.set(o[0],o[1],o[2]);m.userData.findId=f.id;m.visible=false;g.add(m);hintMarkers.push(m);});
+  function syncHintMarkers(){hintMarkers.forEach(m=>{m.visible=S.phase==="room"&&S.priorityDone&&!S.found[m.userData.findId];});}
 const S={found:{},tips:0,lamp:true,near:0,light:0,place:null,started:false,phase:"corridor",auto:null,priorityDone:false,priorityChoice:null,placeOpen:false};
 
 /* ---------- Platzwahl ---------- */
@@ -336,8 +340,7 @@ const PLACES=[
 const markers=[];
 PLACES.forEach(p=>{const g=new THREE.Group();g.position.set(p.pos[0],0,p.pos[1]);g.visible=false;g.userData.placeId=p.id;scene.add(g);
   const rm=new THREE.MeshBasicMaterial({color:0x7cc7bc,transparent:true,opacity:.6});rm.userData.outlineParameters={visible:false};const ring=new THREE.Mesh(new THREE.CircleGeometry(.32,32),rm);ring.rotation.x=-Math.PI/2;ring.position.y=.02;g.add(ring);
-  const lab=new THREE.Sprite(new THREE.SpriteMaterial({map:labelTex(p.label),depthTest:false,transparent:true}));lab.scale.set(.6,.15,1);lab.position.y=1.15;g.add(lab);
-  markers.push({p,g,ring,lab});});
+  markers.push({p,g,ring});});
 
 /* ---------- Spieler und Kollision ---------- */
 const P={x:1.65,z:1.95,yaw:0,pitch:-.05};
@@ -438,7 +441,7 @@ function openFind(id){
     if(b.dataset.cat){sel.cat=b.dataset.cat;card.innerHTML=form();}
     else if(b.dataset.art){sel.art=b.dataset.art;card.innerHTML=form();}
     else if(b.hasAttribute("data-check")){const r={cat:sel.cat,art:sel.art,catOk:f.cat.includes(sel.cat),artOk:sel.art===f.art};S.found[id]=r;justDone=true;updHud();
-      card.innerHTML=head+resultHTML(f,r)+`<div class="actions"><button type="button" class="primary" data-close>Zurück ins Zimmer</button></div>`;card.querySelector("[data-close]").focus();}
+      syncHintMarkers();card.innerHTML=head+resultHTML(f,r)+`<div class="actions"><button type="button" class="primary" data-close>Zurück ins Zimmer</button></div>`;card.querySelector("[data-close]").focus();}
     else if(b.hasAttribute("data-close"))closeDlg();};
 }
 function afterFind(){if(S.priorityDone&&!S.placeOpen){S.placeOpen=true;markers.forEach(m=>m.g.visible=true);$("#bPlace").hidden=false;$("#bTip").disabled=true;
@@ -458,16 +461,20 @@ function tip(){const open=FINDS.filter(f=>!S.found[f.id]);if(!open.length)return
 $("#bTip").onclick=tip;
 
 /* ---------- Platzwahl & Abschluss ---------- */
+function placeChooser(){
+  openDlg(`<p class="eyebrow">Platzwahl</p><h2 id="dTitle">Wo sprichst du mit X?</h2><p>Wähle einen der hellen Kreise am Boden – oder schließe das Fenster und erkunde weiter.</p><div class="actions" style="justify-content:flex-start">${PLACES.map(p=>`<button type="button" data-pl="${p.id}">${p.label}</button>`).join("")}<button type="button" data-close>Zurück ins Zimmer</button></div>`);
+  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-pl"))openPlace(PLACES.find(p=>p.id===b.dataset.pl));if(b.hasAttribute("data-close"))closeDlg();};
+}
 function openPlace(p){
   if(p.id==="nah")xState.leanT=-.12;
   openDlg(`<p class="eyebrow">Platzwahl</p><h2 id="dTitle">${p.title}</h2><p class="see">${p.text}</p>
-   <div class="actions"><button type="button" data-close>Anderen Platz wählen</button><button type="button" class="primary" data-take>Hier bleiben</button></div>`,()=>{xState.leanT=xState.base;});
+   <div class="actions"><button type="button" data-back>Andere Position wählen</button><button type="button" data-close>Zurück ins Zimmer</button><button type="button" class="primary" data-take>Hier bleiben</button></div>`,()=>{xState.leanT=xState.base;});
   card.onclick=e=>{const b=e.target.closest("button");if(!b)return;
-    if(b.hasAttribute("data-close"))closeDlg();
-    if(b.hasAttribute("data-take")){S.place=p;onClose=null;summary();}};
+    if(b.hasAttribute("data-back")){xState.leanT=xState.base;placeChooser();}
+    else if(b.hasAttribute("data-close"))closeDlg();
+    else if(b.hasAttribute("data-take")){S.place=p;onClose=null;summary();}};
 }
-$("#bPlace").onclick=()=>{openDlg(`<p class="eyebrow">Platzwahl</p><h2 id="dTitle">Wo sprichst du mit X?</h2><p>Du kannst auch im Zimmer direkt auf einen der hellen Kreise am Boden klicken.</p><div class="actions" style="justify-content:flex-start">${PLACES.map(p=>`<button type="button" data-pl="${p.id}">${p.label}</button>`).join("")}</div>`);
-  card.onclick=e=>{const b=e.target.closest("[data-pl]");if(b)openPlace(PLACES.find(p=>p.id===b.dataset.pl));};};
+$("#bPlace").onclick=placeChooser;
 function summary(){
   const all=FINDS.length, examined=Object.keys(S.found).length;
   openDlg(`<p class="eyebrow">Reflexion · Ende der Probe</p><h2 id="dTitle">Was hatte Vorrang?</h2>
@@ -490,7 +497,7 @@ function priority(){
       <p>${correct?'Du priorisierst Kontakt, direkte Fragen und die aktuelle Sicherheit.':'Die Gegenstände können später Hinweise geben. Nach einem geäußerten Suizidwunsch darf die aktuelle Gefährdung nicht durch eine Suchaufgabe oder bloßes Abwarten nach hinten rücken.'}</p>
       <p>Sprich X ruhig an, frage direkt nach aktuellen Suizidgedanken und kläre entsprechend den geltenden Standards Absicht, Planung und unmittelbare Gefährdung. Bei akuter Gefahr hole unverzüglich Unterstützung und setze erforderliche Schutzmaßnahmen um.</p>
       <div class="actions">${correct?'':'<button type="button" data-again>Neu entscheiden</button>'}<button type="button" class="primary" data-next ${correct?'':'disabled'}>Gesprächsplatz wählen</button></div>`;
-    card.onclick=e2=>{if(e2.target.closest('[data-again]'))priority();if(e2.target.closest('[data-next]')){S.priorityDone=true;closeDlg();afterFind();}};
+    card.onclick=e2=>{if(e2.target.closest('[data-again]'))priority();if(e2.target.closest('[data-next]')){S.priorityDone=true;closeDlg();syncHintMarkers();afterFind();}};
   };
 }
 $("#bHelp").onclick=()=>{openDlg(`<h2 id="dTitle">So geht es</h2><ul class="how">${$("#howDesk").innerHTML}</ul><p class="small">Tastatur geht auch: W A S D gehen, Pfeiltasten ← → drehen, F Lampe, T Tipp.</p><div class="actions"><button type="button" class="primary" data-close>Weiter</button></div>`);
@@ -502,7 +509,7 @@ function updateGuide(){
   const T=isTouch;let s,h;
   if(S.auto&&S.auto.enter){s="Du gehst ins Zimmer.";h="Einen Moment.";}
   else if(S.auto){s="Tipp: Dein Blick dreht sich zu einem Hinweis.";h="Achte auf das, was sich bewegt.";}
-  else if(S.placeOpen){s="Entscheide über einen geeigneten Gesprächsplatz oder erkunde weitere Hinweise.";h=T?"Tippe auf einen der hellen Kreise am Boden.":"<b>Klick</b> auf einen der hellen Kreise am Boden, oder oben auf „Platz wählen“.";}
+  else if(S.placeOpen){s="Wähle einen Gesprächsplatz oder erkunde die elf markierten Hinweise.";h=T?"<b>Tippe</b> auf einen leuchtenden Punkt.":"<b>Klick</b> auf einen leuchtenden Punkt. Sitzplätze wählst du unten oder über „Platz wählen“.";}
   else if(S.phase==="corridor"&&!knocked){s="Klopf an die Tür von Zimmer 14.";h=T?"<b>Tippe auf die Tür.</b>":"<b>Klick auf die Tür.</b>";}
   else if(S.phase==="corridor"){s="Du hast angeklopft.";h="Die Tür geht gleich auf.";}
   else {const n=Object.keys(S.found).length;s=`Sicherheit zuerst. Optional: ${n} von ${FINDS.length} Hinweisen erkundet.`;
@@ -552,6 +559,7 @@ function loop(){
     else{g.rotation.z=Math.sin(t*24)*.07*k;g.position.y=g.userData.base.y+Math.abs(Math.sin(t*12))*.02*k;}
     if(wig[id]<=0){delete wig[id];if(id!=="x"){g.rotation.z=0;g.position.y=g.userData.base.y;}xState.nod=0;}}
   if(S.placeOpen)markers.forEach(m=>{m.ring.material.opacity=.45+Math.sin(t*3)*.25;});
+  hintMarkers.forEach((m,i)=>{if(m.visible){const pulse=.75+Math.sin(t*4+i*.6)*.22;m.scale.setScalar(pulse);m.material.opacity=.6+Math.sin(t*4+i*.6)*.2;}});
   if(S.started)updateGuide();
   (fx||renderer).render(scene,camera);
 }
