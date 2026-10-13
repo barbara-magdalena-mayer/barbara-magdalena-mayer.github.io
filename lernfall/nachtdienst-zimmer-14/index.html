@@ -1,0 +1,562 @@
+<!doctype html><html lang="de"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>Nachtdienst, Zimmer 14 · Interaktiver Lernfall</title></head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: Vollbild-3D-Szene, Anleitung oben mittig, Gedanken unten, Dialoge als Karten mit Schließen-Knopf. Bewusst nur ein dunkles Erscheinungsbild (Nachtdienst). */
+:root{
+  --night:#0b1214; --panel:#142024; --panel2:#1b2a2f; --ink:#e6eeec; --muted:#9db0ad; --line:#2c3e43;
+  --accent:#7cc7bc; --accent-ink:#0b1214; --warm:#f0c98a;
+  --kraft:#e3a453; --wille:#c69bd6; --wissen:#83bce3; --ok:#86d3a1; --warn:#e9a46e;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--night);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.5;overflow:hidden;padding-inline:0}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab;filter:grayscale(1) contrast(1.35)}
+#c.drag{cursor:grabbing}
+#c.hot{cursor:pointer}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.15;text-wrap:balance}
+p{margin:0}
+button{font:inherit;font-family:var(--f-display);font-size:15px;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:9px 14px}
+button:hover{border-color:var(--accent)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button[disabled]{opacity:.4;cursor:not-allowed}
+.eyebrow{font-family:var(--f-display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;background:var(--panel2)}
+
+.layer{position:fixed;inset:0;display:grid;place-items:center;padding:16px;z-index:20;background:rgba(5,9,10,.72);overflow:auto}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px;max-width:620px;width:100%;display:grid;gap:14px;max-height:calc(100% - 16px);overflow:auto}
+.start h1{font-size:clamp(30px,6vw,46px)}
+.start .lead{font-size:18px}
+.how{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.how li{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center}
+.how svg{width:30px;height:30px}
+.note{border-left:3px solid var(--warn);padding-left:12px;color:var(--muted);font-size:15px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+#x{position:absolute;top:10px;right:10px;width:40px;height:40px;padding:0;font-size:24px;line-height:1;border-radius:50%}
+#dlgCard{padding-top:26px}
+
+#hud{position:fixed;inset:0;pointer-events:none;z-index:5}
+.top{position:absolute;left:0;right:0;top:calc(10px + env(safe-area-inset-top,0px));display:flex;justify-content:space-between;align-items:flex-start;padding-inline:14px;gap:10px}
+.stat{background:rgba(20,32,36,.82);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-family:var(--f-display);font-variant-numeric:tabular-nums;display:flex;gap:16px}
+.stat b{font-size:20px;display:block}
+.stat span{font-size:12px;color:var(--muted)}
+.tbtns{display:flex;gap:8px;pointer-events:auto;flex-wrap:wrap;justify-content:flex-end}
+.tbtns button{background:rgba(27,42,47,.88);padding:7px 11px;font-size:14px}
+#guide{position:absolute;left:50%;top:calc(76px + env(safe-area-inset-top,0px));transform:translateX(-50%);width:min(600px,calc(100% - 28px));background:rgba(20,32,36,.92);border:1px solid var(--accent);border-radius:12px;padding:10px 14px;font-family:var(--f-display)}
+#gStep{font-size:17px;font-weight:700;color:var(--ink)}
+#gHow{font-size:14px;color:var(--muted);margin-top:2px}
+#gHow b{color:var(--warm);font-weight:500}
+@media (max-width:700px){#guide{top:calc(88px + env(safe-area-inset-top,0px))}#gStep{font-size:15px}}
+#hover{position:fixed;z-index:6;pointer-events:none;font-family:var(--f-display);font-size:14px;background:var(--warm);color:#1a1208;border-radius:999px;padding:3px 12px;transform:translate(14px,14px);white-space:nowrap}
+#thought{position:absolute;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(640px,calc(100% - 32px));text-align:center;font-style:italic;font-size:19px;color:var(--warm);text-shadow:0 2px 12px #000;transition:opacity .5s}
+#thought small{display:block;font-style:normal;font-family:var(--f-display);font-size:13px;color:var(--ink);opacity:.85;margin-top:6px}
+
+#desk{position:absolute;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:flex-end;pointer-events:auto;flex-wrap:wrap}
+#pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px);gap:4px}
+#pad button{padding:0;font-size:20px;background:rgba(27,42,47,.92);user-select:none;touch-action:none}
+#pad button.on{background:var(--accent);color:var(--accent-ink)}
+#pad .up{grid-column:2;grid-row:1}#pad .le{grid-column:1;grid-row:2}#pad .dn{grid-column:2;grid-row:2}#pad .ri{grid-column:3;grid-row:2}
+#legend{background:rgba(20,32,36,.88);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-family:var(--f-display);font-size:13px;display:grid;gap:3px}
+#legend b{color:var(--warm);font-weight:500}
+.touch #legend{display:none}
+
+.q{display:grid;gap:8px}
+.qlabel{font-family:var(--f-display);font-size:15px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts button[aria-pressed="true"]{background:var(--ink);color:var(--night);border-color:var(--ink)}
+.opt-kraft[aria-pressed="true"]{background:var(--kraft)!important;border-color:var(--kraft)!important;color:#1a1208!important}
+.opt-wille[aria-pressed="true"]{background:var(--wille)!important;border-color:var(--wille)!important;color:#1a1020!important}
+.opt-wissen[aria-pressed="true"]{background:var(--wissen)!important;border-color:var(--wissen)!important;color:#0a1620!important}
+.res{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.verdict{font-family:var(--f-display);font-weight:700}
+.good{color:var(--ok)}.part{color:var(--warn)}
+.chip{display:inline-block;font-family:var(--f-display);font-size:13px;padding:1px 9px;border-radius:999px;border:1px solid currentColor}
+.c-kraft{color:var(--kraft)}.c-wille{color:var(--wille)}.c-wissen{color:var(--wissen)}
+.actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.see{font-size:18px}
+.sumgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.sumgrid div{background:var(--panel2);border-radius:8px;padding:10px 12px;font-family:var(--f-display);font-variant-numeric:tabular-nums}
+.sumgrid b{display:block;font-size:22px}
+.sumgrid span{font-size:12px;color:var(--muted)}
+.tel{user-select:all;font-variant-numeric:tabular-nums;color:var(--ink)}
+.small{font-size:14px;color:var(--muted)}
+</style>
+
+<canvas id="c" aria-label="3D-Szene: Nachtdienst, Zimmer 14"></canvas>
+<div id="hover" hidden></div>
+
+<div id="hud" hidden>
+  <div class="top">
+    <div class="stat" aria-live="polite"><div><b id="hFound">0 / 11</b><span>entdeckt</span></div><div><b id="hTips">0</b><span>Tipps</span></div></div>
+    <div class="tbtns">
+      <button type="button" id="bTip">Tipp</button>
+      <button type="button" id="bLamp" aria-pressed="true">Lampe an</button>
+      <button type="button" id="bPlace" hidden>Platz wählen</button>
+      <button type="button" id="bHelp">Hilfe</button>
+    </div>
+  </div>
+  <div id="guide" role="status" aria-live="polite"><p id="gStep"></p><p id="gHow"></p></div>
+  <div id="thought" style="opacity:0"></div>
+  <div id="desk">
+    <div id="pad" aria-label="Gehen und drehen">
+      <button type="button" class="up" data-k="KeyW" aria-label="Vorwärts gehen">▲</button>
+      <button type="button" class="le" data-k="ArrowLeft" aria-label="Nach links drehen">↺</button>
+      <button type="button" class="dn" data-k="KeyS" aria-label="Rückwärts gehen">▼</button>
+      <button type="button" class="ri" data-k="ArrowRight" aria-label="Nach rechts drehen">↻</button>
+    </div>
+    <div id="legend">
+      <span><b>Klicken</b> auf etwas: genauer ansehen</span>
+      <span><b>Maustaste halten und ziehen</b>: umsehen</span>
+      <span><b>▲ ▼</b> gehen · <b>↺ ↻</b> drehen</span>
+    </div>
+  </div>
+</div>
+
+<div class="layer start" id="start">
+  <div class="card">
+    <p class="small"><a href="../../" style="color:var(--accent);text-decoration:none">← Zurück zu Barbara Mayer</a></p>
+    <p class="eyebrow">Interaktives Entscheidungstraining · Lernen am Optimum</p>
+    <h1>Nachtdienst, Zimmer 14</h1>
+    <p class="lead">Es ist halb drei. Du bist Pflegekraft im Nachtdienst einer psychiatrischen Akutstation. X wurde gestern aufgenommen, nachdem sie einen Suizidwunsch angedeutet hatte. Du gehst zu ihr ins Zimmer.</p>
+    <p><strong>Deine Aufgabe:</strong> Erkenne, was jetzt Vorrang hat. Entscheide zuerst über die Sicherheit von X. Erkunde anschließend freiwillig die Hinweise im Zimmer und unterscheide Beobachtung, Vermutung und notwendige Rückfrage.</p>
+    <ul class="how" id="howDesk">
+      <li><svg viewBox="0 0 30 30"><rect x="8" y="3" width="14" height="22" rx="7" fill="none" stroke="#7cc7bc" stroke-width="2"/><rect x="9" y="4" width="6" height="8" rx="3" fill="#f0c98a"/></svg><span><strong>Klicken</strong> auf Dinge im Zimmer öffnet sie. Wird der Mauszeiger zur Hand, gibt es dort etwas.</span></li>
+      <li><svg viewBox="0 0 30 30"><path d="M5 15h20M5 15l5-5M5 15l5 5M25 15l-5-5M25 15l-5 5" stroke="#7cc7bc" stroke-width="2" fill="none"/></svg><span><strong>Maustaste gedrückt halten und ziehen</strong>: umsehen.</span></li>
+      <li><svg viewBox="0 0 30 30"><path d="M15 5l7 9H8z" fill="#7cc7bc"/><path d="M15 25l7-9H8z" fill="#7cc7bc" opacity=".6"/></svg><span><strong>▲ ▼ ↺ ↻</strong> unten links: gehen und drehen. Laufen musst du aber kaum.</span></li>
+      <li><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="11" fill="none" stroke="#7cc7bc" stroke-width="2"/><path d="M10 10l10 10M20 10l-10 10" stroke="#7cc7bc" stroke-width="2"/></svg><span>Fenster schließt du mit <strong>×</strong> oben rechts, mit Esc oder mit einem Klick daneben.</span></li>
+    </ul>
+    <p class="small" id="howTouch" hidden>Tippe auf Dinge, um sie anzusehen. Wische, um dich umzusehen. Mit ▲ ▼ ↺ ↻ unten links gehst und drehst du dich. Im Querformat siehst du mehr.</p>
+    <p class="note">Inhaltshinweis: Der Lernfall behandelt eine psychische Krise mit Suizidgedanken. Er zeigt keine Methoden. Hilfe für dich selbst: Telefonseelsorge, kostenlos und rund um die Uhr, <span class="tel">0800 111 0 111</span>.</p>
+    <div class="row"><button type="button" class="primary" id="bStart">Schicht beginnen</button></div>
+    <p class="small">Konzept: Barbara Magdalena Mayer, nach Virginia Henderson</p>
+  </div>
+</div>
+
+<div class="layer" id="err" hidden>
+  <div class="card">
+    <h2>Die 3D-Szene konnte nicht starten</h2>
+    <p>Dein Browser unterstützt hier kein WebGL, oder die Hardwarebeschleunigung ist ausgeschaltet. Versuche einen anderen Browser, zum Beispiel Chrome oder Firefox am Computer.</p>
+  </div>
+</div>
+
+<div class="layer" id="dlg" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+    <button type="button" id="x" aria-label="Schließen">×</button>
+    <div id="dlgCard" style="display:grid;gap:14px"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/effects/OutlineEffect.js"></script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const isTouch = matchMedia("(pointer: coarse)").matches;
+if(isTouch){document.body.classList.add("touch");$("#howDesk").hidden=true;$("#howTouch").hidden=false;}
+function fail(){$("#start").hidden=true;$("#err").hidden=false;}
+if(!window.THREE){fail();return;}
+let renderer;
+try{renderer=new THREE.WebGLRenderer({canvas:$("#c"),antialias:true});}catch(e){fail();return;}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+renderer.outputEncoding=THREE.sRGBEncoding;
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x0a1220);
+scene.fog=new THREE.FogExp2(0x0a1220,0.06);
+const camera=new THREE.PerspectiveCamera(70,1,0.05,40);
+camera.rotation.order="YXZ";
+scene.add(camera);
+const fx=THREE.OutlineEffect?new THREE.OutlineEffect(renderer,{defaultThickness:.005,defaultColor:[0,0,0],defaultAlpha:1}):null;
+function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w<h?82:70;camera.updateProjectionMatrix();}
+addEventListener("resize",resize);resize();
+
+/* ---------- Hilfsfunktionen ---------- */
+const gm=(()=>{const d=new Uint8Array([70,150,255]);const t=new THREE.DataTexture(d,3,1,THREE.LuminanceFormat);t.minFilter=t.magFilter=THREE.NearestFilter;t.generateMipmaps=false;t.needsUpdate=true;return t;})();
+const M=(c,o={})=>{const p=Object.assign({color:c},o);delete p.roughness;delete p.metalness;return new THREE.MeshToonMaterial(Object.assign(p,{gradientMap:gm}));};
+const B=(c)=>new THREE.MeshBasicMaterial({color:c});
+function box(par,w,h,d,mat,x,y,z,ry=0,rx=0,rz=0){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.rotation.set(rx,ry,rz);par.add(m);return m;}
+function cyl(par,rt,rb,h,mat,x,y,z,seg=16){const m=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,seg),mat);m.position.set(x,y,z);par.add(m);return m;}
+function limb(par,a,b,r,mat){const d=new THREE.Vector3().subVectors(b,a);const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,d.length(),12),mat);m.position.copy(a).addScaledVector(d,.5);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());par.add(m);
+  const j=new THREE.Mesh(new THREE.SphereGeometry(r,10,8),mat);j.position.copy(a);par.add(j);return m;}
+function tex(w,h,draw){const c=document.createElement("canvas");c.width=w;c.height=h;const g=c.getContext("2d");draw(g,w,h);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t;}
+function plane(par,w,h,map,x,y,z,ry=0,rx=0,basic=false){const mat=basic?new THREE.MeshBasicMaterial({map}):new THREE.MeshToonMaterial({map,gradientMap:gm});const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat);m.position.set(x,y,z);m.rotation.set(rx,ry,0);par.add(m);return m;}
+function rr(g,x,y,w,h,r){g.beginPath();if(g.roundRect)g.roundRect(x,y,w,h,r);else g.rect(x,y,w,h);g.fill();}
+
+/* ---------- Texturen ---------- */
+const tCal=tex(256,300,(g,w,h)=>{g.fillStyle="#fbfaf6";g.fillRect(0,0,w,h);g.fillStyle="#b55a55";g.fillRect(0,0,w,50);g.fillStyle="#fff";g.font="700 24px system-ui,sans-serif";g.textAlign="center";g.fillText("OKTOBER",w/2,34);
+  g.strokeStyle="#d5d0c3";g.lineWidth=2;for(let r=0;r<6;r++){g.beginPath();g.moveTo(10,60+r*40);g.lineTo(w-10,60+r*40);g.stroke();}
+  g.strokeStyle="#333";g.lineWidth=3;let n=0;for(let r=0;r<5;r++)for(let c=0;c<7;c++){if(n++>=12)continue;const x=16+c*33,y=66+r*40;g.beginPath();g.moveTo(x,y);g.lineTo(x+22,y+26);g.moveTo(x+22,y);g.lineTo(x,y+26);g.stroke();}});
+const tMap=tex(300,220,(g,w,h)=>{g.fillStyle="#f2ecd8";g.fillRect(0,0,w,h);g.strokeStyle="#9cc0d6";g.lineWidth=16;g.beginPath();g.moveTo(0,150);g.bezierCurveTo(90,120,170,190,300,140);g.stroke();
+  g.strokeStyle="#d6c9a5";g.lineWidth=6;[[40,0,60,220],[140,0,125,220],[230,0,245,220],[0,50,300,60],[0,190,300,180]].forEach(a=>{g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(a[2],a[3]);g.stroke();});});
+const tPlan=tex(220,300,(g,w,h)=>{g.fillStyle="#fff";g.fillRect(0,0,w,h);g.fillStyle="#c96b4f";g.fillRect(0,0,w,44);g.fillStyle="#fff";g.font="700 21px system-ui,sans-serif";g.fillText("Mein Krisenplan",14,29);
+  g.fillStyle="#555";g.font="15px system-ui,sans-serif";["Meine Warnzeichen","Was mir hilft","Wen ich anrufe"].forEach((t,i)=>{const y=70+i*76;g.fillText(t,14,y);g.strokeStyle="#c9d1ce";g.lineWidth=2;g.strokeRect(14,y+8,w-28,44);});});
+const tPhone=tex(128,256,(g,w,h)=>{g.fillStyle="#f4f6fa";g.fillRect(0,0,w,h);g.fillStyle="#b9dfc2";[[30,18,86,46],[24,72,92,56],[34,136,82,40]].forEach(r=>rr(g,r[0],r[1],r[2],r[3],8));
+  g.fillStyle="#7da88a";for(let i=0;i<3;i++)g.fillRect(38,26+i*10,66,4);for(let i=0;i<4;i++)g.fillRect(32,80+i*11,74,4);for(let i=0;i<2;i++)g.fillRect(42,144+i*10,62,4);
+  g.fillStyle="#d9dde3";rr(g,8,192,82,30,8);g.fillStyle="#333";g.font="15px system-ui,sans-serif";g.fillText("mal sehen 😉",14,212);});
+const tNote=tex(256,128,(g,w,h)=>{g.fillStyle="#fbfaf5";g.fillRect(0,0,w,h);g.fillStyle="#e8e4d8";g.fillRect(w/2-3,0,6,h);});
+const tPaper=tex(256,180,(g,w,h)=>{g.fillStyle="#f4f1ea";g.fillRect(0,0,w,h);g.fillStyle="#b9b6ad";for(let i=0;i<9;i++)g.fillRect(20,20+i*17,180-(i%3)*30,4);g.strokeStyle="#c0392b";g.lineWidth=4;g.beginPath();g.moveTo(150,40);g.lineTo(220,30);g.moveTo(170,110);g.lineTo(200,90);g.stroke();});
+const tSign=tex(128,64,(g,w,h)=>{g.fillStyle="#f7f8f6";g.fillRect(0,0,w,h);g.fillStyle="#2f3e3a";g.font="700 40px system-ui";g.textAlign="center";g.fillText("14",w/2,46);});
+const tExit=tex(128,64,(g,w,h)=>{g.fillStyle="#1f9a4c";g.fillRect(0,0,w,h);g.fillStyle="#fff";g.fillRect(14,14,26,36);g.fillStyle="#1f9a4c";g.fillRect(20,20,14,30);g.fillStyle="#fff";g.font="700 22px system-ui";g.fillText("→",60,42);});
+function labelTex(t){return tex(320,80,(g,w,h)=>{g.fillStyle="rgba(20,32,36,.92)";g.fillRect(0,0,w,h);g.strokeStyle="#7cc7bc";g.lineWidth=4;g.strokeRect(2,2,w-4,h-4);g.fillStyle="#e6eeec";g.font="600 30px system-ui";g.textAlign="center";g.fillText(t,w/2,52);});}
+
+/* ---------- Räume ---------- */
+const wallM=M(0x9cc2b8), wallC=M(0x8fb0a8), floorR=M(0xb08d63), floorC=M(0x6e8580), ceil=M(0x8aa39d);
+const blockers=[];
+function wall(w,h,d,mat,x,y,z){const m=box(scene,w,h,d,mat,x,y,z);blockers.push(m);return m;}
+box(scene,5,.02,5,floorR,0,-.01,-2.5);box(scene,5,.02,5,ceil,0,2.71,-2.5);
+wall(.1,2.7,5,wallM,-2.55,1.35,-2.5);wall(.1,2.7,5,wallM,2.55,1.35,-2.5);wall(5.2,2.7,.1,wallM,0,1.35,-5.05);
+wall(5.25,2.7,.1,wallM,-1.375,1.35,0);wall(1.95,2.7,.1,wallM,3.025,1.35,0);wall(.8,.6,.1,wallM,1.65,2.4,0);
+box(scene,8,.02,2.5,floorC,0,-.01,1.25);box(scene,8,.02,2.5,ceil,0,2.71,1.25);
+wall(8,2.7,.1,wallC,0,1.35,2.55);wall(.1,2.7,2.6,wallC,-4.05,1.35,1.25);wall(.1,2.7,2.6,wallC,4.05,1.35,1.25);
+plane(scene,.22,.11,tSign,2.25,1.75,.06);
+plane(scene,.5,.25,tExit,-2.6,2.45,2.49,Math.PI,0,true);
+const corr=new THREE.PointLight(0xffd9a3,1.1,4.2,1.6);corr.position.set(.8,2.55,1.4);scene.add(corr);
+box(scene,1,.04,.18,B(0xfff1d6),.8,2.68,1.4);
+box(scene,6,.05,.05,M(0xb9a17c),0,.95,2.45);
+
+const doorPivot=new THREE.Group();doorPivot.position.set(2.05,0,0);scene.add(doorPivot);
+const doorM=box(doorPivot,.8,2.08,.05,M(0xb9c6c1),-.4,1.04,0);blockers.push(doorM);
+box(doorPivot,.14,.04,.04,M(0x6c7773,{metalness:.5,roughness:.4}),-.7,1.02,.05);
+box(doorPivot,.14,.04,.04,M(0x6c7773,{metalness:.5,roughness:.4}),-.7,1.02,-.05);
+let doorOpen=0, doorTarget=0, knocked=false;
+
+scene.add(new THREE.HemisphereLight(0x6d8cb0,0x2a2018,.42));
+const nl=new THREE.PointLight(0xffb36b,.8,3.4,1.8);nl.position.set(2.35,.35,-1.1);scene.add(nl);
+box(scene,.04,.08,.16,B(0xffc98a),2.48,.32,-1.1);
+const sl=new THREE.PointLight(0x9fb8e8,.6,3.5,1.6);sl.position.set(.72,1.6,-4.6);scene.add(sl);
+
+/* ---------- Funde ---------- */
+const roots={};
+function find(id,x,y,z,ry=0){const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=ry;g.userData.findId=id;g.userData.base={y:y};scene.add(g);roots[id]=g;return g;}
+const hitMat=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false});hitMat.userData.outlineParameters={visible:false};
+function hit(g,w,h,d,y=0){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),hitMat);m.position.y=y;g.add(m);return m;}
+
+box(scene,1.5,1.3,.04,M(0x1e2a3a),.7,1.55,-5);
+const cur=M(0x6a7fb0);box(scene,.74,1.5,.06,cur,.33,1.55,-4.93);box(scene,.74,1.5,.06,cur,1.09,1.55,-4.93);
+box(scene,.03,1.3,.02,B(0xaabfe0),.72,1.55,-4.97);
+box(scene,1.7,.05,.28,M(0xe9ece9),.7,.86,-4.86);
+{const g=find("notizbuch",.3,.9,-4.84,.2);box(g,.3,.012,.2,M(0x6e4f80),0,0,0);plane(g,.28,.18,tNote,0,.008,0,0,-Math.PI/2);box(g,.008,.014,.2,M(0xc0392b),.06,.008,0);hit(g,.5,.22,.3,.06);}
+{const g=find("kalender",2.49,1.6,-2.3,-Math.PI/2);plane(g,.4,.47,tCal,0,0,0);}
+{const g=find("stadtplan",-1.0,1.5,-4.99,0);plane(g,.6,.44,tMap,0,0,0);}
+{const g=find("krisenplan",.35,1.4,-.06,Math.PI);plane(g,.3,.41,tPlan,0,0,0);}
+
+const bedFrame=M(0x8fb3ab), sheet=M(0xf3f5f2), duvet=M(0x8fb2e0);
+{const g=find("bett",-1.9,0,-3.5);
+  box(g,1.0,.22,2.1,bedFrame,0,.33,0);box(g,.96,.17,2.02,sheet,0,.53,0);
+  box(g,1.02,.95,.06,bedFrame,0,.62,-1.08);box(g,1.02,.5,.06,bedFrame,0,.5,1.08);
+  box(g,.55,.13,.36,M(0xf4f6f5),-.12,.67,-.78,.5,.15,.1);
+  box(g,.8,.1,1.1,duvet,-.05,.66,.25,.35,.05,-.12);
+  box(g,.06,.45,.95,duvet,.5,.42,.35,.1,0,.08);
+  box(g,.55,.06,.85,duvet,.78,.03,.4,.4);
+  [-.45,.45].forEach(x=>[-.95,.95].forEach(z=>cyl(g,.03,.03,.22,M(0x55615d),x,.11,z,8)));}
+{const g=find("handy",-1.6,.625,-4.1,.5);box(g,.085,.012,.165,M(0x1d2124),0,0,0);plane(g,.074,.148,tPhone,0,.007,0,0,-Math.PI/2,true);hit(g,.3,.16,.36,.06);
+  const pl=new THREE.PointLight(0xdfe8ff,.25,.9,2);pl.position.set(0,.12,0);g.add(pl);}
+box(scene,.5,.6,.45,M(0x9c8a6c),-1.05,.3,-4.45);box(scene,.52,.03,.47,M(0x8f7c5c),-1.05,.615,-4.45);
+{const g=find("foto",-1.13,.64,-4.42,.3);box(g,.16,.016,.21,M(0x5f4a35),0,0,0);box(g,.12,.004,.17,M(0xc6b08a),0,.009,0);hit(g,.24,.16,.28,.06);}
+{const g=find("powerbank",-.92,.643,-4.5,-.4);box(g,.1,.022,.06,M(0x2f363d),0,0,0);
+  const led=new THREE.Mesh(new THREE.SphereGeometry(.008,8,8),B(0xff3b2a));led.position.set(.035,.012,.022);g.add(led);
+  const lp=new THREE.PointLight(0xff3b2a,.12,.35,2);lp.position.set(.035,.04,.022);g.add(lp);hit(g,.2,.16,.2,.06);}
+{const g=find("tablett",-1.45,0,-2.62);
+  cyl(g,.025,.025,.85,M(0x7d8a86),.38,.43,0,8);box(g,.45,.03,.35,M(0x6f7c78),.3,.02,0);
+  box(g,.78,.03,.4,M(0xcbbf9f),0,.86,0);box(g,.5,.02,.32,M(0xb7c6c2),0,.885,0);
+  cyl(g,.11,.1,.015,M(0xffffff),-.08,.9,0,24);
+  const f1=new THREE.Mesh(new THREE.SphereGeometry(.05,12,8,0,Math.PI*2,0,Math.PI/2),M(0xb7793a));f1.position.set(-.1,.905,-.01);g.add(f1);
+  const f2=new THREE.Mesh(new THREE.SphereGeometry(.03,12,8,0,Math.PI*2,0,Math.PI/2),M(0x6f9a52));f2.position.set(-.03,.905,.03);g.add(f2);
+  cyl(g,.035,.03,.08,M(0xf2f2f0),.15,.93,-.05,16);}
+{const g=find("stapel",-1.1,0,-3.3,.25);
+  box(g,.42,.08,.32,M(0xe3ddcc),0,.04,0);box(g,.4,.05,.3,M(0x5f86b2),.02,.105,0,.1);box(g,.36,.04,.28,M(0xd2bd85),-.01,.15,.01,-.12);
+  box(g,.34,.03,.26,M(0xf4f1ea),0,.185,0,.05);plane(g,.33,.24,tPaper,0,.202,0,.05,-Math.PI/2);}
+{const g=new THREE.Group();g.position.set(.72,0,-3.25);scene.add(g);cyl(g,.18,.18,.04,M(0x6f8781),0,.48,0,20);[[-.11,-.11],[.11,-.11],[-.11,.11],[.11,.11]].forEach(p=>cyl(g,.015,.015,.48,M(0x4f5c58),p[0],.24,p[1],6));}
+cyl(scene,.13,.11,.32,M(0x7f8b87),-.55,.16,-4.7,16);
+box(scene,.4,.3,.18,M(0x6e5341),-.3,.15,-1.0,.4);
+
+/* ---------- X sitzt auf dem Boden in der Ecke ---------- */
+const XPOS=new THREE.Vector3(2.12,0,-4.55);
+const xg=find("x",XPOS.x,0,XPOS.z,Math.atan2(1.65-XPOS.x,0-XPOS.z));
+const sil=new THREE.MeshBasicMaterial({color:0x020203}); const skin=sil, top=sil, pants=sil, hair=sil, chairM=M(0x6f9a8e);
+// leerer Stuhl daneben
+{const c=new THREE.Group();c.position.set(2.22,0,-2.95);c.rotation.y=-Math.PI/2+.25;scene.add(c);
+  box(c,.46,.05,.44,chairM,0,.46,0);box(c,.46,.42,.04,chairM,0,.74,-.21);
+  [[-.2,-.19],[.2,-.19],[-.2,.19],[.2,.19]].forEach(p=>cyl(c,.018,.018,.46,M(0x4f5c58),p[0],.23,p[1],6));}
+// Becken und angezogene Beine
+box(xg,.3,.12,.24,pants,0,.07,0);
+[-1,1].forEach(s=>{const hip=new THREE.Vector3(.09*s,.09,.02),knee=new THREE.Vector3(.1*s,.44,.3),foot=new THREE.Vector3(.09*s,.05,.4);
+  limb(xg,hip,knee,.065,pants);limb(xg,knee,foot,.055,pants);
+  const kn=new THREE.Mesh(new THREE.SphereGeometry(.065,10,8),pants);kn.position.copy(knee);xg.add(kn);
+  box(xg,.1,.06,.2,sil,.09*s,.03,.46);});
+// Oberkörper, Rücken an der Wand
+const torso=new THREE.Group();torso.position.set(0,.12,-.06);xg.add(torso);
+const body=cyl(torso,.14,.16,.48,top,0,.24,0,16);
+const head=new THREE.Group();head.position.set(0,.56,.02);torso.add(head);
+cyl(head,.04,.045,.08,skin,0,-.05,0,10);
+const hd=new THREE.Mesh(new THREE.SphereGeometry(.105,20,16),skin);hd.position.set(0,.07,.01);head.add(hd);
+const hr=new THREE.Mesh(new THREE.SphereGeometry(.112,20,16,0,Math.PI*2,0,Math.PI*.55),hair);hr.position.set(0,.08,-.012);hr.rotation.x=-.35;head.add(hr);
+const bun=new THREE.Mesh(new THREE.SphereGeometry(.05,12,10),hair);bun.position.set(0,.07,-.11);head.add(bun);
+// Arme um die Knie gelegt, Hände sichtbar vorn an den Schienbeinen
+[-1,1].forEach(s=>{
+  const sh=new THREE.Vector3(.17*s,.42,0), el=new THREE.Vector3(.21*s,.22,.2), ha=new THREE.Vector3(.04*s,.24,.4);
+  limb(torso,sh,el,.045,top);limb(torso,el,ha,.04,top);
+  const hand=new THREE.Mesh(new THREE.SphereGeometry(.048,10,8),skin);hand.position.copy(ha);hand.scale.set(1.2,.8,1);torso.add(hand);});
+const xState={lean:.12,leanT:.12,headY:0,headYT:0,headX:.45,headXT:.45,nod:0,base:.12,back:-.12};
+
+/* ---------- Inhalte ---------- */
+const CAT={kraft:"Kraft",wille:"Wille",wissen:"Wissen"}, ART={zeichen:"Zeichen",symbol:"Symbol"};
+const FINDS=[
+ {id:"x",name:"X in der Ecke",cat:["kraft","wille"],art:"zeichen",see:"Im Dunkeln erkennst du X nur als Umriss. Sie sitzt angezogen auf dem Boden in der Ecke, den Rücken an der Wand, die Knie angezogen und die Arme darum gelegt. Der Stuhl im Zimmer bleibt leer. Ihr Kopf ist zur Tür gewandt.",text:"Sich klein machen, den Rücken an der Wand, den Eingang im Blick: Das kann Angst, Misstrauen und Schutzsuche zeigen, und Angst bindet Kraft. Dass sie den Stuhl nicht nutzt, kann heißen, dass sie sich am Boden sicherer fühlt. Rückzug, also fehlender Wille, ist ebenfalls vertretbar."},
+ {id:"bett",name:"Bett",cat:["kraft"],art:"zeichen",see:"Das Bett ist zerwühlt, die Decke hängt halb auf dem Boden. Um halb drei ist X wach.",text:"Hinweis auf eine schlaflose Nacht. Schlafstörungen sind in Krisen häufig und zehren an der Kraft. Im Nachtdienst dokumentieren: wann wach, wie lange, was geholfen hat."},
+ {id:"handy",name:"Handy",cat:["wille"],art:"symbol",see:"Auf dem Bett leuchtet das Handy. Drei lange Nachrichten von X, die Antwort darunter: „mal sehen 😉“.",text:"Viel Hoffnung, wenig zurück. Das Bild steht für Hoffnung, die an der Bestätigung anderer hängt. Wer bedürftig und unter Druck ist, gerät leichter an Menschen, die das ausnutzen."},
+ {id:"tablett",name:"Tablett",cat:["wille","kraft"],art:"zeichen",see:"Das Abendessen steht unberührt auf dem Tisch.",text:"Beobachtbar und dokumentierbar. Es kann für fehlenden Antrieb stehen, also Wille. Fehlende Kraft ist ebenfalls vertretbar. Klären lässt sich das nur mit X selbst."},
+ {id:"stapel",name:"Papierstapel",cat:["kraft"],art:"symbol",see:"Am Boden liegen Bewerbungsmappen, Wohnungsanzeigen, ein Studienskript und korrigierte Klassenarbeiten.",text:"Job, Wohnung, Studium und Beruf auf einem Haufen. Der Stapel ist ein Bild für Lasten, die X allein trägt, aber kein klinisches Zeichen."},
+ {id:"foto",name:"Bilderrahmen",cat:["wille"],art:"symbol",see:"Auf dem Nachttisch liegt ein Bilderrahmen, mit dem Bild nach unten.",text:"Vermutlich zeigt das Foto einen Menschen, der X wichtig ist. Umgedreht kann es Scham, Schmerz oder Abstand bedeuten. Es kann auch eine Ressource sein: Wofür und für wen lohnt es sich?"},
+ {id:"powerbank",name:"Powerbank",cat:["kraft"],art:"symbol",see:"Auf dem Nachttisch blinkt eine Powerbank rot. Nur noch ein Balken.",text:"Ein Bild für aufgebrauchte Reserven. Für sich allein sagt sie klinisch nichts, sie lädt aber dazu ein, nach den Kraftquellen von X zu fragen."},
+ {id:"kalender",name:"Wandkalender",cat:["wille"],art:"symbol",see:"Im Kalender ist jeder Tag bis gestern durchgestrichen. Danach ist nichts mehr eingetragen.",text:"Ein leerer Kalender kann für fehlende Zukunftsperspektive stehen. Hoffnungslosigkeit ist ein wichtiges Warnzeichen. Ob sie da ist, erfährt man nur im Gespräch."},
+ {id:"krisenplan",name:"Formular neben der Tür",cat:["wissen"],art:"zeichen",see:"Neben der Tür hängt der Vordruck „Mein Krisenplan“. Alle Felder sind leer.",text:"X weiß vielleicht noch nicht, was ihr in einer Krise hilft und wen sie erreichen kann. Ein Krisenplan wird gemeinsam erarbeitet, nicht ausgehändigt."},
+ {id:"notizbuch",name:"Notizbuch",cat:["wissen","kraft"],art:"symbol",see:"Auf der Fensterbank liegt ein aufgeschlagenes Notizbuch „Was mir guttut“. Die Seiten sind leer.",text:"Ein Bild für fehlendes Wissen über eigene Ressourcen. Es kann auch heißen, dass gerade die Kraft zum Schreiben fehlt."},
+ {id:"stadtplan",name:"Stadtplan",cat:["wissen"],art:"symbol",see:"An der Wand hängt ein Plan einer Stadt, die X noch neu ist. Nichts ist markiert.",text:"X kennt die Hilfe vor Ort noch nicht: Beratungsstellen, Selbsthilfegruppen, Praxen. Hier können Pflegende mit Information und Vernetzung ansetzen."}
+];
+const BY=Object.fromEntries(FINDS.map(f=>[f.id,f]));
+const S={found:{},tips:0,lamp:true,near:0,light:0,place:null,started:false,phase:"corridor",auto:null,priorityDone:false,priorityChoice:null,placeOpen:false};
+
+/* ---------- Platzwahl ---------- */
+const PLACES=[
+ {id:"tuer",pos:[1.65,-.75],label:"An der Tür",title:"Du bleibst an der Tür",good:false,
+  text:"Für X heißt das: Du bist gleich wieder weg. Ein Gespräch über Suizidgedanken braucht Zeit und Ruhe. Aus dieser Distanz wird sie sich kaum öffnen. Aus dieser Position ist ein ruhiges Gespräch möglicherweise erschwert. Prüfe die Reaktion von X."},
+ {id:"nah",pos:[1.75,-3.45],label:"Direkt vor ihr",title:"Du stehst direkt vor ihr",good:false,
+  text:"Du schaust von oben auf sie herab und stehst zwischen ihr und der Tür. Für jemanden mit Angst vor Menschen wirkt das bedrohlich, und der Weg nach draußen ist versperrt. X zieht sich zurück."},
+ {id:"hocker",pos:[.72,-3.25],label:"Auf dem Hocker",title:"Du setzt dich auf den Hocker",good:false,
+  text:"Der Abstand stimmt, und der Weg zur Tür bleibt frei. Aber X sitzt auf dem Boden, und du sitzt über ihr. Das ist besser als Stehen, achte zusätzlich auf ihre Reaktion und auf Sicherheit und Abstand."},
+ {id:"boden",pos:[1.0,-3.6],label:"Auf dem Boden",title:"Du setzt dich mit Abstand auf den Boden",good:true,
+  text:"Du sitzt etwa anderthalb Meter entfernt und seitlich zu ihr, auf Augenhöhe. Der Weg zur Tür bleibt für euch beide frei. Das kann einen Gesprächsbeginn erleichtern, sofern Hygiene, Sicherheit und die Reaktion von X es zulassen. Frage jetzt direkt nach aktuellen Suizidgedanken."}
+];
+const markers=[];
+PLACES.forEach(p=>{const g=new THREE.Group();g.position.set(p.pos[0],0,p.pos[1]);g.visible=false;g.userData.placeId=p.id;scene.add(g);
+  const rm=new THREE.MeshBasicMaterial({color:0x7cc7bc,transparent:true,opacity:.6});rm.userData.outlineParameters={visible:false};const ring=new THREE.Mesh(new THREE.CircleGeometry(.32,32),rm);ring.rotation.x=-Math.PI/2;ring.position.y=.02;g.add(ring);
+  const lab=new THREE.Sprite(new THREE.SpriteMaterial({map:labelTex(p.label),depthTest:false,transparent:true}));lab.scale.set(.6,.15,1);lab.position.y=1.15;g.add(lab);
+  markers.push({p,g,ring,lab});});
+
+/* ---------- Spieler und Kollision ---------- */
+const P={x:1.65,z:1.95,yaw:0,pitch:-.05};
+const OBST=[[-2.5,-1.3,-4.7,-2.3],[-1.32,-.78,-4.72,-4.18],[-1.15,-.75,-2.9,-2.35],[1.6,2.55,-5.1,-3.95],[1.95,2.55,-3.25,-2.65],[-1.4,-.8,-3.6,-3.0],[-.75,-.35,-4.9,-4.5]];
+const R=.28;
+function free(x,z){
+  const inRoom=x>-2.5+R&&x<2.5-R&&z>-5+R&&z<-R+.1, inCorr=x>-4+R&&x<4-R&&z>R-.1&&z<2.5-R, inDoor=doorOpen>.6&&x>1.25+R*.7&&x<2.05-R*.7&&z>-.6&&z<.6;
+  if(!(inRoom||inCorr||inDoor))return false;
+  for(const o of OBST){if(x>o[0]-R&&x<o[1]+R&&z>o[2]-R&&z<o[3]+R)return false;}
+  return true;}
+const keys={};
+const dlg=$("#dlg"),card=$("#dlgCard");
+addEventListener("keydown",e=>{
+  if(!dlg.hidden){if(e.key==="Escape")closeDlg();return;}
+  keys[e.code]=true;if(!S.started)return;
+  if(e.code==="KeyE"&&hover)act(hover);if(e.code==="KeyF")toggleLamp();if(e.code==="KeyT")tip();});
+addEventListener("keyup",e=>{keys[e.code]=false;});
+addEventListener("blur",()=>{for(const k in keys)keys[k]=false;});
+
+/* ---------- Zeigen, Ziehen, Klicken ---------- */
+const cv=$("#c"), hv=$("#hover");
+const ray=new THREE.Raycaster();ray.far=6;
+let hover=null, down=null;
+function rootOf(o){while(o){if(o.userData&&o.userData.findId)return {type:"find",id:o.userData.findId};if(o.userData&&o.userData.placeId)return {type:"place",id:o.userData.placeId};if(o===doorM)return {type:"door"};o=o.parent;}return null;}
+function pick(cx,cy){
+  const r=cv.getBoundingClientRect();
+  ray.setFromCamera({x:(cx-r.left)/r.width*2-1,y:-((cy-r.top)/r.height*2-1)},camera);
+  const list=[...Object.values(roots),...blockers];if(S.placeOpen)markers.forEach(m=>list.push(m.g));
+  const h=ray.intersectObjects(list,true);
+  for(const hit of h){if(hit.object.isSprite)continue;const t=rootOf(hit.object);
+    if(!t)return null;
+    if(t.type==="door")return (!knocked&&hit.distance<3.5)?t:null;
+    if(t.type==="find")return S.phase==="room"?t:null;
+    return t;}
+  return null;}
+function label(t){if(!t)return"";if(t.type==="door")return"Anklopfen";if(t.type==="place")return PLACES.find(p=>p.id===t.id).label+": hier sprechen";return S.found[t.id]?"Nochmal ansehen":"Genauer ansehen";}
+function setHover(t,cx,cy){hover=t;cv.classList.toggle("hot",!!t);
+  if(t&&!isTouch){hv.hidden=false;hv.textContent=label(t);hv.style.left=cx+"px";hv.style.top=cy+"px";}else hv.hidden=true;}
+cv.addEventListener("pointerdown",e=>{if(!S.started||!dlg.hidden||S.auto)return;down={x:e.clientX,y:e.clientY,lx:e.clientX,ly:e.clientY,d:0,id:e.pointerId};try{cv.setPointerCapture(e.pointerId);}catch(_){}});
+cv.addEventListener("pointermove",e=>{
+  if(!S.started||!dlg.hidden)return;
+  if(down&&e.pointerId===down.id){const dx=e.clientX-down.lx,dy=e.clientY-down.ly;down.lx=e.clientX;down.ly=e.clientY;down.d+=Math.abs(dx)+Math.abs(dy);
+    if(down.d>6){cv.classList.add("drag");hv.hidden=true;look(dx,dy,isTouch?.006:.004);}return;}
+  if(!isTouch&&!S.auto)setHover(pick(e.clientX,e.clientY),e.clientX,e.clientY);});
+function endPointer(e){if(!down||e.pointerId!==down.id)return;cv.classList.remove("drag");
+  if(down.d<=6&&!S.auto){const t=pick(e.clientX,e.clientY);if(t)act(t);}down=null;}
+cv.addEventListener("pointerup",endPointer);cv.addEventListener("pointercancel",()=>{down=null;cv.classList.remove("drag");});
+cv.addEventListener("pointerleave",()=>{if(!down)setHover(null);});
+function look(dx,dy,k){P.yaw+=dx*k;P.pitch=Math.max(-1.1,Math.min(1.1,P.pitch+dy*k*.8));}
+
+/* Gehen mit Knöpfen */
+document.querySelectorAll("#pad button").forEach(b=>{const k=b.dataset.k;
+  const on=e=>{e.preventDefault();keys[k]=true;b.classList.add("on");},off=()=>{keys[k]=false;b.classList.remove("on");};
+  b.addEventListener("pointerdown",on);b.addEventListener("pointerup",off);b.addEventListener("pointerleave",off);b.addEventListener("pointercancel",off);});
+
+/* ---------- Lampe, Gedanken, Klopfen ---------- */
+const lamp=new THREE.SpotLight(0xfff1dc,1.4,8,.45,.75,1.4);lamp.position.set(.12,-.12,0);camera.add(lamp);
+const lampT=new THREE.Object3D();lampT.position.set(0,-.08,-1);camera.add(lampT);lamp.target=lampT;
+function toggleLamp(){S.lamp=!S.lamp;lamp.visible=S.lamp;const b=$("#bLamp");b.textContent=S.lamp?"Lampe an":"Lampe aus";b.setAttribute("aria-pressed",String(S.lamp));}
+$("#bLamp").onclick=toggleLamp;
+let thT;
+function thought(t,ms=5200,h){const el=$("#thought");el.innerHTML=t+(h?`<small>${h}</small>`:"");el.style.opacity=1;clearTimeout(thT);thT=setTimeout(()=>el.style.opacity=0,ms);}
+let actx=null;
+function knock(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();[0,.22].forEach(d=>{const n=actx.createBufferSource(),b=actx.createBuffer(1,actx.sampleRate*.08,actx.sampleRate),ch=b.getChannelData(0);for(let i=0;i<ch.length;i++)ch[i]=(Math.random()*2-1)*Math.pow(1-i/ch.length,4);n.buffer=b;const f=actx.createBiquadFilter();f.type="lowpass";f.frequency.value=420;const g=actx.createGain();g.gain.value=.9;n.connect(f).connect(g).connect(actx.destination);n.start(actx.currentTime+d);});}catch(_){}}
+
+/* ---------- Handeln ---------- */
+function act(t){
+  setHover(null);
+  if(t.type==="door"){knocked=true;knock();thought("Halb drei. Mein Kaffee ist längst kalt, und ich habe noch elf Zimmer.",3800,"Auch nachts anklopfen. X soll nicht erschrecken.");
+    setTimeout(()=>{doorTarget=1;},1500);
+    setTimeout(()=>{S.auto={t:0,dur:2.6,from:{x:P.x,z:P.z,yaw:P.yaw,pitch:P.pitch},to:{x:1.55,z:-.95,yaw:.2,pitch:-.12},enter:true};},2400);return;}
+  if(t.type==="find")openFind(t.id);
+  if(t.type==="place")openPlace(PLACES.find(p=>p.id===t.id));
+}
+
+/* ---------- Dialog ---------- */
+let onClose=null;
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function openDlg(html,closeFn){for(const k in keys)keys[k]=false;document.querySelectorAll("#pad button").forEach(b=>b.classList.remove("on"));
+  card.innerHTML=html;onClose=closeFn||null;dlg.hidden=false;setHover(null);$("#x").focus();}
+function closeDlg(){if(dlg.hidden)return;dlg.hidden=true;const f=onClose;onClose=null;if(f)f();}
+$("#x").onclick=closeDlg;
+dlg.addEventListener("click",e=>{if(e.target===dlg)closeDlg();});
+function resultHTML(f,r){const main=f.cat[0],alt=f.cat.slice(1);let v,c;
+  if(r.catOk&&r.artOk){v="Eine mögliche Einordnung – überprüfe sie im Gespräch.";c="good";}else if(r.catOk||r.artOk){v="Teilweise. Schau dir die zweite Entscheidung noch einmal an.";c="part";}else{v="Eine andere Deutung ist möglich; die Beobachtung allein entscheidet nicht.";c="part";}
+  return `<div class="res"><p class="verdict ${c}">${v}</p><p>Deine Wahl: <span class="chip c-${r.cat}">${CAT[r.cat]}</span> <span class="chip">${ART[r.art]}</span></p>
+  <p>Im Modell vorgeschlagene Deutung: <span class="chip c-${main}">${CAT[main]}</span> <span class="chip">${ART[f.art]}</span>${alt.length?" · auch vertretbar: "+alt.map(a=>`<span class="chip c-${a}">${CAT[a]}</span>`).join(" "):""}</p><p>${esc(f.text)}</p></div>`;}
+function openFind(id){
+  const f=BY[id];let sel={cat:null,art:null};let justDone=false;
+  const head=`<p class="eyebrow">Zimmer 14</p><h2 id="dTitle">${esc(f.name)}</h2><p class="see">${esc(f.see)}</p>`;
+  function form(){return head+`<div class="q"><p class="qlabel">1. Welche Perspektive könnte hilfreich sein?</p><div class="opts">${Object.keys(CAT).map(k=>`<button type="button" class="opt-${k}" data-cat="${k}" aria-pressed="${sel.cat===k}">${CAT[k]}</button>`).join("")}</div></div>
+      <div class="q"><p class="qlabel">2. Was siehst du?</p><div class="opts">${Object.keys(ART).map(k=>`<button type="button" data-art="${k}" aria-pressed="${sel.art===k}">${ART[k]}</button>`).join("")}</div></div>
+      <div class="actions"><button type="button" data-close>Später</button><button type="button" class="primary" data-check ${sel.cat&&sel.art?"":"disabled"}>Prüfen</button></div>`;}
+  const after=()=>{if(justDone){wiggle(id);afterFind();}};
+  if(S.found[id]) openDlg(head+resultHTML(f,S.found[id])+`<div class="actions"><button type="button" class="primary" data-close>Zurück ins Zimmer</button></div>`);
+  else openDlg(form(),after);
+  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;
+    if(b.dataset.cat){sel.cat=b.dataset.cat;card.innerHTML=form();}
+    else if(b.dataset.art){sel.art=b.dataset.art;card.innerHTML=form();}
+    else if(b.hasAttribute("data-check")){const r={cat:sel.cat,art:sel.art,catOk:f.cat.includes(sel.cat),artOk:sel.art===f.art};S.found[id]=r;justDone=true;updHud();
+      card.innerHTML=head+resultHTML(f,r)+`<div class="actions"><button type="button" class="primary" data-close>Zurück ins Zimmer</button></div>`;card.querySelector("[data-close]").focus();}
+    else if(b.hasAttribute("data-close"))closeDlg();};
+}
+function afterFind(){if(S.priorityDone&&!S.placeOpen){S.placeOpen=true;markers.forEach(m=>m.g.visible=true);$("#bPlace").hidden=false;$("#bTip").disabled=true;
+  thought("Wie kann ich sicher und respektvoll mit X ins Gespräch kommen?",7000);}}
+function updHud(){$("#hFound").textContent=Object.keys(S.found).length+" / "+FINDS.length;$("#hTips").textContent=S.tips;}
+
+/* ---------- Wackeln und Tipp ---------- */
+const wig={};
+function wiggle(id){wig[id]=1.6;}
+function tip(){const open=FINDS.filter(f=>!S.found[f.id]);if(!open.length)return;
+  if(S.phase!=="room"){thought("Erst anklopfen.",2500);return;}
+  const f=open[Math.floor(Math.random()*open.length)];S.tips++;updHud();
+  const w=new THREE.Vector3();roots[f.id].getWorldPosition(w);if(f.id==="x")w.y=.6;
+  const dx=w.x-P.x,dy=w.y-1.62,dz=w.z-P.z;let ty=Math.atan2(-dx,-dz);let d=ty-P.yaw;d=Math.atan2(Math.sin(d),Math.cos(d));
+  S.auto={t:0,dur:1.2,from:{x:P.x,z:P.z,yaw:P.yaw,pitch:P.pitch},to:{x:P.x,z:P.z,yaw:P.yaw+d,pitch:Math.max(-1,Math.min(1,Math.atan2(dy,Math.hypot(dx,dz))))}};
+  wig[f.id]=2.8;thought("Schau hierhin. Achte auf das, was sich bewegt.",3500);}
+$("#bTip").onclick=tip;
+
+/* ---------- Platzwahl & Abschluss ---------- */
+function openPlace(p){
+  if(p.id==="nah")xState.leanT=-.12;
+  openDlg(`<p class="eyebrow">Platzwahl</p><h2 id="dTitle">${p.title}</h2><p class="see">${p.text}</p>
+   <div class="actions"><button type="button" data-close>Anderen Platz wählen</button><button type="button" class="primary" data-take>Hier bleiben</button></div>`,()=>{xState.leanT=xState.base;});
+  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;
+    if(b.hasAttribute("data-close"))closeDlg();
+    if(b.hasAttribute("data-take")){S.place=p;onClose=null;summary();}};
+}
+$("#bPlace").onclick=()=>{openDlg(`<p class="eyebrow">Platzwahl</p><h2 id="dTitle">Wo sprichst du mit X?</h2><p>Du kannst auch im Zimmer direkt auf einen der hellen Kreise am Boden klicken.</p><div class="actions" style="justify-content:flex-start">${PLACES.map(p=>`<button type="button" data-pl="${p.id}">${p.label}</button>`).join("")}</div>`);
+  card.onclick=e=>{const b=e.target.closest("[data-pl]");if(b)openPlace(PLACES.find(p=>p.id===b.dataset.pl));};};
+function summary(){
+  const all=FINDS.length, examined=Object.keys(S.found).length;
+  openDlg(`<p class="eyebrow">Reflexion · Ende der Probe</p><h2 id="dTitle">Was hatte Vorrang?</h2>
+   <div class="sumgrid"><div><b>${examined} / ${all}</b><span>Hinweise erkundet (freiwillig)</span></div><div><b>${S.tips}</b><span>Hilfen genutzt</span></div><div><b>${S.place.label}</b><span>Gesprächsposition</span></div></div>
+   <p><strong>Entscheidend:</strong> Bei einer Aufnahme nach geäußertem Suizidwunsch steht die zeitnahe, direkte Einschätzung der aktuellen Gefährdung vor dem Sammeln weiterer Hinweise. Bestehende Schutz- und Beobachtungsmaßnahmen sowie Stationsstandards sind einzuhalten; bei akuter Gefahr sofort Unterstützung hinzuziehen.</p>
+   <p><strong>Beobachten:</strong> X sitzt wach und zurückgezogen am Boden. <strong>Vermuten:</strong> Angst oder Erschöpfung sind möglich, aber nicht bewiesen. <strong>Erfragen:</strong> „Haben Sie gerade Gedanken, sich das Leben zu nehmen?“ Danach nach konkreter Absicht, Planung, verfügbaren Mitteln und unmittelbarer Sicherheit fragen und fachgerecht weiterhandeln.</p>
+   <p><strong>Henderson:</strong> Kraft, Wille und Wissen sind mögliche Perspektiven auf Unterstützungsbedarf – keine Diagnosen, die sich aus Gegenständen ablesen lassen. Die Gesprächsposition hängt von Sicherheit, Abstand und der Reaktion von X ab.</p>
+   <p class="small">Dies ist eine Übung, kein Ersatz für klinische Standards oder Supervision. Bei eigener Belastung: Telefonseelsorge 0800 111 0 111 oder 0800 111 0 222.</p>
+   <div class="actions"><button type="button" data-close>Weiter erkunden</button><button type="button" class="primary" data-restart>Neu beginnen</button></div>`);
+  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-restart"))location.reload();if(b.hasAttribute("data-close"))closeDlg();};
+}
+function priority(){
+  if(S.priorityDone)return;
+  openDlg(`<p class="eyebrow">Entscheidung 1 · Priorität</p><h2 id="dTitle">Was tust du jetzt zuerst?</h2>
+    <p>X sitzt um halb drei wach auf dem Boden. Sie wurde nach Andeutung eines Suizidwunsches aufgenommen. Du kennst ihre aktuelle Gefährdung noch nicht.</p>
+    <div class="q"><button type="button" data-pr="search">Erst das Zimmer nach Hinweisen absuchen</button><button type="button" data-pr="ask">Ruhig Kontakt aufnehmen, unmittelbar nach Suizidgedanken fragen und Sicherheit einschätzen</button><button type="button" data-pr="later">X schlafen lassen und später wiederkommen</button></div>`);
+  card.onclick=e=>{const b=e.target.closest('[data-pr]');if(!b)return;const choice=b.dataset.pr;S.priorityChoice=choice;
+    const correct=choice==='ask';
+    card.innerHTML=`<p class="eyebrow">Rückmeldung</p><h2 id="dTitle">${correct?'Sicherheit hat Vorrang':'Die aktuelle Gefährdung ist noch ungeklärt'}</h2>
+      <p>${correct?'Du priorisierst Kontakt, direkte Fragen und die aktuelle Sicherheit.':'Die Gegenstände können später Hinweise geben. Nach einem geäußerten Suizidwunsch darf die aktuelle Gefährdung nicht durch eine Suchaufgabe oder bloßes Abwarten nach hinten rücken.'}</p>
+      <p>Sprich X ruhig an, frage direkt nach aktuellen Suizidgedanken und kläre entsprechend den geltenden Standards Absicht, Planung und unmittelbare Gefährdung. Bei akuter Gefahr hole unverzüglich Unterstützung und setze erforderliche Schutzmaßnahmen um.</p>
+      <div class="actions">${correct?'':'<button type="button" data-again>Neu entscheiden</button>'}<button type="button" class="primary" data-next ${correct?'':'disabled'}>Gesprächsplatz wählen</button></div>`;
+    card.onclick=e2=>{if(e2.target.closest('[data-again]'))priority();if(e2.target.closest('[data-next]')){S.priorityDone=true;closeDlg();afterFind();}};
+  };
+}
+$("#bHelp").onclick=()=>{openDlg(`<h2 id="dTitle">So geht es</h2><ul class="how">${$("#howDesk").innerHTML}</ul><p class="small">Tastatur geht auch: W A S D gehen, Pfeiltasten ← → drehen, F Lampe, T Tipp.</p><div class="actions"><button type="button" class="primary" data-close>Weiter</button></div>`);
+  card.onclick=e=>{if(e.target.closest("[data-close]"))closeDlg();};};
+
+/* ---------- Anleitung oben ---------- */
+let gLast="";
+function updateGuide(){
+  const T=isTouch;let s,h;
+  if(S.auto&&S.auto.enter){s="Du gehst ins Zimmer.";h="Einen Moment.";}
+  else if(S.auto){s="Tipp: Dein Blick dreht sich zu einem Hinweis.";h="Achte auf das, was sich bewegt.";}
+  else if(S.placeOpen){s="Entscheide über einen geeigneten Gesprächsplatz oder erkunde weitere Hinweise.";h=T?"Tippe auf einen der hellen Kreise am Boden.":"<b>Klick</b> auf einen der hellen Kreise am Boden, oder oben auf „Platz wählen“.";}
+  else if(S.phase==="corridor"&&!knocked){s="Klopf an die Tür von Zimmer 14.";h=T?"<b>Tippe auf die Tür.</b>":"<b>Klick auf die Tür.</b>";}
+  else if(S.phase==="corridor"){s="Du hast angeklopft.";h="Die Tür geht gleich auf.";}
+  else {const n=Object.keys(S.found).length;s=`Sicherheit zuerst. Optional: ${n} von ${FINDS.length} Hinweisen erkundet.`;
+    h=T?"<b>Wischen</b> = umsehen. <b>Tippen</b> auf etwas = genauer ansehen.":"<b>Maustaste halten und ziehen</b> = umsehen. <b>Klicken</b> auf etwas = genauer ansehen. Der Mauszeiger wird dort zur Hand.";}
+  const key=s+h;if(key!==gLast){gLast=key;$("#gStep").textContent=s;$("#gHow").innerHTML=h;}
+}
+
+/* ---------- Start ---------- */
+$("#bStart").onclick=()=>{S.started=true;$("#start").hidden=true;$("#hud").hidden=false;
+  thought("Nachtdienst, halb drei. Zimmer 14 steht als Nächstes auf meiner Runde.",5000);};
+
+/* ---------- Schleife ---------- */
+const clock=new THREE.Clock();let t=0,nearCd=0,lightCd=0;
+const tmpV=new THREE.Vector3(),fwd=new THREE.Vector3(),headW=new THREE.Vector3();
+const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+function loop(){
+  requestAnimationFrame(loop);
+  const dt=Math.min(clock.getDelta(),.05);t+=dt;
+  const active=S.started&&dlg.hidden;
+  if(S.auto){const a=S.auto;a.t+=dt;const k=ease(Math.min(1,a.t/a.dur));
+    P.x=a.from.x+(a.to.x-a.from.x)*k;P.z=a.from.z+(a.to.z-a.from.z)*k;P.yaw=a.from.yaw+(a.to.yaw-a.from.yaw)*k;P.pitch=a.from.pitch+(a.to.pitch-a.from.pitch)*k;
+    if(a.t>=a.dur){S.auto=null;if(a.enter){S.phase="room";thought("X sitzt wach auf dem Boden. Ihre aktuelle Sicherheit hat Vorrang.",4500);setTimeout(()=>priority(),550);}}}
+  else if(active){
+    let mf=0,ms=0;
+    if(keys.KeyW||keys.ArrowUp)mf+=1;if(keys.KeyS||keys.ArrowDown)mf-=1;if(keys.KeyD)ms+=1;if(keys.KeyA)ms-=1;
+    if(keys.ArrowLeft)P.yaw+=1.6*dt;if(keys.ArrowRight)P.yaw-=1.6*dt;
+    const L=Math.hypot(mf,ms);if(L>1){mf/=L;ms/=L;}
+    const sp=1.4,fx=-Math.sin(P.yaw),fz=-Math.cos(P.yaw),rx=Math.cos(P.yaw),rz=-Math.sin(P.yaw);
+    const dx=(fx*mf+rx*ms)*sp*dt,dz=(fz*mf+rz*ms)*sp*dt;
+    if(free(P.x+dx,P.z))P.x+=dx;if(free(P.x,P.z+dz))P.z+=dz;
+    if(S.phase==="corridor"&&P.z<-.4)S.phase="room";}
+  camera.position.set(P.x,1.62,P.z);camera.rotation.set(P.pitch,P.yaw,0);
+  doorOpen+=(doorTarget-doorOpen)*Math.min(1,dt*2.2);doorPivot.rotation.y=-1.45*doorOpen;
+  // X reagiert auf Nähe und Licht
+  const dX=Math.hypot(P.x-XPOS.x,P.z-XPOS.z);nearCd-=dt;lightCd-=dt;
+  if(dX<1.2){xState.leanT=-.12;if(nearCd<=0&&active){S.near++;nearCd=9;thought("Sie zieht die Knie enger an und drückt sich an die Wand. Zu nah.",5200,"Angst vor Menschen: Abstand halten, Nähe anbieten statt aufdrängen.");}}
+  else if(dlg.hidden)xState.leanT=xState.base;
+  hd.getWorldPosition(headW);camera.getWorldDirection(fwd);tmpV.copy(headW).sub(camera.position);const dist=tmpV.length();tmpV.normalize();
+  const ang=Math.acos(Math.min(1,fwd.dot(tmpV)));
+  if(S.lamp&&S.phase==="room"&&dist<4.2&&ang<.14){xState.headYT=.95;xState.headXT=.5;if(lightCd<=0&&active){S.light++;lightCd=10;thought("Der Lichtkegel trifft ihr Gesicht. Sie dreht sich weg.",5200,"Nachts das Licht auf den Boden richten, nicht auf die Person.");}}
+  else{xState.headYT=0;xState.headXT=.45;}
+  xState.lean+=(xState.leanT-xState.lean)*Math.min(1,dt*4);xState.headY+=(xState.headYT-xState.headY)*Math.min(1,dt*3);xState.headX+=(xState.headXT-xState.headX)*Math.min(1,dt*3);
+  torso.rotation.x=xState.lean;head.rotation.y=xState.headY;head.rotation.x=xState.headX+(xState.nod>0?Math.sin(xState.nod*10)*.18:0);
+  body.scale.set(1,1+Math.sin(t*1.6)*.012,1);
+  for(const id in wig){wig[id]-=dt;const g=roots[id],k=Math.min(1,Math.max(0,wig[id])/1.6);
+    if(id==="x")xState.nod=Math.max(0,wig[id]);
+    else{g.rotation.z=Math.sin(t*24)*.07*k;g.position.y=g.userData.base.y+Math.abs(Math.sin(t*12))*.02*k;}
+    if(wig[id]<=0){delete wig[id];if(id!=="x"){g.rotation.z=0;g.position.y=g.userData.base.y;}xState.nod=0;}}
+  if(S.placeOpen)markers.forEach(m=>{m.ring.material.opacity=.45+Math.sin(t*3)*.25;});
+  if(S.started)updateGuide();
+  (fx||renderer).render(scene,camera);
+}
+updHud();loop();
+})();
+</script>
+
+</body></html>
