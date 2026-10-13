@@ -97,6 +97,7 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
       <button type="button" id="bTip">Tipp</button>
       <button type="button" id="bLamp" aria-pressed="true">Lampe an</button>
       <button type="button" id="bPlace" hidden>Platz wählen</button>
+      <button type="button" id="bFinish" class="finish-btn" hidden>♥ Abschluss ansehen</button>
       <button type="button" id="bHelp">Hilfe</button>
     </div>
   </div>
@@ -304,7 +305,7 @@ const bun=new THREE.Mesh(new THREE.SphereGeometry(.05,12,10),hair);bun.position.
   const hand=new THREE.Mesh(new THREE.SphereGeometry(.048,10,8),skin);hand.position.copy(ha);hand.scale.set(1.2,.8,1);torso.add(hand);});
 const xState={lean:.12,leanT:.12,headY:0,headYT:0,headX:.45,headXT:.45,nod:0,base:.12,back:-.12};
 const heartTex=tex(180,180,(g,w,h)=>{g.clearRect(0,0,w,h);g.save();g.translate(w/2,h/2+8);g.scale(.78,.78);g.beginPath();g.moveTo(0,58);g.bezierCurveTo(-18,38,-62,10,-62,-24);g.bezierCurveTo(-62,-54,-26,-68,0,-40);g.bezierCurveTo(26,-68,62,-54,62,-24);g.bezierCurveTo(62,10,18,38,0,58);g.closePath();g.fillStyle="#f3b5c0";g.shadowColor="#f3b5c0";g.shadowBlur=22;g.fill();g.restore();});
-const heart=new THREE.Sprite(new THREE.SpriteMaterial({map:heartTex,transparent:true,depthTest:false,opacity:0}));heart.scale.set(.34,.34,1);heart.position.set(0,.78,.22);xg.add(heart);
+const heart=new THREE.Sprite(new THREE.SpriteMaterial({map:heartTex,transparent:true,depthTest:false,opacity:0}));heart.scale.set(.52,.52,1);heart.position.set(0,.67,.34);xg.add(heart);
 const successLight=new THREE.PointLight(0xf3b5c0,0,2.2,2);successLight.position.set(0,1.1,.1);xg.add(successLight);
 
 /* ---------- Inhalte ---------- */
@@ -484,10 +485,14 @@ function openPlace(p){
 }
 $("#bPlace").onclick=placeChooser;
 function finishGame(){
-  S.finished=true;S.placeOpen=false;markers.forEach(m=>m.g.visible=false);$("#bPlace").hidden=true;$("#bTip").disabled=true;syncHintMarkers();heart.material.opacity=1;successLight.intensity=1.1;
-  openDlg(`<p class="eyebrow">Lernfall abgeschlossen</p><h2 id="dTitle">Du hast dein Ziel erreicht.</h2><p class="see">Du hast alle elf Hinweise erkundet, die aktuelle Sicherheit priorisiert und einen geeigneten Gesprächsplatz gewählt.</p><div class="sumgrid"><div><b>11 / 11</b><span>Hinweise erkundet</span></div><div><b>${S.place.label}</b><span>geeignete Gesprächsposition</span></div></div><p><strong>Dein nächster pflegerischer Schritt:</strong> ruhig Kontakt aufnehmen, direkt nach aktuellen Suizidgedanken fragen und die weitere Sicherheit nach den Standards deiner Einrichtung klären.</p><p class="good" style="font-family:var(--f-display);font-weight:700">Das pulsierende Herz markiert: Die Begegnung kann jetzt beginnen.</p><div class="actions"><button type="button" class="primary" data-finish-close>Spiel beenden</button><button type="button" data-restart>Neu beginnen</button></div>`);
-  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-restart"))location.reload();if(b.hasAttribute("data-finish-close"))closeDlg();};
+  S.finished=true;S.placeOpen=false;markers.forEach(m=>m.g.visible=false);$("#bPlace").hidden=true;$("#bTip").disabled=true;$("#bFinish").hidden=false;syncHintMarkers();heart.material.opacity=1;successLight.intensity=1.1;
+  thought("Alle elf Hinweise sind erkundet. Du hast den geeigneten Gesprächsplatz gewählt.",9000,"Die Szene ist abgeschlossen. Öffne oben mit ♥ den Abschluss.");
 }
+function finishDialog(){
+  openDlg(`<p class="eyebrow">Lernfall abgeschlossen</p><h2 id="dTitle">Du hast dein Ziel erreicht.</h2><p class="see">Du hast alle elf Hinweise erkundet, die aktuelle Sicherheit priorisiert und einen geeigneten Gesprächsplatz gewählt.</p><div class="sumgrid"><div><b>11 / 11</b><span>Hinweise erkundet</span></div><div><b>${S.place.label}</b><span>geeignete Gesprächsposition</span></div></div><p><strong>Dein nächster pflegerischer Schritt:</strong> ruhig Kontakt aufnehmen, direkt nach aktuellen Suizidgedanken fragen und die weitere Sicherheit nach den Standards deiner Einrichtung klären.</p><p class="good" style="font-family:var(--f-display);font-weight:700">Das blassrosa Herz auf der Brust markiert: Die Begegnung kann jetzt beginnen.</p><div class="actions"><button type="button" class="primary" data-finish-close>Spiel beenden</button><button type="button" data-close>Zurück zur Szene</button><button type="button" data-restart>Neu beginnen</button></div>`);
+  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-restart"))location.reload();if(b.hasAttribute("data-finish-close")){closeDlg();$("#bFinish").hidden=true;$("#desk").hidden=true;thought("Lernfall beendet.",5000);}};
+}
+$("#bFinish").onclick=finishDialog;
 function summary(){
   const all=FINDS.length, examined=Object.keys(S.found).length;
   openDlg(`<p class="eyebrow">Reflexion · Ende der Probe</p><h2 id="dTitle">Was hatte Vorrang?</h2>
@@ -543,7 +548,7 @@ const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
 function loop(){
   requestAnimationFrame(loop);
   const dt=Math.min(clock.getDelta(),.05);t+=dt;
-  const active=S.started&&dlg.hidden;
+  const active=S.started&&dlg.hidden&&!S.finished;
   if(S.auto){const a=S.auto;a.t+=dt;const k=ease(Math.min(1,a.t/a.dur));
     P.x=a.from.x+(a.to.x-a.from.x)*k;P.z=a.from.z+(a.to.z-a.from.z)*k;P.yaw=a.from.yaw+(a.to.yaw-a.from.yaw)*k;P.pitch=a.from.pitch+(a.to.pitch-a.from.pitch)*k;
     if(a.t>=a.dur){S.auto=null;if(a.enter){S.phase="room";thought("X sitzt wach auf dem Boden. Ihre aktuelle Sicherheit hat Vorrang.",4500);setTimeout(()=>priority(),550);}}}
