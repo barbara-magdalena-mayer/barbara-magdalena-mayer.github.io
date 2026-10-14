@@ -74,7 +74,6 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
 .opt-wissen[aria-pressed="true"]{background:var(--wissen)!important;border-color:var(--wissen)!important;color:#0a1620!important}
 .res{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:12px}
 .verdict{font-family:var(--f-display);font-weight:700}
-.good{color:var(--ok)}.part{color:var(--warn)}
 .chip{display:inline-block;font-family:var(--f-display);font-size:13px;padding:1px 9px;border-radius:999px;border:1px solid currentColor}
 .c-kraft{color:var(--kraft)}.c-wille{color:var(--wille)}.c-wissen{color:var(--wissen)}
 .actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
@@ -85,7 +84,6 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
 .sumgrid span{font-size:12px;color:var(--muted)}
 .tel{user-select:all;font-variant-numeric:tabular-nums;color:var(--ink)}
 .small{font-size:14px;color:var(--muted)}
-
 /* Bedienbarkeit auf kleinen Displays */
 @keyframes ballBounce{0%,100%{transform:translateY(0) scale(1,1)}15%{transform:translateY(-17px) scale(.94,1.07)}33%{transform:translateY(0) scale(1.08,.9)}47%{transform:translateY(-9px) scale(.97,1.04)}62%{transform:translateY(0) scale(1.04,.96)}75%{transform:translateY(-3px)}90%{transform:translateY(0)}}
 #bStart{animation:ballBounce 2.5s ease-in-out infinite;transform-origin:center bottom;will-change:transform;box-shadow:0 0 0 0 rgba(124,199,188,.35)}
@@ -93,6 +91,13 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
 @media(prefers-reduced-motion:reduce){#bStart{animation:none!important}*{scroll-behavior:auto!important}}
 @media(max-width:600px){.layer{padding:8px}.card{padding:16px;gap:11px;max-height:calc(100dvh - 16px)}.start h1{font-size:clamp(26px,7vw,36px)}.start .lead{font-size:16px}.top{padding-inline:7px;gap:5px}.stat{gap:7px;padding:5px 7px}.stat b{font-size:16px}.tbtns{gap:4px}.tbtns button{font-size:12px;padding:6px 8px}#guide{top:calc(104px + env(safe-area-inset-top,0px));padding:7px 10px}#thought{bottom:calc(120px + env(safe-area-inset-bottom,0px));font-size:16px}#pad{grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,44px)}.opts button{min-height:44px}}
 @media(max-height:550px){.card{max-height:calc(100dvh - 12px)}#guide{top:calc(65px + env(safe-area-inset-top,0px))}#thought{bottom:65px}}
+textarea{font:inherit;font-size:16px;width:100%;min-height:84px;background:var(--night);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical}
+textarea:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.opts.plan{display:grid;gap:8px}.opts.plan button{text-align:left}
+.mine{font-style:italic;color:var(--warm)}
+.log{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.log li{background:var(--panel2);border-radius:8px;padding:10px 12px}
+details summary{cursor:pointer}
 </style>
 
 <canvas id="c" aria-label="3D-Szene: Nachtdienst, Zimmer 14"></canvas>
@@ -105,8 +110,8 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
       <button type="button" id="bTip">Tipp</button>
       <button type="button" id="bLamp" aria-pressed="true">Lampe an</button>
       <button type="button" id="bPlace" hidden>Platz wählen</button>
-      <button type="button" id="bFinish" class="finish-btn" hidden>♥ Abschluss ansehen</button>
-       <button type="button" id="bHelp">Hilfe</button>
+      <button type="button" id="bFinish" class="finish-btn" hidden>♥ Reflexion</button>
+      <button type="button" id="bHelp">Hilfe</button>
     </div>
   </div>
   <div id="guide" role="status" aria-live="polite"><p id="gStep"></p><p id="gHow"></p></div>
@@ -132,7 +137,7 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
     <p class="eyebrow">Interaktives Entscheidungstraining · Lernen am Optimum</p>
     <h1>Nachtdienst, Zimmer 14</h1>
     <p class="lead">Es ist halb drei. Du bist Pflegekraft im Nachtdienst einer psychiatrischen Akutstation. X wurde gestern aufgenommen, nachdem sie einen Suizidwunsch angedeutet hatte. Du gehst zu ihr ins Zimmer.</p>
-    <p><strong>Deine Aufgabe:</strong> Erkenne, was jetzt Vorrang hat. Entscheide zuerst über die Sicherheit von X. Erkunde anschließend freiwillig die Hinweise im Zimmer und unterscheide Beobachtung, Vermutung und notwendige Rückfrage.</p>
+    <p><strong>Deine Aufgabe:</strong> Du entscheidest selbst, wie du vorgehst: erst zu X setzen und sprechen oder erst die Hinweise im Zimmer ansehen. Es gibt keine Punkte und kein Richtig oder Falsch. Jede Entscheidung begründest du – am Ende siehst du deinen Weg mit allen Begründungen.</p>
     <ul class="how" id="howDesk">
       <li><svg viewBox="0 0 30 30"><rect x="8" y="3" width="14" height="22" rx="7" fill="none" stroke="#7cc7bc" stroke-width="2"/><rect x="9" y="4" width="6" height="8" rx="3" fill="#f0c98a"/></svg><span><strong>Klicken</strong> auf Dinge im Zimmer öffnet sie. Wird der Mauszeiger zur Hand, gibt es dort etwas.</span></li>
       <li><svg viewBox="0 0 30 30"><path d="M5 15h20M5 15l5-5M5 15l5 5M25 15l-5-5M25 15l-5 5" stroke="#7cc7bc" stroke-width="2" fill="none"/></svg><span><strong>Maustaste gedrückt halten und ziehen</strong>: umsehen.</span></li>
@@ -140,6 +145,7 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
       <li><svg viewBox="0 0 30 30"><circle cx="15" cy="15" r="11" fill="none" stroke="#7cc7bc" stroke-width="2"/><path d="M10 10l10 10M20 10l-10 10" stroke="#7cc7bc" stroke-width="2"/></svg><span>Fenster schließt du mit <strong>×</strong> oben rechts, mit Esc oder mit einem Klick daneben.</span></li>
     </ul>
     <p class="small" id="howTouch" hidden>Tippe auf Dinge, um sie anzusehen. Wische, um dich umzusehen. Mit ▲ ▼ ↺ ↻ unten links gehst und drehst du dich. Im Querformat siehst du mehr.</p>
+    <p class="small">🔊 Mit Ton erlebst du die Szene besser: Klopfen, Rufe auf dem Flur, ein Seufzen. Am iPhone oder iPad den Stummschalter ausschalten.</p>
     <p class="note">Inhaltshinweis: Der Lernfall behandelt eine psychische Krise mit Suizidgedanken. Er zeigt keine Methoden. Hilfe für dich selbst: Telefonseelsorge, kostenlos und rund um die Uhr, <span class="tel">0800 111 0 111</span>.</p>
     <div class="row"><button type="button" class="primary" id="bStart">Schicht beginnen</button></div>
     <p class="small">Konzept: Barbara Magdalena Mayer, nach Virginia Henderson</p>
@@ -172,8 +178,8 @@ if(!window.THREE){fail();document.querySelector("#err p").textContent="Die 3D-Bi
 let renderer;
 try{renderer=new THREE.WebGLRenderer({canvas:$("#c"),antialias:true});}catch(e){fail();return;}
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
-renderer.outputEncoding=THREE.sRGBEncoding;
 renderer.domElement.addEventListener("webglcontextlost",e=>{e.preventDefault();fail();});
+renderer.outputEncoding=THREE.sRGBEncoding;
 
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x0a1220);
@@ -246,14 +252,56 @@ box(doorPivot,.14,.04,.04,M(0x6c7773,{metalness:.5,roughness:.4}),-.7,1.02,-.05)
 let doorOpen=0, doorTarget=0, knocked=false;
 // Nachtatmosphäre ohne zusätzliche Figuren: zufällige Rufe und Lichtflackern.
 let corridorEventT=0,corridorEventDone=false,corridorFlickerT=0;
-function audioNoise(duration=0.12,filter=900,volume=.08){if(!soundOn)return;try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const b=actx.createBuffer(1,actx.sampleRate*duration,actx.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);const n=actx.createBufferSource(),f=actx.createBiquadFilter(),g=actx.createGain();n.buffer=b;f.type="lowpass";f.frequency.value=filter;g.gain.value=volume;n.connect(f).connect(g).connect(actx.destination);n.start();}catch(_){} }
-let soundOn=true;
-function unlockAudio(){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const promise=actx.resume();if(promise&&promise.catch)promise.catch(()=>{});}catch(_){} }
-
+/* ---------- Ton ---------- */
+// Eigene kleine Klang-Engine: alles läuft über einen Master mit Kompressor, damit es auch aus Laptop- und Handylautsprechern hörbar ist.
+let actx=null,master=null,soundOn=true;
+function ac(){
+  if(!actx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+    actx=new C();const comp=actx.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=4;
+    master=actx.createGain();master.gain.value=soundOn?1:0;master.connect(comp).connect(actx.destination);}
+  if(actx.state==="suspended"){const p=actx.resume();if(p&&p.catch)p.catch(()=>{});}
+  return actx;}
+let silentEl=null;
+function unlockAudio(){
+  // iPhone/iPad: Ohne diesen Schritt stellt der Stummschalter Web-Audio stumm.
+  try{if(navigator.audioSession)navigator.audioSession.type="playback";}catch(_){}
+  try{if(!silentEl){const n=800,b=new ArrayBuffer(44+n),v=new DataView(b),w=(o,s)=>{for(let i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));};
+      w(0,"RIFF");v.setUint32(4,36+n,true);w(8,"WAVEfmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,"data");v.setUint32(40,n,true);for(let i=0;i<n;i++)v.setUint8(44+i,128);
+      silentEl=new Audio(URL.createObjectURL(new Blob([b],{type:"audio/wav"})));silentEl.setAttribute("playsinline","");}
+    const p=silentEl.play();if(p&&p.catch)p.catch(()=>{});}catch(_){}
+  const a=ac();if(!a)return;
+  try{const o=a.createOscillator(),g=a.createGain();g.gain.value=0;o.connect(g).connect(master);o.start();o.stop(a.currentTime+.05);}catch(_){}
+  try{if(window.speechSynthesis)speechSynthesis.getVoices();}catch(_){}
+}
+addEventListener("pointerdown",()=>{if(actx&&actx.state!=="running")ac();},{passive:true});
+function noiseBuf(a,sec){const b=a.createBuffer(1,Math.max(1,Math.floor(a.sampleRate*sec)),a.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;return b;}
+// Rauschen mit Filter und Hüllkurve: att = Anstieg, rel = Abklingen (Sekunden)
+function noiseHit({at=0,dur=.1,type="bandpass",freq=1000,q=1,vol=.5,att=.003,rel=null,sweepTo=null}={}){
+  const a=ac();if(!a||!soundOn)return;try{const t=a.currentTime+at,s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();
+  s.buffer=noiseBuf(a,dur+.05);f.type=type;f.frequency.setValueAtTime(freq,t);f.Q.value=q;if(sweepTo)f.frequency.exponentialRampToValueAtTime(sweepTo,t+dur);
+  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+att);g.gain.exponentialRampToValueAtTime(0.0001,t+(rel==null?dur:att+rel));
+  s.connect(f).connect(g).connect(master);s.start(t);s.stop(t+dur+.05);}catch(_){}}
+function tone({at=0,freq=440,to=null,dur=.2,vol=.3,type="sine"}={}){
+  const a=ac();if(!a||!soundOn)return;try{const t=a.currentTime+at,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+dur);
+  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.008);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g).connect(master);o.start(t);o.stop(t+dur+.02);}catch(_){}}
+function knock(){[0,.24,.48].forEach(d=>{tone({at:d,freq:190,to:90,dur:.16,vol:.9});noiseHit({at:d,dur:.07,freq:1600,q:.9,vol:.55,rel:.06});});}
+function doorSound(){noiseHit({dur:.12,freq:2500,q:2,vol:.25,rel:.1});tone({at:.08,freq:420,to:520,dur:.9,vol:.05,type:"sawtooth"});noiseHit({at:.1,dur:1,type:"lowpass",freq:700,vol:.06,att:.3,rel:.7});}
+// Seufzen: gefiltertes Atemrauschen, erst einatmen, dann langes Ausatmen
+function sighSound(){noiseHit({dur:.7,freq:900,q:.7,vol:.18,att:.45,rel:.25,sweepTo:1300});noiseHit({at:.75,dur:1.6,freq:1100,q:.6,vol:.32,att:.12,rel:1.45,sweepTo:420});tone({at:.8,freq:210,to:150,dur:1.1,vol:.04,type:"triangle"});}
+let deVoice=null;
+function pickVoice(){try{const v=speechSynthesis.getVoices();deVoice=v.find(x=>/^de(-|_)/i.test(x.lang)&&/female|anna|petra|helena|katja|google/i.test(x.name))||v.find(x=>/^de/i.test(x.lang))||null;}catch(_){}}
+try{if(window.speechSynthesis){pickVoice();speechSynthesis.addEventListener?speechSynthesis.addEventListener("voiceschanged",pickVoice):(speechSynthesis.onvoiceschanged=pickVoice);}}catch(_){}
+function say(text,{rate=.8,pitch=.9,vol=1}={}){
+  if(!soundOn)return false;try{if(!window.speechSynthesis)return false;const u=new SpeechSynthesisUtterance(text);u.lang="de-DE";if(deVoice)u.voice=deVoice;u.volume=vol;u.rate=rate;u.pitch=pitch;
+  if(speechSynthesis.speaking||speechSynthesis.pending){speechSynthesis.cancel();setTimeout(()=>speechSynthesis.speak(u),120);}else speechSynthesis.speak(u);
+  if(speechSynthesis.paused)speechSynthesis.resume();return true;}catch(_){return false;}}
 const ambientCalls=["Hallo?","Schwester?","Ist da jemand?"];
-function ambientCall(){try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance(ambientCalls[Math.floor(Math.random()*ambientCalls.length)]);u.lang="de-DE";u.volume=.72;u.rate=.78;u.pitch=.86;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}}catch(_){} }
+function ambientCall(){
+  // Ferner Ruf auf dem Flur. Ohne Sprachausgabe bleibt wenigstens die Klingel hörbar.
+  tone({freq:880,dur:.35,vol:.12,type:"triangle"});tone({at:.4,freq:660,dur:.5,vol:.1,type:"triangle"});
+  setTimeout(()=>say(ambientCalls[Math.floor(Math.random()*ambientCalls.length)],{rate:.75,pitch:.85,vol:.8}),900);}
 function ambientCorridor(){ambientCall();corridorFlickerT=1.8;}
-function sigh(){ambientCall();xState.leanT=.02;setTimeout(()=>xState.leanT=xState.base,900);}
+function sigh(){sighSound();xState.leanT=.02;setTimeout(()=>xState.leanT=xState.base,900);}
 scene.add(new THREE.HemisphereLight(0x6d8cb0,0x2a2018,.42));
 const nl=new THREE.PointLight(0xffb36b,.8,3.4,1.8);nl.position.set(2.35,.35,-1.1);scene.add(nl);
 box(scene,.04,.08,.16,B(0xffc98a),2.48,.32,-1.1);
@@ -341,7 +389,7 @@ const CAT={kraft:"Kraft",wille:"Wille",wissen:"Wissen"}, ART={zeichen:"Zeichen",
 const FINDS=[
  {id:"x",name:"X in der Ecke",cat:["kraft","wille"],art:"zeichen",see:"Im Dunkeln erkennst du X nur als Umriss. Sie sitzt angezogen auf dem Boden in der Ecke, den Rücken an der Wand, die Knie angezogen und die Arme darum gelegt. Der Stuhl im Zimmer bleibt leer. Ihr Kopf ist zur Tür gewandt.",text:"Sich klein machen, den Rücken an der Wand, den Eingang im Blick: Das kann Angst, Misstrauen und Schutzsuche zeigen, und Angst bindet Kraft. Dass sie den Stuhl nicht nutzt, kann heißen, dass sie sich am Boden sicherer fühlt. Rückzug, also fehlender Wille, ist ebenfalls vertretbar."},
  {id:"bett",name:"Bett",cat:["kraft"],art:"zeichen",see:"Das Bett ist zerwühlt, die Decke hängt halb auf dem Boden. Um halb drei ist X wach.",text:"Hinweis auf eine schlaflose Nacht. Schlafstörungen sind in Krisen häufig und zehren an der Kraft. Im Nachtdienst dokumentieren: wann wach, wie lange, was geholfen hat."},
- {id:"handy",name:"Handy",cat:["wille"],art:"symbol",see:"Auf dem Bett leuchtet das Handy. Drei lange Nachrichten von X, die Antwort darunter: „mal sehen 😉“.",text:"Viel Hoffnung, wenig zurück. Das Bild steht für Hoffnung, die an der Bestätigung anderer hängt. Wer bedürftig und unter Druck ist, gerät leichter an Menschen, die das ausnutzen."},
+ {id:"handy",name:"Handy",cat:["wille"],art:"symbol",see:"Auf dem Bett leuchtet das Handy. Drei lange Nachrichten von X, die Antwort darunter: „mal sehen 😉“.",text:"Viel geschrieben, wenig zurück. Das Bild kann für Hoffnung stehen, die an der Antwort eines anderen Menschen hängt. Wer diese Person ist und was ihr Schweigen für X bedeutet, weißt du nicht – das lässt sich nur erfragen."},
  {id:"tablett",name:"Tablett",cat:["wille","kraft"],art:"zeichen",see:"Das Abendessen steht unberührt auf dem Tisch.",text:"Beobachtbar und dokumentierbar. Es kann für fehlenden Antrieb stehen, also Wille. Fehlende Kraft ist ebenfalls vertretbar. Klären lässt sich das nur mit X selbst."},
  {id:"stapel",name:"Papierstapel",cat:["kraft"],art:"symbol",see:"Am Boden liegen Bewerbungsmappen, Wohnungsanzeigen, ein Studienskript und korrigierte Klassenarbeiten.",text:"Job, Wohnung, Studium und Beruf auf einem Haufen. Der Stapel ist ein Bild für Lasten, die X allein trägt, aber kein klinisches Zeichen."},
  {id:"foto",name:"Bilderrahmen",cat:["wille"],art:"symbol",see:"Auf dem Nachttisch liegt ein Bilderrahmen, mit dem Bild nach unten.",text:"Vermutlich zeigt das Foto einen Menschen, der X wichtig ist. Umgedreht kann es Scham, Schmerz oder Abstand bedeuten. Es kann auch eine Ressource sein: Wofür und für wen lohnt es sich?"},
@@ -355,19 +403,19 @@ const FINDS=[
   const hintMarkers=[];
   const hintOffsets={x:[0,.9,0],bett:[0,.78,0],handy:[0,.18,0],tablett:[0,.98,0],stapel:[0,.24,0],foto:[0,.18,0],powerbank:[0,.18,0],kalender:[0,.45,.02],krisenplan:[0,.42,.02],notizbuch:[0,.18,0],stadtplan:[0,.45,.02]};
   FINDS.forEach(f=>{const g=roots[f.id];if(!g)return;const color=f.id==="x"?0xff7d87:0xffd36f;const m=new THREE.Mesh(new THREE.SphereGeometry(f.id==="x"?.14:.12,16,10),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.98}));const o=hintOffsets[f.id]||[0,.2,0];m.position.set(o[0],o[1],o[2]);m.userData.findId=f.id;m.visible=false;g.add(m);hintMarkers.push(m);});
-  function syncHintMarkers(){hintMarkers.forEach(m=>{m.visible=S.phase==="room"&&S.priorityDone&&!S.found[m.userData.findId];});}
-const S={found:{},tips:0,lamp:true,near:0,light:0,place:null,started:false,phase:"corridor",auto:null,priorityDone:false,priorityChoice:null,placeOpen:false,finished:false};
+  function syncHintMarkers(){hintMarkers.forEach(m=>{m.visible=S.phase==="room"&&!!S.plan&&!S.finished&&!S.found[m.userData.findId];});}
+const S={found:{},tips:0,lamp:true,near:0,light:0,place:null,started:false,phase:"corridor",auto:null,plan:null,planReason:"",placeReason:"",log:[],final:"",placeOpen:false,finished:false};
 
 /* ---------- Platzwahl ---------- */
 const PLACES=[
- {id:"tuer",pos:[1.65,-.75],label:"An der Tür",title:"Du bleibst an der Tür",good:false,
-  text:"Für X heißt das: Du bist gleich wieder weg. Ein Gespräch über Suizidgedanken braucht Zeit und Ruhe. Aus dieser Distanz wird sie sich kaum öffnen. Aus dieser Position ist ein ruhiges Gespräch möglicherweise erschwert. Prüfe die Reaktion von X."},
- {id:"nah",pos:[1.75,-3.45],label:"Direkt vor ihr",title:"Du stehst direkt vor ihr",good:false,
-  text:"Du schaust von oben auf sie herab und stehst zwischen ihr und der Tür. Für jemanden mit Angst vor Menschen wirkt das bedrohlich, und der Weg nach draußen ist versperrt. X zieht sich zurück."},
- {id:"hocker",pos:[.72,-3.25],label:"Auf dem Hocker",title:"Du setzt dich auf den Hocker",good:false,
-  text:"Der Abstand stimmt, und der Weg zur Tür bleibt frei. Aber X sitzt auf dem Boden, und du sitzt über ihr. Das ist besser als Stehen, achte zusätzlich auf ihre Reaktion und auf Sicherheit und Abstand."},
- {id:"boden",pos:[1.0,-3.6],label:"Auf dem Boden",title:"Du setzt dich mit Abstand auf den Boden",good:true,
-  text:"Du sitzt etwa anderthalb Meter entfernt und seitlich zu ihr, auf Augenhöhe. Der Weg zur Tür bleibt für euch beide frei. Das kann einen Gesprächsbeginn erleichtern, sofern Hygiene, Sicherheit und die Reaktion von X es zulassen. Frage jetzt direkt nach aktuellen Suizidgedanken."}
+ {id:"tuer",pos:[1.65,-.75],label:"An der Tür",title:"Du bleibst an der Tür",
+  text:"Viel Abstand, und der Ausgang bleibt für euch beide frei. Für X kann es aber auch heißen: Du bist gleich wieder weg. Wie passt diese Position zu einem Gespräch, das Zeit und Ruhe braucht?"},
+ {id:"nah",pos:[1.75,-3.45],label:"Direkt vor ihr",title:"Du stehst direkt vor ihr",
+  text:"Du siehst X gut und kannst schnell reagieren. Gleichzeitig schaust du von oben auf sie herab und stehst zwischen ihr und der Tür. Beobachte, wie X reagiert."},
+ {id:"hocker",pos:[.72,-3.25],label:"Auf dem Hocker",title:"Du setzt dich auf den Hocker",
+  text:"Du sitzt mit Abstand, der Weg zur Tür bleibt frei, und du kommst schnell wieder auf die Beine. X sitzt am Boden, du etwas über ihr."},
+ {id:"boden",pos:[1.0,-3.6],label:"Auf dem Boden",title:"Du setzt dich mit Abstand auf den Boden",
+  text:"Du sitzt etwa anderthalb Meter entfernt und seitlich zu ihr, auf Augenhöhe. Der Weg zur Tür bleibt frei. Vom Boden kommst du selbst langsamer hoch, und Hygiene und Stationsregeln spielen mit."}
 ];
 const markers=[];
 PLACES.forEach(p=>{const g=new THREE.Group();g.position.set(p.pos[0],0,p.pos[1]);g.visible=false;g.userData.placeId=p.id;scene.add(g);
@@ -436,61 +484,96 @@ $("#bLamp").onclick=toggleLamp;
 let thT;
 function thought(t,ms=5200,h){const el=$("#thought");el.innerHTML=t+(h?`<small>${h}</small>`:"");el.style.opacity=1;clearTimeout(thT);thT=setTimeout(()=>el.style.opacity=0,ms);}
 $("#thought").onclick=()=>{$("#thought").style.opacity=0;};
-let actx=null;
-function knock(){if(!soundOn)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();[0,.22].forEach(d=>{const n=actx.createBufferSource(),b=actx.createBuffer(1,actx.sampleRate*.08,actx.sampleRate),ch=b.getChannelData(0);for(let i=0;i<ch.length;i++)ch[i]=(Math.random()*2-1)*Math.pow(1-i/ch.length,4);n.buffer=b;const f=actx.createBiquadFilter();f.type="lowpass";f.frequency.value=420;const g=actx.createGain();g.gain.value=.9;n.connect(f).connect(g).connect(actx.destination);n.start(actx.currentTime+d);});}catch(_){}}
 
 /* ---------- Handeln ---------- */
 function act(t){
   setHover(null);
   if(t.type==="door"){knocked=true;knock();thought("Halb drei. Mein Kaffee ist längst kalt, und ich habe noch elf Zimmer.",3800,"Auch nachts anklopfen. X soll nicht erschrecken.");
-    setTimeout(()=>{doorTarget=1;},1500);
+    setTimeout(()=>{doorTarget=1;doorSound();},1500);
     setTimeout(()=>{S.auto={t:0,dur:2.6,from:{x:P.x,z:P.z,yaw:P.yaw,pitch:P.pitch},to:{x:1.55,z:-.95,yaw:.2,pitch:-.12},enter:true};},2400);return;}
-  if(S.finished)return;if(t.type==="find")openFind(t.id);
+  if(S.finished)return;
+  if(t.type==="find")openFind(t.id);
   if(t.type==="place")openPlace(PLACES.find(p=>p.id===t.id));
 }
 
 /* ---------- Dialog ---------- */
 let onClose=null;
+const MINLEN=10;
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function openDlg(html,closeFn){for(const k in keys)keys[k]=false;document.querySelectorAll("#pad button").forEach(b=>b.classList.remove("on"));
-  card.innerHTML=html;onClose=closeFn||null;dlg.hidden=false;setHover(null);$("#x").focus();}
+  card.oninput=null;card.innerHTML=html;onClose=closeFn||null;dlg.hidden=false;setHover(null);$("#x").focus();}
 function closeDlg(){if(dlg.hidden)return;dlg.hidden=true;const f=onClose;onClose=null;if(f)f();}
 $("#x").onclick=closeDlg;
 dlg.addEventListener("click",e=>{if(e.target===dlg)closeDlg();});
-function resultHTML(f,r){const main=f.cat[0],alt=f.cat.slice(1);let v,c;
-  if(r.catOk&&r.artOk){v="Eine mögliche Einordnung – überprüfe sie im Gespräch.";c="good";}else if(r.catOk||r.artOk){v="Teilweise. Schau dir die zweite Entscheidung noch einmal an.";c="part";}else{v="Eine andere Deutung ist möglich; die Beobachtung allein entscheidet nicht.";c="part";}
-  return `<div class="res"><p class="verdict ${c}">${v}</p><p>Deine Wahl: <span class="chip c-${r.cat}">${CAT[r.cat]}</span> <span class="chip">${ART[r.art]}</span></p>
-  <p>Im Modell vorgeschlagene Deutung: <span class="chip c-${main}">${CAT[main]}</span> <span class="chip">${ART[f.art]}</span>${alt.length?" · auch vertretbar: "+alt.map(a=>`<span class="chip c-${a}">${CAT[a]}</span>`).join(" "):""}</p><p>${esc(f.text)}</p></div>`;}
-function openFind(id){
-  const f=BY[id];let sel={cat:null,art:null};let justDone=false;
-  const head=`<p class="eyebrow">Zimmer 14</p><h2 id="dTitle">${esc(f.name)}</h2><p class="see">${esc(f.see)}</p>`;
-  function form(){return head+`<div class="q"><p class="qlabel">1. Welche Perspektive könnte hilfreich sein?</p><div class="opts">${Object.keys(CAT).map(k=>`<button type="button" class="opt-${k}" data-cat="${k}" aria-pressed="${sel.cat===k}">${CAT[k]}</button>`).join("")}</div></div>
-      <div class="q"><p class="qlabel">2. Was siehst du?</p><div class="opts">${Object.keys(ART).map(k=>`<button type="button" data-art="${k}" aria-pressed="${sel.art===k}">${ART[k]}</button>`).join("")}</div></div>
-      <div class="actions"><button type="button" data-close>Später</button><button type="button" class="primary" data-check ${sel.cat&&sel.art?"":"disabled"}>Prüfen</button></div>`;}
-  const after=()=>{if(justDone){wiggle(id);afterFind();}};
-  if(S.found[id]) openDlg(head+resultHTML(f,S.found[id])+`<div class="actions"><button type="button" class="primary" data-close>Zurück ins Zimmer</button></div>`);
-  else openDlg(form(),after);
+const reasonOk=s=>!!s&&s.trim().length>=MINLEN;
+function reasonField(id,label,ph){return `<div class="q"><label class="qlabel" for="${id}">${label}</label><textarea id="${id}" placeholder="${ph}"></textarea><p class="small">Mindestens ein kurzer Satz. Es gibt hier kein Richtig oder Falsch – es zählt deine Begründung.</p></div>`;}
+function setPressed(sel,attr,val){card.querySelectorAll(`[${attr}]`).forEach(b=>b.setAttribute("aria-pressed",String(b.getAttribute(attr)===val)));}
+
+/* ---------- Vorgehen wählen ---------- */
+const PLANS={sprechen:"Erst setzen und sprechen, danach die Hinweise im Zimmer ansehen",hinweise:"Erst die Hinweise im Zimmer ansehen, dann setzen und sprechen"};
+function entryIntro(){
+  openDlg(`<p class="eyebrow">Zimmer 14 · Beobachtung</p><h2 id="dTitle">X sitzt in der Ecke</h2><p class="see">Im gedämpften Zimmer sitzt X wach auf dem Boden, den Rücken an der Wand, die Knie angezogen und die Arme darum gelegt. Sie hält den Eingang im Blick. Der Stuhl neben ihr bleibt leer.</p><p>Du kennst ihre aktuelle Gefährdung noch nicht. Nimm dir einen Moment für die Beobachtung. Danach entscheidest du, wie du vorgehst.</p><div class="actions"><button type="button" class="primary" data-continue>Weiter</button></div>`,()=>{if(!S.plan)planChooser();});
+  card.onclick=e=>{if(e.target.closest("[data-continue]"))closeDlg();};
+}
+function planChooser(){
+  if(S.plan)return;
+  let sel=null;
+  openDlg(`<p class="eyebrow">Dein Vorgehen</p><h2 id="dTitle">Wie gehst du vor?</h2>
+    <p>X sitzt um halb drei wach auf dem Boden. Sie wurde nach Andeutung eines Suizidwunsches aufgenommen. Beides ist möglich – du entscheidest und begründest.</p>
+    <div class="opts plan">${Object.keys(PLANS).map(k=>`<button type="button" data-plan="${k}" aria-pressed="false">${PLANS[k]}</button>`).join("")}</div>
+    ${reasonField("rPlan","Warum gehst du so vor?","Ich gehe so vor, weil …")}
+    <div class="actions"><button type="button" class="primary" data-ok disabled>Festlegen</button></div>`,()=>{if(!S.plan)setTimeout(planChooser,0);});
+  const upd=()=>{card.querySelector("[data-ok]").disabled=!(sel&&reasonOk($("#rPlan").value));};
+  card.oninput=upd;
   card.onclick=e=>{const b=e.target.closest("button");if(!b)return;
-    if(b.dataset.cat){sel.cat=b.dataset.cat;card.innerHTML=form();}
-    else if(b.dataset.art){sel.art=b.dataset.art;card.innerHTML=form();}
-    else if(b.hasAttribute("data-check")){const r={cat:sel.cat,art:sel.art,catOk:f.cat.includes(sel.cat),artOk:sel.art===f.art};S.found[id]=r;justDone=true;updHud();
-      syncHintMarkers();
-      const allFound=Object.keys(S.found).length===FINDS.length;
-      const nextStep=allFound?`<div class="next-step"><strong>Alle elf Hinweise sind erkundet.</strong><span>Jetzt wählst du noch den geeigneten Gesprächsplatz.</span></div><div class="actions"><button type="button" class="primary" data-place>Gesprächsplatz wählen</button><button type="button" data-close>Zurück ins Zimmer</button></div>`:`<div class="actions"><button type="button" class="primary" data-close>Zurück ins Zimmer</button></div>`;
-      card.innerHTML=head+resultHTML(f,r)+nextStep;
-      const focus=card.querySelector(allFound?"[data-place]":"[data-close]");if(focus)focus.focus();}
-    else if(b.hasAttribute("data-place")){afterFind();placeChooser();}
+    if(b.dataset.plan){sel=b.dataset.plan;setPressed(card,"data-plan",sel);upd();}
+    else if(b.hasAttribute("data-ok")){S.plan=sel;S.planReason=$("#rPlan").value.trim();S.log.push({type:"plan",plan:sel,reason:S.planReason});
+      onClose=null;closeDlg();openRoom();}};
+}
+function openRoom(){
+  S.placeOpen=true;markers.forEach(m=>m.g.visible=true);$("#bPlace").hidden=false;$("#bTip").disabled=false;syncHintMarkers();
+  thought(S.plan==="sprechen"?"Erst ankommen, dann sprechen. Wo setze ich mich hin?":"Erst schaue ich mich um. Was erzählt mir dieses Zimmer?",6000,
+    S.plan==="sprechen"?"Leuchtende Ringe am Boden zeigen mögliche Plätze.":"Gelbe Punkte zeigen Hinweise. Den Gesprächsplatz wählst du, wann du willst.");
+}
+
+/* ---------- Hinweise ---------- */
+function findResult(f,r){
+  return `<div class="res"><p>Deine Einordnung: <span class="chip c-${r.cat}">${CAT[r.cat]}</span> <span class="chip">${ART[r.art]}</span></p>
+  <p class="mine">„${esc(r.reason)}“</p>
+  <p class="eyebrow" style="margin-top:4px">Zum Weiterdenken</p><p>${esc(f.text)}</p></div>`;}
+function openFind(id){
+  const f=BY[id];
+  const head=`<p class="eyebrow">Zimmer 14</p><h2 id="dTitle">${esc(f.name)}</h2><p class="see">${esc(f.see)}</p>`;
+  if(S.found[id]){openDlg(head+findResult(f,S.found[id])+`<div class="actions"><button type="button" class="primary" data-close>Zurück ins Zimmer</button></div>`);
+    card.onclick=e=>{if(e.target.closest("[data-close]"))closeDlg();};return;}
+  const sel={cat:null,art:null};let justDone=false;
+  openDlg(head+`<div class="q"><p class="qlabel">1. Welche Perspektive nach Henderson passt für dich?</p><div class="opts">${Object.keys(CAT).map(k=>`<button type="button" class="opt-${k}" data-cat="${k}" aria-pressed="false">${CAT[k]}</button>`).join("")}</div></div>
+      <div class="q"><p class="qlabel">2. Ist das für dich ein Zeichen (beobachtbar, dokumentierbar) oder ein Symbol (ein Bild, das du deutest)?</p><div class="opts">${Object.keys(ART).map(k=>`<button type="button" data-art="${k}" aria-pressed="false">${ART[k]}</button>`).join("")}</div></div>
+      ${reasonField("rFind","3. Begründe deine Einordnung","Ich sehe das so, weil …")}
+      <div class="actions"><button type="button" data-close>Später</button><button type="button" class="primary" data-check disabled>Festhalten</button></div>`,
+    ()=>{if(justDone)wiggle(id);});
+  const upd=()=>{const c=card.querySelector("[data-check]");if(c)c.disabled=!(sel.cat&&sel.art&&reasonOk($("#rFind").value));};
+  card.oninput=upd;
+  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;
+    if(b.dataset.cat){sel.cat=b.dataset.cat;setPressed(card,"data-cat",sel.cat);upd();}
+    else if(b.dataset.art){sel.art=b.dataset.art;setPressed(card,"data-art",sel.art);upd();}
+    else if(b.hasAttribute("data-check")){const r={cat:sel.cat,art:sel.art,reason:$("#rFind").value.trim()};S.found[id]=r;S.log.push({type:"find",id,...r});justDone=true;updHud();syncHintMarkers();
+      const n=Object.keys(S.found).length;
+      card.oninput=null;
+      card.innerHTML=head+findResult(f,r)+(n===FINDS.length?`<p class="small">Du hast alle elf Hinweise angesehen.</p>`:"")+`<div class="actions">${S.place?`<button type="button" data-reflect>Zur Reflexion</button>`:`<button type="button" data-place>Gesprächsplatz wählen</button>`}<button type="button" class="primary" data-close>Zurück ins Zimmer</button></div>`;
+      card.querySelector("[data-close]").focus();}
+    else if(b.hasAttribute("data-place")){onClose=null;dlg.hidden=true;wiggle(id);placeChooser();}
+    else if(b.hasAttribute("data-reflect")){onClose=null;dlg.hidden=true;wiggle(id);reflection();}
     else if(b.hasAttribute("data-close"))closeDlg();};
 }
-function afterFind(){if(S.priorityDone&&!S.placeOpen){S.placeOpen=true;markers.forEach(m=>m.g.visible=true);$("#bPlace").hidden=false;$("#bPlace").textContent=Object.keys(S.found).length===FINDS.length?"Gesprächsplatz wählen":"Platz wählen";$("#bTip").disabled=true;
-  thought(Object.keys(S.found).length===FINDS.length?"Alle elf Hinweise sind erkundet. Jetzt noch den geeigneten Gesprächsplatz wählen.":"Wie kann ich sicher und respektvoll mit X ins Gespräch kommen?",7000);}}
 function updHud(){$("#hFound").textContent=Object.keys(S.found).length+" / "+FINDS.length;$("#hTips").textContent=S.tips;}
 
 /* ---------- Wackeln und Tipp ---------- */
 const wig={};
 function wiggle(id){wig[id]=1.6;}
-function tip(){const open=FINDS.filter(f=>!S.found[f.id]);if(!open.length)return;
+function tip(){const open=FINDS.filter(f=>!S.found[f.id]);if(!open.length){thought("Du hast alle Hinweise angesehen.",2500);return;}
   if(S.phase!=="room"){thought("Erst anklopfen.",2500);return;}
+  if(!S.plan)return;
   const f=open[Math.floor(Math.random()*open.length)];S.tips++;updHud();
   const w=new THREE.Vector3();roots[f.id].getWorldPosition(w);if(f.id==="x")w.y=.6;
   const dx=w.x-P.x,dy=w.y-1.62,dz=w.z-P.z;let ty=Math.atan2(-dx,-dz);let d=ty-P.yaw;d=Math.atan2(Math.sin(d),Math.cos(d));
@@ -498,58 +581,74 @@ function tip(){const open=FINDS.filter(f=>!S.found[f.id]);if(!open.length)return
   wig[f.id]=2.8;thought("Schau hierhin. Achte auf das, was sich bewegt.",3500);}
 $("#bTip").onclick=tip;
 
-/* ---------- Platzwahl & Abschluss ---------- */
+/* ---------- Gesprächsplatz ---------- */
 function placeChooser(){
-  openDlg(`<p class="eyebrow">Platzwahl</p><h2 id="dTitle">Wo sprichst du mit X?</h2><p><strong>Letzter Schritt:</strong> Setze dich für das Gespräch zu X. Empfohlen ist <strong>„Auf dem Boden“</strong>: mit Abstand, seitlich und auf Augenhöhe.</p><div class="actions" style="justify-content:flex-start">${PLACES.map(p=>`<button type="button" data-pl="${p.id}">${p.label}</button>`).join("")}<button type="button" data-close>Zurück ins Zimmer</button></div>`);
+  openDlg(`<p class="eyebrow">Gesprächsplatz</p><h2 id="dTitle">Wo sprichst du mit X?</h2><p>Jeder Platz hat Vor- und Nachteile. Sieh sie dir an, entscheide dich und begründe deine Wahl.</p><div class="actions" style="justify-content:flex-start">${PLACES.map(p=>`<button type="button" data-pl="${p.id}">${p.label}</button>`).join("")}<button type="button" data-close>Zurück ins Zimmer</button></div>`);
   card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-pl"))openPlace(PLACES.find(p=>p.id===b.dataset.pl));if(b.hasAttribute("data-close"))closeDlg();};
 }
 function openPlace(p){
   if(p.id==="nah")xState.leanT=-.12;
-  openDlg(`<p class="eyebrow">Platzwahl</p><h2 id="dTitle">${p.title}</h2><p class="see">${p.text}</p>
-   <div class="actions"><button type="button" data-back>Andere Position wählen</button><button type="button" data-close>Zurück ins Zimmer</button><button type="button" class="primary" data-take>Hier bleiben</button></div>`,()=>{xState.leanT=xState.base;});
+  openDlg(`<p class="eyebrow">Gesprächsplatz</p><h2 id="dTitle">${p.title}</h2><p class="see">${p.text}</p>
+   ${reasonField("rPlace","Warum wählst du diesen Platz – oder warum nicht?","Ich wähle diesen Platz, weil …")}
+   <div class="actions"><button type="button" data-back>Anderen Platz ansehen</button><button type="button" class="primary" data-take disabled>Hier bleiben</button></div>`,()=>{xState.leanT=xState.base;});
+  card.oninput=()=>{card.querySelector("[data-take]").disabled=!reasonOk($("#rPlace").value);};
   card.onclick=e=>{const b=e.target.closest("button");if(!b)return;
     if(b.hasAttribute("data-back")){xState.leanT=xState.base;placeChooser();}
-    else if(b.hasAttribute("data-close"))closeDlg();
-    else if(b.hasAttribute("data-take")){S.place=p;onClose=null;if(p.good&&Object.keys(S.found).length===FINDS.length)finishGame();else summary();}};
+    else if(b.hasAttribute("data-take")){const reason=$("#rPlace").value.trim();S.place=p;S.placeReason=reason;S.log.push({type:"place",id:p.id,reason});onClose=null;xState.leanT=xState.base;seated();}};
+}
+function seated(){
+  $("#bPlace").textContent="Platz wechseln";$("#bFinish").hidden=false;
+  const n=Object.keys(S.found).length, rest=FINDS.length-n;
+  openDlg(`<p class="eyebrow">Gespräch</p><h2 id="dTitle">Du bist bei X: ${esc(S.place.label)}</h2>
+    <p class="see">Das Gespräch kann beginnen.</p>
+    <p>${n===0?"Du hast noch keinen Hinweis im Zimmer angesehen. Du kannst sie jetzt erkunden – vielleicht mit dem, was X dir erzählt.":rest>0?`Du hast ${n} von ${FINDS.length} Hinweisen angesehen. Du kannst weiter erkunden oder zur Reflexion gehen.`:"Du hast alle Hinweise angesehen."}</p>
+    <div class="actions">${rest>0?`<button type="button" data-close>Hinweise erkunden</button>`:""}<button type="button" class="primary" data-reflect>Zur Reflexion</button></div>`);
+  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-close"))closeDlg();if(b.hasAttribute("data-reflect"))reflection();};
 }
 $("#bPlace").onclick=placeChooser;
-function finishGame(){
-  S.finished=true;S.placeOpen=false;markers.forEach(m=>m.g.visible=false);$("#bPlace").hidden=true;$("#bTip").disabled=true;$("#bFinish").hidden=false;syncHintMarkers();heart.material.opacity=1;successLight.intensity=1.1;
-  thought("Alle elf Hinweise sind erkundet. Du hast den geeigneten Gesprächsplatz gewählt.",9000,"Die Szene ist abgeschlossen. Öffne oben mit ♥ den Abschluss.");
+
+/* ---------- Reflexion ---------- */
+function logText(){
+  const L=["Nachtdienst, Zimmer 14 – meine Notizen",""];
+  S.log.forEach((e,i)=>{
+    if(e.type==="plan")L.push(`${i+1}. Vorgehen: ${PLANS[e.plan]}`,`   Begründung: ${e.reason}`);
+    if(e.type==="find")L.push(`${i+1}. Hinweis „${BY[e.id].name}“: ${CAT[e.cat]}, ${ART[e.art]}`,`   Begründung: ${e.reason}`);
+    if(e.type==="place")L.push(`${i+1}. Gesprächsplatz: ${PLACES.find(p=>p.id===e.id).label}`,`   Begründung: ${e.reason}`);});
+  L.push("",`Hinweise angesehen: ${Object.keys(S.found).length} von ${FINDS.length}`,`Tipps genutzt: ${S.tips}`);
+  if(S.near)L.push(`X sehr nah gekommen: ${S.near}-mal`);if(S.light)L.push(`X mit der Lampe ins Gesicht geleuchtet: ${S.light}-mal`);
+  if(S.final)L.push("","Mein Rückblick:",S.final);
+  return L.join("\n");}
+function reflection(){
+  const items=S.log.map(e=>{
+    if(e.type==="plan")return `<li><span class="eyebrow">Vorgehen</span><br>${esc(PLANS[e.plan])}<p class="mine">„${esc(e.reason)}“</p></li>`;
+    if(e.type==="find")return `<li><span class="eyebrow">Hinweis</span><br>${esc(BY[e.id].name)} · <span class="chip c-${e.cat}">${CAT[e.cat]}</span> <span class="chip">${ART[e.art]}</span><p class="mine">„${esc(e.reason)}“</p></li>`;
+    return `<li><span class="eyebrow">Gesprächsplatz</span><br>${esc(PLACES.find(p=>p.id===e.id).label)}<p class="mine">„${esc(e.reason)}“</p></li>`;}).join("");
+  const obs=[];if(S.near)obs.push(`Du bist X ${S.near}-mal sehr nah gekommen; sie hat sich an die Wand gedrückt.`);if(S.light)obs.push(`Der Lichtkegel hat ${S.light}-mal ihr Gesicht getroffen; sie hat sich abgewandt.`);
+  openDlg(`<p class="eyebrow">Reflexion</p><h2 id="dTitle">Dein Weg durch Zimmer 14</h2>
+   <div class="sumgrid"><div><b>${Object.keys(S.found).length} / ${FINDS.length}</b><span>Hinweise angesehen</span></div><div><b>${S.tips}</b><span>Tipps genutzt</span></div><div><b>${S.place?esc(S.place.label):"–"}</b><span>Gesprächsplatz</span></div></div>
+   <p>So bist du vorgegangen, in deiner Reihenfolge und mit deinen Begründungen:</p>
+   <ol class="log">${items}</ol>
+   ${obs.length?`<p class="small">${obs.join(" ")}</p>`:""}
+   <div class="q"><label class="qlabel" for="rFinal">Rückblick: Passt dein Vorgehen noch zu deiner ersten Begründung? Was würdest du beim nächsten Mal genauso, was anders machen?</label><textarea id="rFinal" placeholder="Rückblickend …">${esc(S.final||"")}</textarea></div>
+   <details><summary class="qlabel">Fachlicher Hintergrund</summary><div style="display:grid;gap:8px;margin-top:8px">
+   <p><strong>Beobachten, vermuten, erfragen:</strong> Gegenstände im Zimmer können Gesprächsanlässe sein. Was sie für X bedeuten, erfährst du nur von X selbst.</p>
+   <p><strong>Direkt fragen:</strong> Nach einem geäußerten Suizidwunsch gehört die direkte Frage nach aktuellen Suizidgedanken ins Gespräch – zum Beispiel: „Haben Sie gerade Gedanken, sich das Leben zu nehmen?“ Danach nach Absicht, Planung, verfügbaren Mitteln und unmittelbarer Sicherheit fragen. Stationsstandards und Beobachtungsmaßnahmen gelten; bei akuter Gefahr sofort Unterstützung holen.</p>
+   <p><strong>Henderson:</strong> Kraft, Wille und Wissen sind Perspektiven auf Unterstützungsbedarf – keine Diagnosen, die sich aus Gegenständen ablesen lassen.</p></div></details>
+   <p class="small">Dies ist eine Übung, kein Ersatz für klinische Standards oder Supervision. Bei eigener Belastung: Telefonseelsorge <span class="tel">0800 111 0 111</span> oder <span class="tel">0800 111 0 222</span>.</p>
+   <div class="actions"><button type="button" data-dl>Notizen herunterladen</button><button type="button" data-copy>Notizen kopieren</button><button type="button" data-close>Weiter erkunden</button><button type="button" data-restart>Neu beginnen</button><button type="button" class="primary" data-end>Lernfall beenden</button></div>`);
+  card.oninput=()=>{S.final=$("#rFinal").value.trim();};
+  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;
+    if(b.hasAttribute("data-dl")){try{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([logText()],{type:"text/plain;charset=utf-8"}));a.download="Zimmer14_meine_Notizen.txt";document.body.appendChild(a);a.click();a.remove();}catch(_){} }
+    if(b.hasAttribute("data-copy")){try{navigator.clipboard.writeText(logText()).then(()=>{b.textContent="Kopiert";},()=>{b.textContent="Kopieren nicht möglich";});}catch(_){b.textContent="Kopieren nicht möglich";}}
+    if(b.hasAttribute("data-restart"))location.reload();
+    if(b.hasAttribute("data-close"))closeDlg();
+    if(b.hasAttribute("data-end")){closeDlg();endGame();}};
 }
-function finishDialog(){
-  openDlg(`<p class="eyebrow">Lernfall abgeschlossen</p><h2 id="dTitle">Du hast dein Ziel erreicht.</h2><p class="see">Du hast alle elf Hinweise erkundet, die aktuelle Sicherheit priorisiert und einen geeigneten Gesprächsplatz gewählt.</p><div class="sumgrid"><div><b>11 / 11</b><span>Hinweise erkundet</span></div><div><b>${S.place.label}</b><span>geeignete Gesprächsposition</span></div></div><p><strong>Dein nächster pflegerischer Schritt:</strong> ruhig Kontakt aufnehmen, direkt nach aktuellen Suizidgedanken fragen und die weitere Sicherheit nach den Standards deiner Einrichtung klären.</p><p class="good" style="font-family:var(--f-display);font-weight:700">Das blassrosa Herz auf der Brust markiert: Die Begegnung kann jetzt beginnen.</p><div class="actions"><button type="button" class="primary" data-finish-close>Spiel beenden</button><button type="button" data-close>Zurück zur Szene</button><button type="button" data-restart>Neu beginnen</button></div>`);
-  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-restart"))location.reload();if(b.hasAttribute("data-finish-close")){closeDlg();$("#bFinish").hidden=true;$("#desk").hidden=true;thought("Lernfall beendet.",5000);}};
-}
-$("#bFinish").onclick=finishDialog;
-function summary(){
-  const all=FINDS.length, examined=Object.keys(S.found).length;
-  openDlg(`<p class="eyebrow">Reflexion · Ende der Probe</p><h2 id="dTitle">Was hatte Vorrang?</h2>
-   <div class="sumgrid"><div><b>${examined} / ${all}</b><span>Hinweise erkundet (freiwillig)</span></div><div><b>${S.tips}</b><span>Hilfen genutzt</span></div><div><b>${S.place.label}</b><span>Gesprächsposition</span></div></div>
-   <p><strong>Entscheidend:</strong> Bei einer Aufnahme nach geäußertem Suizidwunsch steht die zeitnahe, direkte Einschätzung der aktuellen Gefährdung vor dem Sammeln weiterer Hinweise. Bestehende Schutz- und Beobachtungsmaßnahmen sowie Stationsstandards sind einzuhalten; bei akuter Gefahr sofort Unterstützung hinzuziehen.</p>
-   <p><strong>Beobachten:</strong> X sitzt wach und zurückgezogen am Boden. <strong>Vermuten:</strong> Angst oder Erschöpfung sind möglich, aber nicht bewiesen. <strong>Erfragen:</strong> „Haben Sie gerade Gedanken, sich das Leben zu nehmen?“ Danach nach konkreter Absicht, Planung, verfügbaren Mitteln und unmittelbarer Sicherheit fragen und fachgerecht weiterhandeln.</p>
-   <p><strong>Henderson:</strong> Kraft, Wille und Wissen sind mögliche Perspektiven auf Unterstützungsbedarf – keine Diagnosen, die sich aus Gegenständen ablesen lassen. Die Gesprächsposition hängt von Sicherheit, Abstand und der Reaktion von X ab.</p>
-   <p class="small">Dies ist eine Übung, kein Ersatz für klinische Standards oder Supervision. Bei eigener Belastung: Telefonseelsorge 0800 111 0 111 oder 0800 111 0 222.</p>
-   <div class="actions"><button type="button" data-close>Weiter erkunden</button><button type="button" class="primary" data-restart>Neu beginnen</button></div>`);
-  card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-restart"))location.reload();if(b.hasAttribute("data-close"))closeDlg();};
-}
-function entryIntro(){
-  openDlg(`<p class="eyebrow">Zimmer 14 · Beobachtung</p><h2 id="dTitle">X sitzt in der Ecke</h2><p class="see">Im gedämpften Zimmer sitzt X wach auf dem Boden, den Rücken an der Wand, die Knie angezogen und die Arme darum gelegt. Sie hält den Eingang im Blick. Der Stuhl neben ihr bleibt leer.</p><p>Du kennst ihre aktuelle Gefährdung noch nicht. Nimm dir einen Moment für die Beobachtung. Danach entscheidest du, was jetzt Vorrang hat.</p><div class="actions"><button type="button" class="primary" data-continue>Zur Entscheidung weiter</button></div>`,()=>{if(!S.priorityDone)priority();});
-  card.onclick=e=>{if(e.target.closest("[data-continue]"))closeDlg();};
-}
-function priority(){
-  if(S.priorityDone)return;
-  openDlg(`<p class="eyebrow">Entscheidung 1 · Priorität</p><h2 id="dTitle">Was tust du jetzt zuerst?</h2>
-    <p>X sitzt um halb drei wach auf dem Boden. Sie wurde nach Andeutung eines Suizidwunsches aufgenommen. Du kennst ihre aktuelle Gefährdung noch nicht.</p>
-    <div class="q"><button type="button" data-pr="search">Erst das Zimmer nach Hinweisen absuchen</button><button type="button" data-pr="ask">Ruhig Kontakt aufnehmen, unmittelbar nach Suizidgedanken fragen und Sicherheit einschätzen</button><button type="button" data-pr="later">X schlafen lassen und später wiederkommen</button></div>`);
-  card.onclick=e=>{const b=e.target.closest('[data-pr]');if(!b)return;const choice=b.dataset.pr;S.priorityChoice=choice;
-    const correct=choice==='ask';
-    card.innerHTML=`<p class="eyebrow">Rückmeldung</p><h2 id="dTitle">${correct?'Sicherheit hat Vorrang':'Die aktuelle Gefährdung ist noch ungeklärt'}</h2>
-      <p>${correct?'Du priorisierst Kontakt, direkte Fragen und die aktuelle Sicherheit.':'Die Gegenstände können später Hinweise geben. Nach einem geäußerten Suizidwunsch darf die aktuelle Gefährdung nicht durch eine Suchaufgabe oder bloßes Abwarten nach hinten rücken.'}</p>
-      <p>Sprich X ruhig an, frage direkt nach aktuellen Suizidgedanken und kläre entsprechend den geltenden Standards Absicht, Planung und unmittelbare Gefährdung. Bei akuter Gefahr hole unverzüglich Unterstützung und setze erforderliche Schutzmaßnahmen um.</p>
-      <div class="actions">${correct?'':'<button type="button" data-again>Neu entscheiden</button>'}<button type="button" class="primary" data-next ${correct?'':'disabled'}>Gesprächsplatz wählen</button></div>`;
-    card.onclick=e2=>{if(e2.target.closest('[data-again]'))priority();if(e2.target.closest('[data-next]')){S.priorityDone=true;closeDlg();syncHintMarkers();afterFind();}};
-  };
+$("#bFinish").onclick=reflection;
+function endGame(){
+  S.finished=true;S.placeOpen=false;markers.forEach(m=>m.g.visible=false);$("#bPlace").hidden=true;$("#bTip").disabled=true;syncHintMarkers();
+  heart.material.opacity=1;successLight.intensity=1.1;$("#desk").hidden=true;
+  thought("Die Begegnung kann beginnen.",9000,"Über „♥ Reflexion“ oben siehst du deine Notizen noch einmal.");
 }
 $("#bHelp").onclick=()=>{openDlg(`<h2 id="dTitle">So geht es</h2><ul class="how">${$("#howDesk").innerHTML}</ul><p class="small">Tastatur geht auch: W A S D gehen, Pfeiltasten ← → drehen, F Lampe, T Tipp.</p><div class="actions"><button type="button" class="primary" data-close>Weiter</button></div>`);
   card.onclick=e=>{if(e.target.closest("[data-close]"))closeDlg();};};
@@ -557,16 +656,17 @@ $("#bHelp").onclick=()=>{openDlg(`<h2 id="dTitle">So geht es</h2><ul class="how"
 /* ---------- Anleitung oben ---------- */
 let gLast="";
 function updateGuide(){
-  const T=isTouch;let s,h;
+  const T=isTouch;let s,h;const n=Object.keys(S.found).length;
+  const clickHint=T?"<b>Tippe</b> auf einen gelben Punkt oder einen Ring am Boden.":"<b>Klick</b> auf einen gelben Punkt (Hinweis) oder einen Ring am Boden (Platz).";
   if(S.auto&&S.auto.enter){s="Du gehst ins Zimmer.";h="Einen Moment.";}
   else if(S.auto){s="Tipp: Dein Blick dreht sich zu einem Hinweis.";h="Achte auf das, was sich bewegt.";}
-  else if(S.finished){s="Lernfall abgeschlossen.";h="Du hast alle Hinweise erkundet und einen geeigneten Gesprächsplatz gewählt.";}
-  else if(S.placeOpen&&Object.keys(S.found).length===FINDS.length){s="Alle Hinweise gefunden. Jetzt Gesprächsplatz wählen.";h="<b>Wähle „Auf dem Boden“</b> für den Abschluss – mit Abstand und auf Augenhöhe.";}
-  else if(S.placeOpen){s="Wähle einen Gesprächsplatz oder erkunde die elf markierten Hinweise.";h=T?"<b>Tippe</b> auf einen leuchtenden Punkt.":"<b>Klick</b> auf einen leuchtenden Punkt. Sitzplätze wählst du unten oder über „Platz wählen“.";}
+  else if(S.finished){s="Lernfall beendet.";h="Deine Notizen findest du oben unter „♥ Reflexion“.";}
   else if(S.phase==="corridor"&&!knocked){s="Klopf an die Tür von Zimmer 14.";h=T?"<b>Tippe auf die Tür.</b>":"<b>Klick auf die Tür.</b>";}
   else if(S.phase==="corridor"){s="Du hast angeklopft.";h="Die Tür geht gleich auf.";}
-  else {const n=Object.keys(S.found).length;s=`Sicherheit zuerst. Optional: ${n} von ${FINDS.length} Hinweisen erkundet.`;
-    h=T?"<b>Wischen</b> = umsehen. <b>Tippen</b> auf etwas = genauer ansehen.":"<b>Maustaste halten und ziehen</b> = umsehen. <b>Klicken</b> auf etwas = genauer ansehen. Der Mauszeiger wird dort zur Hand.";}
+  else if(!S.plan){s="Beobachte X. Dann entscheidest du, wie du vorgehst.";h=T?"<b>Wischen</b> = umsehen.":"<b>Maustaste halten und ziehen</b> = umsehen.";}
+  else if(S.place){s=`Du bist bei X. ${n} von ${FINDS.length} Hinweisen angesehen.`;h=n<FINDS.length?clickHint+" Oben: Reflexion.":"Öffne oben „♥ Reflexion“.";}
+  else if(S.plan==="sprechen"){s="Dein Plan: erst setzen und sprechen.";h=clickHint+" Oder oben „Platz wählen“.";}
+  else {s=`Dein Plan: erst Hinweise ansehen. ${n} von ${FINDS.length}.`;h=clickHint+" Den Platz wählst du, wann du willst.";}
   const key=s+h;if(key!==gLast){gLast=key;$("#gStep").textContent=s;$("#gHow").innerHTML=h;}
 }
 
