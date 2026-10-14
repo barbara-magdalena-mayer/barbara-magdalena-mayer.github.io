@@ -96,6 +96,7 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
     <div class="tbtns">
       <button type="button" id="bTip">Tipp</button>
       <button type="button" id="bLamp" aria-pressed="true">Lampe an</button>
+      <button type="button" id="bSound">Ton testen</button>
       <button type="button" id="bPlace" hidden>Platz wählen</button>
       <button type="button" id="bFinish" class="finish-btn" hidden>♥ Abschluss ansehen</button>
       <button type="button" id="bHelp">Hilfe</button>
@@ -216,7 +217,7 @@ box(scene,8,.02,2.5,floorC,0,-.01,1.25);box(scene,8,.02,2.5,ceil,0,2.71,1.25);
 wall(8,2.7,.1,wallC,0,1.35,2.55);wall(.1,2.7,2.6,wallC,-4.05,1.35,1.25);wall(.1,2.7,2.6,wallC,4.05,1.35,1.25);
 plane(scene,.22,.11,tSign,2.25,1.75,.06);
 plane(scene,.5,.25,tExit,-2.6,2.45,2.49,Math.PI,0,true);
-const corr=new THREE.PointLight(0xffd9a3,1.1,4.2,1.6);corr.position.set(.8,2.55,1.4);scene.add(corr);
+const corr=new THREE.PointLight(0xffd9a3,.45,4.2,1.6);corr.position.set(.8,2.55,1.4);scene.add(corr);
 box(scene,1,.04,.18,B(0xfff1d6),.8,2.68,1.4);
 box(scene,6,.05,.05,M(0xb9a17c),0,.95,2.45);
 // Heller Stationsflur: Deckenleuchten, Türnischen und Zimmernummern.
@@ -229,7 +230,7 @@ const corridorDoorM=M(0xc4d0cc), corridorFrame=M(0x718984), corridorSignM=M(0xe8
   box(scene,.05,.06,.04,M(0x657570),x-side*.10,1.02,z);
   plane(scene,.28,.14,tSign,x-side*.07,2.02,z,side<0?Math.PI/2:-Math.PI/2,0,true);
 });
-const corridorLights=[];[2.15,1.35,.55].forEach(z=>{const light=new THREE.PointLight(0xfff3d2,1.35,3.4,1.7);light.position.set(0,2.55,z);scene.add(light);corridorLights.push(light);box(scene,1.25,.035,.16,B(0xfff5d8),0,2.68,z);});
+const corridorLights=[];[2.15,1.35,.55].forEach(z=>{const light=new THREE.PointLight(0xfff3d2,.55,3.4,1.7);light.position.set(0,2.55,z);scene.add(light);corridorLights.push(light);box(scene,1.25,.035,.16,B(0xfff5d8),0,2.68,z);});
 
 const doorPivot=new THREE.Group();doorPivot.position.set(2.05,0,0);scene.add(doorPivot);
 const doorM=box(doorPivot,.8,2.08,.05,M(0xb9c6c1),-.4,1.04,0);blockers.push(doorM);
@@ -240,8 +241,9 @@ let doorOpen=0, doorTarget=0, knocked=false;
 let corridorEventT=0,corridorEventDone=false,corridorFlickerT=0;
 function audioNoise(duration=0.12,filter=900,volume=.08){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const b=actx.createBuffer(1,actx.sampleRate*duration,actx.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);const n=actx.createBufferSource(),f=actx.createBiquadFilter(),g=actx.createGain();n.buffer=b;f.type="lowpass";f.frequency.value=filter;g.gain.value=volume;n.connect(f).connect(g).connect(actx.destination);n.start();}catch(_){} }
 function audioTone(freq,duration,volume=.12,type="sine"){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(volume,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+duration);o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+duration);}catch(_){} }
-function audioRattle(){audioNoise(.65,1200,.24);audioTone(480,.22,.12,"square");setTimeout(()=>audioTone(260,.18,.09,"square"),110);thought("Im hellen Flur scheppert kurz ein Metallwagen. Eine Deckenleuchte flackert.",3600);corridorFlickerT=1.8;}
-function sigh(){audioNoise(.95,520,.24);audioTone(165,.55,.08,"sine");thought("X seufzt hörbar und zieht die Arme wieder enger um die Knie.",3600);xState.leanT=.02;setTimeout(()=>xState.leanT=xState.base,900);}
+function audioRattle(){audioNoise(.75,1200,.42);audioTone(480,.28,.22,"square");setTimeout(()=>audioTone(260,.22,.16,"square"),110);thought("Im hellen Flur scheppert kurz ein Metallwagen. Eine Deckenleuchte flackert.",3600);corridorFlickerT=1.8;}
+function sigh(){audioNoise(1.05,520,.36);audioTone(165,.7,.13,"sine");thought("X seufzt hörbar und zieht die Arme wieder enger um die Knie.",3600);xState.leanT=.02;setTimeout(()=>xState.leanT=xState.base,900);}
+$("#bSound").onclick=()=>{try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();actx.resume();}catch(_){}audioRattle();$("#bSound").textContent="Ton läuft";setTimeout(()=>$("#bSound").textContent="Ton testen",1800);};
 scene.add(new THREE.HemisphereLight(0x6d8cb0,0x2a2018,.42));
 const nl=new THREE.PointLight(0xffb36b,.8,3.4,1.8);nl.position.set(2.35,.35,-1.1);scene.add(nl);
 box(scene,.04,.08,.16,B(0xffc98a),2.48,.32,-1.1);
@@ -574,7 +576,7 @@ function loop(){
     if(a.t>=a.dur){S.auto=null;if(a.enter){S.phase="room";setTimeout(()=>sigh(),900);setTimeout(()=>entryIntro(),550);}}}
   else if(active){
     if(S.phase==="corridor"&&!corridorEventDone){corridorEventT+=dt;if(corridorEventT>3.2){corridorEventDone=true;audioRattle();}}
-    if(corridorFlickerT>0){corridorFlickerT-=dt;const flicker=Math.random()>.38?1.35:.12;corridorLights.forEach(l=>l.intensity=flicker);if(corridorFlickerT<=0)corridorLights.forEach(l=>l.intensity=1.35);}
+    if(corridorFlickerT>0){corridorFlickerT-=dt;const flicker=Math.random()>.38?.95:.035;corridorLights.forEach(l=>l.intensity=flicker);if(corridorFlickerT<=0)corridorLights.forEach(l=>l.intensity=.55);}
     let mf=0,ms=0;
     if(keys.KeyW||keys.ArrowUp)mf+=1;if(keys.KeyS||keys.ArrowDown)mf-=1;if(keys.KeyD)ms+=1;if(keys.KeyA)ms-=1;
     if(keys.ArrowLeft)P.yaw+=1.6*dt;if(keys.ArrowRight)P.yaw-=1.6*dt;
