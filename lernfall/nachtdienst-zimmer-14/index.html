@@ -219,12 +219,37 @@ plane(scene,.5,.25,tExit,-2.6,2.45,2.49,Math.PI,0,true);
 const corr=new THREE.PointLight(0xffd9a3,1.1,4.2,1.6);corr.position.set(.8,2.55,1.4);scene.add(corr);
 box(scene,1,.04,.18,B(0xfff1d6),.8,2.68,1.4);
 box(scene,6,.05,.05,M(0xb9a17c),0,.95,2.45);
+// Heller Stationsflur: Deckenleuchten, Türnischen und Zimmernummern.
+const corridorDoorM=M(0xc4d0cc), corridorFrame=M(0x718984), corridorSignM=M(0xe8efe9);
+[[ -3.2,2.0,"12"],[-3.2,1.0,"13"],[3.2,2.0,"15"],[3.2,1.0,"16"]].forEach(([x,z,n])=>{
+  const side=x<0?-1:1;
+  box(scene,.06,2.05,.82,corridorDoorM,x,1.04,z);
+  box(scene,.08,2.18,.06,corridorFrame,x-side*.035,1.09,z-.44);
+  box(scene,.08,2.18,.06,corridorFrame,x-side*.035,1.09,z+.44);
+  box(scene,.05,.06,.04,M(0x657570),x-side*.10,1.02,z);
+  plane(scene,.28,.14,tSign,x-side*.07,2.02,z,side<0?Math.PI/2:-Math.PI/2,0,true);
+});
+[2.15,1.35,.55].forEach(z=>{const light=new THREE.PointLight(0xfff3d2,1.35,3.4,1.7);light.position.set(0,2.55,z);scene.add(light);box(scene,1.25,.035,.16,B(0xfff5d8),0,2.68,z);});
 
 const doorPivot=new THREE.Group();doorPivot.position.set(2.05,0,0);scene.add(doorPivot);
 const doorM=box(doorPivot,.8,2.08,.05,M(0xb9c6c1),-.4,1.04,0);blockers.push(doorM);
 box(doorPivot,.14,.04,.04,M(0x6c7773,{metalness:.5,roughness:.4}),-.7,1.02,.05);
 box(doorPivot,.14,.04,.04,M(0x6c7773,{metalness:.5,roughness:.4}),-.7,1.02,-.05);
 let doorOpen=0, doorTarget=0, knocked=false;
+// Eine ruhige, einmalige Bewegung auf dem Flur: Pflegekraft begleitet einen Patienten.
+const hallWalk=new THREE.Group();hallWalk.position.set(1.0,0,2.45);hallWalk.visible=false;scene.add(hallWalk);
+const walkSkin=M(0x8a6e63), walkScrub=M(0x4d716f), walkWheel=M(0x53605c);
+function walkerPerson(g,x,bodyM,headM){box(g,.28,.62,.18,bodyM,x,.82,0);cyl(g,.12,.1,.16,headM,x,1.28,0,12);cyl(g,.035,.035,.55,bodyM,x-.11,.33,0,8);cyl(g,.035,.035,.55,bodyM,x+.11,.33,0,8);}
+walkerPerson(hallWalk,-.28,walkScrub,walkSkin);
+const chair=new THREE.Group();chair.position.set(.25,0,0);hallWalk.add(chair);box(chair,.48,.06,.42,walkWheel,0,.5,0);box(chair,.42,.48,.05,walkWheel,0,.78,-.18);[[-.18,-.16],[.18,-.16],[-.18,.16],[.18,.16]].forEach(([x,z])=>cyl(chair,.025,.025,.34,walkWheel,x,.23,z,8));
+walkerPerson(hallWalk,.25,walkScrub,walkSkin);
+let hallWalkT=0,hallWalkStarted=false,hallWalkDone=false,hallCallDone=false;
+function startHallWalk(){if(hallWalkStarted)return;hallWalkStarted=true;hallWalk.visible=true;hallWalkT=0;audioWheel();}
+function audioNoise(duration=0.12,filter=900,volume=.08){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const b=actx.createBuffer(1,actx.sampleRate*duration,actx.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);const n=actx.createBufferSource(),f=actx.createBiquadFilter(),g=actx.createGain();n.buffer=b;f.type="lowpass";f.frequency.value=filter;g.gain.value=volume;n.connect(f).connect(g).connect(actx.destination);n.start();}catch(_){} }
+function audioWheel(){audioNoise(.35,420,.045);}
+function distantCall(){try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance("Hallo? Ist da jemand?");u.lang="de-DE";u.volume=.28;u.rate=.82;u.pitch=.82;window.speechSynthesis.speak(u);}}catch(_){}thought("Aus einem entfernten Zimmer: „Hallo? Ist da jemand?“",3600);}
+function sigh(){audioNoise(.8,520,.07);thought("X seufzt leise und zieht die Arme wieder enger um die Knie.",3600);xState.leanT=.02;setTimeout(()=>xState.leanT=xState.base,900);}
+
 
 scene.add(new THREE.HemisphereLight(0x6d8cb0,0x2a2018,.42));
 const nl=new THREE.PointLight(0xffb36b,.8,3.4,1.8);nl.position.set(2.35,.35,-1.1);scene.add(nl);
@@ -504,6 +529,10 @@ function summary(){
    <div class="actions"><button type="button" data-close>Weiter erkunden</button><button type="button" class="primary" data-restart>Neu beginnen</button></div>`);
   card.onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-restart"))location.reload();if(b.hasAttribute("data-close"))closeDlg();};
 }
+function entryIntro(){
+  openDlg(`<p class="eyebrow">Zimmer 14 · Beobachtung</p><h2 id="dTitle">X sitzt in der Ecke</h2><p class="see">Im gedämpften Zimmer sitzt X wach auf dem Boden, den Rücken an der Wand, die Knie angezogen und die Arme darum gelegt. Sie hält den Eingang im Blick. Der Stuhl neben ihr bleibt leer.</p><p>Du kennst ihre aktuelle Gefährdung noch nicht. Nimm dir einen Moment für die Beobachtung. Danach entscheidest du, was jetzt Vorrang hat.</p><div class="actions"><button type="button" class="primary" data-continue>Zur Entscheidung weiter</button></div>`,()=>{if(!S.priorityDone)priority();});
+  card.onclick=e=>{if(e.target.closest("[data-continue]"))closeDlg();};
+}
 function priority(){
   if(S.priorityDone)return;
   openDlg(`<p class="eyebrow">Entscheidung 1 · Priorität</p><h2 id="dTitle">Was tust du jetzt zuerst?</h2>
@@ -551,8 +580,10 @@ function loop(){
   const active=S.started&&dlg.hidden&&!S.finished;
   if(S.auto){const a=S.auto;a.t+=dt;const k=ease(Math.min(1,a.t/a.dur));
     P.x=a.from.x+(a.to.x-a.from.x)*k;P.z=a.from.z+(a.to.z-a.from.z)*k;P.yaw=a.from.yaw+(a.to.yaw-a.from.yaw)*k;P.pitch=a.from.pitch+(a.to.pitch-a.from.pitch)*k;
-    if(a.t>=a.dur){S.auto=null;if(a.enter){S.phase="room";thought("X sitzt wach auf dem Boden. Ihre aktuelle Sicherheit hat Vorrang.",4500);setTimeout(()=>priority(),550);}}}
+    if(a.t>=a.dur){S.auto=null;if(a.enter){S.phase="room";startHallWalk();setTimeout(()=>sigh(),900);setTimeout(()=>entryIntro(),550);}}}
   else if(active){
+    if(S.phase==="corridor"&&!hallWalkStarted&&t>.8)startHallWalk();
+    if(hallWalkStarted&&!hallWalkDone){hallWalkT+=dt;hallWalk.position.z=2.45-Math.min(hallWalkT/10,1)*2.15;if(hallWalkT>4.8&&hallWalkT<5.0&&!hallCallDone){hallCallDone=true;distantCall();}if(hallWalkT>=10){hallWalkDone=true;hallWalk.visible=false;}}
     let mf=0,ms=0;
     if(keys.KeyW||keys.ArrowUp)mf+=1;if(keys.KeyS||keys.ArrowDown)mf-=1;if(keys.KeyD)ms+=1;if(keys.KeyA)ms-=1;
     if(keys.ArrowLeft)P.yaw+=1.6*dt;if(keys.ArrowRight)P.yaw-=1.6*dt;
