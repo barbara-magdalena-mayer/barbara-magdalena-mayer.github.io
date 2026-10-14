@@ -229,28 +229,19 @@ const corridorDoorM=M(0xc4d0cc), corridorFrame=M(0x718984), corridorSignM=M(0xe8
   box(scene,.05,.06,.04,M(0x657570),x-side*.10,1.02,z);
   plane(scene,.28,.14,tSign,x-side*.07,2.02,z,side<0?Math.PI/2:-Math.PI/2,0,true);
 });
-[2.15,1.35,.55].forEach(z=>{const light=new THREE.PointLight(0xfff3d2,1.35,3.4,1.7);light.position.set(0,2.55,z);scene.add(light);box(scene,1.25,.035,.16,B(0xfff5d8),0,2.68,z);});
+const corridorLights=[];[2.15,1.35,.55].forEach(z=>{const light=new THREE.PointLight(0xfff3d2,1.35,3.4,1.7);light.position.set(0,2.55,z);scene.add(light);corridorLights.push(light);box(scene,1.25,.035,.16,B(0xfff5d8),0,2.68,z);});
 
 const doorPivot=new THREE.Group();doorPivot.position.set(2.05,0,0);scene.add(doorPivot);
 const doorM=box(doorPivot,.8,2.08,.05,M(0xb9c6c1),-.4,1.04,0);blockers.push(doorM);
 box(doorPivot,.14,.04,.04,M(0x6c7773,{metalness:.5,roughness:.4}),-.7,1.02,.05);
 box(doorPivot,.14,.04,.04,M(0x6c7773,{metalness:.5,roughness:.4}),-.7,1.02,-.05);
 let doorOpen=0, doorTarget=0, knocked=false;
-// Eine ruhige, einmalige Bewegung auf dem Flur: Pflegekraft begleitet einen Patienten.
-const hallWalk=new THREE.Group();hallWalk.position.set(1.0,0,2.45);hallWalk.visible=false;scene.add(hallWalk);
-const walkSkin=M(0x8a6e63), walkScrub=M(0x4d716f), walkWheel=M(0x53605c);
-function walkerPerson(g,x,bodyM,headM){box(g,.28,.62,.18,bodyM,x,.82,0);cyl(g,.12,.1,.16,headM,x,1.28,0,12);cyl(g,.035,.035,.55,bodyM,x-.11,.33,0,8);cyl(g,.035,.035,.55,bodyM,x+.11,.33,0,8);}
-walkerPerson(hallWalk,-.28,walkScrub,walkSkin);
-const chair=new THREE.Group();chair.position.set(.25,0,0);hallWalk.add(chair);box(chair,.48,.06,.42,walkWheel,0,.5,0);box(chair,.42,.48,.05,walkWheel,0,.78,-.18);[[-.18,-.16],[.18,-.16],[-.18,.16],[.18,.16]].forEach(([x,z])=>cyl(chair,.025,.025,.34,walkWheel,x,.23,z,8));
-walkerPerson(hallWalk,.25,walkScrub,walkSkin);
-let hallWalkT=0,hallWalkStarted=false,hallWalkDone=false,hallCallDone=false;
-function startHallWalk(){if(hallWalkStarted)return;hallWalkStarted=true;hallWalk.visible=true;hallWalkT=0;audioWheel();}
+// Nachtatmosphäre ohne zusätzliche Figuren: ein kurzes Scheppern und Lichtflackern.
+let corridorEventT=0,corridorEventDone=false,corridorFlickerT=0;
 function audioNoise(duration=0.12,filter=900,volume=.08){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const b=actx.createBuffer(1,actx.sampleRate*duration,actx.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);const n=actx.createBufferSource(),f=actx.createBiquadFilter(),g=actx.createGain();n.buffer=b;f.type="lowpass";f.frequency.value=filter;g.gain.value=volume;n.connect(f).connect(g).connect(actx.destination);n.start();}catch(_){} }
-function audioWheel(){audioNoise(.35,420,.045);}
-function distantCall(){try{if(window.speechSynthesis){const u=new SpeechSynthesisUtterance("Hallo? Ist da jemand?");u.lang="de-DE";u.volume=.28;u.rate=.82;u.pitch=.82;window.speechSynthesis.speak(u);}}catch(_){}thought("Aus einem entfernten Zimmer: „Hallo? Ist da jemand?“",3600);}
-function sigh(){audioNoise(.8,520,.07);thought("X seufzt leise und zieht die Arme wieder enger um die Knie.",3600);xState.leanT=.02;setTimeout(()=>xState.leanT=xState.base,900);}
-
-
+function audioTone(freq,duration,volume=.12,type="sine"){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(volume,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+duration);o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+duration);}catch(_){} }
+function audioRattle(){audioNoise(.65,1200,.24);audioTone(480,.22,.12,"square");setTimeout(()=>audioTone(260,.18,.09,"square"),110);thought("Im hellen Flur scheppert kurz ein Metallwagen. Eine Deckenleuchte flackert.",3600);corridorFlickerT=1.8;}
+function sigh(){audioNoise(.95,520,.24);audioTone(165,.55,.08,"sine");thought("X seufzt hörbar und zieht die Arme wieder enger um die Knie.",3600);xState.leanT=.02;setTimeout(()=>xState.leanT=xState.base,900);}
 scene.add(new THREE.HemisphereLight(0x6d8cb0,0x2a2018,.42));
 const nl=new THREE.PointLight(0xffb36b,.8,3.4,1.8);nl.position.set(2.35,.35,-1.1);scene.add(nl);
 box(scene,.04,.08,.16,B(0xffc98a),2.48,.32,-1.1);
@@ -351,8 +342,8 @@ const FINDS=[
   const BY=Object.fromEntries(FINDS.map(f=>[f.id,f]));
   const hintMarkers=[];
   const hintOffsets={x:[0,.9,0],bett:[0,.78,0],handy:[0,.18,0],tablett:[0,.98,0],stapel:[0,.24,0],foto:[0,.18,0],powerbank:[0,.18,0],kalender:[0,.45,.02],krisenplan:[0,.42,.02],notizbuch:[0,.18,0],stadtplan:[0,.45,.02]};
-  FINDS.forEach(f=>{const g=roots[f.id];if(!g)return;const m=new THREE.Mesh(new THREE.SphereGeometry(f.id==="x"?.085:.055,12,8),new THREE.MeshBasicMaterial({color:f.id==="x"?0xff6f78:0xf0c98a,transparent:true,opacity:.9}));const o=hintOffsets[f.id]||[0,.2,0];m.position.set(o[0],o[1],o[2]);m.userData.findId=f.id;m.visible=false;g.add(m);hintMarkers.push(m);});
-  function syncHintMarkers(){hintMarkers.forEach(m=>{m.visible=S.phase==="room"&&S.priorityDone&&!S.found[m.userData.findId];});}
+  FINDS.forEach(f=>{const g=roots[f.id];if(!g)return;const color=f.id==="x"?0xff7d87:0xffd36f;const m=new THREE.Mesh(new THREE.SphereGeometry(f.id==="x"?.14:.12,16,10),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.98}));const halo=new THREE.Mesh(new THREE.RingGeometry(f.id==="x"?.18:.15,f.id==="x"?.24:.21,24),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.72,side:THREE.DoubleSide}));const o=hintOffsets[f.id]||[0,.2,0];m.position.set(o[0],o[1],o[2]);halo.position.copy(m.position);halo.rotation.x=-Math.PI/2;m.userData.findId=f.id;m.userData.halo=halo;m.visible=false;halo.visible=false;g.add(m);g.add(halo);hintMarkers.push(m);});
+  function syncHintMarkers(){hintMarkers.forEach(m=>{const show=S.phase==="room"&&S.priorityDone&&!S.found[m.userData.findId];m.visible=show;m.userData.halo.visible=show;});}
 const S={found:{},tips:0,lamp:true,near:0,light:0,place:null,started:false,phase:"corridor",auto:null,priorityDone:false,priorityChoice:null,placeOpen:false,finished:false};
 
 /* ---------- Platzwahl ---------- */
@@ -567,7 +558,7 @@ function updateGuide(){
 }
 
 /* ---------- Start ---------- */
-$("#bStart").onclick=()=>{S.started=true;$("#start").hidden=true;$("#hud").hidden=false;
+$("#bStart").onclick=()=>{try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();actx.resume();}catch(_){}S.started=true;$("#start").hidden=true;$("#hud").hidden=false;
   thought("Nachtdienst, halb drei. Zimmer 14 steht als Nächstes auf meiner Runde.",5000);};
 
 /* ---------- Schleife ---------- */
@@ -580,10 +571,10 @@ function loop(){
   const active=S.started&&dlg.hidden&&!S.finished;
   if(S.auto){const a=S.auto;a.t+=dt;const k=ease(Math.min(1,a.t/a.dur));
     P.x=a.from.x+(a.to.x-a.from.x)*k;P.z=a.from.z+(a.to.z-a.from.z)*k;P.yaw=a.from.yaw+(a.to.yaw-a.from.yaw)*k;P.pitch=a.from.pitch+(a.to.pitch-a.from.pitch)*k;
-    if(a.t>=a.dur){S.auto=null;if(a.enter){S.phase="room";startHallWalk();setTimeout(()=>sigh(),900);setTimeout(()=>entryIntro(),550);}}}
+    if(a.t>=a.dur){S.auto=null;if(a.enter){S.phase="room";setTimeout(()=>sigh(),900);setTimeout(()=>entryIntro(),550);}}}
   else if(active){
-    if(S.phase==="corridor"&&!hallWalkStarted&&t>.8)startHallWalk();
-    if(hallWalkStarted&&!hallWalkDone){hallWalkT+=dt;hallWalk.position.z=2.45-Math.min(hallWalkT/10,1)*2.15;if(hallWalkT>4.8&&hallWalkT<5.0&&!hallCallDone){hallCallDone=true;distantCall();}if(hallWalkT>=10){hallWalkDone=true;hallWalk.visible=false;}}
+    if(S.phase==="corridor"&&!corridorEventDone){corridorEventT+=dt;if(corridorEventT>3.2){corridorEventDone=true;audioRattle();}}
+    if(corridorFlickerT>0){corridorFlickerT-=dt;const flicker=Math.random()>.38?1.35:.12;corridorLights.forEach(l=>l.intensity=flicker);if(corridorFlickerT<=0)corridorLights.forEach(l=>l.intensity=1.35);}
     let mf=0,ms=0;
     if(keys.KeyW||keys.ArrowUp)mf+=1;if(keys.KeyS||keys.ArrowDown)mf-=1;if(keys.KeyD)ms+=1;if(keys.KeyA)ms-=1;
     if(keys.ArrowLeft)P.yaw+=1.6*dt;if(keys.ArrowRight)P.yaw-=1.6*dt;
@@ -610,7 +601,7 @@ function loop(){
     else{g.rotation.z=Math.sin(t*24)*.07*k;g.position.y=g.userData.base.y+Math.abs(Math.sin(t*12))*.02*k;}
     if(wig[id]<=0){delete wig[id];if(id!=="x"){g.rotation.z=0;g.position.y=g.userData.base.y;}xState.nod=0;}}
   if(S.placeOpen)markers.forEach(m=>{m.ring.material.opacity=.45+Math.sin(t*3)*.25;});
-  hintMarkers.forEach((m,i)=>{if(m.visible){const pulse=.75+Math.sin(t*4+i*.6)*.22;m.scale.setScalar(pulse);m.material.opacity=.6+Math.sin(t*4+i*.6)*.2;}});
+  hintMarkers.forEach((m,i)=>{if(m.visible){const pulse=.82+Math.sin(t*4+i*.6)*.25;m.scale.setScalar(pulse);m.userData.halo.scale.setScalar(.9+Math.sin(t*4+i*.6)*.18);m.userData.halo.rotation.z=t*.8+i; m.material.opacity=.78+Math.sin(t*4+i*.6)*.2;}});
   if(S.finished){const pulse=1+Math.sin(t*4)*.08;heart.scale.set(.42*pulse,.42*pulse,1);heart.material.opacity=.82+Math.sin(t*4)*.18;successLight.intensity=1.0+Math.sin(t*4)*.25;}
   if(S.started)updateGuide();
   (fx||renderer).render(scene,camera);
