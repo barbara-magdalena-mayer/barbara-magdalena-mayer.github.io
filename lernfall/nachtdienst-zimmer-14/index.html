@@ -24,7 +24,7 @@ button{font:inherit;font-family:var(--f-display);font-size:15px;cursor:pointer;b
 button:hover{border-color:var(--accent)}
 button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-button[disabled]{opacity:.4;cursor:not-allowed}
+button[disabled]{opacity:.4;cursor:not-allowed}button[aria-disabled="true"]{opacity:.58}
 .eyebrow{font-family:var(--f-display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;background:var(--panel2)}
 
@@ -54,7 +54,7 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
 @media (max-width:700px){#guide{top:calc(88px + env(safe-area-inset-top,0px))}#gStep{font-size:15px}#thought{top:50%;bottom:auto;font-size:19px;width:calc(100% - 24px)}}
 #hover{position:fixed;z-index:6;pointer-events:none;font-family:var(--f-display);font-size:14px;background:var(--warm);color:#1a1208;border-radius:999px;padding:3px 12px;transform:translate(14px,14px);white-space:nowrap}
 #thought{pointer-events:auto;cursor:pointer;position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:min(720px,calc(100% - 32px));text-align:center;font-style:italic;font-size:21px;line-height:1.4;color:var(--warm);text-shadow:0 2px 12px #000;background:rgba(11,18,20,.9);border:1px solid rgba(240,201,138,.58);border-radius:12px;padding:14px 18px;transition:opacity .5s;z-index:8}
-#thought small{display:block;font-style:normal;font-family:var(--f-display);font-size:13px;color:var(--ink);opacity:.85;margin-top:6px}
+#thought small{display:block;font-style:normal;font-family:var(--f-display);font-size:13px;color:var(--ink);opacity:.85;margin-top:6px}#thought .thought-prompt{color:var(--warm);opacity:.95;font-size:12px;letter-spacing:.02em}
 
 #desk{position:absolute;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:flex-end;pointer-events:auto;flex-wrap:wrap}
 #pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px);gap:4px}
@@ -482,15 +482,13 @@ const lampT=new THREE.Object3D();lampT.position.set(0,-.08,-1);camera.add(lampT)
 function toggleLamp(){S.lamp=!S.lamp;lamp.visible=S.lamp;const b=$("#bLamp");b.textContent=S.lamp?"Lampe an":"Lampe aus";b.setAttribute("aria-pressed",String(S.lamp));}
 $("#bLamp").onclick=toggleLamp;
 let thT;
-function thought(t,ms=5200,h){const el=$("#thought");clearTimeout(thT);if(el._typeTimer)clearInterval(el._typeTimer);el.innerHTML="";el.style.opacity=1;const main=document.createElement("span");el.appendChild(main);let i=0;const step=32;el._typeTimer=setInterval(()=>{main.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(el._typeTimer);el._typeTimer=null;if(h){const small=document.createElement("small");small.innerHTML=h;el.appendChild(small);}}},step);const total=Math.max(ms,t.length*step+(h?1100:0));thT=setTimeout(()=>{el.style.opacity=0;},total);}
-$("#thought").onclick=()=>{const el=$("#thought");if(el._typeTimer)clearInterval(el._typeTimer);el.style.opacity=0;};
+function thought(t,ms=5200,h,manual=false,after=null){const el=$("#thought");clearTimeout(thT);if(el._typeTimer)clearInterval(el._typeTimer);let finished=false;const finish=()=>{if(finished)return;finished=true;if(el._typeTimer)clearInterval(el._typeTimer);el.style.opacity=0;if(after)after();};el._thoughtDone=finish;el.innerHTML="";el.style.opacity=1;const main=document.createElement("span");el.appendChild(main);let i=0;const step=32;el._typeTimer=setInterval(()=>{main.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(el._typeTimer);el._typeTimer=null;if(h){const small=document.createElement("small");small.innerHTML=h;el.appendChild(small);}if(manual){const prompt=document.createElement("small");prompt.className="thought-prompt";prompt.textContent="Tippe hier, wenn du weitergehen möchtest.";el.appendChild(prompt);}}},step);if(!manual){const total=Math.max(ms,t.length*step+(h?1100:0));thT=setTimeout(finish,total);}}
+$("#thought").onclick=()=>{const el=$("#thought");if(el._thoughtDone)el._thoughtDone();else el.style.opacity=0;};
 
 /* ---------- Handeln ---------- */
 function act(t){
   setHover(null);
-  if(t.type==="door"){knocked=true;knock();thought("Halb drei. Mein Kaffee ist längst kalt, und ich habe noch elf Zimmer.",3800,"Auch nachts anklopfen. X soll nicht erschrecken.");
-    setTimeout(()=>{doorTarget=1;doorSound();},1500);
-    setTimeout(()=>{S.auto={t:0,dur:2.6,from:{x:P.x,z:P.z,yaw:P.yaw,pitch:P.pitch},to:{x:1.55,z:-.95,yaw:.2,pitch:-.12},enter:true};},2400);return;}
+  if(t.type==="door"){knocked=true;knock();thought("Halb drei. Mein Kaffee ist längst kalt, und ich habe noch elf Zimmer.",0,"Auch nachts anklopfen. X soll nicht erschrecken.",true,()=>{setTimeout(()=>{doorTarget=1;doorSound();},800);setTimeout(()=>{S.auto={t:0,dur:3.8,from:{x:P.x,z:P.z,yaw:P.yaw,pitch:P.pitch},to:{x:1.55,z:-.95,yaw:.2,pitch:-.12},enter:true};},1900);});return;}
   if(S.finished)return;
   if(t.type==="find")openFind(t.id);
   if(t.type==="place")openPlace(PLACES.find(p=>p.id===t.id));
@@ -522,18 +520,18 @@ function planChooser(){
     <p>X sitzt um halb drei wach auf dem Boden. Sie wurde nach Andeutung eines Suizidwunsches aufgenommen. Beides ist möglich – du entscheidest und begründest.</p>
     <div class="opts plan">${Object.keys(PLANS).map(k=>`<button type="button" data-plan="${k}" aria-pressed="false">${PLANS[k]}</button>`).join("")}</div>
     ${reasonField("rPlan","Warum gehst du so vor?","Ich gehe so vor, weil …")}
-    <div class="actions"><button type="button" class="primary" data-ok disabled>Festlegen</button></div>`,()=>{if(!S.plan)setTimeout(planChooser,0);});
-  const upd=()=>{card.querySelector("[data-ok]").disabled=!(sel&&reasonOk($("#rPlan").value));};
-  card.oninput=upd;
+    <div class="actions"><button type="button" class="primary" data-ok>Festlegen</button></div><p class="small" id="planMsg" aria-live="polite">Wähle eine Vorgehensweise und begründe sie mit mindestens einem kurzen Satz.</p>`,()=>{if(!S.plan)setTimeout(planChooser,0);});
+  const upd=()=>{const b=card.querySelector("[data-ok]"),ready=!!(sel&&reasonOk($("#rPlan").value));b.setAttribute("aria-disabled",String(!ready));};
+  card.oninput=upd;upd();
   card.onclick=e=>{const b=e.target.closest("button");if(!b)return;
     if(b.dataset.plan){sel=b.dataset.plan;setPressed(card,"data-plan",sel);upd();}
-    else if(b.hasAttribute("data-ok")){S.plan=sel;S.planReason=$("#rPlan").value.trim();S.log.push({type:"plan",plan:sel,reason:S.planReason});
+    else if(b.hasAttribute("data-ok")){const reason=$("#rPlan").value.trim();if(!sel||!reasonOk(reason)){const m=$("#planMsg");m.textContent=!sel?"Bitte wähle zuerst eine Vorgehensweise.":"Bitte schreibe mindestens einen kurzen Satz als Begründung.";return;}S.plan=sel;S.planReason=reason;S.log.push({type:"plan",plan:sel,reason:S.planReason});
       onClose=null;closeDlg();openRoom();}};
 }
 function openRoom(){
   S.placeOpen=true;markers.forEach(m=>m.g.visible=true);$("#bPlace").hidden=false;$("#bTip").disabled=false;syncHintMarkers();
-  thought(S.plan==="sprechen"?"Erst ankommen, dann sprechen. Wo setze ich mich hin?":"Erst schaue ich mich um. Was erzählt mir dieses Zimmer?",6000,
-    S.plan==="sprechen"?"Leuchtende Ringe am Boden zeigen mögliche Plätze.":"Gelbe Punkte zeigen Hinweise. Den Gesprächsplatz wählst du, wann du willst.");
+  thought(S.plan==="sprechen"?"Erst ankommen, dann sprechen. Wo setze ich mich hin?":"Erst schaue ich mich um. Was erzählt mir dieses Zimmer?",0,
+    S.plan==="sprechen"?"Leuchtende Ringe am Boden zeigen mögliche Plätze.":"Gelbe Punkte zeigen Hinweise. Den Gesprächsplatz wählst du, wann du willst.",true);
 }
 
 /* ---------- Hinweise ---------- */
@@ -672,7 +670,7 @@ function updateGuide(){
 
 /* ---------- Start ---------- */
 $("#bStart").onclick=()=>{unlockAudio();S.started=true;$("#start").hidden=true;$("#hud").hidden=false;
-  thought("Nachtdienst, halb drei. Zimmer 14 steht als Nächstes auf meiner Runde.",5000);};
+  thought("Nachtdienst, halb drei. Zimmer 14 ist das nächste Zimmer auf meiner Runde.",0,null,true);};
 
 /* ---------- Schleife ---------- */
 const clock=new THREE.Clock();let t=0,nearCd=0,lightCd=0,lightReaction=0,lightSeen=false;
