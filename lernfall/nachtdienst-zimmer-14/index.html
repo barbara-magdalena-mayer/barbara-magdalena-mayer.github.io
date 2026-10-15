@@ -51,9 +51,9 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
 #gStep{font-size:17px;font-weight:700;color:var(--ink)}
 #gHow{font-size:14px;color:var(--muted);margin-top:2px}
 #gHow b{color:var(--warm);font-weight:500}
-@media (max-width:700px){#guide{top:calc(88px + env(safe-area-inset-top,0px))}#gStep{font-size:15px}}
+@media (max-width:700px){#guide{top:calc(88px + env(safe-area-inset-top,0px))}#gStep{font-size:15px}#thought{top:46%;font-size:19px;width:calc(100% - 24px)}}
 #hover{position:fixed;z-index:6;pointer-events:none;font-family:var(--f-display);font-size:14px;background:var(--warm);color:#1a1208;border-radius:999px;padding:3px 12px;transform:translate(14px,14px);white-space:nowrap}
-#thought{pointer-events:auto;cursor:pointer;position:absolute;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(640px,calc(100% - 32px));text-align:center;font-style:italic;font-size:19px;color:var(--warm);text-shadow:0 2px 12px #000;transition:opacity .5s}
+#thought{pointer-events:auto;cursor:pointer;position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:min(720px,calc(100% - 32px));text-align:center;font-style:italic;font-size:21px;line-height:1.4;color:var(--warm);text-shadow:0 2px 12px #000;background:rgba(11,18,20,.9);border:1px solid rgba(240,201,138,.58);border-radius:12px;padding:14px 18px;transition:opacity .5s;z-index:8}
 #thought small{display:block;font-style:normal;font-family:var(--f-display);font-size:13px;color:var(--ink);opacity:.85;margin-top:6px}
 
 #desk{position:absolute;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:flex-end;pointer-events:auto;flex-wrap:wrap}
@@ -482,8 +482,8 @@ const lampT=new THREE.Object3D();lampT.position.set(0,-.08,-1);camera.add(lampT)
 function toggleLamp(){S.lamp=!S.lamp;lamp.visible=S.lamp;const b=$("#bLamp");b.textContent=S.lamp?"Lampe an":"Lampe aus";b.setAttribute("aria-pressed",String(S.lamp));}
 $("#bLamp").onclick=toggleLamp;
 let thT;
-function thought(t,ms=5200,h){const el=$("#thought");el.innerHTML=t+(h?`<small>${h}</small>`:"");el.style.opacity=1;clearTimeout(thT);thT=setTimeout(()=>el.style.opacity=0,ms);}
-$("#thought").onclick=()=>{$("#thought").style.opacity=0;};
+function thought(t,ms=5200,h){const el=$("#thought");clearTimeout(thT);if(el._typeTimer)clearInterval(el._typeTimer);el.innerHTML="";el.style.opacity=1;const main=document.createElement("span");el.appendChild(main);let i=0;const step=32;el._typeTimer=setInterval(()=>{main.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(el._typeTimer);el._typeTimer=null;if(h){const small=document.createElement("small");small.innerHTML=h;el.appendChild(small);}}},step);const total=Math.max(ms,t.length*step+(h?1100:0));thT=setTimeout(()=>{el.style.opacity=0;},total);}
+$("#thought").onclick=()=>{const el=$("#thought");if(el._typeTimer)clearInterval(el._typeTimer);el.style.opacity=0;};
 
 /* ---------- Handeln ---------- */
 function act(t){

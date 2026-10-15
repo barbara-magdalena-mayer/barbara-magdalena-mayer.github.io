@@ -45,7 +45,7 @@ button:focus-visible,textarea:focus-visible{outline:3px solid var(--ki-line);out
 .opt{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;text-align:left;background:var(--surface);color:var(--fg);border:1px solid var(--line);padding:12px 14px;width:100%}
 .opt{border-width:2px}.opt:hover{border-color:var(--pink)}.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--good-bg);box-shadow:inset 0 0 0 1px var(--accent)}
 .opt .min{flex:none;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-textarea{width:100%;min-height:80px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;background:var(--surface);color:var(--fg)}
+textarea{width:100%;min-height:80px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;background:var(--surface);color:var(--fg)}.reason-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.reason-focus{font-size:14px;padding:7px 11px}
 label{display:block;font-weight:700;margin-bottom:6px}
 .result{border-radius:10px;padding:14px 16px}
 .result.gut{background:var(--good-bg)}.result.teilweise{background:var(--mid-bg)}.result.riskant{background:var(--bad-bg)}
@@ -169,13 +169,14 @@ function play(){
  ${ki?`<div class="ki"><div class="label">KI-Assistent schlägt vor</div><p style="margin:0 0 10px">${ki.text}</p><p class="muted" style="margin:0 0 6px">Wie schätzt du diesen Vorschlag ein?</p><div class="choices" role="group">${Object.entries(KIRATE).map(([k,v])=>`<button class="chip" data-rate="${k}" aria-pressed="${S.rate===k}" ${decided?'disabled':''}>${v}</button>`).join('')}</div></div>`:`<div class="ki"><div class="label">KI-Assistent</div><p style="margin:0">Keine Antwort. In diesem Fall arbeitest du ohne KI.</p></div>`}
  ${hints.map(h=>`<div class="hint">${h}</div>`).join('')}
  <div><h3>Was tust du?</h3><div class="options">${S.order[S.step].map(i=>[st.opts[i],i]).map(([o,i])=>`<button class="opt" data-opt="${i}" aria-pressed="${S.pick===i}" ${decided?'disabled':''}><span>${o.t}</span><span class="min">${o.min} Min.</span></button>`).join('')}</div></div>
- <div><label for="why">Deine Begründung (optional)</label><textarea id="why" ${decided?'disabled':''} placeholder="Warum entscheidest du dich so?">${esc(S.why||'')}</textarea></div>
+ <div><div class="reason-row"><label for="why">Deine Begründung (optional)</label>${decided?"":'<button type="button" class="ghost reason-focus" id="focusWhy">✎ Begründung schreiben</button>'}</div><textarea id="why" ${decided?'disabled':''} placeholder="Warum entscheidest du dich so?">${esc(S.why||'')}</textarea></div>
  <p class="muted" id="msg" aria-live="polite" style="margin:0"></p>
  ${decided?resultHtml(st,ki):`<div class="row"><button class="primary" id="decide">Entscheidung treffen</button></div>`}
  </section>${side()}</div>`;
  app.querySelectorAll('[data-opt]').forEach(b=>b.onclick=()=>{S.pick=+b.dataset.opt;app.querySelectorAll('[data-opt]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
  app.querySelectorAll('[data-rate]').forEach(b=>b.onclick=()=>{S.rate=b.dataset.rate;app.querySelectorAll('[data-rate]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
  const why=document.getElementById('why');why.oninput=()=>S.why=why.value;
+ const focusWhy=document.getElementById('focusWhy');if(focusWhy)focusWhy.onclick=()=>{why.focus();why.scrollIntoView({block:'center',behavior:'smooth'});};
  document.getElementById('restart').onclick=setup;
  const d=document.getElementById('decide');
  if(d)d.onclick=()=>{
