@@ -64,7 +64,7 @@ label{display:block;font-weight:700;margin-bottom:6px}
 .sum li{margin-bottom:10px}
 .optimum{border-radius:12px;padding:16px;border:2px solid var(--good);background:var(--good-bg)}
 .notyet{border-radius:12px;padding:16px;border:2px dashed var(--muted)}
-.warn{font-size:13px;color:var(--muted)}
+.warn{font-size:13px;color:var(--muted)}.blog-card{border-left:4px solid var(--pink);background:var(--surface)}.blog-card.after{border-left-color:var(--accent)}.blog-card .eyebrow{color:var(--pink)}.blog-card.after .eyebrow{color:var(--accent)}.blog-card p{max-width:70ch}.blog-card ul{margin:8px 0 0;padding-left:20px}
 @media(max-width:760px){.setup,.play{grid-template-columns:1fr}.card{padding:16px}}
 @keyframes wackeln{0%,100%{transform:rotate(0)}20%{transform:rotate(-1.5deg)}40%{transform:rotate(1.5deg)}60%{transform:rotate(-1deg)}80%{transform:rotate(.5deg)}}
 @media(prefers-reduced-motion:no-preference){
@@ -77,7 +77,21 @@ button:not(:disabled):hover{animation:wackeln .45s ease-in-out}}
 <body>
 
 <header><div class="wrap"><h1>Lernen am Optimum</h1><p>Ein Pflegefall mit drei Entscheidungen. Kraft, Wille und Wissen nach Henderson gelten für Person X und für dich als Pflegeperson. Das Optimum hast du erreicht, wenn du den komplexen Fall ohne Hilfen löst und Fehler der KI erkennst.</p></div></header>
-<main><div class="wrap" id="app"></div></main>
+<main><div class="wrap">
+<section class="card blog-card" aria-labelledby="blog-before-title">
+ <p class="eyebrow">Vor dem Spiel · Denkfolie</p><h2 id="blog-before-title">Das Optimum hat zwei Seiten</h2>
+ <p>In diesem Lernspiel suchst du nicht nur nach einer guten Handlung. Du beobachtest auch, welche Unterstützung dir beim Weiterlernen hilft.</p>
+ <ul><li><strong>Handlungsoptimum:</strong> Was ist jetzt sicher, angemessen und realistisch?</li><li><strong>Lernoptimum:</strong> Welche Hilfe ermöglicht meinen nächsten Lernschritt?</li></ul>
+ <p class="muted">Lies die <a href="artikel/optimum-zwei-seiten/">kurze Vertiefung zum Blogbeitrag</a> oder starte direkt mit dem Fall.</p>
+</section>
+<div id="app"></div>
+<section class="card blog-card after" id="afterBlog" hidden aria-labelledby="blog-after-title">
+ <p class="eyebrow">Nach dem Spiel · Reflexion</p><h2 id="blog-after-title">Was bleibt nach deiner Entscheidung?</h2>
+ <p>Im Lernfall ging es nicht um eine versteckte Musterlösung. Entscheidend ist, wie du beobachtet, begründet und Unterstützung genutzt hast.</p>
+ <ul><li>Was war unter den gegebenen Bedingungen dein Handlungsoptimum?</li><li>Welche Hilfe hat dein Lernoptimum unterstützt?</li><li>Was wäre dein nächster Lernschritt?</li></ul>
+ <div class="row"><a class="primary" href="artikel/optimum-zwei-seiten/">Blogbeitrag vertiefen</a><a class="ghost" href="artikel/optimum-zwei-seiten/">Die zwei Optima nachlesen</a></div>
+</section>
+</div></main>
 
 <script>
 const LEVEL={1:{name:'Einstieg',ki:'keine',kiText:'Keine KI-Unterstützung'},2:{name:'Erweiterung',ki:'plausibel',kiText:'KI antwortet plausibel, aber nicht immer richtig'},3:{name:'Komplex',ki:'fehlleitend',kiText:'KI antwortet unsinnig oder gefährlich'}};
@@ -124,6 +138,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 function chips(group,obj,cur){return `<div class="choices" role="group">${Object.entries(obj).map(([k,v])=>`<button class="chip" data-g="${group}" data-v="${k}" aria-pressed="${k==cur}">${esc(v)}</button>`).join('')}</div>`}
 
 function setup(){
+ const afterBlog=document.getElementById("afterBlog");if(afterBlog)afterBlog.hidden=true;
  S=null;
  app.innerHTML=`<div class="stack"><section class="card"><h2>Deine Ausgangslage</h2><p class="muted">Stelle Fall, Hilfen, deine Haltung und die Lage von Person X ein. Du kannst jederzeit neu starten und andere Kombinationen ausprobieren.</p>
  <div class="setup">
@@ -199,6 +214,7 @@ function resultHtml(st,ki){
 }
 
 function summary(){
+ const afterBlog=document.getElementById("afterBlog");if(afterBlog)afterBlog.hidden=false;
  const good=S.log.filter(l=>l.q==='gut').length,kiL=S.log.filter(l=>l.ki),kiOk=kiL.filter(l=>l.ki.ok).length;
  const need=S.hidden&&!S.guess;
  const maxMin=STEPS.reduce((a,st)=>a+Math.max(...st.opts.map(o=>o.min)),0);
