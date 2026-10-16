@@ -20,10 +20,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
 .wrap{width:min(440px,100%);margin:0 auto;padding-block:40px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
-.plus-mark{width:48px;height:48px;position:relative;display:grid;place-items:center}
-.plus-mark::before,.plus-mark::after{content:"";position:absolute;background:var(--plus)}
-.plus-mark::before{width:9px;height:38px}.plus-mark::after{width:38px;height:9px}
-.plus-mark span{display:none}
+.plus-mark{display:block;color:var(--plus);font-family:var(--display);font-size:2rem;font-weight:600;line-height:1}
 .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
 h1{font-family:var(--display);font-weight:600;font-size:1.6rem;line-height:1.15;margin:0;text-wrap:balance}
 .lead{margin:0;color:var(--muted);max-width:32ch}
@@ -43,7 +40,7 @@ footer{font-size:.8rem;color:var(--muted);margin-top:8px}
 </head>
 <body>
 <main class="wrap">
-  <div class="plus-mark" aria-label="Plus-Marke von Barbara Magdalena Mayer"><span>PLUS</span></div>
+  <div class="plus-mark" aria-label="Plus-Marke von Barbara Magdalena Mayer">Plus</div>
   <span class="eyebrow">Werkstatt für berufliche Bildung</span>
   <h1>Barbara Magdalena Mayer</h1>
   <p class="lead">Ich baue digitale Lernwelten für berufliche Bildung.</p>
@@ -51,7 +48,7 @@ footer{font-size:.8rem;color:var(--muted);margin-top:8px}
   <ul class="links">
     <li><a class="night" href="https://barbara-magdalena-mayer.github.io/lernfall/nachtdienst-zimmer-14/">▶ Nachtdienst, Zimmer 14<small>Interaktiver Lernfall</small></a></li>
     <li><a class="pink" href="https://barbara-magdalena-mayer.github.io/lernen-am-optimum.html">▶ Lernen am Optimum<small>Entscheiden, begründen, KI prüfen</small></a></li>
-    <li><a href="https://barbara-magdalena-mayer.github.io/fuersorge-kompass.html">✦ Fürsorge-Kompass<small>Perspektiven wechseln und nächste Schritte finden</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/fuersorge-kompass.html">Fürsorge-Kompass<small>Perspektiven wechseln und nächste Schritte finden</small></a></li>
     <li><a href="https://barbara-magdalena-mayer.github.io/artikel/optimum-zwei-seiten/">Das Optimum hat zwei Seiten<small>Die Idee hinter dem Lernfall</small></a></li>
     <li><a href="https://barbara-magdalena-mayer.github.io/artikel/psychische-gesundheit-im-pflegeberuf/">Psychische Gesundheit im Beruf stärken<small>Handreichung in acht Schritten · Beispiel Pflege</small></a></li>
     <li><a href="https://barbara-magdalena-mayer.github.io/">Meine Werkstatt<small>Alle Arbeitsproben</small></a></li>
