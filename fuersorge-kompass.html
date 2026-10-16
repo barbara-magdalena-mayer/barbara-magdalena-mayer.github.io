@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fürsorge-Kompass · Perspektiven wechseln</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: Kopfband; links der Kompass mit Reglern und Brillen-Buttons, rechts die Deutung durch die aufgesetzte Brille und der eigene nächste Schritt. Farben aus Barbaras Fürsorge-Kompass-Grafik. */
+:root{--bg:#F7F4EE;--surface:#FFFFFF;--sunk:#EFEAE0;--fg:#0F3D4C;--muted:#56706D;--line:#DCD5C8;--navy:#0F3D4C;--teal:#176B68;--coral:#E89178;--coral-ink:#B5543A;--hen:#2F6B3F;--hen-bg:#E3EFE5;--pep:#7A3E8C;--pep-bg:#F1E5F4;--arb:#9A6A12;--arb-bg:#F7ECD6;--ki:#B0304F;--ki-bg:#FBE3EA;--good:#2F6B3F;--good-bg:#E3EFE5;--bad:#B0304F;--bad-bg:#FBE3EA;--compass-bg:#FFFFFF;--font:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#132026;--surface:#1B2B32;--sunk:#22353D;--fg:#E6EEEC;--muted:#A3B8B4;--line:#33484F;--navy:#CFE3E0;--teal:#5FB3AE;--coral:#F0A48E;--coral-ink:#F0A48E;--hen:#8CC29E;--hen-bg:#1F3329;--pep:#C9A2D6;--pep-bg:#31253A;--arb:#E2B65C;--arb-bg:#3A2F17;--ki:#E8899F;--ki-bg:#3A2329;--good:#8CC29E;--good-bg:#1F3329;--bad:#E8899F;--bad-bg:#3A2329;--compass-bg:#1B2B32;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#132026;--surface:#1B2B32;--sunk:#22353D;--fg:#E6EEEC;--muted:#A3B8B4;--line:#33484F;--navy:#CFE3E0;--teal:#5FB3AE;--coral:#F0A48E;--coral-ink:#F0A48E;--hen:#8CC29E;--hen-bg:#1F3329;--pep:#C9A2D6;--pep-bg:#31253A;--arb:#E2B65C;--arb-bg:#3A2F17;--ki:#E8899F;--ki-bg:#3A2329;--good:#8CC29E;--good-bg:#1F3329;--bad:#E8899F;--bad-bg:#3A2329;--compass-bg:#1B2B32;color-scheme:dark}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.55}
+p{margin:0}
+header{background:var(--navy);color:var(--bg);padding-block:26px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1100px;margin:0 auto}
+header h1{margin:0 0 6px;font-size:clamp(24px,4vw,34px);text-wrap:balance}
+header p{max-width:68ch;opacity:.9}
+main{padding-block:20px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h2{font-size:20px;margin:0 0 8px;text-wrap:balance}
+h3{font-size:15px;margin:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}
+.stack{display:flex;flex-direction:column;gap:14px}
+.muted{color:var(--muted);font-size:14px}
+.label{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;align-items:start}
+button{font:inherit;cursor:pointer;border-radius:10px;color:var(--fg)}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+/* Brillen-Buttons */
+.glasses{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.gbtn{background:var(--surface);border:2px solid var(--line);padding:8px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:700;font-size:13px;line-height:1.2;text-align:center;border-radius:14px;transition:transform .2s}
+.gbtn svg{width:58px;height:24px}
+.gbtn[aria-pressed="true"]{border-color:var(--fg);transform:translateY(-3px)}
+.gbtn[data-l="h"][aria-pressed="true"]{background:var(--hen-bg)}.gbtn[data-l="p"][aria-pressed="true"]{background:var(--pep-bg)}.gbtn[data-l="a"][aria-pressed="true"]{background:var(--arb-bg)}.gbtn[data-l="k"][aria-pressed="true"]{background:var(--ki-bg)}
+.compass{background:var(--compass-bg);border-radius:16px;border:1px solid var(--line)}
+.compass svg{display:block;width:100%;height:auto}
+.needle{transition:transform .9s cubic-bezier(.3,1.4,.5,1);transform-box:view-box;transform-origin:335px 250px}
+@media(prefers-reduced-motion:reduce){.needle,.gbtn{transition:none}}
+.sliders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
+.slider label{display:flex;justify-content:space-between;font-weight:700;font-size:14px;margin-bottom:2px}
+.slider label span{font-variant-numeric:tabular-nums;color:var(--teal)}
+.slider input{width:100%;accent-color:var(--teal)}
+.areas{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--surface);border:1px solid var(--line);padding:6px 11px;font-weight:700;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--teal);color:#fff;border-color:var(--teal)}
+.lensbox{border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.lensbox.o{background:var(--sunk)}.lensbox.h{background:var(--hen-bg)}.lensbox.p{background:var(--pep-bg)}.lensbox.a{background:var(--arb-bg)}.lensbox.k{background:var(--ki-bg)}
+.lensbox .lname{font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.lensbox.h .lname{color:var(--hen)}.lensbox.p .lname{color:var(--pep)}.lensbox.a .lname{color:var(--arb)}.lensbox.k .lname{color:var(--ki)}
+.q{font-weight:700;font-size:17px}
+.step{border-left:4px solid var(--coral);padding:6px 0 6px 12px}
+.kiquote{font-style:italic;background:var(--surface);border-radius:10px;padding:10px 12px}
+.fb{border-radius:10px;padding:10px 12px}
+.fb.ok{background:var(--good-bg)}.fb.no{background:var(--bad-bg)}
+textarea{width:100%;min-height:80px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;background:var(--surface);color:var(--fg)}
+.primary{background:var(--coral-ink);color:#fff;border:0;padding:11px 20px;font-weight:700;border-radius:999px}
+.ghost{background:transparent;border:2px solid var(--teal);color:var(--teal);padding:8px 16px;font-weight:700;border-radius:999px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rule{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:var(--sunk);border-radius:8px;padding:8px 10px;overflow-x:auto}
+.cmp{overflow-x:auto}
+.cmp table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+.cmp th,.cmp td{text-align:left;vertical-align:top;padding:8px 10px;border-top:1px solid var(--line)}
+.cmp th{font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.help{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}.glasses{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+
+<header><div class="wrap"><h1>Brillenwechsel am Fürsorge-Kompass</h1><p>Stell deinen Kompass ein. Die Nadel zeigt, wo gerade der größte Unterstützungsbedarf liegen könnte. Dann setz nacheinander verschiedene Brillen auf: Jede deutet denselben Kompass anders. Eine davon ist eine KI, und der solltest du nicht alles glauben.</p><p style="margin-top:10px"><a href="werkstatt.html" style="color:inherit;font-weight:700">← Zur Werkstatt</a></p></div></header>
+<main><div class="wrap stack">
+ <div class="grid">
+  <section class="card stack">
+   <div class="glasses" role="group" aria-label="Brille wählen" id="glasses"></div>
+   <div class="compass"><svg id="cmp" viewBox="-85 0 670 500" role="img" aria-label="Fürsorge-Kompass mit deinen Werten"></svg></div>
+   <div class="stack" style="gap:8px">
+    <div class="row" style="justify-content:space-between"><span class="label">Deine Standortbestimmung (1 bis 10)</span><span class="muted" id="sample">Beispielwerte</span></div>
+    <div class="sliders" id="sliders"></div>
+   </div>
+  </section>
+  <section class="stack">
+   <div class="card stack">
+    <div class="row" style="justify-content:space-between"><span class="label">Bereich</span><div class="areas" id="areas" role="group" aria-label="Bereich wählen"></div></div>
+    <div id="lens"></div>
+   </div>
+   <div class="card stack">
+    <h2>Dein nächster kleiner Schritt</h2>
+    <p class="muted">Für die nächsten sieben Tage. So konkret, dass du später prüfen kannst, ob er stattgefunden hat.</p>
+    <label for="mystep" class="label">Mein Schritt</label>
+    <textarea id="mystep" placeholder="Zum Beispiel: Am Mittwoch nach dem Dienst zehn Minuten mit meiner Vertrauensperson telefonieren."></textarea>
+    <div class="row"><button class="primary" id="check">Schritt prüfen</button></div>
+    <div id="checkres" aria-live="polite"></div>
+   </div>
+  </section>
+ </div>
+ <section class="card stack">
+  <div class="row" style="justify-content:space-between"><h2 style="margin:0">Alle Brillen auf einen Blick</h2><button class="ghost" id="cmpbtn" aria-expanded="false">Vergleich zeigen</button></div>
+  <div class="cmp" id="cmptable" hidden></div>
+ </section>
+ <section class="card stack">
+  <h3>Über dieses Lernspiel</h3>
+  <p class="muted" style="max-width:68ch">Der Fürsorge-Kompass stammt aus Barbaras Handreichung „Psychische Gesundheit im Pflegeberuf stärken“. Hier wird er mit verschiedenen Brillen gelesen: Henderson fragt nach Kraft, Wille und Wissen. Peplau fragt nach Beziehungen und Rollen. Die Arbeitsbedingungen-Brille fragt mit WHO und BAuA, was gar kein persönliches Problem ist, sondern ein strukturelles. Die KI-Brille klingt überzeugend und liegt trotzdem oft daneben.</p>
+  <p class="muted" style="max-width:68ch">Die Prüfung deines Schritts macht keine KI, sondern eine einfache, offen gezeigte Regel. Auch das gehört zum Lernen: zu sehen, was eine Regel erkennt und was sie übersieht.</p>
+  <p class="help">Dieses Spiel ersetzt keine Beratung. Wenn Beschwerden anhalten oder zunehmen: Hausarztpraxis, betriebsärztlicher Dienst, psychotherapeutische Praxis oder Beratungsstelle. Die TelefonSeelsorge ist rund um die Uhr erreichbar unter 0800 1110111 oder 0800 1110222. In akuter Gefahr: 112.</p>
+  <p class="muted"><strong>Konzept:</strong> Barbara Magdalena Mayer · Technische Umsetzung mit KI-Unterstützung · Theorien: Henderson (1966), Peplau (1952) · Arbeitsbedingungen nach WHO „Mental health at work“ und BAuA „Psychische Faktoren“</p>
+ </section>
+</div></main>
+
+<script>
+const AREAS=[{id:'o',name:'Orientierung',sub:'Reflexion, Lernen, Leben außerhalb der Arbeit',ang:0,dx:0,dy:-1},{id:'b',name:'Beziehungen',sub:'Kontakt zu Menschen, die dir guttun',ang:90,dx:1,dy:0},{id:'k',name:'Körper',sub:'Schlaf, Essen, Bewegung, Erholung',ang:180,dx:0,dy:1},{id:'g',name:'Gefühle',sub:'Wahrnehmen, ausdrücken, regulieren',ang:270,dx:-1,dy:0}];
+const LENSES={
+ o:{name:'Ohne Brille',col:'#56706D',core:'Wo steht dein Kompass?'},
+ h:{name:'Henderson',col:'#2F6B3F',core:'Fehlt dir hier gerade Kraft, Wille oder Wissen?'},
+ p:{name:'Peplau',col:'#7A3E8C',core:'Welche Beziehung steckt dahinter, und welche Rolle hast du darin?'},
+ a:{name:'Arbeits­bedingungen',col:'#9A6A12',core:'Was davon ist gar nicht dein persönliches Problem, sondern ein strukturelles?'},
+ k:{name:'KI',col:'#B0304F',core:'Die KI wertet deinen Kompass aus. Stimmt, was sie sagt?'}};
+const T={
+ h:{k:['Nach Nachtdiensten fehlt oft die Kraft, nicht der Wille. Weißt du, was dir Kraft zurückgibt?','Eine Erholungszeit fest einplanen, zum Beispiel am Donnerstag nach dem Frühdienst 20 Minuten hinlegen.'],
+    g:['Weißt du, was du fühlst? Willst du es zulassen? Und hast du gerade die Kraft dafür?','Nach drei Diensten in einem Satz notieren, welches Gefühl mit nach Hause gekommen ist.'],
+    b:['Fehlt dir die Kraft für Kontakte, oder der Wille, um Unterstützung zu bitten?','Am Wochenende eine Person anrufen, die dir guttut.'],
+    o:['Weißt du noch, was dir außerhalb der Arbeit wichtig ist?','Diese Woche eine Stunde für etwas, das nichts mit Pflege zu tun hat.']},
+ p:{k:['Erschöpfung zeigt sich oft zuerst in Beziehungen: Du wirst knapper und ungeduldiger. Wer würde das an dir bemerken?','Einer Vertrauensperson sagen, woran sie merkt, dass du erschöpft bist.'],
+    g:['Welche Gefühle aus Begegnungen mit Patientinnen und Patienten nimmst du mit? Peplau: Wer helfen will, braucht Selbstwahrnehmung.','Nach einer belastenden Begegnung fragen: Welche Rolle hatte ich? Fremde, Beraterin, Stellvertreterin?'],
+    b:['Für wen bist du ständig die Ressourcenperson? Und wer ist es für dich?','Eine Person benennen, die für dich beraten kann, und sie diese Woche ansprechen.'],
+    o:['Beziehungen enden, auch die im Dienst. Löst du dich nach Feierabend innerlich ab?','Ein Feierabendritual als bewusste Ablösung: Arbeitskleidung ablegen, ein Stück zu Fuß gehen.']},
+ a:{k:['Fallen Pausen aus? Ist der Schichtplan erholsam? Dann ist das kein privates Schlafproblem.','Eine Woche lang ausgefallene Pausen notieren und im Team ansprechen.'],
+    g:['Gibt es nach belastenden Ereignissen eine Nachbesprechung? Wenn nicht, trägst du allein, was das Team tragen sollte.','Nach dem nächsten belastenden Ereignis eine kurze Nachbesprechung anfragen.'],
+    b:['Gibt es im Team soziale Unterstützung, Supervision und klare Zuständigkeiten?','Bei der Leitung nach Supervision oder einer regelmäßigen Fallbesprechung fragen.'],
+    o:['Hast du Einfluss auf Dienstplan und Prioritäten? Wenig Einfluss ist ein bekanntes psychosoziales Risiko.','Einen konkreten Wunsch für den nächsten Dienstplan einreichen.']}};
+const KI={
+ k:{text:'„Laut einer WHO-Studie von 2025 schlafen Pflegekräfte mit 10.000 Schritten am Tag 43 % besser. Starte ab morgen.“',err:'quelle',why:'Diese Studie und die 43 % sind erfunden. Eine Zahl mit Prozentzeichen und großem Namen klingt nach Beleg, ist aber keiner. Prüfe Quellen, bevor du ihnen folgst.'},
+ g:{text:'„Deine Werte deuten eindeutig auf ein Burnout-Syndrom hin. Du solltest dich krankschreiben lassen.“',err:'diagnose',why:'Aus vier Zahlen lässt sich keine Diagnose stellen. Das kann nur eine Fachperson im Gespräch. Wenn Beschwerden anhalten, ist eine Fachperson der richtige Weg, nicht eine KI-Einschätzung.'},
+ b:{text:'„Wähle eine Person, die dir guttut, und verabrede dich diese Woche für ein kurzes Gespräch.“',err:'passt',why:'Das passt. Der Vorschlag ist klein, konkret und deckt sich mit der Handreichung. Eine KI liegt nicht immer falsch, deshalb lohnt sich das Prüfen in beide Richtungen.'},
+ o:{text:'„Überlastung ist eine Frage der Einstellung. Arbeite an deiner Resilienz, dann ist auch Personalmangel kein Problem mehr.“',err:'struktur',why:'Hier wird ein strukturelles Problem zu deinem persönlichen gemacht. Personalmangel, fehlende Pausen und wenig Einfluss lassen sich nicht wegtrainieren. Sie gehören in Gespräche mit Team, Leitung und Arbeitsschutz.'}};
+const ERR={passt:'Passt so',quelle:'Erfindet eine Quelle',diagnose:'Stellt eine Diagnose',struktur:'Macht Strukturelles zu meinem Problem'};
+let vals={o:3,b:7,k:4,g:6},lens='o',area=null,touched=false,kiAns={};
+const $=id=>document.getElementById(id);
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
+const lowest=()=>AREAS.reduce((m,a)=>vals[a.id]<vals[m.id]?a:m,AREAS[0]);
+const cur=()=>area?AREAS.find(a=>a.id===area):lowest();
+
+function glassIcon(col){return `<svg viewBox="0 0 58 24" aria-hidden="true"><circle cx="15" cy="12" r="10" fill="${col}" fill-opacity=".25" stroke="${col}" stroke-width="2.5"/><circle cx="43" cy="12" r="10" fill="${col}" fill-opacity=".25" stroke="${col}" stroke-width="2.5"/><path d="M25 11 Q29 7 33 11" fill="none" stroke="${col}" stroke-width="2.5"/><path d="M5 10 L1 6 M53 10 L57 6" stroke="${col}" stroke-width="2.5" stroke-linecap="round"/></svg>`}
+$('glasses').innerHTML=Object.entries(LENSES).map(([k,l])=>`<button class="gbtn" data-l="${k}" aria-pressed="${k===lens}">${glassIcon(l.col)}<span>${l.name}</span></button>`).join('');
+$('glasses').querySelectorAll('.gbtn').forEach(b=>b.onclick=()=>{lens=b.dataset.l;$('glasses').querySelectorAll('.gbtn').forEach(x=>x.setAttribute('aria-pressed',x===b));draw();panel()});
+$('sliders').innerHTML=AREAS.map(a=>`<div class="slider"><label for="s_${a.id}">${a.name}<span id="v_${a.id}">${vals[a.id]}</span></label><input type="range" id="s_${a.id}" min="1" max="10" value="${vals[a.id]}"></div>`).join('');
+AREAS.forEach(a=>$('s_'+a.id).oninput=e=>{vals[a.id]=+e.target.value;$('v_'+a.id).textContent=vals[a.id];if(!touched){touched=true;$('sample').textContent='Deine Werte'}draw();panel();cmpTable()});
+
+let G=null;
+function draw(){
+ const svg=$('cmp'),C=250,Rr=150,col=LENSES[lens].col,a=cur();
+ if(!G){G={base:el('g',{},svg)};G.needle=el('g',{class:'needle'},svg);
+  el('path',{d:`M${C} ${C-Rr+14} L${C+16} ${C} L${C-16} ${C}Z`,fill:'currentColor',style:'color:var(--coral)'},G.needle);
+  el('path',{d:`M${C} ${C+Rr-14} L${C-16} ${C} L${C+16} ${C}Z`,fill:'currentColor',opacity:.85,style:'color:var(--teal)'},G.needle);
+  el('circle',{cx:C,cy:C,r:16,fill:'currentColor',style:'color:var(--navy)'},svg);G.labels=el('g',{},svg)}
+ G.base.innerHTML='';G.labels.innerHTML='';let s=G.base;
+ el('circle',{cx:C,cy:C,r:Rr+12,fill:'none',stroke:'currentColor','stroke-width':5,style:'color:var(--navy)'},s);
+ [0.25,0.5,0.75,1].forEach(f=>el('circle',{cx:C,cy:C,r:Rr*f,fill:'none',stroke:'currentColor','stroke-width':1,opacity:.18,style:'color:var(--navy)'},s));
+ el('path',{d:`M${C} ${C-Rr-12}V${C+Rr+12}M${C-Rr-12} ${C}H${C+Rr+12}`,stroke:'currentColor','stroke-width':2,opacity:.25,style:'color:var(--teal)'},s);
+ const pts=AREAS.map(x=>[C+x.dx*Rr*vals[x.id]/10,C+x.dy*Rr*vals[x.id]/10]);
+ el('polygon',{points:pts.map(p=>p.join(',')).join(' '),fill:'currentColor','fill-opacity':.22,stroke:'currentColor','stroke-width':2.5,style:'color:var(--teal)'},s);
+ pts.forEach((p,i)=>{el('circle',{cx:p[0],cy:p[1],r:5,fill:'currentColor',style:'color:var(--teal)'},s)});
+ // Brillenglas über dem Kompass
+ if(lens!=='o'){el('circle',{cx:C,cy:C,r:Rr+12,fill:col,'fill-opacity':.10},s);
+  el('path',{d:`M${C-60} ${C-Rr-30} Q${C} ${C-Rr-52} ${C+60} ${C-Rr-30}`,fill:'none',stroke:col,'stroke-width':5,'stroke-linecap':'round',opacity:.7},s)}
+ // Nadel
+ G.needle.style.transform=`rotate(${a.ang}deg)`;
+ s=G.labels;
+ // Beschriftung
+ AREAS.forEach(x=>{const on=x.id===a.id;
+  const pos={o:[C,40,'middle'],k:[C,474,'middle'],g:[-75,C+6,'start'],b:[575,C+6,'end']}[x.id];
+  const t=el('text',{x:pos[0],y:pos[1],'text-anchor':pos[2],'font-size':on?19:16,'font-weight':700,fill:'currentColor',style:`color:${on?'var(--coral-ink)':'var(--navy)'};cursor:pointer;font-family:var(--font);letter-spacing:.05em`},s);
+  t.textContent=x.name.toUpperCase()+' '+vals[x.id];
+  t.addEventListener('click',()=>{area=x.id;draw();panel()});
+ });
+ const ax={o:'Orientierung',b:'Beziehungen',k:'Körper',g:'Gefühle'};
+ svg.setAttribute('aria-label','Fürsorge-Kompass: '+AREAS.map(x=>ax[x.id]+' '+vals[x.id]).join(', ')+'. Die Nadel zeigt auf '+a.name+'.');
+ $('areas').innerHTML=AREAS.map(x=>`<button class="chip" data-a="${x.id}" aria-pressed="${x.id===a.id}">${x.name}</button>`).join('');
+ $('areas').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{area=b.dataset.a;draw();panel()});
+}
+
+function panel(){
+ const a=cur(),L=LENSES[lens],box=$('lens');
+ const auto=!area||area===lowest().id;
+ let h=`<div class="lensbox ${lens}"><span class="lname">${lens==='o'?'Ohne Brille':L.name.replace('­','')+'-Brille'}</span>`;
+ if(lens==='o'){
+  h+=`<p class="q">${a.name}: ${vals[a.id]} von 10</p><p>${a.sub}.</p><p>${auto?'Das ist dein niedrigster Wert. Er ist kein Versagen, er zeigt nur, wo gerade der größte Unterstützungsbedarf liegen könnte.':'Du schaust dir gerade einen anderen Bereich an als den niedrigsten. Auch das ist erlaubt.'}</p><p class="muted">Setz jetzt eine Brille auf. Jede liest denselben Wert anders.</p>`;
+ }else if(lens==='k'){
+  const k=KI[a.id],ans=kiAns[a.id];
+  h+=`<p class="q">${L.core}</p><p class="kiquote">${k.text}</p><p class="muted">Was trifft auf diese Antwort zu?</p><div class="row">${Object.entries(ERR).map(([e,t])=>`<button class="chip" data-e="${e}" aria-pressed="${ans===e}" ${ans?'disabled':''}>${t}</button>`).join('')}</div>`;
+  if(ans)h+=`<div class="fb ${ans===k.err?'ok':'no'}"><p><strong>${ans===k.err?'Richtig erkannt.':'Nicht ganz. Richtig wäre: '+ERR[k.err]+'.'}</strong></p><p>${k.why}</p></div>`;
+  const done=AREAS.filter(x=>kiAns[x.id]).length;h+=`<p class="muted">KI-Antworten geprüft: ${done} von 4. Wähl einen anderen Bereich, um die nächste zu sehen.</p>`;
+ }else{
+  const [q,st]=T[lens][a.id];
+  h+=`<p class="muted">${L.core}</p><p class="q">${q}</p><div class="step"><span class="label">Ein möglicher kleiner Schritt</span><p>${st}</p></div><button class="ghost" id="take" style="align-self:flex-start">Als Entwurf übernehmen</button>`;
+ }
+ box.innerHTML=h+'</div>';
+ box.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{kiAns[a.id]=b.dataset.e;panel();cmpTable()});
+ const tk=$('take');if(tk)tk.onclick=()=>{$('mystep').value=T[lens][a.id][1];$('mystep').focus();$('checkres').innerHTML='<p class="muted">Übernommen. Mach ihn zu deinem: Wann genau, mit wem, wie lange?</p>'};
+}
+
+$('check').onclick=()=>{
+ const t=$('mystep').value.trim(),res=$('checkres');
+ if(!t){res.innerHTML='<p class="muted">Schreib zuerst einen Schritt auf.</p>';return}
+ const when=/\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|morgen|heute|wochenende|nach dem dienst|vor dem dienst|feierabend)\b/i.test(t);
+ const amount=/\b\d+\s*(min|minuten|stunden?|uhr|mal|schritte)\b|\b(zehn|fünf|zwanzig|dreißig|eine stunde|einmal|zweimal)\b/i.test(t);
+ const vague=/\b(mehr|besser|öfter|weniger)\b.*\b(achten|aufpassen|kümmern)\b|\bmehr auf mich\b/i.test(t);
+ const ok=when&&amount&&!vague;
+ res.innerHTML=`<div class="fb ${ok?'ok':'no'}"><p><strong>${ok?'Überprüfbar formuliert.':'Noch nicht gut überprüfbar.'}</strong> ${when?'Ein Zeitpunkt ist genannt.':'Es fehlt ein Zeitpunkt (zum Beispiel ein Wochentag oder „nach dem Dienst“).'} ${amount?'Eine Menge oder Dauer ist genannt.':'Es fehlt eine Menge oder Dauer (zum Beispiel „zehn Minuten“).'}${vague?' Die Formulierung klingt eher nach einem Vorsatz als nach einem Schritt.':''}</p></div>
+ <p class="muted">So prüft diese Seite, ohne KI, mit einer offenen Regel:</p>
+ <div class="rule">Zeitpunkt? Wochentag | heute | morgen | nach dem Dienst …<br>Menge? Zahl + Minuten | Uhr | mal …<br>Vorsatz statt Schritt? „mehr auf mich achten“ …</div>
+ <p class="muted">Was übersieht diese Regel? Zum Beispiel, ob der Schritt zu dir passt oder ob er realistisch ist. Das kann nur ein Mensch beurteilen.</p>`;
+};
+
+$('cmpbtn').onclick=()=>{const t=$('cmptable'),open=t.hidden;t.hidden=!open;$('cmpbtn').setAttribute('aria-expanded',open);$('cmpbtn').textContent=open?'Vergleich ausblenden':'Vergleich zeigen';cmpTable()};
+function cmpTable(){
+ const t=$('cmptable');if(t.hidden)return;const a=cur();
+ t.innerHTML=`<p class="muted" style="margin-bottom:8px">Bereich: <strong>${a.name}</strong> (${vals[a.id]} von 10). Dieselbe Zahl, vier Deutungen.</p><table><thead><tr><th>Brille</th><th>Frage</th><th>Möglicher Schritt</th></tr></thead><tbody>${['h','p','a'].map(l=>`<tr><td><strong>${LENSES[l].name.replace('­','')}</strong></td><td>${T[l][a.id][0]}</td><td>${T[l][a.id][1]}</td></tr>`).join('')}<tr><td><strong>KI</strong></td><td colspan="2">${KI[a.id].text}${kiAns[a.id]?` <em>(${ERR[KI[a.id].err]})</em>`:' <em>(noch nicht geprüft)</em>'}</td></tr></tbody></table>`;
+}
+const _p=panel;panel=function(){_p();cmpTable()};
+draw();panel();
+</script>
+</body>
+</html>

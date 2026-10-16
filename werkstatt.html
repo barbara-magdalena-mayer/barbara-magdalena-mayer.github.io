@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meine Werkstatt · Barbara Magdalena Mayer</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: eine schmale Spalte für das Handy, Porträt oben, darunter große Buttons. Gleiche Farben wie die Hauptseite. */
+:root{
+  --bg:#faeef1; --ink:#24382c; --muted:#5e5459; --line:#ead5db;
+  --green:#2f5240; --pink:#b04e6b; --pink-dark:#8a3a52; --night:#0b1214; --teal:#7cc7bc; --surface:#ffffff;
+  --display:"Literata",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --lime:#e8f4c8; --plus:#d62568;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{width:min(440px,100%);margin:0 auto;padding-block:40px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.plus-mark{width:112px;height:112px;position:relative;display:grid;place-items:center;filter:drop-shadow(0 8px 12px rgba(36,56,44,.18))}
+.plus-mark::before,.plus-mark::after{content:"";position:absolute;background:var(--plus);border:5px solid var(--lime);border-radius:999px;box-shadow:0 0 0 4px var(--surface)}
+.plus-mark::before{width:32px;height:106px}.plus-mark::after{width:106px;height:32px}
+.plus-mark span{position:relative;z-index:1;font:600 12px var(--mono);letter-spacing:.08em;color:var(--plus);background:var(--lime);border:2px solid var(--plus);border-radius:999px;padding:4px 6px}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
+h1{font-family:var(--display);font-weight:600;font-size:1.6rem;line-height:1.15;margin:0;text-wrap:balance}
+.lead{margin:0;color:var(--muted);max-width:32ch}
+.links{list-style:none;margin:10px 0 0;padding:0;width:100%;display:flex;flex-direction:column;gap:12px}
+.links a,.links button{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;text-decoration:none;font:inherit;font-weight:600;border:0;border-radius:14px;padding:14px 18px;cursor:pointer;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 3px 0 var(--line)}
+.links small{font-weight:400;font-size:.85rem;color:var(--muted)}
+.links .night{background:var(--night);color:#fff;border-color:var(--night);box-shadow:0 3px 0 #2c3e43}
+.links .night small{color:var(--teal)}
+.links .pink{background:var(--pink);color:#fff;border-color:var(--pink);box-shadow:0 3px 0 var(--pink-dark)}
+.links .pink small{color:#fde4ec}
+a:focus-visible,button:focus-visible{outline:3px solid #d4a373;outline-offset:2px}
+.mail{font-family:var(--mono);font-size:.85rem;color:var(--muted);user-select:all;word-break:break-all}
+.copied{font-size:.85rem;color:var(--green)}
+footer{font-size:.8rem;color:var(--muted);margin-top:8px}
+</style>
+
+</head>
+<body>
+<main class="wrap">
+  <div class="plus-mark" aria-label="Plus-Marke von Barbara Magdalena Mayer"><span>PLUS</span></div>
+  <span class="eyebrow">Werkstatt für berufliche Bildung</span>
+  <h1>Barbara Magdalena Mayer</h1>
+  <p class="lead">Ich baue digitale Lernwelten für berufliche Bildung.</p>
+
+  <ul class="links">
+    <li><a class="night" href="https://barbara-magdalena-mayer.github.io/lernfall/nachtdienst-zimmer-14/">▶ Nachtdienst, Zimmer 14<small>Interaktiver Lernfall</small></a></li>
+    <li><a class="pink" href="https://barbara-magdalena-mayer.github.io/lernen-am-optimum.html">▶ Lernen am Optimum<small>Entscheiden, begründen, KI prüfen</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/fuersorge-kompass.html">✦ Fürsorge-Kompass<small>Perspektiven wechseln und nächste Schritte finden</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/artikel/optimum-zwei-seiten/">Das Optimum hat zwei Seiten<small>Die Idee hinter dem Lernfall</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/artikel/psychische-gesundheit-im-pflegeberuf/">Psychische Gesundheit im Beruf stärken<small>Handreichung in acht Schritten · Beispiel Pflege</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/">Meine Werkstatt<small>Alle Arbeitsproben</small></a></li>
+    <li><a href="https://bsky.app/profile/3armagmay.bsky.social" rel="me">Bluesky<small>Neue Prototypen zuerst dort</small></a></li>
+    <li><button type="button" id="copy">E-Mail kopieren<small class="mail" id="mail">barbara.magdalena.mayer@web.de</small></button></li>
+  </ul>
+  <span class="copied" id="copied" hidden>Kopiert</span>
+  <footer>Stand: Oktober 2026</footer>
+</main>
+
+<script>
+document.getElementById('copy').addEventListener('click',function(){
+  var el=document.getElementById('mail'),c=document.getElementById('copied'),t=el.textContent.trim();
+  function fallback(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);c.textContent='Markiert, bitte kopieren';c.hidden=false}
+  try{navigator.clipboard.writeText(t).then(function(){c.textContent='Kopiert';c.hidden=false;setTimeout(function(){c.hidden=true},2000)},fallback)}catch(e){fallback()}
+});
+</script>
+</body>
+</html>
