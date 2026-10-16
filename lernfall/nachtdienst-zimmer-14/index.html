@@ -91,7 +91,8 @@ kbd{font-family:var(--f-display);font-size:13px;border:1px solid var(--line);bor
 @media(prefers-reduced-motion:reduce){#bStart{animation:none!important}*{scroll-behavior:auto!important}}
 @media(max-width:600px){.layer{padding:8px}.card{padding:16px;gap:11px;max-height:calc(100dvh - 16px)}.start h1{font-size:clamp(26px,7vw,36px)}.start .lead{font-size:16px}.top{padding-inline:7px;gap:5px}.stat{gap:7px;padding:5px 7px}.stat b{font-size:16px}.tbtns{gap:4px}.tbtns button{font-size:12px;padding:6px 8px}#guide{top:calc(104px + env(safe-area-inset-top,0px));padding:7px 10px}#thought{top:50%;bottom:auto;font-size:19px;width:calc(100% - 24px)}#pad{grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,44px)}.opts button{min-height:44px}}
 @media(max-height:550px){.card{max-height:calc(100dvh - 12px)}#guide{top:calc(65px + env(safe-area-inset-top,0px))}#thought{bottom:65px}}
-textarea{font:inherit;font-size:16px;width:100%;min-height:84px;background:var(--night);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical}
+textarea{display:block;position:relative;z-index:2;pointer-events:auto;font:inherit;font-size:16px;width:100%;min-height:84px;background:var(--night);color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--accent);opacity:1;border:1px solid var(--line);border-radius:8px;padding:10px 12px;resize:vertical;-webkit-appearance:none;appearance:none}
+textarea::placeholder{color:var(--muted);-webkit-text-fill-color:var(--muted);opacity:1}
 textarea:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 .opts.plan{display:grid;gap:8px}.opts.plan button{text-align:left}
 .mine{font-style:italic;color:var(--warm)}
@@ -499,7 +500,9 @@ let onClose=null;
 const MINLEN=10;
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function openDlg(html,closeFn){for(const k in keys)keys[k]=false;document.querySelectorAll("#pad button").forEach(b=>b.classList.remove("on"));
-  card.oninput=null;card.innerHTML=html;onClose=closeFn||null;dlg.hidden=false;setHover(null);$("#x").focus();}
+  card.oninput=null;card.innerHTML=html;onClose=closeFn||null;dlg.hidden=false;setHover(null);
+  const textfield=card.querySelector("textarea,input");
+  if(textfield){setTimeout(()=>textfield.focus(),0);}else $("#x").focus();}
 function closeDlg(){if(dlg.hidden)return;dlg.hidden=true;const f=onClose;onClose=null;if(f)f();}
 $("#x").onclick=closeDlg;
 dlg.addEventListener("click",e=>{if(e.target===dlg)closeDlg();});
