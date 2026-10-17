@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Grundbegriffe: Pflegetheorie, Virginia Henderson, Kraft – Wille – Wissen, Hildegard Peplau und Lernen am Optimum – verständlich erklärt.">
+<title>Grundbegriffe · Lernen am Optimum</title>
+<link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:"Literata";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/literata-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Literata";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
+
+:root{--bg:#faeef1;--surface:#fff;--ink:#24382c;--muted:#5e5459;--line:#ead5db;--green:#2f5240;--green-soft:#d5e2d6;--pink:#b04e6b;--pink-dark:#8a3a52;--pink-soft:#f5e7e9;--black:#0b1214;--teal:#7cc7bc;--display:"Literata",Georgia,serif;--body:"Source Sans 3",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;padding:0 20px;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{width:min(720px,100%);margin:0 auto;padding:40px 0 64px;display:flex;flex-direction:column;gap:46px}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.18;margin:0}
+h1{font-size:clamp(2.2rem,6.5vw,3.1rem)}h2{font-size:1.55rem}h3{font-family:var(--body);font-size:1.05rem;font-weight:600}
+p{margin:0;max-width:66ch}
+a{color:var(--green)}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
+.muted{color:var(--muted)}.small-note{font-size:.86rem;color:var(--muted)}
+.back{font-size:.92rem;font-weight:600;text-decoration:none}.back:hover{text-decoration:underline}
+
+.hero{display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--line);padding-bottom:30px}
+.hero .lead{font-size:1.08rem}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.toc a{font-size:.88rem;background:var(--green-soft);color:var(--green);border-radius:999px;padding:4px 12px;text-decoration:none}
+.toc a:hover{background:#c3d6c5}
+
+.term{display:flex;flex-direction:column;gap:13px;scroll-margin-top:20px}
+.term .num{font-family:var(--mono);font-size:.78rem;color:var(--pink)}
+.term-head{display:flex;flex-direction:column;gap:4px}
+.inshort{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--green);border-radius:10px;padding:12px 14px;font-size:.96rem}
+.inshort b{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;font-weight:500;color:var(--green);display:block;margin-bottom:2px}
+blockquote{margin:0;padding:14px 16px;border-left:4px solid var(--pink);background:var(--pink-soft);border-radius:0 10px 10px 0;font-family:var(--display);font-size:1.05rem;line-height:1.5}
+blockquote footer{font-family:var(--body);font-size:.84rem;color:var(--muted);margin-top:8px}
+
+.brille{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.brille span{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:12px;display:flex;flex-direction:column;gap:4px;font-size:.92rem}
+.brille small{color:var(--muted)}
+
+.needs{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.needs li{font-size:.85rem;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+
+/* Kraft – Wille – Wissen, umschaltbar */
+.kww{background:#fff9f5;border:1px solid var(--line);border-radius:18px;padding:clamp(18px,4.5vw,28px);display:flex;flex-direction:column;gap:16px;box-shadow:0 12px 35px rgba(36,56,44,.055)}
+.switch{display:inline-flex;background:var(--pink-soft);border-radius:999px;padding:4px;gap:4px;width:max-content;max-width:100%;flex-wrap:wrap}
+.switch button{font:inherit;font-size:.92rem;font-weight:600;border:0;border-radius:999px;padding:7px 14px;background:transparent;color:var(--pink-dark);cursor:pointer}
+.switch button[aria-pressed="true"]{background:var(--pink);color:#fff}
+.kww-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.kww-card{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--green);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.kww-card:nth-child(2){border-top-color:var(--pink)}.kww-card:nth-child(3){border-top-color:#d4a373}
+.kww-card h3{font-family:var(--display);font-size:1.25rem}
+.kww-card .q{font-size:.9rem;color:var(--muted)}
+.kww-card .ex{font-size:.95rem;transition:opacity .25s}
+.kww-who{font-size:.92rem;color:var(--muted)}
+
+/* Beziehung */
+.relation{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:stretch}
+.person{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.person h3{font-family:var(--display);font-size:1.1rem}
+.mini{display:flex;flex-wrap:wrap;gap:6px}.mini span{font-size:.8rem;font-family:var(--mono);background:var(--green-soft);color:var(--green);border-radius:6px;padding:2px 7px}
+.bridge{display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:2.4rem;color:var(--pink)}
+
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;counter-reset:ph}
+.phases span{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:12px;display:flex;flex-direction:column;gap:4px;font-size:.92rem;counter-increment:ph}
+.phases span::before{content:counter(ph);font-family:var(--mono);font-size:.75rem;color:var(--pink)}
+.phases small{color:var(--muted)}
+
+.principles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.principle{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--green);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.principle:last-child{border-top-color:var(--pink)}
+
+.work-explain{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--pink);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.work-explain h3{font-family:var(--display);font-size:1.2rem}
+.work-explain a{font-weight:600;width:max-content;max-width:100%}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px}
+.cta{display:inline-flex;align-items:center;gap:8px;max-width:100%;font-weight:600;text-decoration:none;border-radius:999px;padding:10px 16px;background:var(--pink);color:#fff;box-shadow:0 3px 0 var(--pink-dark)}
+.cta:hover{background:var(--pink-dark)}.cta.alt{background:var(--green);box-shadow:0 3px 0 #1e3729}.cta.alt:hover{background:#1e3729}
+
+.sources{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.sources ol{margin:0;padding-left:1.2em;display:grid;gap:8px;font-size:.92rem}
+.sources a{word-break:break-word}
+
+footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.84rem;display:flex;flex-direction:column;gap:8px}
+button:focus-visible,a:focus-visible{outline:3px solid #d4a373;outline-offset:2px}
+
+@media(max-width:560px){body{font-size:16px}.wrap{padding-top:30px;gap:40px}.brille,.kww-grid,.phases,.principles{grid-template-columns:1fr}.relation{grid-template-columns:1fr}.bridge{font-size:1.8rem;padding:2px 0}}
+@media(prefers-reduced-motion:no-preference){.cta{animation:wackeln 5.8s ease-in-out 2s infinite}@keyframes wackeln{0%,7%,100%{transform:rotate(0)}1.5%{transform:rotate(-2deg)}3.5%{transform:rotate(2deg)}5%{transform:rotate(-1deg)}}
+.bridge{animation:plus-breathe 5s ease-in-out infinite}@keyframes plus-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.kww-card .ex{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="./">← Zur Werkstatt</a>
+
+  <header class="hero">
+    <span class="eyebrow">Grundbegriffe · zum Einstieg</span>
+    <h1>Worum es mir geht</h1>
+    <p class="lead">Diese Seite ist für alle, die weder aus der Pflege noch aus der Didaktik kommen. Sie erklärt in wenigen Schritten die Ideen, auf denen meine Arbeiten aufbauen – von der Pflegetheorie bis zu meinem eigenen Ansatz.</p>
+    <nav class="toc" aria-label="Inhalt">
+      <a href="#was-ich-mache">Digitale dritte Lernorte</a>
+      <a href="#beispiel">Nur ein Beispiel</a>
+      <a href="#ki">Die KI, die irren darf</a>
+      <a href="#pflegetheorie">Pflegetheorie</a>
+      <a href="#henderson">Virginia Henderson</a>
+      <a href="#kww">Kraft · Wille · Wissen</a>
+      <a href="#beziehung">Beide Seiten</a>
+      <a href="#peplau">Hildegard Peplau</a>
+      <a href="#optimum">Das zweigeteilte Optimum</a>
+      <a href="#arbeiten">Die Arbeitsproben</a>
+      <a href="#quellen">Quellen</a>
+    </nav>
+  </header>
+
+  <section class="term" id="was-ich-mache" aria-labelledby="t1">
+    <div class="term-head"><span class="num">01</span><h2 id="t1">Was ich mache: digitale dritte Lernorte</h2></div>
+    <p>In der beruflichen Bildung lernt man an zwei bekannten Orten: in der Schule und im Betrieb. Als <strong>dritten Lernort</strong> bezeichnet man einen zusätzlichen Übungsraum dazwischen – in der Pflegeausbildung zum Beispiel ein Übungsraum mit Puppen und Simulationen, das sogenannte Skills Lab.</p>
+    <p>Ich baue solche dritten Lernorte <strong>digital</strong>: begehbare Räume, Lernspiele und Fälle im Browser. Man kann sie jederzeit und von überall betreten, ausprobieren, Fehler machen und neu anfangen – ohne dass jemandem dabei etwas passiert. Man liest dort nicht nur, man handelt und muss begründen, warum.</p>
+    <div class="inshort"><b>Kurz gesagt</b>Ich gestalte digitale Übungsorte, in denen man berufliches Handeln unter Unsicherheit ausprobieren kann.</div>
+  </section>
+
+  <section class="term" id="beispiel" aria-labelledby="t1b">
+    <div class="term-head"><span class="num">02</span><h2 id="t1b">Pflege ist nur das Beispiel</h2></div>
+    <p>Alle meine bisherigen Arbeiten spielen im Gesundheitswesen, weil ich dort meine Berufserfahrung habe. Die Pflege ist aber nur das <strong>Beispiel</strong>, nicht das Thema.</p>
+    <p class="muted">Die Bauweise lässt sich auf jeden Beruf übertragen, in dem man Situationen einschätzen, entscheiden und sein Handeln begründen muss: im Handwerk, in der Technik, im Büro, in der Sozialarbeit. Deshalb erkläre ich auf dieser Seite auch die Pflegetheorien – damit man die Beispiele versteht, ohne aus der Pflege zu kommen.</p>
+  </section>
+
+  <section class="term" id="ki" aria-labelledby="t1c">
+    <div class="term-head"><span class="num">03</span><h2 id="t1c">Meine Besonderheit: eine KI, die irren darf</h2></div>
+    <p>In meine Lernorte kann man eine <strong>simulierte KI</strong> dazuschalten. Sie gibt Hinweise und eröffnet zusätzliche Perspektiven – aber sie liegt mal richtig, mal halb richtig und mal falsch. Das ist Absicht.</p>
+    <p>Im Berufsalltag begegnen uns KI-Werkzeuge längst. Sie klingen oft überzeugend, auch wenn sie irren. In meinen Lernorten übt man genau das: einen Hinweis nicht einfach zu übernehmen, sondern zu prüfen, was daran stimmt – und am Ende selbst zu entscheiden.</p>
+    <div class="brille">
+      <span><b>Ohne KI</b><small>Was weiß ich selbst?</small></span>
+      <span><b>Mit KI</b><small>Was ist an dem Hinweis belastbar?</small></span>
+      <span><b>KI liegt falsch</b><small>Was entscheide ich trotzdem – und warum?</small></span>
+    </div>
+    <p class="small-note">Die KI ist simuliert: Ihre Antworten sind von mir vorher festgelegt – auch die falschen.</p>
+    <div class="inshort"><b>Kurz gesagt</b>Die KI ist kein Lehrer, sondern eine zusätzliche Stimme, die man prüfen muss.</div>
+  </section>
+
+  <section class="term" id="pflegetheorie" aria-labelledby="t2">
+    <div class="term-head"><span class="num">04</span><h2 id="t2">Was ist eine Pflegetheorie?</h2></div>
+    <p>Eine Pflegetheorie ist ein durchdachtes Gedankengebäude darüber, was Pflege ist, wozu sie da ist und worauf Pflegende achten sollen. Sie beschreibt keine einzelnen Handgriffe, sondern einen <em>Blickwinkel</em>.</p>
+    <p>Man kann sie sich wie eine Brille vorstellen. Dieselbe Situation sieht durch verschiedene Brillen unterschiedlich aus: Die eine lenkt den Blick auf Bedürfnisse, die andere auf die Beziehung zwischen zwei Menschen, eine dritte auf Selbstständigkeit.</p>
+    <p class="muted">Was man mit einer Pflegetheorie macht:</p>
+    <div class="brille">
+      <span><b>Wahrnehmen</b><small>Worauf schaue ich in dieser Situation?</small></span>
+      <span><b>Ordnen</b><small>Was ist wichtig, was fehlt?</small></span>
+      <span><b>Begründen</b><small>Warum handle ich so und nicht anders?</small></span>
+    </div>
+    <div class="inshort"><b>Kurz gesagt</b>Eine Theorie gibt keine Antwort vor. Sie hilft, die richtigen Fragen zu stellen.</div>
+  </section>
+
+  <section class="term" id="henderson" aria-labelledby="t3">
+    <div class="term-head"><span class="num">05</span><h2 id="t3">Virginia Henderson</h2></div>
+    <p>Virginia Henderson (1897–1996) war eine US-amerikanische Pflegelehrerin und Pflegewissenschaftlerin. Sie gehört zu den bekanntesten Stimmen der Pflege im 20. Jahrhundert. Ihre Beschreibung, was Pflege ausmacht, wurde in den 1960er-Jahren über den Weltbund der Pflegenden (ICN) in vielen Sprachen verbreitet.</p>
+    <p>Ihr Grundgedanke, sinngemäß: Pflege unterstützt Menschen – ob krank oder gesund – bei dem, was sie für ihre Gesundheit, ihre Genesung oder ein friedliches Sterben tun würden, <strong>wenn sie die nötige Kraft, den nötigen Willen oder das nötige Wissen hätten</strong>. Ziel ist, dass sie es möglichst bald wieder selbst können.</p>
+    <blockquote>„… if he had the necessary strength, will or knowledge.“<footer>Henderson, 1966, The Nature of Nursing</footer></blockquote>
+    <p class="muted">Henderson nennt vierzehn Grundbedürfnisse, bei denen Menschen Unterstützung brauchen können:</p>
+    <ul class="needs">
+      <li>Atmen</li><li>Essen und Trinken</li><li>Ausscheiden</li><li>Bewegen und Haltung</li><li>Schlafen und Ruhen</li><li>Sich kleiden</li><li>Körpertemperatur</li><li>Körperpflege</li><li>Gefahren vermeiden</li><li>Kommunizieren</li><li>Glauben leben</li><li>Arbeiten</li><li>Spielen und Freizeit</li><li>Lernen und Entdecken</li>
+    </ul>
+    <p class="small-note">Warum Henderson? Ihre Idee ist einfach, alltagsnah und auch ohne Fachwissen verständlich. Sie ist für mich ein Beispiel – meine Spiele lassen sich auch mit anderen Theorien spielen.</p>
+  </section>
+
+  <section class="term" id="kww" aria-labelledby="t4">
+    <div class="term-head"><span class="num">06</span><h2 id="t4">Kraft · Wille · Wissen</h2></div>
+    <p>Aus Hendersons Satz nehme ich die drei Begriffe heraus, die beschreiben, <em>was fehlen kann</em>, wenn jemand etwas nicht selbst schafft. Fehlt eines davon, braucht es Unterstützung – aber jeweils eine andere.</p>
+    <div class="kww">
+      <div class="switch" role="group" aria-label="Blickwinkel wählen">
+        <button type="button" data-who="patient" aria-pressed="true">Die gepflegte Person</button>
+        <button type="button" data-who="pflege" aria-pressed="false">Die Pflegekraft</button>
+      </div>
+      <p class="kww-who" id="kww-who" aria-live="polite">Beispiel: Ein Mann soll nach einer Operation wieder selbst aufstehen.</p>
+      <div class="kww-grid">
+        <div class="kww-card"><h3>Kraft</h3><p class="q">Kann ich es körperlich und praktisch?</p><p class="ex" data-k="kraft"></p></div>
+        <div class="kww-card"><h3>Wille</h3><p class="q">Will ich es – und traue ich es mir zu?</p><p class="ex" data-k="wille"></p></div>
+        <div class="kww-card"><h3>Wissen</h3><p class="q">Weiß ich, was zu tun ist und warum?</p><p class="ex" data-k="wissen"></p></div>
+      </div>
+    </div>
+    <div class="inshort"><b>Kurz gesagt</b>Gute Hilfe fragt zuerst: Fehlt Kraft, Wille oder Wissen? Und hilft dann genau dort.</div>
+  </section>
+
+  <section class="term" id="beziehung" aria-labelledby="t5">
+    <div class="term-head"><span class="num">07</span><h2 id="t5">Beide Seiten zählen</h2></div>
+    <p>Henderson schreibt über die Menschen, die gepflegt werden. Ich gehe einen Schritt weiter und wende Kraft, Wille und Wissen <strong>auch auf die Pflegekraft</strong> an.</p>
+    <p>Pflege ist eine Beziehung zwischen zwei Menschen. Und auch die Person, die hilft, ist nicht immer in Bestform: Sie ist vielleicht müde nach dem dritten Nachtdienst, unsicher in einer neuen Situation oder ihr fehlt eine Information. Niemand füllt seine Rolle immer perfekt aus – man ist auch nur ein Mensch.</p>
+    <div class="relation" aria-label="Zwei Personen, beide mit Kraft, Wille und Wissen">
+      <div class="person"><h3>Gepflegte Person</h3><div class="mini"><span>Kraft</span><span>Wille</span><span>Wissen</span></div><p class="small-note">Was fehlt mir gerade?</p></div>
+      <div class="bridge" aria-hidden="true">+</div>
+      <div class="person"><h3>Pflegekraft</h3><div class="mini"><span>Kraft</span><span>Wille</span><span>Wissen</span></div><p class="small-note">Was fehlt mir gerade?</p></div>
+    </div>
+    <p class="muted">Deshalb fragen meine Lernfälle nicht nur „Was braucht die Patientin?“, sondern auch „Was brauchst du, um gut handeln zu können?“ Das gilt für Lernende genauso: Auch beim Lernen kann Kraft, Wille oder Wissen fehlen.</p>
+  </section>
+
+  <section class="term" id="peplau" aria-labelledby="t6">
+    <div class="term-head"><span class="num">08</span><h2 id="t6">Hildegard Peplau</h2></div>
+    <p>Hildegard Peplau (1909–1999) war eine US-amerikanische Pflegewissenschaftlerin mit Schwerpunkt psychiatrische Pflege. Ihr Buch <em>Interpersonal Relations in Nursing</em> erschien 1952. Für sie steht die <strong>Beziehung</strong> zwischen Pflegekraft und gepflegter Person im Mittelpunkt: Pflege ist für sie ein gemeinsamer Prozess zweier Menschen, die zusammen an einem Gesundheitsproblem arbeiten.</p>
+    <p class="muted">Peplau beschreibt, wie sich eine solche Beziehung in Phasen entwickelt:</p>
+    <div class="phases">
+      <span><b>Orientierung</b><small>Man lernt sich kennen und klärt, worum es geht.</small></span>
+      <span><b>Arbeit</b><small>Man arbeitet gemeinsam am Problem; die Person nutzt die Hilfe zunehmend selbst.</small></span>
+      <span><b>Abschluss</b><small>Die Beziehung endet, die Person geht gestärkt weiter.</small></span>
+    </div>
+    <p class="small-note">Wo Henderson fragt „Was fehlt?“, fragt Peplau „Was passiert zwischen uns?“ Im <a href="fuersorge-kompass.html">Fürsorge-Kompass</a> ist Peplau deshalb eine der Brillen, durch die man dieselbe Lage anders sieht.</p>
+  </section>
+
+  <section class="term" id="optimum" aria-labelledby="t7">
+    <div class="term-head"><span class="num">09</span><h2 id="t7">Lernen am Optimum: das zweigeteilte Optimum</h2></div>
+    <p>„Lernen am Optimum“ ist mein eigener Ansatz – eine Art Bauplan für digitale Lernfälle. „Optimum“ heißt dabei nicht „perfekt“, sondern: <strong>das Beste, was unter den gegebenen Bedingungen möglich ist.</strong></p>
+    <p>Das Besondere: Das Optimum hat zwei Seiten. Es gibt eines für die <em>Situation</em> und eines für die <em>Person, die lernt</em>.</p>
+    <div class="principles">
+      <div class="principle"><h3>Handlungsoptimum</h3><p>Blick auf die Situation: Was ist hier die beste begründbare Handlung – mit der Zeit, dem Wissen und den Mitteln, die gerade da sind?</p><p class="small-note">Im Nachtdienst-Beispiel: Was hat jetzt Vorrang – und warum?</p></div>
+      <div class="principle"><h3>Lernoptimum</h3><p>Blick auf die lernende Person: Welche Hilfe bringt sie jetzt einen Schritt weiter – so, dass sie die Hilfe bald nicht mehr braucht?</p><p class="small-note">Im Nachtdienst-Beispiel: Reicht ein Hinweis im Raum, oder braucht es mehr?</p></div>
+    </div>
+    <p>Hier schließt sich der Kreis zu Henderson: Beim Lernen kann genauso Kraft, Wille oder Wissen fehlen wie in der Pflege. Das Lernoptimum fragt, was gerade fehlt – und gibt genau so viel Hilfe wie nötig.</p>
+    <p>Das Ziel ist erreicht, wenn jemand einen Fall <strong>ohne Hilfen</strong> lösen kann. Wer lernt, steuert dabei selbst: wo er einsteigt, wie schnell er geht, ob er Hilfe holt oder die KI dazuschaltet.</p>
+    <div class="inshort"><b>Kurz gesagt</b>Zwei Fragen gehören zusammen: Was ist hier gut zu tun? Und was brauche ich, um es selbst zu können?</div>
+  </section>
+
+  <section class="term" id="arbeiten" aria-labelledby="t9">
+    <div class="term-head"><span class="num">10</span><h2 id="t9">Die Arbeitsproben erklärt</h2></div>
+    <p>Alle Arbeiten nutzen die Pflege als Beispiel. In dieser Reihenfolge ergeben sie am meisten Sinn:</p>
+
+    <div class="work-explain">
+      <span class="eyebrow">A · Handreichung</span>
+      <h3>Selbstfürsorge im Beruf</h3>
+      <p>Ein Text in acht Schritten: Wie bleibe ich in einem fordernden Beruf psychisch gesund, wo liegen meine Grenzen, wo finde ich Unterstützung? Das Beispiel ist die Pflege, die Fragen stellen sich in vielen Berufen.</p>
+      <p class="small-note">Hier fängt es an: Die Handreichung ist die inhaltliche Grundlage für den Kompass. · Ohne KI.</p>
+      <a href="artikel/psychische-gesundheit-im-pflegeberuf/">Handreichung lesen →</a>
+    </div>
+
+    <div class="work-explain">
+      <span class="eyebrow">B · Interaktiver Kompass</span>
+      <h3>Fürsorge-Kompass</h3>
+      <p>Aus der Handreichung wird etwas, das man tun kann: Man schätzt die eigene Lage ein und sieht sie dann durch verschiedene Brillen – Henderson, Peplau, Arbeitsbedingungen und eine KI-Brille. Am Ende plant man einen kleinen nächsten Schritt.</p>
+      <p class="small-note">Hier wird „Beide Seiten zählen“ greifbar: Die helfende Person schaut auf sich selbst. · Mit KI-Brille.</p>
+      <a href="fuersorge-kompass.html">Kompass ausprobieren →</a>
+    </div>
+
+    <div class="work-explain">
+      <span class="eyebrow">C · Begehbarer 3D-Lernraum</span>
+      <h3>Nachtdienst, Zimmer 14</h3>
+      <p>Ein Spiel, in dem man <strong>beruflich handeln</strong> muss. Man ist eine Pflegekraft im Nachtdienst, betritt ein Zimmer und muss entscheiden, was jetzt Vorrang hat. Danach kann man den Raum untersuchen und lernt zu trennen: Was sehe ich wirklich, was vermute ich nur, und was muss ich nachfragen?</p>
+      <p>Es gibt keine Punkte und keine richtige Reihenfolge. Man wählt sein Vorgehen selbst – und muss es begründen. Darum geht es.</p>
+      <p class="small-note">Das Beispiel ist eine psychiatrische Station. Dieselbe Bauweise passt auf jeden Beruf mit Entscheidungen unter Zeitdruck. · Noch ohne KI.</p>
+      <a href="lernfall/nachtdienst-zimmer-14/">Lernfall starten →</a>
+    </div>
+
+    <div class="work-explain">
+      <span class="eyebrow">D · Lernspiel mit simulierter KI</span>
+      <h3>Lernen am Optimum</h3>
+      <p>Ein Fall, drei Entscheidungen, Henderson als Brille. Hier ist alles zusammen: das zweigeteilte Optimum, gestufte Hilfen und eine simulierte KI, die überzeugend klingt, aber auch irrt.</p>
+      <p class="small-note">Mit KI.</p>
+      <a href="lernen-am-optimum.html">Lernspiel ansehen →</a>
+    </div>
+
+    <div class="cta-row"><a class="cta alt" href="./">Zur Werkstatt →</a></div>
+  </section>
+
+  <section class="sources" id="quellen" aria-labelledby="t8">
+    <span class="eyebrow">Zum Weiterlesen</span>
+    <h2 id="t8">Quellen</h2>
+    <ol>
+      <li>Henderson, V. (1966). <em>The Nature of Nursing: A Definition and Its Implications for Practice, Research, and Education.</em> New York: Macmillan.</li>
+      <li>Henderson, V. (1960er-Jahre). <em>Basic Principles of Nursing Care.</em> Genf: International Council of Nurses (ICN).</li>
+      <li>Peplau, H. E. (1952). <em>Interpersonal Relations in Nursing: A Conceptual Frame of Reference for Psychodynamic Nursing.</em> New York: G. P. Putnam’s Sons.</li>
+      <li>Online, frei zugänglich: Nursology – <a href="https://nursology.net/nurse-theories/the-nature-of-nursing">The Nature of Nursing (Henderson)</a> und <a href="https://nursology.net/nurse-theories/peplaus-theory-of-interpersonal-relations/">Peplau’s Theory of Interpersonal Relations</a> (englisch).</li>
+    </ol>
+  </section>
+
+  <footer>
+    <a class="back" href="./">← Zur Werkstatt</a>
+    <span>Barbara Magdalena Mayer · Stand: Oktober 2026</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+ var data={
+  patient:{who:'Beispiel: Ein Mann soll nach einer Operation wieder selbst aufstehen.',
+   kraft:'Die Beine sind noch schwach. Er braucht jemanden, der ihn stützt.',
+   wille:'Er hat Angst vor Schmerzen und will lieber liegen bleiben. Er braucht Ermutigung.',
+   wissen:'Er weiß nicht, dass frühes Aufstehen die Heilung fördert. Er braucht eine Erklärung.'},
+  pflege:{who:'Beispiel: Eine Pflegekraft soll den Mann beim ersten Aufstehen begleiten.',
+   kraft:'Sie ist erschöpft nach mehreren Diensten. Sie braucht Pause oder eine Kollegin.',
+   wille:'Sie zweifelt, ob sie das allein verantworten möchte. Sie braucht Rückhalt.',
+   wissen:'Ihr fehlt eine Information zur Operation. Sie braucht Nachfrage oder Übergabe.'}
+ };
+ var btns=document.querySelectorAll('.switch button'),who=document.getElementById('kww-who');
+ function set(k){var d=data[k];who.textContent=d.who;
+  document.querySelectorAll('.kww-card .ex').forEach(function(p){p.textContent=d[p.dataset.k]});
+  btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.who===k?'true':'false')});}
+ btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.who)})});
+ set('patient');
+})();
+</script>
+</body>
+</html>
