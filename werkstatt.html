@@ -5,11 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Meine Werkstatt · Barbara Magdalena Mayer</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Layout: eine schmale Spalte für das Handy, Porträt oben, darunter große Buttons. Gleiche Farben wie die Hauptseite. */
+/* Schmale, mobilfreundliche Linkseite mit den lokalen Schriften und Farben der Hauptseite. */
+@font-face{font-family:"Literata";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/literata-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Literata";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
 :root{
   --bg:#faeef1; --ink:#24382c; --muted:#5e5459; --line:#ead5db;
   --green:#2f5240; --pink:#b04e6b; --pink-dark:#8a3a52; --night:#0b1214; --teal:#7cc7bc; --surface:#ffffff;
@@ -34,29 +38,29 @@ h1{font-family:var(--display);font-weight:600;font-size:1.6rem;line-height:1.15;
 a:focus-visible,button:focus-visible{outline:3px solid #d4a373;outline-offset:2px}
 .mail{font-family:var(--mono);font-size:.85rem;color:var(--muted);user-select:all;word-break:break-all}
 .copied{font-size:.85rem;color:var(--green)}
-footer{font-size:.8rem;color:var(--muted);margin-top:8px}
+footer{font-size:.8rem;color:var(--muted);margin-top:8px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px}
+footer a{color:var(--green)}
 </style>
-
 </head>
 <body>
 <main class="wrap">
   <div class="plus-mark" aria-label="Plus-Marke von Barbara Magdalena Mayer">Plus</div>
   <span class="eyebrow">Werkstatt für berufliche Bildung</span>
   <h1>Barbara Magdalena Mayer</h1>
-  <p class="lead">Ich baue digitale Lernwelten für berufliche Bildung.</p>
+  <p class="lead">Ich baue digitale Lernwelten für die berufliche Bildung.</p>
 
   <ul class="links">
     <li><a class="night" href="https://barbara-magdalena-mayer.github.io/lernfall/nachtdienst-zimmer-14/">▶ Nachtdienst, Zimmer 14<small>Interaktiver Lernfall</small></a></li>
-    <li><a class="pink" href="https://barbara-magdalena-mayer.github.io/lernen-am-optimum.html">▶ Lernen am Optimum<small>Entscheiden, begründen, KI prüfen</small></a></li>
+    <li><a class="pink" href="https://barbara-magdalena-mayer.github.io/lernen-am-optimum.html">▶ Lernen am Optimum<small>KI-Fallspiel · Entscheiden und begründen</small></a></li>
     <li><a href="https://barbara-magdalena-mayer.github.io/fuersorge-kompass.html">Fürsorge-Kompass<small>Perspektiven wechseln und nächste Schritte finden</small></a></li>
     <li><a href="https://barbara-magdalena-mayer.github.io/artikel/optimum-zwei-seiten/">Das Optimum hat zwei Seiten<small>Die Idee hinter dem Lernfall</small></a></li>
-    <li><a href="https://barbara-magdalena-mayer.github.io/artikel/psychische-gesundheit-im-pflegeberuf/">Psychische Gesundheit im Beruf stärken<small>Handreichung in acht Schritten · Beispiel Pflege</small></a></li>
-    <li><a href="https://barbara-magdalena-mayer.github.io/">Meine Werkstatt<small>Alle Arbeitsproben</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/artikel/psychische-gesundheit-im-pflegeberuf/">Psychische Gesundheit im Pflegeberuf stärken<small>Handreichung in acht Schritten · Beispiel Pflege</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/">Über mich &amp; alle Arbeitsproben<small>Hintergründe und mein Portfolio</small></a></li>
     <li><a href="https://bsky.app/profile/3armagmay.bsky.social" rel="me">Bluesky<small>Neue Prototypen zuerst dort</small></a></li>
     <li><button type="button" id="copy">E-Mail kopieren<small class="mail" id="mail">barbara.magdalena.mayer@web.de</small></button></li>
   </ul>
   <span class="copied" id="copied" hidden>Kopiert</span>
-  <footer>Stand: Oktober 2026</footer>
+  <footer><span>Stand: Oktober 2026</span><a href="https://barbara-magdalena-mayer.github.io/#impressum">Impressum</a><a href="https://barbara-magdalena-mayer.github.io/#datenschutz">Datenschutz</a></footer>
 </main>
 
 <script>
