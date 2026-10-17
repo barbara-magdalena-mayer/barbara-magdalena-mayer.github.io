@@ -4,78 +4,236 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Barbara Magdalena Mayer – Gestalterin interaktiver Lernmedien mit Pflegeexpertise">
-<title>Barbara Magdalena Mayer · Gestalterin interaktiver Lernmedien</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<meta name="description" content="Barbara Magdalena Mayer · Lernen am Optimum: digitale, interaktive Lernwelten für die berufliche Bildung. Persönliches Portfolio.">
+<title>Lernen am Optimum · Barbara Magdalena Mayer</title>
+<link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Schriften lokal eingebunden (keine Verbindung zu Google) · SIL Open Font License 1.1 */
+@font-face{font-family:"Literata";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/literata-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Literata";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
+
 :root{--bg:#faeef1;--surface:#fff;--ink:#24382c;--muted:#5e5459;--line:#ead5db;--green:#2f5240;--green-soft:#d5e2d6;--pink:#b04e6b;--pink-dark:#8a3a52;--black:#0b1214;--teal:#7cc7bc;--display:"Literata",Georgia,serif;--body:"Source Sans 3",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;padding:0 20px;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}.wrap{width:min(720px,100%);margin:0 auto;padding:48px 0 64px;display:flex;flex-direction:column;gap:42px}h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.18;margin:0}h1{font-size:clamp(2.35rem,7vw,3.35rem)}h2{font-size:1.55rem}h3{font-family:var(--body);font-size:1.05rem;font-weight:600}p{margin:0;max-width:66ch}.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}.muted{color:var(--muted)}.hero{display:flex;flex-direction:column;gap:15px;border-bottom:1px solid var(--line);padding-bottom:34px}.hero .role{font-family:var(--body);font-size:1.04rem;color:var(--green);margin-top:-4px}.hero .lead{font-size:1.08rem}.tags{display:flex;flex-wrap:wrap;gap:8px}.tag{font-size:.86rem;background:var(--green-soft);color:var(--green);border-radius:999px;padding:3px 11px}.section{display:flex;flex-direction:column;gap:14px}.workshop{border-left:3px solid var(--pink);padding-left:16px}.interactive-case{background:var(--black);color:#e6eeec;border:1px solid #2c3e43;border-radius:14px;padding:25px;display:flex;flex-direction:column;gap:14px}.interactive-case .eyebrow{color:var(--teal)}.interactive-case h2{color:#fff}.interactive-case p{color:#c7d5d2}.case-cta,.cta{display:inline-flex;align-items:center;gap:8px;width:max-content;max-width:100%;font-weight:600;text-decoration:none;border-radius:999px;padding:10px 16px}.case-cta{background:var(--teal);color:var(--black);box-shadow:0 3px 0 #4c8f87}.case-cta:hover{background:#9adbd2}.cta{background:var(--pink);color:#fff;box-shadow:0 3px 0 var(--pink-dark)}.cta.alt{background:var(--green);box-shadow:0 3px 0 #1e3729}.cta-row{display:flex;flex-wrap:wrap;gap:10px}.work-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;margin-top:2px;padding-top:12px;border-top:1px solid var(--line);font-size:.86rem;color:var(--muted)}.work-meta strong{display:block;color:var(--ink);font-size:.76rem;font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;font-weight:500;margin-bottom:2px}.concept{display:flex;flex-direction:column;gap:14px}.concept-note{border:1px solid var(--line);background:rgba(255,255,255,.55);border-radius:9px;padding:10px 12px;font-size:.88rem;color:var(--muted)}.concept-note strong{color:var(--ink);font-weight:600}.handout{display:flex;flex-direction:column;gap:14px}.contact{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px}.mailrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.mail{font-family:var(--mono);font-size:.92rem;word-break:break-all;user-select:all}button{font:inherit;font-size:.9rem;background:var(--green);color:#fff;border:0;border-radius:6px;padding:7px 12px;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #d4a373;outline-offset:2px}.copied{font-size:.86rem;color:var(--green)}footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.84rem;display:flex;flex-direction:column;gap:10px}footer details summary{cursor:pointer;color:var(--ink);font-weight:600}footer a{color:var(--green)}@media(max-width:560px){.work-meta{grid-template-columns:1fr}body{font-size:16px}.wrap{padding-top:34px;gap:36px}.interactive-case{padding:21px}.case-cta,.cta{width:auto;justify-content:center}.mailrow{align-items:flex-start;flex-direction:column}}
-@media(prefers-reduced-motion:no-preference){.case-cta,.cta{animation:wackeln 5.8s ease-in-out 2s infinite}@keyframes wackeln{0%,7%,100%{transform:rotate(0)}1.5%{transform:rotate(-2deg)}3.5%{transform:rotate(2deg)}5%{transform:rotate(-1deg)}}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;padding:0 20px;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+.wrap{width:min(720px,100%);margin:0 auto;padding:48px 0 64px;display:flex;flex-direction:column;gap:42px}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.18;margin:0}
+h1{font-size:clamp(2.35rem,7vw,3.35rem)}h2{font-size:1.55rem}h3{font-family:var(--body);font-size:1.05rem;font-weight:600}
+p{margin:0;max-width:66ch}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
+.muted{color:var(--muted)}.small-note{font-size:.86rem;color:var(--muted)}
+
+.hero{display:flex;flex-direction:column;gap:15px;border-bottom:1px solid var(--line);padding-bottom:34px}
+.hero .name{font-family:var(--body);font-size:1.15rem;font-weight:600;color:var(--ink)}
+.hero .role{font-size:1.04rem;color:var(--green);margin-top:-4px}
+.hero .lead{font-size:1.08rem}
+.tags{display:flex;flex-wrap:wrap;gap:8px}.tag{font-size:.86rem;background:var(--green-soft);color:var(--green);border-radius:999px;padding:3px 11px}
+.section{display:flex;flex-direction:column;gap:14px}
+
+/* Mini-Erlebnis */
+.plus-experience{background:#fff9f5;border:1px solid var(--line);border-radius:18px;padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:16px;box-shadow:0 12px 35px rgba(36,56,44,.055)}
+.plus-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.plus-symbol{display:inline-block;font-family:var(--display);font-size:4.2rem;font-weight:600;line-height:.75;color:var(--pink);transform-origin:center}
+.plus-experience h2{font-size:clamp(1.5rem,4vw,2.15rem)}
+.plus-options{display:grid;gap:10px;margin-top:18px}
+.plus-choice{width:100%;text-align:left;border:1px solid #d8bfc7;border-radius:10px;background:#fff;color:var(--ink);padding:14px 16px;line-height:1.45;font-size:1rem;transition:background .2s,transform .2s}
+.plus-choice:hover{background:#f9e9ee;transform:translateX(3px)}
+.plus-choice.seen{border-style:dashed;color:var(--muted)}
+.plus-foot{font-size:.87rem;color:var(--muted)}
+.plus-result{background:#f1e9e2;padding:18px;border-radius:12px;display:grid;gap:12px}
+.plus-result strong{font-family:var(--display);font-size:1.2rem}
+.plus-result .plus-gain{border-left:4px solid var(--pink);padding-left:12px}
+.plus-again{justify-self:start;width:auto}
+.plus-all{font-size:.92rem;color:var(--green);font-weight:600}
+
+/* Arbeiten */
+.work{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:25px;display:flex;flex-direction:column;gap:14px}
+.work.feature{background:var(--black);color:#e6eeec;border-color:#2c3e43}
+.work.feature .eyebrow{color:var(--teal)}.work.feature h2{color:#fff}.work.feature p{color:#c7d5d2}
+.work.feature .work-meta{border-top-color:#2c3e43;color:#a9bab6}.work.feature .work-meta strong{color:#e6eeec}
+.work-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;padding-top:12px;border-top:1px solid var(--line);font-size:.86rem;color:var(--muted)}
+.work-meta strong{display:block;color:var(--ink);font-size:.76rem;font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;font-weight:500;margin-bottom:2px}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px}
+.cta{display:inline-flex;align-items:center;gap:8px;max-width:100%;font-weight:600;text-decoration:none;border-radius:999px;padding:10px 16px;background:var(--pink);color:#fff;box-shadow:0 3px 0 var(--pink-dark)}
+.cta:hover{background:var(--pink-dark)}
+.cta.teal{background:var(--teal);color:var(--black);box-shadow:0 3px 0 #4c8f87}.cta.teal:hover{background:#9adbd2}
+.cta.ghost{background:transparent;color:var(--teal);box-shadow:none;padding-left:0}
+.cta.ghost:hover{text-decoration:underline;background:transparent}
+.ki-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ki-steps span{background:#f5e7e9;border-radius:9px;padding:12px;display:flex;flex-direction:column;gap:5px}.ki-steps small{color:var(--muted)}
+
+/* Prinzip */
+.principles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.principle{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--green);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.principle:last-child{border-top-color:var(--pink)}
+
+/* Über mich */
+.about{border-left:3px solid var(--pink);padding-left:16px}
+.facts{display:grid;gap:6px;margin:0;padding:0;list-style:none;font-size:.95rem}
+.facts li{display:grid;grid-template-columns:9.5rem 1fr;gap:12px}
+.facts b{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;font-weight:500;color:var(--green);padding-top:3px}
+
+/* Kontakt */
+.contact{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.mailrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.mail{font-family:var(--mono);font-size:.92rem;word-break:break-all;user-select:all}
+.social{display:flex;flex-wrap:wrap;gap:16px}.social a{color:var(--green);font-weight:600}
+button{font:inherit;font-size:.9rem;background:var(--green);color:#fff;border:0;border-radius:6px;padding:7px 12px;cursor:pointer}
+button:focus-visible,a:focus-visible,.plus-choice:focus-visible{outline:3px solid #d4a373;outline-offset:2px}
+.copied{font-size:.86rem;color:var(--green)}
+footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.84rem;display:flex;flex-direction:column;gap:10px}
+footer details summary{cursor:pointer;color:var(--ink);font-weight:600}footer a{color:var(--green)}
+
+@media(max-width:560px){body{font-size:16px}.wrap{padding-top:34px;gap:36px}.work{padding:21px}.work-meta,.principles,.ki-steps{grid-template-columns:1fr}.facts li{grid-template-columns:1fr;gap:0}.mailrow{align-items:flex-start;flex-direction:column}}
+.cta.alt{background:var(--green);box-shadow:0 3px 0 #1e3729}.cta.alt:hover{background:#1e3729}
+/* Bewegung: Plus atmet, Buttons wackeln */
+@media(prefers-reduced-motion:no-preference){.plus-symbol{animation:plus-breathe 5s ease-in-out infinite}@keyframes plus-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.cta:not(.ghost){animation:wackeln 5.8s ease-in-out 2s infinite}@keyframes wackeln{0%,7%,100%{transform:rotate(0)}1.5%{transform:rotate(-2deg)}3.5%{transform:rotate(2deg)}5%{transform:rotate(-1deg)}}}
+@media(prefers-reduced-motion:reduce){.plus-choice{transition:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 <div class="wrap">
+
   <header class="hero">
-    <span class="eyebrow">Werkstatt für Gesundheit und Bildung</span>
-    <h1>Barbara<br>Magdalena Mayer</h1>
-    <p class="role">Gestalterin interaktiver Lernmedien · Pflegeexpertise aus 16 Jahren psychiatrischer Akutpflege</p>
-    <p class="lead">Ich baue Lernfälle, Lernspiele und digitale Materialien für Gesundheit und Bildung. Dabei verbinde ich Pflegeexpertise, meinen bildungswissenschaftlichen Hintergrund und meine Freude am Gestalten, Erzählen und Ausprobieren.</p>
-    <div class="tags"><span class="tag">Interaktive Lernmedien</span><span class="tag">Pflegeexpertise</span><span class="tag">Bildungswissenschaft</span></div>
+    <span class="eyebrow">Portfolio · Digitale Bildung &amp; Gestaltung</span>
+    <h1>Lernen am Optimum</h1>
+    <p class="name">Barbara Magdalena Mayer</p>
+    <p class="role">Erleben. Entdecken. Ein Plus mitnehmen.</p>
+    <p class="lead">Ich baue digitale, interaktive Lernwelten für die berufliche Bildung: begehbare Räume, Lernspiele und simulierte KI, die man prüfen muss, statt ihr zu folgen.</p>
+    <p class="muted">Meine Frage: Wie werden Menschen unter Unsicherheit handlungsfähig – und was nehmen sie aus einem Erlebnis mit, das sie vorher noch nicht hatten?</p>
+    <div class="tags"><span class="tag">Digitale Lernwelten</span><span class="tag">KI kritisch prüfen</span><span class="tag">Berufliche Bildung</span><span class="tag">Bildungswissenschaft</span></div>
   </header>
 
-  <section class="section workshop" aria-labelledby="h-werkstatt">
-    <span class="eyebrow">Meine Werkstatt</span>
-    <h2 id="h-werkstatt">Ich baue Lernwelten</h2>
-    <p class="muted">Ich entwickle Lernmedien nicht nur als Text oder Präsentation. Ich baue Situationen, Räume und Entscheidungen, in denen Lernen stattfinden kann. Dabei verbinde ich fachliche Fragen mit Sprache, Bild, Atmosphäre und Interaktion.</p>
-    <p class="muted">Die Ergebnisse sind zunächst Prototypen: Sie dürfen ausprobiert, verändert und weiterentwickelt werden. Hier zeige ich drei Arbeitsproben aus dieser Werkstatt.</p>
+  <section class="plus-experience" aria-labelledby="plus-title">
+    <div class="plus-top"><span class="eyebrow">60 Sekunden · ein kleines Erlebnis</span><span class="plus-symbol" aria-hidden="true">+</span></div>
+    <h2 id="plus-title">Du willst helfen. Aber was braucht der andere?</h2>
+    <div id="plus-game" aria-live="polite"></div>
+    <p class="plus-foot">Keine Prüfung. Keine Punkte. Probier alle drei Wege aus – jeder zeigt dir etwas anderes.</p>
   </section>
 
-  <section class="interactive-case" aria-labelledby="h-lernfall">
-    <span class="eyebrow">Interaktiver Lernfall · psychiatrische Pflege</span>
+  <section class="section" aria-labelledby="h-arbeiten">
+    <span class="eyebrow">Arbeitsproben</span>
+    <h2 id="h-arbeiten">Zum Ausprobieren</h2>
+    <p class="muted">Alles hier habe ich selbst konzipiert und gebaut. Die Beispielinhalte stammen aus dem Gesundheitswesen, die Formen lassen sich auf andere Berufe übertragen. Viele Arbeiten sind Prototypen, die ich weiterentwickle.</p>
+  </section>
+
+  <article class="work feature" aria-labelledby="h-lernfall">
+    <span class="eyebrow">Begehbarer 3D-Lernraum</span>
     <h2 id="h-lernfall">Nachtdienst, Zimmer 14</h2>
-    <p>Du betrittst nachts ein Zimmer und musst entscheiden, was jetzt Vorrang hat. Erkunde die Szene, nimm Hinweise wahr und reflektiere deine nächsten Schritte.</p>
-    <div class="work-meta"><span><strong>Idee</strong>Eine psychiatrische Situation als begehbarer Raum</span><span><strong>Gestaltung</strong>3D-Szene, Licht und Hinweis-Punkte</span><span><strong>Interaktion</strong>Erkunden, entscheiden, begründen</span><span><strong>Lernabsicht</strong>Wahrnehmen und Prioritäten reflektieren</span></div>
-    <a class="case-cta" href="lernfall/nachtdienst-zimmer-14/" aria-label="Interaktiven Lernfall Nachtdienst, Zimmer 14 starten">▶&nbsp; Lernfall starten</a>
-    <a class="cta" href="artikel/optimum-zwei-seiten/">Die Idee hinter dem Lernfall lesen →</a>
-  </section>
+    <p>Du betrittst nachts ein Zimmer, schaust dich im Raum um und musst entscheiden, was jetzt Vorrang hat. Danach untersuchst du Hinweise und trennst Beobachtung, Vermutung und offene Rückfrage.</p>
+    <div class="work-meta"><span><strong>Form</strong>Navigierbare 3D-Szene mit Klick-Ebene</span><span><strong>Gestaltung</strong>Raum, Licht, Objekte als Hinweise</span><span><strong>Interaktion</strong>Erkunden, entscheiden, begründen</span><span><strong>Lernabsicht</strong>Wahrnehmen und Prioritäten setzen</span></div>
+    <div class="cta-row">
+      <a class="cta teal" href="lernfall/nachtdienst-zimmer-14/">▶&nbsp; Lernfall starten</a>
+      <a class="cta ghost" href="artikel/optimum-zwei-seiten/">Die Idee dahinter lesen →</a>
+    </div>
+    <p class="small-note">Beispielinhalt: Akutsituation in der Psychiatrie · mit Inhaltshinweis</p>
+  </article>
 
-  <section class="section concept" aria-labelledby="h-optimum">
-    <span class="eyebrow">Lernspiel · Konzept</span>
-    <h2 id="h-optimum">Lernen am Optimum</h2>
-    <p class="muted">Eine Spielidee: Man nimmt eine Pflegetheorie und macht sie spielbar. Die Theorie bestimmt dabei nicht, wie eine Person reagiert. Sie bietet einen Blickwinkel, aus dem der Fall betrachtet wird. Es gibt sehr viele Pflegetheorien, und jede hat ihre Berechtigung (Beispiele sind Orem, Peplau, Krohwinkel und viele mehr).</p>
-    <p class="muted">In einer möglichen Weiterentwicklung könnten verschiedene Theorien unterschiedliche Aufgaben, Hinweise und Gesprächswege eröffnen. Das Ziel ist, dass Lernende auch komplexe berufliche Situationen zunehmend selbstständig bearbeiten können – mit passenden Hilfen und anschließender Reflexion.</p>
-    <div class="work-meta"><span><strong>Idee</strong>Pflegetheorie als spielbaren Blickwinkel nutzen</span><span><strong>Gestaltung</strong>Fallaufgaben, Hilfen und Rückmeldungen</span><span><strong>Interaktion</strong>Auswählen, begründen, reflektieren</span><span><strong>Lernabsicht</strong>Theorie in Handlung übersetzen</span></div>
-    <div class="concept-note"><strong>In diesem Beispiel:</strong> Henderson · Kraft, Wille, Wissen</div>
-    <div class="concept-note">Weitere mögliche Perspektiven: Orem, Peplau, Krohwinkel und viele mehr</div>
+  <article class="work" aria-labelledby="h-ki">
+    <span class="eyebrow">Lernspiel mit simulierter KI</span>
+    <h2 id="h-ki">Was, wenn die KI überzeugend klingt – aber irrt?</h2>
+    <p class="muted">Ein Fall, drei Entscheidungen. Eine simulierte KI gibt Hinweise, die plausibel, unvollständig oder bewusst falsch sein können. Das Optimum ist erreicht, wenn du den Fall ohne Hilfe löst und die Fehler der KI erkennst.</p>
+    <div class="ki-steps"><span><b>Ohne Hilfe</b><small>Was weiß ich selbst?</small></span><span><b>Mit Hinweis</b><small>Was ist daran belastbar?</small></span><span><b>Mit Widerspruch</b><small>Was entscheide ich trotzdem?</small></span></div>
+    <div class="work-meta"><span><strong>Form</strong>Fallspiel mit gestuften Hilfen</span><span><strong>Gestaltung</strong>Theorie als „Brille“ auf den Fall</span><span><strong>Interaktion</strong>Prüfen, entscheiden, begründen</span><span><strong>Lernabsicht</strong>KI-Ergebnisse kritisch bewerten</span></div>
     <div class="cta-row"><a class="cta" href="lernen-am-optimum.html">▶&nbsp; Lernspiel ansehen</a></div>
-    <p class="muted"><small>Eigene didaktische Entwicklung · technische Umsetzung mit KI-Unterstützung · Beispielfall mit erfundenen Daten</small></p>
+    <p class="small-note">Eigene didaktische Entwicklung · technische Umsetzung mit KI-Unterstützung · Beispielfall mit erfundenen Daten. Die KI-Fehler sind didaktisch gestaltet, keine Aussage über reale KI-Systeme.</p>
+  </article>
+
+  <article class="work" aria-labelledby="h-kompass">
+    <span class="eyebrow">Interaktiver Kompass</span>
+    <h2 id="h-kompass">Fürsorge-Kompass</h2>
+    <p class="muted">Du schätzt deine Lage ein, eine Kompassnadel zeigt, wo Unterstützung fehlen könnte. Dann wechselst du die Brille – Theorie, Arbeitsbedingungen, KI – und siehst, wie derselbe Kompass anders gelesen wird. Am Ende steht ein kleiner Schritt für die nächsten sieben Tage.</p>
+    <div class="work-meta"><span><strong>Form</strong>Skalen, Kompass, Perspektivwechsel</span><span><strong>Gestaltung</strong>Vier Brillen, eine Vergleichsansicht</span><span><strong>Interaktion</strong>Einschätzen, umdeuten, planen</span><span><strong>Lernabsicht</strong>Ressourcen und nächste Schritte finden</span></div>
+    <div class="cta-row"><a class="cta" href="fuersorge-kompass.html">▶&nbsp; Kompass ausprobieren</a></div>
+    <p class="small-note">Baut auf der Handreichung „Psychische Gesundheit im Pflegeberuf stärken“ auf.</p>
+  </article>
+
+  <article class="work" aria-labelledby="h-handout">
+    <span class="eyebrow">Handreichung</span>
+    <h2 id="h-handout">Selbstfürsorge im Beruf</h2>
+    <p class="muted">Acht Schritte für Selbstfürsorge, professionelle Grenzen und passende Unterstützung im Berufsalltag – am Beispiel der Pflege.</p>
+    <div class="work-meta"><span><strong>Form</strong>Acht Schritte, online und als PDF</span><span><strong>Gestaltung</strong>Verständliche Sprache, klare Struktur</span><span><strong>Interaktion</strong>Lesen, prüfen, eigene Grenzen reflektieren</span><span><strong>Lernabsicht</strong>Ressourcen und Unterstützung erkennen</span></div>
+    <div class="cta-row"><a class="cta alt" href="artikel/psychische-gesundheit-im-pflegeberuf/">Online lesen →</a><a class="cta" href="artikel/psychische-gesundheit-im-pflegeberuf/psychische-gesundheit-im-pflegeberuf.pdf" download>↓ PDF</a></div>
+  </article>
+
+  <section class="section" aria-labelledby="h-idee">
+    <span class="eyebrow">Das Prinzip hinter den Erlebnissen</span>
+    <h2 id="h-idee">Das Plus: eine Möglichkeit mehr</h2>
+    <p>Vorher scheint eine Situation eindeutig oder unlösbar. Dann kommt eine Entscheidung, ein Perspektivwechsel oder ein überraschender Widerspruch. Nachher ist etwas hinzugekommen: eine Einsicht, eine Frage oder eine neue Handlungsmöglichkeit. Dieses Plus ist mein gestalterisches Ziel. Zwei Fragen leiten mich dabei:</p>
+    <div class="principles">
+      <div class="principle"><h3>Handlungsoptimum</h3><p>Welche Handlung ist in dieser Situation fachlich begründet, verantwortbar und unter den gegebenen Bedingungen möglich?</p></div>
+      <div class="principle"><h3>Lernoptimum</h3><p>Welche Aufgabe, welcher Hinweis oder welche Hilfe bringt eine lernende Person jetzt einen Schritt weiter – so, dass sie die Hilfe bald nicht mehr braucht?</p></div>
+    </div>
   </section>
 
-  <section class="section handout" aria-labelledby="h-handout">
-    <span class="eyebrow">Handreichung</span>
-    <h2 id="h-handout">Psychische Gesundheit<br>im Pflegeberuf stärken</h2>
-    <p class="muted">Acht Schritte für Selbstfürsorge, professionelle Grenzen und passende Unterstützung im Pflegealltag.</p>
-    <div class="work-meta"><span><strong>Idee</strong>Psychische Gesundheit im Pflegealltag ansprechbar machen</span><span><strong>Gestaltung</strong>Acht Schritte in verständlicher Sprache</span><span><strong>Interaktion</strong>Lesen, prüfen, eigene Grenzen reflektieren</span><span><strong>Lernabsicht</strong>Ressourcen und Unterstützung erkennen</span></div>
-    <div class="cta-row"><a class="cta alt" href="artikel/psychische-gesundheit-im-pflegeberuf/">Online lesen →</a><a class="cta" href="artikel/psychische-gesundheit-im-pflegeberuf/psychische-gesundheit-im-pflegeberuf.pdf" download>↓ PDF</a></div>
+  <section class="section about" aria-labelledby="h-ueber">
+    <span class="eyebrow">Über mich</span>
+    <h2 id="h-ueber">Ich baue, um zu verstehen</h2>
+    <p class="muted">Ich komme aus der Praxis des Gesundheitswesens und habe Bildungswissenschaft studiert. Heute verbinde ich beides mit Gestaltung und Technik: Ich entwickle Lernwelten, in denen man handelt, statt nur zu lesen – und in denen digitale Werkzeuge, auch KI, kritisch geprüft werden.</p>
   </section>
 
   <section class="contact" aria-labelledby="h-kontakt">
-    <span class="eyebrow">Kontakt</span>
-    <p id="h-kontakt" class="mail">barbara.magdalena.mayer@web.de</p>
+    <span class="eyebrow" id="h-kontakt">Kontakt</span>
+    <p class="mail" id="mail">barbara.magdalena.mayer@web.de</p>
     <div class="mailrow"><button type="button" id="copy">E-Mail kopieren</button><span class="copied" id="copied" hidden>Kopiert</span></div>
-    <a href="https://bsky.app/" rel="me">Bluesky</a>
+    <div class="social">
+      <a href="https://bsky.app/profile/3armagmay.bsky.social" rel="me">Bluesky</a>
+      <a href="https://www.instagram.com/3armagmay/" rel="me">Instagram</a>
+    </div>
+    <p class="small-note">Neue Prototypen zeige ich zuerst auf Bluesky.</p>
   </section>
 
   <footer>
     <details><summary>Impressum</summary><p>Barbara Magdalena Mayer<br>E-Mail: <a href="mailto:barbara.magdalena.mayer@web.de">barbara.magdalena.mayer@web.de</a></p></details>
-    <details><summary>Datenschutz</summary><p>Diese statische GitHub-Pages-Seite verwendet keine eigenen Analyse- oder Trackingdienste. Beim Aufruf können technisch notwendige Verbindungsdaten durch Hosting- und eingebundene Dienste verarbeitet werden.</p></details>
+    <details><summary>Datenschutz</summary><p>Diese statische GitHub-Pages-Seite verwendet keine Analyse- oder Trackingdienste und lädt Schriften von diesem Server, nicht von Drittanbietern. Beim Aufruf verarbeitet der Hoster (GitHub) technisch notwendige Verbindungsdaten.</p></details>
     <span>Stand: Oktober 2026</span>
   </footer>
 </div>
+
 <script>
-document.getElementById('copy').addEventListener('click',function(){var t=document.getElementById('h-kontakt').textContent.trim(),c=document.getElementById('copied');try{navigator.clipboard.writeText(t).then(function(){c.hidden=false;setTimeout(function(){c.hidden=true},2000)},function(){fallback()})}catch(e){fallback()}function fallback(){var r=document.createRange();r.selectNodeContents(document.getElementById('h-kontakt'));var s=getSelection();s.removeAllRanges();s.addRange(r);c.textContent='Markiert – bitte kopieren';c.hidden=false}});
+document.getElementById('copy').addEventListener('click',function(){
+ var el=document.getElementById('mail'),t=el.textContent.trim(),c=document.getElementById('copied');
+ function fallback(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);c.textContent='Markiert – bitte kopieren';c.hidden=false}
+ try{navigator.clipboard.writeText(t).then(function(){c.textContent='Kopiert';c.hidden=false;setTimeout(function(){c.hidden=true},2000)},fallback)}catch(e){fallback()}
+});
+</script>
+
+<script>
+(function(){
+ var root=document.getElementById('plus-game');if(!root)return;
+ var seen={};
+ var options=[
+  ['rat','„Ich sage dir, was du jetzt machen solltest.“'],
+  ['take','„Gib her, ich mache das für dich.“'],
+  ['ask','„Was ist gerade das Schwierigste daran?“']
+ ];
+ var responses={
+  rat:['Du gibst einen Rat.','Vielleicht ist dein Vorschlag gut. Aber du weißt noch nicht, ob die Person Rat, Entlastung oder einfach Gehör braucht.','Dein Plus: Ein guter Rat zur falschen Zeit ist keine Hilfe. Vor dem Rat steht die Frage, was gebraucht wird.'],
+  take:['Du übernimmst die Aufgabe.','Das kann sofort entlasten. Es kann der Person aber auch die Erfahrung nehmen, es selbst zu schaffen.','Dein Plus: Helfen hat ein Ziel – dass die Hilfe irgendwann nicht mehr nötig ist. Abnehmen ist manchmal richtig, aber nie der einzige Weg.'],
+  ask:['Du fragst nach.','Du erfährst vielleicht etwas, das du vorher nicht sehen konntest. Aber eine Frage allein löst noch nichts – irgendwann braucht es auch eine Handlung.','Dein Plus: Eine Frage öffnet den Blick. Jetzt kannst du Rat oder Entlastung gezielt anbieten, statt zu raten.']
+ };
+ function start(){
+  var html='<p>Eine Person sagt zu dir: „Ich schaffe das gerade nicht.“ Du möchtest etwas Gutes tun. Was sagst du?</p><div class="plus-options">';
+  options.forEach(function(o){html+='<button type="button" class="plus-choice'+(seen[o[0]]?' seen':'')+'" data-choice="'+o[0]+'">'+o[1]+(seen[o[0]]?' <small>· schon erlebt</small>':'')+'</button>'});
+  root.innerHTML=html+'</div>';
+ }
+ function show(key){
+  seen[key]=true;var r=responses[key],n=Object.keys(seen).length;
+  root.innerHTML='<div class="plus-result"><strong></strong><p></p><p class="plus-gain"></p>'+(n===3?'<p class="plus-all">Alle drei Wege erlebt: Keiner ist immer richtig. Das Optimum hängt davon ab, was der andere gerade braucht – und genau das kann man üben.</p>':'')+'<button type="button" class="plus-choice plus-again" data-again>'+(n===3?'Noch einmal von vorn ↺':'Andere Möglichkeit erleben ↺')+'</button></div>';
+  var box=root.querySelector('.plus-result');
+  box.querySelector('strong').textContent=r[0];box.querySelectorAll('p')[0].textContent=r[1];box.querySelector('.plus-gain').textContent=r[2];
+  box.querySelector('[data-again]').focus();
+ }
+ root.addEventListener('click',function(ev){
+  var c=ev.target.closest('[data-choice]');if(c){show(c.dataset.choice);return}
+  if(ev.target.closest('[data-again]')){if(Object.keys(seen).length===3)seen={};start();var b=root.querySelector('.plus-choice');if(b)b.focus()}
+ });
+ start();
+})();
 </script>
 </body>
 </html>
