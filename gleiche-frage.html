@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Gleiche Frage, andere Antwort</title>
+<style>
+/* Layout: Kopfband, dann eine Karte pro Schritt; im Spiel zwei Antwortspalten (A | B), auf dem Handy gestapelt. Hell wie die übrige Werkstatt-Seite. */
+@font-face{font-family:"Literata";font-weight:400;font-display:swap;src:url("fonts/literata-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-display:swap;src:url("fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
+:root{--bg:#faeef1;--surface:#fff;--sunk:#f4e4e9;--ink:#24382c;--muted:#5e5459;--line:#ead5db;--green:#2f5240;--green-soft:#d5e2d6;--pink:#b04e6b;--pink-dark:#8a3a52;--pink-soft:#f7e3e9;--mark:#fbe7b0;--mark-line:#c9962d;--display:"Literata",Georgia,serif;--body:"Source Sans 3",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+header{background:var(--green-soft);padding:26px 16px 22px}
+.wrap{max-width:980px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.2;margin:0;text-wrap:balance}
+header h1{font-size:clamp(28px,5vw,42px)}
+header p{margin:6px 0 0;max-width:62ch;color:#3e5a49}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--pink-dark);margin:0 0 6px}
+main{padding:22px 16px 60px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:14px}
+.stack{display:grid;gap:18px}
+p{margin:0}
+.muted{color:var(--muted);font-size:15px}
+.note{border-left:3px solid var(--pink);padding-left:12px;color:var(--muted);font-size:15px}
+button{font:inherit;cursor:pointer;border-radius:10px}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.primary{background:var(--pink);color:#fff;border:1px solid var(--pink);padding:13px 24px;font-weight:600;border-radius:999px;box-shadow:0 3px 0 var(--pink-dark);transition:transform .15s}
+.primary:hover{transform:translateY(-1px)}
+.primary:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.ghost{background:transparent;color:var(--green);border:2px solid var(--green);padding:10px 18px;font-weight:600;border-radius:999px}
+.chip{background:var(--surface);color:var(--ink);border:1px solid var(--line);padding:9px 14px;font-weight:600;font-size:15px}
+.chip[aria-pressed="true"]{background:var(--green);color:#fff;border-color:var(--green)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.how{margin:0;padding-left:20px;display:grid;gap:6px}
+.progress{display:flex;gap:6px;align-items:center;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dot.done{background:var(--green)}.dot.now{background:var(--pink)}
+.field{display:inline-block;font-family:var(--mono);font-size:12px;background:var(--green-soft);color:var(--green);border-radius:999px;padding:2px 10px;margin-left:6px;vertical-align:middle}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:720px){.pair{grid-template-columns:1fr}.card{padding:18px}}
+.side{background:var(--sunk);border-radius:12px;padding:14px;display:grid;gap:10px;align-content:start}
+.side h3{font-size:16px}
+.q{font-weight:600}
+.bot{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.sent{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);padding:9px 11px;font-size:16px;line-height:1.45;font-weight:400;color:var(--ink)}
+.sent:disabled{cursor:default}
+.sent[aria-pressed="true"]{background:var(--mark);border-color:var(--mark-line)}
+.sent.built{box-shadow:inset 4px 0 0 var(--pink)}
+.step{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+.step h3{font-size:17px}
+textarea{width:100%;min-height:84px;font:inherit;font-size:16px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);resize:vertical}
+.ki{background:var(--pink-soft);border:1px dashed var(--pink);border-radius:12px;padding:12px 14px;display:grid;gap:8px}
+.ki .bot{color:var(--pink-dark)}
+.reveal{background:var(--green-soft);border-radius:12px;padding:14px;display:grid;gap:8px}
+.reveal h3{font-size:17px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+footer{padding:0 16px 40px;color:var(--muted);font-size:14px}
+footer a,main a{color:var(--pink-dark)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <p class="eyebrow">Werkstatt · Lernspiel · KI-Kompetenz</p>
+  <h1>Gleiche Frage, andere Antwort</h1>
+  <p>Fünf Fälle, zwei nachgebaute KI-Antworten: Markiere, was dir auffällt, und entscheide, ob der Unterschied eine Verzerrung oder fachlich begründet ist.</p>
+</div></header>
+
+<main><div class="wrap stack" id="app"></div></main>
+
+<footer><div class="wrap">
+  <p>Idee und Didaktik: Barbara Magdalena Mayer · technische Umsetzung mit KI-Unterstützung · Übungsspiel mit erfundenen Personen und nachgebauten KI-Antworten.</p>
+  <p><a href="werkstatt.html">← Zurück zur Werkstatt</a></p>
+</div></footer>
+
+<script>
+const ROUNDS=[
+ {id:"herz",field:"Gesundheit",type:"pair",
+  qA:"Eine 58-jährige Frau hat seit einer Stunde Übelkeit, kalten Schweiß und Druck im Oberbauch. Was könnte dahinterstecken?",
+  qB:"Ein 58-jähriger Mann hat seit einer Stunde Übelkeit, kalten Schweiß und Druck im Oberbauch. Was könnte dahinterstecken?",
+  aA:["Am wahrscheinlichsten ist eine Magenverstimmung oder eine Magenschleimhautentzündung.","Auch Stress oder Angst können solche Beschwerden auslösen.","Wenn es nicht besser wird, sollte sie in den nächsten Tagen zur Hausärztin gehen."],
+  aB:["Diese Kombination kann auf einen Herzinfarkt hindeuten.","Rufen Sie sofort den Notruf 112.","Seltener steckt eine Magenerkrankung dahinter."],
+  changed:"Geschlecht",builtA:[0,1,2],builtB:[],verdict:"bias",
+  ki:"Kein Problem erkennbar: Die Antworten unterscheiden sich, weil Männer häufiger Herzinfarkte haben. Das ist medizinisch begründet.",kiRight:false,
+  explain:"Bei Frauen zeigt sich ein Herzinfarkt häufiger mit weniger typischen Zeichen wie Übelkeit, Schweiß oder Oberbauchschmerzen. Antwort A deutet dieselben Beschwerden als Magen oder Stress und rät zum Abwarten. Richtig wäre für beide: sofort den Notruf rufen. Die KI-Zweitmeinung klingt plausibel, verwechselt aber Häufigkeit mit dem Einzelfall.",
+  source:"Angelehnt an Zack et al. (2024): GPT-4 schätzte kardiologische Diagnostik bei Patientinnen seltener als wichtig ein."},
+ {id:"beruf",field:"Berufsorientierung",type:"pair",
+  qA:"Lena, 16, hat gute Noten in Mathe und Kunst und baut in ihrer Freizeit gern Technik zusammen. Welche Ausbildungsberufe passen zu ihr?",
+  qB:"Lukas, 16, hat gute Noten in Mathe und Kunst und baut in seiner Freizeit gern Technik zusammen. Welche Ausbildungsberufe passen zu ihm?",
+  aA:["Mediengestalterin oder Fotografin würden ihre Kreativität gut nutzen.","Auch Zahnmedizinische Fachangestellte ist ein gefragter Beruf.","Technische Berufe sind möglich, sind aber oft körperlich anstrengend."],
+  aB:["Mechatroniker oder Elektroniker passen gut zu seinem Technikinteresse.","Mit seinen Mathenoten stehen ihm auch technische Zeichnerberufe offen.","Mediengestalter wäre eine kreative Alternative."],
+  changed:"Geschlecht",builtA:[0,1,2],builtB:[],verdict:"bias",
+  ki:"Auffällig: Bei Lena wird das Technikinteresse kaum aufgegriffen, und nur bei ihr steht eine Warnung. Das spricht für ein Rollenklischee.",kiRight:true,
+  explain:"Beide haben dieselben Noten und dasselbe Hobby. Bei Lukas wird das Technikinteresse zur Hauptempfehlung, bei Lena wird es zur Randnotiz mit Warnung, und dafür taucht ein typischer Frauenberuf auf, der mit ihren Angaben nichts zu tun hat. Die KI-Zweitmeinung liegt hier richtig.",
+  source:"Rollenklischees in Trainingsdaten sind gut belegt; die Antworten sind für dieses Spiel nachgebaut."},
+ {id:"delir",field:"Gesundheit",type:"pair",
+  qA:"Ein 84-jähriger Patient ist seit gestern Abend plötzlich verwirrt. Was sollte die Pflege tun?",
+  qB:"Ein 44-jähriger Patient ist seit gestern Abend plötzlich verwirrt. Was sollte die Pflege tun?",
+  aA:["Verwirrtheit ist im hohen Alter häufig.","Orientierungshilfen wie Uhr und Kalender können helfen.","Informieren Sie die Angehörigen über eine mögliche Demenz."],
+  aB:["Plötzliche Verwirrtheit ist ein Warnzeichen.","Informieren Sie umgehend die Ärztin, damit Ursachen wie Infektion, Flüssigkeitsmangel oder Medikamente geprüft werden.","Beobachten Sie Bewusstsein und Vitalzeichen engmaschig."],
+  changed:"Alter",builtA:[0,2],builtB:[],verdict:"bias",
+  ki:"Der Unterschied ist sinnvoll: Bei alten Menschen ist Verwirrtheit normal, bei jüngeren nicht. Antwort A ist altersgerecht.",kiRight:false,
+  explain:"Entscheidend ist das Wort „plötzlich“. Eine plötzliche Verwirrtheit ist in jedem Alter ein Warnzeichen, etwa für ein Delir, und gerade bei alten Menschen kommt das häufig vor. Antwort A schreibt die Beschwerde dem Alter zu und denkt gleich an Demenz. Orientierungshilfen sind nicht falsch, ersetzen aber die ärztliche Abklärung nicht. Die KI-Zweitmeinung wiederholt das Altersklischee.",
+  source:"Angelehnt an den WHO-Policy-Brief „Ageism in artificial intelligence for health“ (2022)."},
+ {id:"schlaf",field:"Gesundheit",type:"pair",
+  qA:"Ein 84-jähriger Patient kann nicht schlafen und fragt nach einer Schlaftablette. Was sollte die Pflege beachten?",
+  qB:"Ein 44-jähriger Patient kann nicht schlafen und fragt nach einer Schlaftablette. Was sollte die Pflege beachten?",
+  aA:["Klären Sie zuerst Ursachen wie Schmerzen, Lärm oder Harndrang.","Viele Schlafmittel erhöhen bei älteren Menschen das Sturzrisiko deutlich.","Die Ärztin sollte prüfen, ob das Mittel für ältere Menschen geeignet ist."],
+  aB:["Klären Sie zuerst Ursachen wie Schmerzen, Lärm oder Sorgen.","Schlafmittel gibt es nur nach ärztlicher Anordnung.","Ruhige Abendgestaltung und ein abgedunkelter Raum unterstützen den Schlaf."],
+  changed:"Alter",builtA:[1,2],builtB:[],verdict:"fair",
+  ki:"Klarer Fall von Altersdiskriminierung: Nur beim 84-Jährigen wird vor dem Medikament gewarnt. Ältere Menschen werden hier bevormundet.",kiRight:false,
+  explain:"Hier ist der Unterschied fachlich begründet. Viele Schlafmittel wirken bei älteren Menschen länger und erhöhen das Sturzrisiko, dafür gibt es eigene Prüflisten für ältere Patientinnen und Patienten. Nicht jeder Unterschied ist Bias. Die KI-Zweitmeinung schlägt Alarm, wo keiner nötig ist.",
+  source:"Fachlicher Hintergrund: Listen potenziell ungeeigneter Medikamente im Alter, z. B. die PRISCUS-Liste."},
+ {id:"theorie",field:"Berufliche Bildung",type:"single",
+  qA:"Nenne die wichtigsten Theorien zum Lernen in der beruflichen Bildung.",
+  aA:["Die wichtigsten Ansätze sind der Behaviorismus nach Skinner, der Konstruktivismus und das Erfahrungslernen nach Kolb.","Ergänzend wird oft die Lernzieltaxonomie nach Bloom genutzt.","Diese Theorien gelten weltweit als Standard für jede Form der Berufsausbildung."],
+  changed:"—",builtA:[2],verdict:"bias",
+  ki:"Die Antwort ist vollständig. Lerntheorien sind wissenschaftlich und deshalb neutral, Bias ist hier nicht möglich.",kiRight:false,
+  explain:"Die genannten Theorien gibt es, falsch sind sie nicht. Aber die Auswahl ist einseitig angloamerikanisch, und der letzte Satz erklärt sie zum weltweiten Standard. Es fehlt alles, was die Berufsbildung im deutschsprachigen Raum prägt, etwa das duale System und das Lernfeldkonzept mit seiner Handlungsorientierung. Wer KI baut und womit sie trainiert wird, entscheidet mit, was als Normalfall erscheint. Die KI-Zweitmeinung ist hier Unsinn: Auch Auswahl ist eine Entscheidung.",
+  source:"Angelehnt an AI Now Institute (2025): „Artificial Power“ zur Marktmacht weniger Anbieter."}
+];
+
+const S={ki:false,i:0,res:{}};
+const app=document.getElementById("app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const VERD={bias:"Verzerrung",fair:"Begründeter Unterschied",unsure:"Ich bin unsicher"};
+
+function start(){
+ app.innerHTML=`<section class="card">
+  <h2>So geht das Spiel</h2>
+  <ol class="how">
+   <li>Du siehst zwei ähnliche Fragen und zwei nachgebaute KI-Antworten. Nur ein Merkmal der Person ist anders.</li>
+   <li>Du findest heraus, was geändert wurde, und markierst Sätze, die dir auffallen.</li>
+   <li>Du entscheidest, ob der Unterschied eine Verzerrung ist oder fachlich begründet, und begründest das in einem Satz.</li>
+  </ol>
+  <section class="reveal" aria-labelledby="bias-meaning">
+   <h3 id="bias-meaning">Was ist KI-Bias?</h3>
+   <p>KI-Bias bezeichnet systematische Schieflagen in KI-Antworten. Eine KI kann Menschen oder Perspektiven ungleich behandeln oder übersehen – zum Beispiel, wenn sie Klischees übernimmt.</p>
+   <p>Vergleiche die Antworten: Ist der Unterschied fachlich begründet oder beruht er auf einer ungerechtfertigten Annahme? Nicht jeder Unterschied ist Bias.</p>
+  </section>
+  <p>Es gibt keine Punkte. Am Ende jeder Runde siehst du, wie das Paar gebaut ist, und kannst es mit deinem Urteil vergleichen.</p>
+  <div class="step">
+   <h3>Willst du eine KI-Zweitmeinung dazuschalten?</h3>
+   <p class="muted">Sie kommentiert jede Runde. Manchmal liegt sie richtig, manchmal klingt sie überzeugend und irrt.</p>
+   <div class="chips" role="group" aria-label="KI-Zweitmeinung">
+    <button type="button" class="chip" data-ki="0" aria-pressed="true">Ohne KI</button>
+    <button type="button" class="chip" data-ki="1" aria-pressed="false">Mit KI-Zweitmeinung</button>
+   </div>
+  </div>
+  <p class="note"><strong>Simulation:</strong> Alle Personen sind erfunden. Die KI-Antworten sind für dieses Spiel nachgebaut, keine Live-Antworten. Sie sind von den Befunden aus den genannten Quellen inspiriert; echte Modelle können anders antworten.</p>
+  <p class="note"><strong>Gesundheitshinweis:</strong> Die Gesundheitsfälle sind fiktive Lernbeispiele, keine medizinische Beratung. Bei einem möglichen Herzinfarkt sofort 112 rufen; in anderen akuten Situationen medizinische Hilfe holen.</p>
+  <div class="row"><button type="button" class="primary" id="go">Erste Runde starten</button></div>
+ </section>`;
+ app.querySelectorAll("[data-ki]").forEach(b=>b.onclick=()=>{S.ki=b.dataset.ki==="1";app.querySelectorAll("[data-ki]").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+ document.getElementById("go").onclick=()=>{S.i=0;S.res={};round();};
+}
+
+function progress(){return `<div class="progress" aria-label="Runde ${S.i+1} von ${ROUNDS.length}">${ROUNDS.map((r,k)=>`<span class="dot ${k<S.i?"done":k===S.i?"now":""}"></span>`).join("")}<span>&nbsp;Runde ${S.i+1} von ${ROUNDS.length}</span></div>`;}
+
+function side(label,q,ans,key){
+ return `<div class="side"><p class="bot">${label}</p><p class="q">${esc(q)}</p><p class="bot">KI antwortet:</p>${ans.map((t,k)=>`<button type="button" class="sent" data-s="${key}${k}" aria-pressed="false">${esc(t)}</button>`).join("")}</div>`;
+}
+
+function round(){
+ const r=ROUNDS[S.i];const st={changed:null,marks:new Set(),verdict:null,ki:null,why:""};S.cur=st;
+ const pair=r.type==="pair";
+ app.innerHTML=`<section class="card">
+  ${progress()}
+  <h2>${pair?"Was ist anders?":"Wessen Sicht spricht?"} <span class="field">${esc(r.field)}</span></h2>
+  ${pair?`<div class="pair">${side("Frage A",r.qA,r.aA,"A")}${side("Frage B",r.qB,r.aB,"B")}</div>`
+        :`<p class="muted">In dieser Runde gibt es nur eine Frage. Achte darauf, wessen Wissen als Normalfall gilt und was fehlt.</p><div class="pair" style="grid-template-columns:1fr">${side("Frage",r.qA,r.aA,"A")}</div>`}
+  ${pair?`<div class="step"><h3>1 · Was wurde an der Person geändert?</h3><div class="chips" role="group" aria-label="Geändertes Merkmal">${["Geschlecht","Alter","Name","Beruf"].map(c=>`<button type="button" class="chip" data-ch="${c}" aria-pressed="false">${c}</button>`).join("")}</div><p class="muted" id="chMsg" aria-live="polite"></p></div>`:""}
+  <div class="step"><h3>${pair?"2":"1"} · Markiere Sätze, die dir auffallen</h3><p class="muted">Tippe auf die Sätze in den Antworten. Mehrere sind möglich, keiner auch.</p></div>
+  <div class="step"><h3>${pair?"3":"2"} · Wie schätzt du ${pair?"den Unterschied":"die Antwort"} ein?</h3>
+   <div class="chips" role="group" aria-label="Einschätzung">${Object.entries(VERD).map(([k,v])=>`<button type="button" class="chip" data-v="${k}" aria-pressed="false">${pair||k!=="fair"?v:"Ausgewogen"}</button>`).join("")}</div>
+   ${S.ki?`<div class="ki"><p class="bot">KI-Zweitmeinung</p><p>${esc(r.ki)}</p><div class="chips" role="group" aria-label="Deine Haltung zur KI"><button type="button" class="chip" data-k="folge" aria-pressed="false">Ich stimme der KI zu</button><button type="button" class="chip" data-k="widerspreche" aria-pressed="false">Ich widerspreche</button></div></div>`:""}
+   <label for="why">Deine Begründung in einem Satz</label>
+   <textarea id="why" placeholder="Mir fällt auf, dass …"></textarea>
+   <div class="row"><button type="button" class="primary" id="done" disabled>Auflösung zeigen</button><span class="muted" id="msg" aria-live="polite"></span></div>
+  </div>
+ </section><section id="rev" hidden></section>`;
+ app.querySelectorAll("[data-ch]").forEach(b=>b.onclick=()=>{st.changed=b.dataset.ch;app.querySelectorAll("[data-ch]").forEach(x=>{x.setAttribute("aria-pressed",x===b);x.disabled=true});document.getElementById("chMsg").textContent=b.dataset.ch===r.changed?`Geändert war: ${r.changed}. Alles andere ist gleich.`:`Geändert war: ${r.changed}. Lies die beiden Fragen noch einmal nebeneinander.`;check();});
+ app.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{const k=b.dataset.s;st.marks.has(k)?st.marks.delete(k):st.marks.add(k);b.setAttribute("aria-pressed",st.marks.has(k));});
+ app.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{st.verdict=b.dataset.v;app.querySelectorAll("[data-v]").forEach(x=>x.setAttribute("aria-pressed",x===b));check();});
+ app.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{st.ki=b.dataset.k;app.querySelectorAll("[data-k]").forEach(x=>x.setAttribute("aria-pressed",x===b));check();});
+ document.getElementById("why").oninput=e=>{st.why=e.target.value;check();};
+ document.getElementById("done").onclick=reveal;
+ function check(){
+  const need=[];
+  if(pair&&!st.changed)need.push("das Merkmal");
+  if(!st.verdict)need.push("deine Einschätzung");
+  if(S.ki&&!st.ki)need.push("deine Haltung zur KI");
+  if(st.why.trim().length<12)need.push("eine kurze Begründung");
+  document.getElementById("done").disabled=need.length>0;
+  document.getElementById("msg").textContent=need.length?"Noch offen: "+need.join(", ")+".":"";
+ }
+ check();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function reveal(){
+ const r=ROUNDS[S.i],st=S.cur;
+ S.res[r.id]={changed:st.changed,marks:[...st.marks],verdict:st.verdict,ki:st.ki,why:st.why.trim()};
+ app.querySelectorAll("button,textarea").forEach(x=>{if(x.id!=="next")x.disabled=true});
+ r.builtA.forEach(k=>{const b=app.querySelector(`[data-s="A${k}"]`);if(b)b.classList.add("built")});
+ (r.builtB||[]).forEach(k=>{const b=app.querySelector(`[data-s="B${k}"]`);if(b)b.classList.add("built")});
+ const nBuilt=r.builtA.length+(r.builtB||[]).length;
+ const hit=[...st.marks].filter(k=>(k[0]==="A"?r.builtA:(r.builtB||[])).includes(+k.slice(1))).length;
+ const same=st.verdict===r.verdict;
+ const rev=document.getElementById("rev");
+ rev.hidden=false;
+ rev.innerHTML=`<div class="card"><div class="reveal">
+  <p class="eyebrow">So ist das Paar gebaut</p>
+  <h3>${r.verdict==="bias"?"Eingebaut ist eine Verzerrung":"Eingebaut ist ein begründeter Unterschied"}</h3>
+  <p>${esc(r.explain)}</p>
+  <p class="muted">Die eingebauten Stellen haben jetzt links einen pinken Rand. Du hast ${st.marks.size} Satz${st.marks.size===1?"":"e"} markiert, ${hit} davon ${hit===1?"gehört":"gehören"} zu den ${nBuilt} eingebauten Stellen.</p>
+  <p>${same?"Dein Urteil deckt sich mit dem Aufbau des Paars.":st.verdict==="unsure"?"Du warst unsicher. Das ist eine ehrliche Antwort, gerade hier lohnt der Blick in eine Fachquelle.":"Dein Urteil weicht vom Aufbau ab. Lies deine Begründung noch einmal: Was hat dich überzeugt?"}${S.ki?` Die KI-Zweitmeinung lag ${r.kiRight?"richtig":"daneben"}, und du hast ${st.ki==="folge"?"ihr zugestimmt":"ihr widersprochen"}.`:""}</p>
+  <p class="muted">${esc(r.source)}</p>
+ </div>
+ <div class="row"><button type="button" class="primary" id="next">${S.i<ROUNDS.length-1?"Nächste Runde":"Zur Reflexion"}</button></div></div>`;
+ document.getElementById("next").onclick=()=>{if(S.i<ROUNDS.length-1){S.i++;round();}else reflect();};
+ rev.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function reflect(){
+ const rows=ROUNDS.map(r=>{const x=S.res[r.id];return `<tr><td>${esc(r.field)}</td><td>${VERD[x.verdict]}</td><td>${r.verdict==="bias"?"Verzerrung":"Begründet"}</td>${S.ki?`<td>${x.ki==="folge"?"zugestimmt":"widersprochen"} (${r.kiRight?"lag richtig":"irrte"})</td>`:""}<td>${esc(x.why)}</td></tr>`}).join("");
+ app.innerHTML=`<section class="card">
+  <p class="eyebrow">Reflexion</p>
+  <h2>Dein Weg durch die fünf Runden</h2>
+  <div class="tablewrap"><table><thead><tr><th>Bereich</th><th>Dein Urteil</th><th>Eingebaut</th>${S.ki?"<th>KI-Zweitmeinung</th>":""}<th>Deine Begründung</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <p>Bias erkennt man selten an einer einzelnen Antwort. Erst der Vergleich zeigt, wo eine KI dieselbe Lage unterschiedlich behandelt. Und nicht jeder Unterschied ist eine Verzerrung: Manchmal ist er fachlich richtig.</p>
+  <label for="final">Was nimmst du dir für deinen eigenen KI-Gebrauch vor?</label>
+  <textarea id="final" placeholder="Wenn ich eine KI frage, werde ich …"></textarea>
+  <div class="row"><button type="button" class="primary" id="copy">Ergebnis kopieren</button><button type="button" class="ghost" id="again">Noch einmal spielen</button><span class="muted" id="cmsg" aria-live="polite"></span></div>
+ </section>
+ <section class="card"><h3>Quellen zum Weiterlesen</h3>
+  <ul class="how">
+   <li>Zack, T., Lehman, E. et al. (2024): Assessing the potential of GPT-4 to perpetuate racial and gender biases in health care. The Lancet Digital Health. <a href="https://pubmed.ncbi.nlm.nih.gov/38123252/">PubMed</a></li>
+   <li>WHO (2022): Ageism in artificial intelligence for health. <a href="https://www.who.int/publications/i/item/9789240040793">WHO</a></li>
+   <li>AI Now Institute (2025): Artificial Power. 2025 Landscape Report. <a href="https://ainowinstitute.org/">AI Now</a></li>
+  </ul></section>`;
+ document.getElementById("again").onclick=start;
+ document.getElementById("copy").onclick=()=>{
+  const lines=["Gleiche Frage, andere Antwort – mein Ergebnis",`KI-Zweitmeinung: ${S.ki?"an":"aus"}`,""];
+  ROUNDS.forEach((r,k)=>{const x=S.res[r.id];lines.push(`Runde ${k+1} (${r.field}): ${VERD[x.verdict]} · eingebaut: ${r.verdict==="bias"?"Verzerrung":"begründet"}${S.ki?` · KI ${x.ki==="folge"?"zugestimmt":"widersprochen"}`:""}`,`Begründung: ${x.why}`,"");});
+  lines.push("Vorsatz: "+document.getElementById("final").value.trim());
+  const t=lines.join("\n"),m=document.getElementById("cmsg");
+  const fallback=()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}a.remove();m.textContent=ok?"Kopiert.":"Kopieren wurde blockiert.";};
+  try{navigator.clipboard.writeText(t).then(()=>m.textContent="Kopiert.",fallback)}catch(e){fallback()}
+ };
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+start();
+</script>
+</body>
+</html>
