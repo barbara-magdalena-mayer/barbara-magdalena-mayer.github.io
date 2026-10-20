@@ -175,6 +175,10 @@ body{font-size:clamp(16px,1.1vw,18px);background:#14231d}
 .risk-item[aria-pressed="true"]{background:var(--pink-soft);border-color:var(--pink)}
 .risk-item[aria-pressed="true"] .dotn{background:var(--pink)}
 .risk-item.done{transform:translateX(2px)}
+
+/* Geöffnete Fenster liegen über den Desktop-Symbolen und bleiben vollständig anklickbar. */
+#win{z-index:2}
+#sticky{z-index:1}
 </style>
 </head>
 <body>
