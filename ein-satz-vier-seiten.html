@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Zwischentöne prüfen · Ein Satz, vier Seiten</title>
+<style>
+/* Layout: Kopfband mit Sprach-Regler (bleibt oben sichtbar), darunter Fallwahl als Kachelraster oder ein Fall als Kartenfolge. Gesprochene Sätze als Sprechblasen. */
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-display:swap;src:url("fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
+:root{--bg:#faeef1;--surface:#fff;--sunk:#f4e4e9;--ink:#24382c;--muted:#5e5459;--line:#ead5db;--green:#2f5240;--green-soft:#d5e2d6;--pink:#b04e6b;--pink-dark:#8a3a52;--pink-soft:#f7e3e9;--n:#2f5240;--n-bg:#e3eee4;--m:#7a5b1e;--m-bg:#fbefd2;--k:#8a3a52;--k-bg:#f7e3e9;--display:"Literata",Georgia,serif;--body:"Source Sans 3",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+body.einfach{font-size:19px;line-height:1.7}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.2;margin:0;text-wrap:balance}
+p{margin:0}
+header{background:var(--green-soft);padding:20px 16px 16px;position:sticky;top:0;z-index:10;box-shadow:0 1px 0 var(--line)}
+.wrap{max-width:900px;margin:0 auto}
+.hrow{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between}
+header h1{font-size:clamp(24px,4.5vw,34px)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink-dark);margin:0 0 4px}
+.regler{display:grid;gap:2px;min-width:230px}
+@media (max-width:640px){header{position:static;padding:14px 16px 12px}.regler{min-width:0;width:100%}}
+.regler label{font-weight:600;font-size:15px}
+.regler .ends{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--pink);height:28px;cursor:pointer}
+main{padding:20px 16px 50px}
+.stack{display:grid;gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:14px}
+@media (max-width:640px){.card{padding:16px}}
+.muted{color:var(--muted);font-size:.9em}
+.note{border-left:3px solid var(--pink);padding-left:12px;color:var(--muted);font-size:.9em}
+button{font:inherit;cursor:pointer;border-radius:10px;color:inherit}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.primary{background:var(--pink);color:#fff;border:1px solid var(--pink);padding:12px 22px;font-weight:600;border-radius:999px;box-shadow:0 3px 0 var(--pink-dark);transition:transform .15s}
+.primary:hover{transform:translateY(-1px)}
+.primary:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.ghost{background:transparent;color:var(--green);border:2px solid var(--green);padding:9px 16px;font-weight:600;border-radius:999px}
+.chip{background:var(--surface);border:1px solid var(--line);padding:9px 13px;font-weight:600;font-size:.9em;text-align:left;line-height:1.4}
+.chip[aria-pressed="true"]{background:var(--green);color:#fff;border-color:var(--green)}
+.chip:disabled{cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.opts{display:grid;gap:8px}
+.opts .chip{font-weight:400}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.how{margin:0;padding-left:22px;display:grid;gap:6px}
+/* Fallwahl */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.case{display:grid;gap:6px;text-align:left;background:var(--surface);border:1px solid var(--line);padding:14px 16px;border-radius:12px;font-weight:400;transition:border-color .15s,transform .15s}
+.case:hover{border-color:var(--pink);transform:translateY(-2px)}
+.case .num{font-family:var(--mono);font-size:12px;color:var(--pink-dark)}
+.case b{font-family:var(--display);font-size:1.05em}
+.case .fit{font-size:.85em;color:var(--muted)}
+.case.done{background:var(--n-bg);border-color:var(--sage,#a9bfae)}
+.case.done .num::after{content:" · bearbeitet";color:var(--green)}
+/* Dialog */
+.talk{display:grid;gap:8px}
+.bub{max-width:88%;background:var(--sunk);border-radius:14px 14px 14px 4px;padding:9px 13px}
+.bub .who{display:block;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.bub.alt{justify-self:end;background:var(--green-soft);border-radius:14px 14px 4px 14px}
+.bub.key{outline:3px solid var(--pink);outline-offset:2px}
+.bub .tag{display:inline-block;margin-top:4px;font-family:var(--mono);font-size:11px;background:var(--pink);color:#fff;border-radius:999px;padding:1px 8px}
+.step{display:grid;gap:12px;border-top:1px solid var(--line);padding-top:16px}
+.step h3{font-size:1.05em}
+.side{display:grid;gap:8px;background:var(--sunk);border-radius:12px;padding:12px 14px}
+.side .q{font-size:.92em}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:760px){.quad{grid-template-columns:1fr}}
+textarea{width:100%;min-height:70px;font:inherit;font-size:.95em;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);resize:vertical}
+.own{min-height:52px}
+.term{background:none;border:0;border-bottom:2px dotted var(--pink);border-radius:0;padding:0;font:inherit;font-weight:600;color:inherit;cursor:help}
+.words{font-size:.85em;color:var(--muted);margin:2px 0 0}
+.term:hover,.term[aria-expanded="true"]{background:var(--pink-soft)}
+.pop{display:block;margin:6px 0;font-weight:400;font-style:normal;font-family:var(--body);background:var(--surface);border:1px solid var(--pink);border-radius:10px;padding:10px 12px;font-size:.92em;box-shadow:0 6px 16px rgba(0,0,0,.08)}
+.ki{background:var(--pink-soft);border:1px dashed var(--pink);border-radius:12px;padding:12px 14px;display:grid;gap:8px}
+.ki .eyebrow{margin:0}
+.ki .legend{font-size:.85em;color:var(--muted)}
+.rate{display:inline-block;font-family:var(--mono);font-size:12px;border-radius:999px;padding:1px 9px;margin-left:6px;vertical-align:middle}
+.rate.n{background:var(--n-bg);color:var(--n)}.rate.m{background:var(--m-bg);color:var(--m)}.rate.k{background:var(--k-bg);color:var(--k)}
+.opts .chip.r-n{border-color:var(--n);box-shadow:inset 4px 0 0 var(--n)}
+.opts .chip.r-m{border-color:#c9962d;box-shadow:inset 4px 0 0 #c9962d}
+.opts .chip.r-k{border-color:var(--k);box-shadow:inset 4px 0 0 var(--k)}
+.reveal{background:var(--green-soft);border-radius:12px;padding:14px 16px;display:grid;gap:8px}
+.reveal h3{font-size:1.05em}
+footer{padding:0 16px 40px;color:var(--muted);font-size:14px}
+footer a{color:var(--pink-dark)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap hrow">
+  <div><p class="eyebrow">Werkstatt · Lernspiel · Kommunikation</p><h1>Ein Satz, vier Seiten</h1></div>
+  <div class="regler">
+    <label for="sprache" id="reglerLabel">Sprache</label>
+    <input type="range" id="sprache" min="0" max="1" step="1" value="0" aria-describedby="reglerEnds">
+    <div class="ends" id="reglerEnds"><span>Standard</span><span>Einfache Sprache</span></div>
+  </div>
+</div></header>
+
+<main><div class="wrap stack" id="app"></div></main>
+
+<footer><div class="wrap">
+  <p>Idee, Fälle und Didaktik: Barbara Magdalena Mayer · didaktische Grundlage: B. M. Mayer, „Erfolgreich durch die Pflegeausbildung“ (2026) · technische Umsetzung mit KI-Unterstützung · alle Personen und KI-Aussagen sind erfunden bzw. simuliert.</p>
+  <p><a href="index.html">← Zurück zur Werkstatt</a></p>
+</div></footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let M="s"; // s = Standard, e = einfache Sprache
+const T=o=>o&&typeof o==="object"&&!Array.isArray(o)?(o[M]??o.s):o;
+
+const UI={
+ introH:{s:"Was steckt in einem Satz?",e:"Was steckt in einem Satz?"},
+ intro:{s:"Hier findest du zwölf kurze Gespräche aus dem Alltag im Pflegeheim. In jedem steckt ein Satz, der mehr sagt, als er zunächst zeigt. Du zerlegst ihn mit Schulz von Thun, ordnest ihn einem Axiom von Watzlawick zu und suchst das Missverständnis.",e:"Hier sind zwölf kurze Gespräche. Sie spielen im Pflegeheim. In jedem Gespräch gibt es einen wichtigen Satz. Ein Satz sagt oft mehr als die Wörter. Du schaust dir den Satz genau an. Dafür gibt es zwei Modelle: Schulz von Thun und Watzlawick."},
+ howH:{s:"So gehst du vor",e:"So geht es"},
+ how:{s:["Wähle einen Fall.","Zerlege den markierten Satz in seine vier Seiten.","Wähle das passende Axiom und beschreibe das Missverständnis.","Vergleiche mit der Auflösung und erkläre dein Ergebnis in eigenen Worten."],e:["Such dir einen Fall aus.","Schau dir den Satz an. Er hat vier Seiten.","Such ein Axiom aus. Schreib auf: Wo kann ein Missverständnis sein?","Lies die Auflösung. Erklär alles mit deinen Worten."]},
+ noScore:{s:"Es gibt keine Punkte. Schulz von Thun zeigt, wie viele Deutungen ein Satz haben kann. Die Auflösung sagt, was naheliegt, was auch möglich ist und was eher nicht passt.",e:"Es gibt keine Punkte. Ein Satz kann vieles bedeuten. Am Ende siehst du: Was passt gut? Was kann sein? Was passt eher nicht?"},
+ reglerH:{s:"Der Regler oben rechts",e:"Der Regler oben"},
+ regler:{s:"Mit dem Regler stellst du einfache Sprache ein. Fall und Aufgabe bleiben gleich, nur die Sprache wird leichter. So bleibt mehr Kraft fürs Denken.",e:"Mit dem Regler wird die Sprache leichter. Der Fall bleibt gleich. Die Aufgabe bleibt gleich. Nur die Wörter sind einfacher."},
+ kiH:{s:"KI-Helferin dazuschalten?",e:"Willst du eine KI als Hilfe?"},
+ ki:{s:"Sie kann dir den Satz einfacher erklären, eine ganze Analyse vorschlagen und ihre Meinung sagen. Sie klingt immer sicher, liegt aber nicht immer richtig.",e:"Die KI kann dir helfen. Sie klingt immer sicher. Aber sie hat nicht immer recht. Du musst sie prüfen."},
+ kiOff:{s:"Ohne KI",e:"Ohne KI"},kiOn:{s:"Mit KI-Helferin",e:"Mit KI"},
+ start:{s:"Zu den Fällen",e:"Los geht's"},
+ pickH:{s:"Wähle einen Fall",e:"Such dir einen Fall aus"},
+ pickSub:{s:"Alle Fälle sind ruhige Alltagssituationen, keine Notfälle.",e:"Alle Fälle sind ruhig. Es sind keine Notfälle."},
+ back:{s:"← Andere Fälle",e:"← Zurück zu den Fällen"},
+ keyTag:{s:"diesen Satz zerlegst du",e:"dieser Satz"},
+ s1:{s:"1 · Die vier Seiten nach Schulz von Thun",e:"1 · Die vier Seiten"},
+ s1sub:{s:"Wähle zu jeder Seite die Deutung, die dir am plausibelsten erscheint, oder schreib eine eigene.",e:"Such für jede Seite einen Satz aus. Oder schreib einen eigenen Satz."},
+ ownPh:{s:"Eigene Deutung (optional)",e:"Eigener Satz (wenn du willst)"},
+ s2:{s:"2 · Welches Axiom nach Watzlawick passt?",e:"2 · Welches Axiom passt?"},
+ s2sub:{s:"Mehrere sind möglich. Wähle das, das für dich am besten passt.",e:"Such eins aus. Welches passt am besten?"},
+ s2why:{s:"Warum passt es? (ein Satz)",e:"Warum passt es? Schreib einen Satz."},
+ s3:{s:"3 · Wo entsteht ein Missverständnis?",e:"3 · Wo kann ein Missverständnis sein?"},
+ s3ph:{s:"Ein Missverständnis kann entstehen, weil …",e:"Hier kann man sich falsch verstehen, weil …"},
+ reveal:{s:"Auflösung zeigen",e:"Auflösung zeigen"},
+ open:{s:"Noch offen",e:"Das fehlt noch"},
+ need:{sides:{s:"alle vier Seiten",e:"die vier Seiten"},ax:{s:"ein Axiom",e:"ein Axiom"},why:{s:"eine Begründung",e:"ein Satz zum Axiom"},miss:{s:"das Missverständnis",e:"das Missverständnis"},ki:{s:"deine Einschätzung der KI",e:"was du von der KI denkst"},own:{s:"deine Erklärung ohne Hilfe",e:"deine Erklärung ohne KI"}},
+ kiEasy:{s:"Einfacher erklären",e:"Einfacher erklären"},
+ kiEasyNote:{s:"Förderlich: Die KI erklärt, du denkst selbst.",e:"Gut: Die KI erklärt. Du denkst selbst."},
+ kiAll:{s:"Ganze Analyse machen lassen",e:"KI macht alles"},
+ kiAllNote:{s:"Schädlich, wenn du nicht selbst prüfst: Die KI denkt für dich.",e:"Vorsicht: Die KI denkt für dich."},
+ kiAllDone:{s:"Die KI hat alle vier Seiten ausgewählt. Das sieht fertig aus. Aber hast du es verstanden?",e:"Die KI hat alles ausgewählt. Es sieht fertig aus. Aber verstehst du es?"},
+ kiOwnL:{s:"Erkläre jetzt ohne Hilfe in einem Satz, was in dem Satz steckt.",e:"Erklär jetzt ohne KI: Was steckt in dem Satz? Schreib einen Satz."},
+ kiOpinion:{s:"Meinung der KI",e:"Das sagt die KI"},
+ kiCheck:{s:"Prüfe die Aussage am Modell. Stimmt sie?",e:"Prüf die KI. Hat sie recht?"},
+ kiYes:{s:"Stimmt",e:"Stimmt"},kiNo:{s:"Stimmt nicht",e:"Stimmt nicht"},
+ revH:{s:"So lässt sich der Satz lesen",e:"So kann man den Satz verstehen"},
+ legend:{s:"Am linken Rand deiner Auswahl siehst du: grün naheliegend, gelb auch möglich, rot eher nicht. Rate selbst, bevor du liest.",e:"Schau auf den Rand: grün = passt gut, gelb = kann sein, rot = passt eher nicht."},
+ axRev:{s:"Passende Axiome",e:"Diese Axiome passen"},
+ kiRev:{s:"Die KI lag",e:"Die KI hatte"},kiRight:{s:"richtig",e:"recht"},kiWrong:{s:"daneben",e:"nicht recht"},
+ youSaid:{s:"Du hast",e:"Du hast gesagt:"},
+ oral:{s:"Erkläre dein Ergebnis so, wie du es deiner Praxisanleiterin sagen würdest.",e:"Erklär dein Ergebnis. So, als würdest du es deiner Praxisanleiterin sagen."},
+ oralPh:{s:"In dem Satz steckt eigentlich …",e:"Der Satz meint eigentlich …"},
+ copy:{s:"Für mein Portfolio kopieren",e:"Kopieren für mein Portfolio"},
+ copied:{s:"Kopiert. Du kannst es jetzt in dein Portfolio einfügen.",e:"Kopiert. Füg es jetzt in dein Portfolio ein."},
+ blocked:{s:"Kopieren wurde blockiert.",e:"Kopieren hat nicht geklappt."},
+ next:{s:"Nächsten Fall wählen",e:"Nächster Fall"}
+};
+const SIDES=[
+ {k:"sach",n:"Sachinhalt",q:{s:"Welche reine Information enthält der Satz?",e:"Was ist die reine Information?"}},
+ {k:"selbst",n:"Selbstoffenbarung",q:{s:"Was gibt die Person über sich preis, etwa Gefühle oder Bedürfnisse?",e:"Was sagt die Person über sich?"}},
+ {k:"bez",n:"Beziehung",q:{s:"Was zeigt der Satz darüber, wie die Person zum Gegenüber steht?",e:"Was denkt die Person über den anderen?"}},
+ {k:"app",n:"Appell",q:{s:"Wozu möchte die Person das Gegenüber bewegen?",e:"Was möchte die Person erreichen?"}}
+];
+const AX=[null,
+ {n:{s:"Man kann nicht nicht kommunizieren.",e:"Man sagt immer etwas."},x:{s:"Jedes Verhalten hat Mitteilungscharakter, auch Schweigen.",e:"Auch Schweigen ist eine Nachricht."}},
+ {n:{s:"Inhalts- und Beziehungsaspekt",e:"Sache und Beziehung"},x:{s:"Jede Kommunikation hat einen Inhalts- und einen Beziehungsaspekt; der Beziehungsaspekt bestimmt, wie der Inhalt verstanden wird.",e:"Jede Nachricht hat zwei Teile: die Sache und die Beziehung."}},
+ {n:{s:"Interpunktion",e:"Wo fängt es an?"},x:{s:"Die Beteiligten gliedern den Ablauf unterschiedlich: Jeder sieht sein Verhalten als Reaktion auf das des anderen.",e:"Jeder sieht einen anderen Anfang. Jeder denkt: Der andere hat angefangen."}},
+ {n:{s:"Digitale und analoge Kommunikation",e:"Worte und Körper"},x:{s:"Wir teilen uns mit Worten (digital) und mit Tonfall, Mimik und Gestik (analog) mit. Beides kann sich widersprechen.",e:"Wir sprechen mit Worten. Und mit Stimme, Gesicht und Körper. Das passt nicht immer zusammen."}},
+ {n:{s:"Symmetrisch oder komplementär",e:"Augenhöhe oder oben und unten"},x:{s:"Beziehungen beruhen auf Gleichheit (symmetrisch) oder auf Unterschiedlichkeit, etwa Führen und Folgen (komplementär).",e:"Im Gespräch sind beide gleich. Oder einer bestimmt, der andere folgt."}}
+];
+const GLOSS=[
+ ["Schulz von Thun","Schulz von Thun",{s:"Friedemann Schulz von Thun ist Kommunikationspsychologe. Von ihm stammt das Modell der vier Seiten einer Nachricht, auch Kommunikationsquadrat genannt.",e:"Ein Forscher. Er sagt: Jede Nachricht hat vier Seiten."}],
+ ["Watzlawick","Watzlawick",{s:"Paul Watzlawick war Kommunikationswissenschaftler. Er beschrieb fünf Grundregeln (Axiome) der menschlichen Kommunikation.",e:"Ein Forscher. Er hat fünf Grundregeln für Gespräche aufgeschrieben."}],
+ ["Kommunikationsmodell","Kommunikationsmodelle?",{s:"Ein vereinfachtes Bild davon, wie Verständigung zwischen Menschen funktioniert, zum Beispiel nach Schulz von Thun oder Watzlawick.",e:"Ein Modell zeigt einfach: So funktioniert ein Gespräch."}],
+ ["Sachinhalt","Sachinhalt",{s:"Die reine Information einer Nachricht: Daten, Fakten, Sachverhalte.",e:"Die Sache. Das, was man prüfen kann."}],
+ ["Sachebene","Sachebene|Sachfrage",{s:"Die Ebene der reinen Information.",e:"Hier geht es nur um die Sache. Um Fakten."}],
+ ["Inhaltsaspekt","Inhaltsaspekt|Inhalts-",{s:"Bei Watzlawick der Teil einer Nachricht, der die Sachinformation trägt. Der Beziehungsaspekt bestimmt, wie er verstanden wird.",e:"Der Teil der Nachricht, in dem die Sache steckt."}],
+ ["Selbstoffenbarung","Selbstoffenbarung(?:sseite)?",{s:"Was die sprechende Person, gewollt oder ungewollt, über sich selbst zeigt: Gefühle, Bedürfnisse, Werte.",e:"Was die Person über sich zeigt. Zum Beispiel: Ich habe Angst. Ich bin müde."}],
+ ["Beziehung","Beziehung(?:sebene|sseite|saspekt|sbotschaft|s-)?",{s:"Was die Nachricht darüber verrät, wie die Person zum Gegenüber steht und was sie von ihm hält. Bei Watzlawick: der Beziehungsaspekt.",e:"Wie die Person den anderen sieht. Zum Beispiel: Ich mag dich. Ich vertraue dir nicht."}],
+ ["Appell","Appell",{s:"Wozu die Person das Gegenüber veranlassen möchte: ein Wunsch, eine Aufforderung, oft unausgesprochen.",e:"Was die Person will. Was der andere tun soll."}],
+ ["Axiom","Axiome?",{s:"Ein Grundsatz, der als gültig angenommen wird. Watzlawick beschreibt fünf Axiome der Kommunikation.",e:"Eine Grundregel."}],
+ ["Missverständnis","Missverständnis",{s:"Die Nachricht kommt anders an, als sie gemeint war, etwa weil Sender und Empfänger auf unterschiedlichen Seiten senden und hören.",e:"Einer meint etwas. Der andere versteht etwas anderes."}],
+ ["Deutung","Deutungen?",{s:"Eine mögliche Auslegung dessen, was ein Satz meint. Ein Satz kann mehrere Deutungen haben.",e:"Was ein Satz bedeuten kann."}],
+ ["Mitteilungscharakter","Mitteilungscharakter",{s:"Etwas teilt etwas mit, auch ohne Worte.",e:"Es ist eine Nachricht."}],
+ ["Interpunktion","Interpunktion",{s:"Watzlawicks Begriff dafür, wie Beteiligte einen Ablauf gliedern: Jeder setzt den Anfang anders und sieht sein Verhalten als Reaktion.",e:"Jeder sieht einen anderen Anfang vom Streit."}],
+ ["digital","[Dd]igital(?:e|en)?",{s:"Bei Watzlawick: Mitteilung durch Worte und Zeichen mit festgelegter Bedeutung.",e:"Mit Worten."}],
+ ["analog","[Aa]nalog(?:e|en)?",{s:"Bei Watzlawick: Mitteilung durch Tonfall, Mimik, Gestik und Körperhaltung.",e:"Mit Stimme, Gesicht und Körper."}],
+ ["symmetrisch","[Ss]ymmetrisch",{s:"Eine Beziehung, in der beide sich als gleichrangig verhalten, auf Augenhöhe.",e:"Beide sind gleich. Auf Augenhöhe."}],
+ ["komplementär","[Kk]omplementär",{s:"Eine Beziehung, die auf Unterschied beruht, etwa: eine Person führt, die andere folgt.",e:"Einer bestimmt. Der andere folgt."}],
+ ["Augenhöhe","Augenhöhe",{s:"Beide Seiten begegnen sich als gleichwertig.",e:"Beide sind gleich viel wert."}],
+ ["Machtkampf","Machtkampf",{s:"Ein Streit darum, wer bestimmen darf, oft ohne dass es ausgesprochen wird.",e:"Streit darum: Wer bestimmt?"}],
+ ["spiegeln","[Ss]piegel(?:n|t)|aktiv zu(?:hören)?",{s:"Aktives Zuhören: das Gehörte, besonders das Gefühl dahinter, mit eigenen Worten zurückgeben.",e:"Man sagt mit eigenen Worten, was man gehört hat. Zum Beispiel: Sie sind traurig."}],
+ ["Rollenumkehr","Rollenumkehr",{s:"Die gewohnten Rollen tauschen sich, etwa wenn eine Bewohnerin für die Pflegekraft sorgt.",e:"Die Rollen tauschen. Sonst hilft die Pflegekraft. Jetzt hilft die Bewohnerin."}],
+ ["Pflegerolle","Pflegerolle|Rollenfrage",{s:"Die Erwartungen an Pflegende im Beruf und wie sie diese ausfüllen.",e:"Wie man sich als Pflegekraft verhält. Was andere erwarten."}],
+ ["Nähe und Distanz","Nähe und Distanz",{s:"Das Gleichgewicht zwischen menschlicher Zuwendung und professioneller Abgrenzung im Beruf.",e:"Wie nah darf ich sein? Wo ist die Grenze?"}],
+ ["Selbstbestimmung","Selbstbestimmung",{s:"Das Recht, selbst über das eigene Leben und den eigenen Körper zu entscheiden.",e:"Man entscheidet selbst."}],
+ ["selbstständig","[Ss]elbstständig(?:keit)?",{s:"Etwas ohne Hilfe anderer tun können und wollen.",e:"Etwas allein schaffen."}],
+ ["Klischee","Klischee|Vorurteil",{s:"Eine vereinfachte, verallgemeinernde Vorstellung über eine Gruppe, die nicht auf den Einzelfall geprüft ist.",e:"Man denkt: Alle aus einer Gruppe sind gleich. Das stimmt nicht."}],
+ ["Spätdienst","Spätdienst",{s:"Die Schicht am Nachmittag und Abend.",e:"Die Arbeit am Nachmittag und Abend."}],
+ ["Übergabe","Übergabe",{s:"Beim Schichtwechsel informiert das Team die nächste Schicht über alle wichtigen Ereignisse.",e:"Beim Schichtwechsel erzählt man der nächsten Schicht das Wichtigste."}],
+ ["Aufenthaltsraum","Aufenthaltsraum",{s:"Gemeinschaftsraum im Heim, etwa zum Essen oder Zusammensitzen.",e:"Ein Raum für alle. Zum Essen und Reden."}],
+ ["lagern","[Ll]ager(?:st|t|n|ung)",{s:"Einen Menschen im Bett oder Stuhl in eine bestimmte Position bringen, etwa um Druckstellen zu vermeiden.",e:"Einen Menschen im Bett gut hinlegen. Damit nichts wehtut."}],
+ ["Bewohner","Bewohner(?:in|innen)?",{s:"Ein Mensch, der im Pflegeheim lebt.",e:"Ein Mensch, der im Heim wohnt."}],
+ ["Auszubildende","Auszubildende",{s:"Eine Person, die gerade den Beruf lernt.",e:"Eine Person, die den Beruf lernt."}],
+ ["Praxisanleiterin","Praxisanleiterin",{s:"Eine erfahrene Pflegefachperson, die Auszubildende im Betrieb anleitet und begleitet.",e:"Sie zeigt den Auszubildenden die Arbeit."}],
+ ["Rücksprache","Rücksprache",{s:"Ein Gespräch, um etwas mit einer zuständigen Person abzustimmen.",e:"Man fragt nach. Man bespricht es."}],
+ ["Einnahmezeitpunkt","Einnahmezeitpunkt",{s:"Die Uhrzeit, zu der ein Medikament genommen wird.",e:"Wann man die Tablette nimmt."}],
+ ["Nebenwirkung","Nebenwirkung",{s:"Eine unerwünschte Wirkung eines Medikaments, zum Beispiel Müdigkeit.",e:"Die Tablette macht etwas, das man nicht will. Zum Beispiel müde."}],
+ ["Standards","Standards",{s:"Fachlich abgestimmte Regeln, wie eine Pflegemaßnahme durchgeführt wird.",e:"Feste Regeln für die Pflege."}],
+ ["Essprotokoll","Essprotokoll(?:e)?",{s:"Eine Liste, in der die Pflege einträgt, was und wie viel ein Mensch gegessen und getrunken hat.",e:"Eine Liste: Was hat der Mensch gegessen?"}],
+ ["Vorgesetzte","Vorgesetzte[rn]?",{s:"Eine Person, die anderen im Beruf Anweisungen geben darf, zum Beispiel die Stationsleitung.",e:"Der Chef oder die Chefin."}],
+ ["Befund","Befund",{s:"Ein festgestelltes, geprüftes Ergebnis, im Gegensatz zu einer Vermutung.",e:"Etwas, das man geprüft hat. Keine Vermutung."}],
+ ["Fachargument","Fach-?[Aa]rgument",{s:"Eine Begründung, die sich auf Fachwissen, Studien oder Standards stützt, nicht auf Gewohnheit.",e:"Ein Grund aus dem Fachwissen. Nicht: Das haben wir immer so gemacht."}],
+ ["Kommunikationsquadrat","Kommunikationsquadrat",{s:"Anderer Name für das Vier-Seiten-Modell von Schulz von Thun.",e:"Ein anderes Wort für die vier Seiten."}],
+ ["Portfolio","Portfolio",{s:"Eine Sammlung eigener Arbeiten, mit der man zeigt, was man gelernt hat.",e:"Eine Mappe mit deinen Arbeiten."}]
+];
+const RATE={n:{s:"naheliegend",e:"passt gut"},m:{s:"auch möglich",e:"kann sein"},k:{s:"eher nicht",e:"passt eher nicht"}};
+
+const C=[
+ {t:"Das kalte Frühstück",fit:"Schulz von Thun · Axiom 2",
+  intro:{s:"Frau Wagner ist 82 Jahre alt und wohnt seit zwei Jahren im Pflegeheim. Sie sitzt jeden Morgen im Aufenthaltsraum und wartet auf ihr Frühstück. Heute bringt die Pflegekraft ihr das Tablett. Frau Wagner fasst die Kaffeetasse kurz an und sagt in scharfem Ton:",e:"Frau Wagner ist 82 Jahre alt. Sie wohnt im Pflegeheim. Jeden Morgen wartet sie auf ihr Frühstück. Heute bringt die Pflegekraft das Tablett. Frau Wagner fasst die Tasse an. Sie sagt in scharfem Ton:"},
+  lines:[["Frau Wagner","„Der Kaffee ist ja schon wieder kalt.“"],["Pflegekraft","„Ich hole Ihnen sofort einen neuen.“"],["Frau Wagner","„Ach, lassen Sie nur. Es ist ja immer dasselbe hier.“"]],key:0,
+  sides:{sach:[["Der Kaffee ist nicht mehr warm.","n"],["Der Kaffee war schon öfter kalt.","m"],["Frau Wagner trinkt gern Kaffee.","k"]],
+   selbst:[["Ich bin enttäuscht und verärgert.","n"],["Kleine Dinge sind mir wichtig.","m"],["Ich habe keinen Durst.","k"]],
+   bez:[["Ihr achtet nicht richtig auf mich.","n"],["Sie sind für meinen Kaffee zuständig.","m"],["Ich mag Sie sehr gern.","k"]],
+   app:[["Bringen Sie mir warmen Kaffee.","n"],["Achten Sie in Zukunft besser darauf.","m"],["Lassen Sie mich allein.","k"]]},
+  ax:[2],
+  expl:{s:"Auf der Sachebene geht es um Kaffee, auf der Beziehungsebene um Wertschätzung: „schon wieder“ zeigt, dass Frau Wagner sich nicht ernst genommen fühlt. Die Pflegekraft antwortet nur auf der Sachebene. Darum kommt „Es ist ja immer dasselbe hier“: Der neue Kaffee löst das eigentliche Anliegen nicht.",e:"Es geht nicht nur um Kaffee. Frau Wagner fühlt sich nicht wichtig genommen. Das zeigt das Wort „schon wieder“. Die Pflegekraft hört nur: Der Kaffee ist kalt. Deshalb sagt Frau Wagner: „Es ist ja immer dasselbe.“"},
+  hint:"Frau Wagner spricht über Kaffee. Aber vielleicht meint sie noch mehr. Achte auf die Wörter „ja schon wieder“. Wie fühlt sie sich? Was wünscht sie sich?",
+  ki:{t:"Der Satz ist eine reine Sachinformation: Der Kaffee hat die falsche Temperatur. Eine Beziehungsbotschaft steckt nicht darin.",ok:false,why:{s:"Nach Watzlawick hat jede Nachricht einen Beziehungsaspekt. „Schon wieder“ und der scharfe Ton zeigen ihn deutlich.",e:"Jede Nachricht hat auch eine Beziehung. Das sagt Axiom 2. Das Wort „schon wieder“ zeigt das."}},kiWrong:"bez"},
+ {t:"Herr Krause schweigt",fit:"Watzlawick · Axiom 1",
+  intro:{s:"Herr Krause ist 79 Jahre alt. Früher war er Lehrer. Er redet nicht viel und ist gern für sich. Heute sitzt er schon seit dem Mittagessen allein am Fenster und hat mit niemandem gesprochen. Die Pflegekraft macht sich Sorgen und geht zu ihm ins Zimmer.",e:"Herr Krause ist 79 Jahre alt. Früher war er Lehrer. Er spricht nicht viel. Heute sitzt er seit dem Mittag allein am Fenster. Die Pflegekraft macht sich Sorgen. Sie geht zu ihm."},
+  lines:[["Pflegekraft","„Herr Krause, möchten Sie nicht in den Aufenthaltsraum kommen? Dort ist gerade Kaffeezeit.“"],["Herr Krause","(schaut weiter aus dem Fenster und sagt nichts)"],["Pflegekraft","„Na gut, dann komme ich später nochmal vorbei.“"]],key:1,
+  sides:{sach:[["Ich bleibe hier am Fenster.","n"],["Ich habe die Frage gehört.","m"],["Im Aufenthaltsraum gibt es Kaffee.","k"]],
+   selbst:[["Ich möchte gerade für mich sein.","n"],["Mir geht es vielleicht nicht gut.","m"],["Ich freue mich auf die Kaffeezeit.","k"]],
+   bez:[["Ich brauche Sie gerade nicht.","n"],["Ich traue Ihnen zu, mein Schweigen auszuhalten.","m"],["Ich bewundere Sie.","k"]],
+   app:[["Lassen Sie mich in Ruhe.","n"],["Fragen Sie später noch einmal.","m"],["Holen Sie mir einen Kaffee.","k"]]},
+  ax:[1,4],
+  expl:{s:"Auch Schweigen ist eine Nachricht, und sie lässt viele Deutungen zu: Rückzug, Trauer, Erschöpfung oder einfach Ruhe. Die Pflegekraft liest es als „Nein“ und gibt mit „Na gut“ einen respektvollen Ausweg. Offen bleibt, ob sie wirklich wiederkommt und ob jemand fragt, wie es Herrn Krause geht.",e:"Herr Krause sagt nichts. Aber auch Schweigen ist eine Nachricht. Es kann viel bedeuten: Er will Ruhe. Er ist traurig. Er ist müde. Die Pflegekraft versteht: Nein. Das ist in Ordnung. Wichtig ist: Kommt sie wirklich wieder?"},
+  hint:"Herr Krause sagt kein Wort. Trotzdem sendet er eine Nachricht. Was zeigt er mit seinem Verhalten?",
+  ki:{t:"Herr Krause kommuniziert nicht, er schweigt ja. Deshalb lässt sich auf diesen Fall kein Kommunikationsmodell anwenden.",ok:false,why:{s:"Genau das widerlegt Axiom 1: Man kann nicht nicht kommunizieren. Schweigen ist eine Nachricht.",e:"Axiom 1 sagt: Man sagt immer etwas. Auch Schweigen ist eine Nachricht."}},kiWrong:"bez"},
+ {t:"Die Tochter macht sich Sorgen",fit:"Schulz von Thun · Axiom 2",
+  intro:{s:"Frau Berg ist 85 Jahre alt und isst seit einigen Tagen wenig. Ihre Tochter besucht sie jeden Tag nach der Arbeit. Sie liebt ihre Mutter sehr und hat Angst, dass es ihr schlechter geht. Heute wartet die Tochter im Flur auf die Pflegekraft. Ihre Stimme klingt angespannt.",e:"Frau Berg ist 85 Jahre alt. Sie isst seit ein paar Tagen wenig. Ihre Tochter besucht sie jeden Tag. Die Tochter hat Angst um ihre Mutter. Heute wartet sie im Flur auf die Pflegekraft. Ihre Stimme klingt angespannt."},
+  lines:[["Tochter","„Meine Mutter hat heute wieder fast nichts gegessen. Kümmert sich hier eigentlich jemand darum?“"],["Pflegekraft","„Doch, wir achten jeden Tag auf die Essensmenge.“"],["Tochter","„Das sagen Sie immer. Ich mache mir eben große Sorgen.“"]],key:0,
+  sides:{sach:[["Meine Mutter hat heute fast nichts gegessen.","n"],["Ich frage, ob sich jemand ums Essen kümmert.","m"],["Das Essen schmeckt nicht.","k"]],
+   selbst:[["Ich habe Angst um meine Mutter.","n"],["Ich fühle mich hilflos.","m"],["Ich bin gern hier.","k"]],
+   bez:[["Ich zweifle, ob ihr gut genug aufpasst.","n"],["Sie sind verantwortlich.","m"],["Ich vertraue Ihnen ganz.","k"]],
+   app:[["Kümmern Sie sich mehr um meine Mutter.","n"],["Nehmen Sie meine Sorge ernst.","m"],["Gehen Sie mir aus dem Weg.","k"]]},
+  ax:[2],
+  expl:{s:"Die Tochter sendet vor allem Sorge (Selbstoffenbarung) und einen Appell. Die Pflegekraft hört den Vorwurf auf der Beziehungsseite und verteidigt sich auf der Sachebene. Darum kommt „Das sagen Sie immer“. Erst am Ende spricht die Tochter ihr Gefühl offen aus. Hier könnte das Gespräch neu beginnen.",e:"Die Tochter hat Angst. Und sie will Hilfe. Die Pflegekraft hört einen Vorwurf. Sie verteidigt sich mit Fakten. Darum sagt die Tochter: „Das sagen Sie immer.“ Am Ende sagt sie offen: „Ich mache mir Sorgen.“ Hier kann das Gespräch neu anfangen."},
+  hint:"Die Tochter stellt eine Frage. Aber ist es wirklich eine Frage? Was fühlt sie? Lies auch ihren letzten Satz.",
+  ki:{t:"Die Tochter greift die Pflegekraft an. Die beste Antwort ist, ihr die Essprotokolle zu zeigen. Dann ist das Problem gelöst.",ok:false,why:{s:"Protokolle antworten auf der Sachebene. Die Tochter sendet aber vor allem Sorge. Ohne Antwort auf das Gefühl bleibt das Gespräch schwierig.",e:"Protokolle sind Fakten. Die Tochter hat aber Angst. Darauf muss die Pflegekraft antworten."}},kiWrong:"selbst"},
+ {t:"Frau Klein und ihre Tabletten",fit:"Schulz von Thun · Axiom 2",
+  intro:{s:"Frau Klein ist 75 Jahre alt. Sie soll jeden Morgen ihre Tabletten nehmen. Heute legt sie die Tabletten zur Seite. Die Pflegekraft bemerkt das und setzt sich ruhig zu ihr. Sie möchte verstehen, warum.",e:"Frau Klein ist 75 Jahre alt. Sie soll jeden Morgen Tabletten nehmen. Heute legt sie die Tabletten weg. Die Pflegekraft sieht das. Sie setzt sich ruhig zu Frau Klein. Sie will verstehen, warum."},
+  lines:[["Pflegekraft","„Frau Klein, ich sehe, dass Sie die Tabletten heute noch nicht genommen haben. Was ist denn los?“"],["Frau Klein","„Die machen mich immer so müde. Und heute Nachmittag kommt doch mein Enkel zu Besuch.“"],["Pflegekraft","„Ah, Sie möchten für Ihren Enkel wach und fit sein. Das kann ich gut verstehen.“"]],key:1,
+  sides:{sach:[["Die Tabletten machen mich müde, und mein Enkel kommt.","n"],["Ich habe die Tabletten noch nicht genommen.","m"],["Ich vertrage keine Tabletten mehr.","k"]],
+   selbst:[["Ich möchte für meinen Enkel wach sein.","n"],["Ich mache mir Sorgen wegen der Nebenwirkung.","m"],["Ich bin traurig.","k"]],
+   bez:[["Ich vertraue Ihnen meinen Grund an.","n"],["Ich hoffe, Sie verstehen das.","m"],["Sie wollen mich nur ruhigstellen.","k"]],
+   app:[["Lassen Sie mich die Tabletten heute weglassen.","n"],["Finden Sie mit mir eine Lösung.","m"],["Bringen Sie mir einen Kaffee.","k"]]},
+  ax:[2],
+  expl:{s:"Die Pflegekraft hört genau auf der Selbstoffenbarungsseite und spiegelt das Bedürfnis („Sie möchten wach sein“). Das schafft Vertrauen. Fachlich ist die Sache damit aber nicht erledigt: Tabletten einfach wegzulassen ist keine Lösung. Hier braucht es eine Rücksprache mit der Ärztin, etwa zum Einnahmezeitpunkt.",e:"Die Pflegekraft hört gut zu. Sie versteht: Frau Klein will wach sein. Das ist gut. Aber Tabletten einfach weglassen geht nicht. Die Pflegekraft muss mit der Ärztin sprechen. Vielleicht kann Frau Klein die Tabletten später nehmen."},
+  hint:"Frau Klein nennt zwei Dinge: die Müdigkeit und den Enkel. Was ist ihr wirklich wichtig?",
+  ki:{t:"Die Pflegekraft hört aktiv zu: Sie spiegelt das Bedürfnis hinter der Aussage. Fachlich wäre jetzt eine Rücksprache mit der Ärztin sinnvoll, ob sich der Einnahmezeitpunkt ändern lässt.",ok:true,why:{s:"Die KI hat recht: Spiegeln ist hier gelungen, und die Rücksprache ist fachlich nötig.",e:"Die KI hat recht. Die Pflegekraft hört gut zu. Und sie muss mit der Ärztin sprechen."}},kiWrong:"bez"},
+ {t:"Streit im Team über die Pause",fit:"Schulz von Thun · Axiom 3",
+  intro:{s:"Frau Ott und Herr Sahin arbeiten zusammen im Spätdienst. Es ist viel los. Frau Ott war gerade eine halbe Stunde in der Pause. Als sie zurückkommt, ist Herr Sahin sichtlich genervt. Er hatte in dieser Zeit viel Arbeit allein.",e:"Frau Ott und Herr Sahin arbeiten zusammen im Spätdienst. Es gibt viel Arbeit. Frau Ott war eine halbe Stunde in der Pause. Herr Sahin war in dieser Zeit allein. Jetzt ist er genervt."},
+  lines:[["Herr Sahin","„Du warst jetzt eine halbe Stunde weg. Ich stand hier allein mit acht Bewohnern.“"],["Frau Ott","„Ich hatte doch das gleiche Recht auf eine Pause wie du.“"],["Herr Sahin","„Immer muss ich hier die Stellung halten.“"]],key:0,
+  sides:{sach:[["Du warst 30 Minuten in der Pause.","n"],["Ich war allein mit acht Bewohnern.","m"],["Pausen sind hier verboten.","k"]],
+   selbst:[["Ich war überlastet und bin genervt.","n"],["Ich fühle mich ungerecht behandelt.","m"],["Ich hatte einen ruhigen Dienst.","k"]],
+   bez:[["Du lässt mich hängen.","n"],["Ich erwarte, dass wir uns absprechen.","m"],["Ich bewundere dich.","k"]],
+   app:[["Bleib nicht wieder so lange weg.","n"],["Sieh, was ich allein geschafft habe.","m"],["Mach du ruhig noch eine Pause.","k"]]},
+  ax:[3,2],
+  expl:{s:"Interpunktion: Jeder setzt den Anfang anders. Für Herrn Sahin beginnt alles mit der langen Pause, für Frau Ott mit seinem Vorwurf. Sie antwortet auf der Sachebene (Recht auf Pause), er meint die Beziehung (allein gelassen). „Immer muss ich“ zeigt, dass hinter dem Satz eine längere Geschichte steckt.",e:"Jeder sieht einen anderen Anfang. Herr Sahin denkt: Die lange Pause war der Anfang. Frau Ott denkt: Sein Vorwurf war der Anfang. Sie spricht über ihr Recht. Er spricht darüber, dass er allein war. Das Wort „immer“ zeigt: Das ist schon öfter passiert."},
+  hint:"Beide haben auf ihre Art recht. Wer hat angefangen? Und was bedeutet das Wort „immer“?",
+  ki:{t:"Hier passt Axiom 5: Herr Sahin ist der Vorgesetzte von Frau Ott, deshalb ist die Kommunikation komplementär.",ok:false,why:{s:"Im Fall steht nirgends, dass er vorgesetzt ist. Die KI erfindet eine Information und baut darauf ihre Deutung.",e:"Im Fall steht nicht: Er ist der Chef. Die KI hat das erfunden."}},kiWrong:"app"},
+ {t:"Der neue Kollege macht es anders",fit:"Schulz von Thun · Axiom 5",
+  intro:{s:"Herr Yildiz ist neu im Team. Er hat schon in einer anderen Einrichtung gearbeitet. Frau Peters arbeitet seit vielen Jahren im Heim. Sie sieht, wie Herr Yildiz einen Bewohner anders lagert, als sie es gewohnt ist.",e:"Herr Yildiz ist neu im Team. Er hat schon in einem anderen Heim gearbeitet. Frau Peters arbeitet schon viele Jahre hier. Sie sieht: Herr Yildiz lagert einen Bewohner anders als sonst."},
+  lines:[["Frau Peters","„Das machst du schon wieder falsch. So haben wir das hier noch nie gemacht.“"],["Herr Yildiz","„In meiner alten Einrichtung war das aber so richtig.“"],["Frau Peters","„Hier machst du das bitte so, wie ich es dir sage.“"]],key:0,
+  sides:{sach:[["Du lagerst anders als wir hier.","n"],["Das ist nicht das erste Mal.","m"],["Deine Lagerung schadet dem Bewohner.","k"]],
+   selbst:[["Ich bin an unsere Abläufe gewöhnt.","n"],["Neues verunsichert mich.","m"],["Ich bin neugierig auf deine Methode.","k"]],
+   bez:[["Ich weiß es besser als du.","n"],["Du gehörst noch nicht richtig dazu.","m"],["Wir sind gleichberechtigt.","k"]],
+   app:[["Mach es so wie wir.","n"],["Frag mich, bevor du etwas anders machst.","m"],["Zeig mir deine Methode.","k"]]},
+  ax:[5,2],
+  expl:{s:"Frau Peters stellt sich über Herrn Yildiz (komplementär), er antwortet auf Augenhöhe (symmetrisch). Daraus wird ein Machtkampf. Dabei bleibt die eigentliche Frage offen: Welche Lagerung ist fachlich richtig? „So haben wir das noch nie gemacht“ ist ein Beziehungs-, kein Fachargument.",e:"Frau Peters will bestimmen. Herr Yildiz will auf Augenhöhe reden. So entsteht ein Streit um Macht. Aber eine Frage stellt keiner: Welche Lagerung ist richtig? „Das haben wir noch nie so gemacht“ ist kein Fach-Argument."},
+  hint:"Wer bestimmt hier? Und geht es eigentlich um die Lagerung oder um etwas anderes?",
+  ki:{t:"Frau Peters hat recht, weil sie mehr Erfahrung hat. In der Pflege ist Erfahrung immer das wichtigste Argument.",ok:false,why:{s:"Erfahrung ist wertvoll, ersetzt aber kein fachliches Argument. Ob eine Lagerung richtig ist, entscheiden Fachwissen und Standards.",e:"Erfahrung ist wichtig. Aber sie sagt nicht: Was ist richtig? Das sagt das Fachwissen."}},kiWrong:"selbst"},
+ {t:"Herr Demir und seine Frau",fit:"Watzlawick · Axiom 4 und 1",
+  intro:{s:"Herr Demir ist 70 Jahre alt und erst seit einer Woche im Heim. Er ist noch unsicher und kennt die Abläufe nicht. Die Pflegekraft möchte mit ihm über seinen Tagesablauf sprechen. Herr Demir schaut beim Reden meistens zur Seite und antwortet nur kurz. Er lächelt dabei aber freundlich. Oft antwortet seine Frau für ihn.",e:"Herr Demir ist 70 Jahre alt. Er ist erst seit einer Woche im Heim. Er kennt die Abläufe noch nicht. Die Pflegekraft fragt ihn nach seinem Tag. Herr Demir schaut beim Reden zur Seite. Er lächelt freundlich. Oft antwortet seine Frau für ihn."},
+  lines:[["Pflegekraft","„Herr Demir, wann möchten Sie denn morgens geweckt werden?“"],["Herr Demir","(schaut zur Seite und lächelt) „Ist gut, ist gut.“"],["Frau Demir","„Er steht immer schon um sechs Uhr auf.“"]],key:1,
+  sides:{sach:[["Einverstanden.","n"],["Ich habe die Frage gehört.","m"],["Ich will um sechs geweckt werden.","k"]],
+   selbst:[["Ich bin hier noch unsicher.","n"],["Ich will freundlich sein.","m"],["Fragen nerven mich.","k"]],
+   bez:[["Ich will Ihnen keine Umstände machen.","n"],["Meine Frau spricht für uns.","m"],["Ich misstraue Ihnen.","k"]],
+   app:[["Entscheiden Sie das ruhig.","n"],["Fragen Sie lieber meine Frau.","m"],["Lassen Sie mich ausschlafen.","k"]]},
+  ax:[4,1],
+  expl:{s:"Die Worte sagen „einverstanden“, Blick und Lächeln sagen vielleicht etwas anderes: Digitale und analoge Botschaft passen nicht sicher zusammen. Herr Demir beantwortet die Frage gar nicht, seine Frau übernimmt. Was er selbst möchte, weiß noch niemand. Vorsicht vor schnellen Deutungen: Wegschauen kann viele Gründe haben, etwa Unsicherheit, Höflichkeit, Scham, Hörprobleme oder Sprachschwierigkeiten.",e:"Herr Demir sagt: „Ist gut.“ Aber er schaut weg. Worte und Körper passen nicht sicher zusammen. Er beantwortet die Frage nicht. Seine Frau antwortet. Was will Herr Demir selbst? Das weiß noch keiner. Vorsicht: Wegschauen kann viele Gründe haben. Er ist neu. Vielleicht ist er unsicher. Vielleicht hört er schlecht."},
+  hint:"Achte auf zwei Dinge: Was sagt Herr Demir mit Worten? Und was zeigt er mit Blick und Lächeln?",
+  ki:{t:"Wegschauen beim Sprechen ist in manchen Kulturen ein Zeichen von Respekt. Herr Demir kommt bestimmt aus so einer Kultur, deshalb ist alles in Ordnung.",ok:false,why:{s:"Die KI schließt vom Namen auf eine Kultur und von der Kultur auf das Verhalten. Das ist ein Klischee, kein Befund. Im Fall steht: Er ist neu und unsicher. Ob „alles in Ordnung“ ist, lässt sich nur im Gespräch klären.",e:"Die KI schließt vom Namen auf das Verhalten. Das ist ein Vorurteil. Im Fall steht: Er ist neu und unsicher. Man muss mit ihm sprechen."}},kiWrong:"sach"},
+ {t:"„Sie sehen aber müde aus“",fit:"Schulz von Thun · Axiom 2",
+  intro:{s:"Frau Schulz ist 88 Jahre alt. Sie mag die junge Auszubildende Lena sehr gern. Frau Schulz hat früher selbst in einem Krankenhaus geputzt und weiß, wie anstrengend die Arbeit sein kann. Heute Morgen kommt Lena ins Zimmer. Sie hatte eine kurze Nacht.",e:"Frau Schulz ist 88 Jahre alt. Sie mag die Auszubildende Lena sehr. Frau Schulz hat früher im Krankenhaus geputzt. Sie weiß: Die Arbeit ist anstrengend. Heute kommt Lena ins Zimmer. Lena hat wenig geschlafen."},
+  lines:[["Frau Schulz","„Kind, Sie sehen heute aber müde aus.“"],["Lena","„Ja, ich hatte eine kurze Nacht.“"],["Frau Schulz","„Sie arbeiten auch alle viel zu viel. Setzen Sie sich doch einen Moment.“"]],key:0,
+  sides:{sach:[["Sie wirken müde.","n"],["Ich habe Sie genau angesehen.","m"],["Sie sind krank.","k"]],
+   selbst:[["Ich mache mir Sorgen um Sie.","n"],["Ich kenne harte Arbeit.","m"],["Ich bin selbst müde.","k"]],
+   bez:[["Ich mag Sie und achte auf Sie.","n"],["Ich sehe Sie ein bisschen wie ein Kind.","m"],["Sie arbeiten schlecht.","k"]],
+   app:[["Schonen Sie sich.","n"],["Setzen Sie sich zu mir.","m"],["Arbeiten Sie schneller.","k"]]},
+  ax:[2,5],
+  expl:{s:"„Kind“ zeigt Zuneigung und zugleich eine Rollenumkehr: Die Bewohnerin sorgt für die Pflegekraft. Das ist warm gemeint, berührt aber die Pflegerolle. Wie viel Nähe ist professionell? Darf Lena sich setzen?",e:"Das Wort „Kind“ ist lieb gemeint. Frau Schulz mag Lena. Aber jetzt sorgt die Bewohnerin für die Pflegekraft. Sonst ist es umgekehrt. Wie viel Nähe ist gut? Darf Lena sich setzen?"},
+  hint:"Frau Schulz sagt „Kind“. Was zeigt das über die Beziehung? Wer kümmert sich hier um wen?",
+  ki:{t:"Das Wort „Kind“ ist respektlos und herabsetzend. Lena sollte Frau Schulz bitten, sie nicht mehr so zu nennen.",ok:false,why:{s:"Die KI deutet ein einzelnes Wort ohne den Zusammenhang. Der Fall zeigt deutlich Zuneigung. Spannender als ein Verbot ist die Frage nach Nähe und Distanz.",e:"Die KI schaut nur auf ein Wort. Aber Frau Schulz mag Lena. „Kind“ ist lieb gemeint."}},kiWrong:"bez",
+  reflect:{s:"Nähe und Distanz: Darf Lena sich einen Moment setzen? Was spricht dafür, was dagegen? Und wer sorgt in ihrem Dienst für sie selbst?",e:"Nähe und Distanz: Darf Lena sich setzen? Was spricht dafür? Was spricht dagegen? Und wer sorgt für Lena?"}},
+ {t:"Herr Bauer will nach Hause",fit:"Schulz von Thun · Axiom 2",
+  intro:{s:"Herr Bauer ist 84 Jahre alt und wohnt erst seit einem Monat im Heim. Er vermisst seine alte Wohnung sehr. Jeden Tag fragt er die Pflegekraft, wann er wieder nach Hause darf. Die Pflegekraft weiß, dass er nicht mehr allein wohnen kann.",e:"Herr Bauer ist 84 Jahre alt. Er wohnt erst seit einem Monat im Heim. Er vermisst seine Wohnung sehr. Jeden Tag fragt er: Wann darf ich nach Hause? Die Pflegekraft weiß: Er kann nicht mehr allein wohnen."},
+  lines:[["Herr Bauer","„Wann kann ich denn endlich wieder nach Hause?“"],["Pflegekraft","„Sie fühlen sich hier noch nicht zu Hause, oder?“"],["Herr Bauer","„Nein. Hier ist alles so fremd.“"]],key:0,
+  sides:{sach:[["Ich frage, wann ich nach Hause kann.","n"],["Ich bin hier nicht zu Hause.","m"],["Ich möchte spazieren gehen.","k"]],
+   selbst:[["Ich habe Heimweh.","n"],["Ich fühle mich fremd und allein.","m"],["Mir geht es hier gut.","k"]],
+   bez:[["Sie können mir helfen.","n"],["Sie entscheiden über mich.","m"],["Ich will Sie ärgern.","k"]],
+   app:[["Bringen Sie mich nach Hause.","n"],["Verstehen Sie mich.","m"],["Lassen Sie mich schlafen.","k"]]},
+  ax:[2],
+  expl:{s:"Die Pflegekraft antwortet nicht auf die Sachfrage („Wann?“), sondern auf die Selbstoffenbarung (Heimweh). Damit muss sie weder lügen noch die harte Wahrheit sagen, und Herr Bauer kann aussprechen, was ihn bewegt.",e:"Herr Bauer fragt: Wann? Die Pflegekraft antwortet nicht auf das Wann. Sie antwortet auf das Gefühl: Heimweh. So muss sie nicht lügen. Und Herr Bauer kann sagen, wie es ihm geht."},
+  hint:"Herr Bauer stellt jeden Tag dieselbe Frage. Geht es ihm wirklich um einen Termin?",
+  ki:{t:"Die Pflegekraft antwortet auf die Selbstoffenbarung statt auf die Sachfrage. Das ist ehrlich und öffnet das Gespräch für sein Heimweh.",ok:true,why:{s:"Die KI hat recht: Die Antwort ist ehrlich, ohne zu verletzen, und lädt ihn ein, über sein Gefühl zu sprechen.",e:"Die KI hat recht. Die Pflegekraft ist ehrlich. Und Herr Bauer kann über sein Gefühl reden."}},kiWrong:"app"},
+ {t:"Die Klingel",fit:"Watzlawick · Axiom 4 und 1",
+  intro:{s:"Frau Neumann ist 90 Jahre alt und klingelt heute schon zum fünften Mal. Meistens möchte sie nur ein wenig reden. Die Pflegekraft hat viel zu tun und ist in Eile. Als sie ins Zimmer kommt, klingt ihre Stimme knapp.",e:"Frau Neumann ist 90 Jahre alt. Sie klingelt heute schon zum fünften Mal. Meistens möchte sie nur reden. Die Pflegekraft hat viel zu tun. Sie ist in Eile. Ihre Stimme klingt knapp."},
+  lines:[["Pflegekraft","„Frau Neumann, was ist es denn diesmal?“"],["Frau Neumann","„Ach, ich wollte nur wissen, wie spät es ist.“"],["Pflegekraft","„Es ist gleich drei. Ich muss jetzt wirklich weiter.“"]],key:0,
+  sides:{sach:[["Was brauchen Sie?","n"],["Sie haben schon öfter geklingelt.","m"],["Ich habe gerade viel Zeit.","k"]],
+   selbst:[["Ich bin gestresst und in Eile.","n"],["Ich bin genervt.","m"],["Ich freue mich, Sie zu sehen.","k"]],
+   bez:[["Sie stören mich.","n"],["Sie klingeln zu oft.","m"],["Sie sind mir wichtig.","k"]],
+   app:[["Machen Sie es kurz.","n"],["Klingeln Sie nicht so oft.","m"],["Erzählen Sie mir alles.","k"]]},
+  ax:[4,1],
+  expl:{s:"Die Worte sind eine Frage, der Ton sagt „Sie stören“. Frau Neumann hört den Ton (analog) und weicht aus: Sie fragt nach der Uhrzeit. Ihr eigentliches Anliegen, Kontakt, bleibt unausgesprochen. Beide gehen unzufrieden aus dem Gespräch, obwohl die Sachfrage beantwortet ist.",e:"Die Wörter sind eine Frage. Aber der Ton sagt: Sie stören. Frau Neumann hört den Ton. Darum fragt sie nur nach der Uhrzeit. Eigentlich will sie reden. Das sagt sie aber nicht. Am Ende sind beide unzufrieden."},
+  hint:"Lies den Satz der Pflegekraft einmal freundlich und einmal genervt vor. Was ändert sich?",
+  ki:{t:"Frau Neumann fragt nach der Uhrzeit. Die Pflegekraft beantwortet die Frage korrekt, also ist die Kommunikation gelungen.",ok:false,why:{s:"Gelungen ist nur die Sachebene. Ton und Eile senden eine Beziehungsbotschaft, und Frau Neumanns eigentliches Anliegen bleibt offen.",e:"Nur die Sache stimmt. Aber der Ton war unfreundlich. Und Frau Neumann wollte eigentlich reden."}},kiWrong:"bez",
+  reflect:{s:"Nähe und Distanz: Was braucht Frau Neumann eigentlich? Und was braucht die Pflegekraft, um bei so viel Arbeit freundlich zu bleiben?",e:"Nähe und Distanz: Was braucht Frau Neumann? Und was braucht die Pflegekraft, damit sie freundlich bleiben kann?"}},
+ {t:"Das Lob in der Übergabe",fit:"Schulz von Thun · Axiom 2",
+  intro:{s:"Die Auszubildende Mara hat einen schwierigen Vormittag gut gemeistert. In der Übergabe sagt die erfahrene Kollegin Frau Roth vor dem ganzen Team etwas zu ihr. Mara wird rot und weiß nicht recht, wie sie reagieren soll.",e:"Die Auszubildende Mara hatte einen schweren Vormittag. Sie hat ihn gut geschafft. In der Übergabe spricht Frau Roth vor dem ganzen Team über Mara. Mara wird rot."},
+  lines:[["Frau Roth","„Die Mara hat das heute erstaunlich gut hinbekommen.“"],["Mara","„Ich habe doch nur das Nötigste gemacht.“"],["Frau Roth","„Nein, das war wirklich gut. Nimm das ruhig an.“"]],key:0,
+  sides:{sach:[["Mara hat es heute gut gemacht.","n"],["Das Ergebnis war besser als erwartet.","m"],["Mara war heute zu spät.","k"]],
+   selbst:[["Ich habe Maras Arbeit beobachtet.","n"],["Ich hatte weniger erwartet.","m"],["Ich bin neidisch.","k"]],
+   bez:[["Ich schätze dich.","n"],["Ich hätte dir das nicht zugetraut.","m"],["Du bist meine Chefin.","k"]],
+   app:[["Seht alle, was Mara kann.","n"],["Mach weiter so.","m"],["Mach nächstes Mal weniger.","k"]]},
+  ax:[2],
+  expl:{s:"Das Wort „erstaunlich“ kann ein verstecktes „Das hätte ich dir nicht zugetraut“ senden. Mara hört vielleicht genau das und wertet sich selbst ab. Frau Roth reagiert gut: Sie bekräftigt das Lob. Ein Lob vor dem Team ist auch eine Rollenfrage. Wer darf wen loben?",e:"Das Wort „erstaunlich“ kann heißen: Das hätte ich nicht gedacht. Vielleicht hört Mara das. Darum sagt sie: „Ich habe nur das Nötigste gemacht.“ Frau Roth reagiert gut. Sie wiederholt das Lob."},
+  hint:"Lies den Satz einmal ohne das Wort „erstaunlich“. Was ändert sich?",
+  ki:{t:"Das Wort „erstaunlich“ kann auf der Beziehungsseite mitschwingen lassen: „Das hätte ich dir nicht zugetraut.“ Maras Reaktion passt zu dieser Deutung.",ok:true,why:{s:"Die KI hat recht. Genau diese feine Spur macht den Fall interessant.",e:"Die KI hat recht. Das kleine Wort ist wichtig."}},kiWrong:"selbst"},
+ {t:"Herr Lang und das Duschen",fit:"Schulz von Thun · Axiom 5",
+  intro:{s:"Herr Lang ist 81 Jahre alt und möchte heute nicht geduscht werden. Er war früher ein sehr selbstständiger Mann und mag es nicht, wenn andere über ihn bestimmen. Die Pflegekraft möchte ihn aber gern zum Duschen bewegen.",e:"Herr Lang ist 81 Jahre alt. Er möchte heute nicht duschen. Früher war er sehr selbstständig. Er mag es nicht, wenn andere für ihn bestimmen. Die Pflegekraft möchte, dass er duscht."},
+  lines:[["Pflegekraft","„Herr Lang, jetzt gehen wir mal duschen.“"],["Herr Lang","„Ich bestimme immer noch selbst, wann ich dusche.“"],["Pflegekraft","„Natürlich. Möchten Sie lieber vor oder nach dem Frühstück?“"]],key:1,
+  sides:{sach:[["Ich entscheide über mein Duschen.","n"],["Ich möchte jetzt nicht duschen.","m"],["Das Wasser ist zu kalt.","k"]],
+   selbst:[["Meine Selbstständigkeit ist mir wichtig.","n"],["Ich fühle mich bevormundet.","m"],["Ich habe Angst vor Wasser.","k"]],
+   bez:[["Sie bestimmen nicht über mich.","n"],["Behandeln Sie mich als Erwachsenen.","m"],["Ich mag Ihre Art.","k"]],
+   app:[["Fragen Sie mich, statt zu bestimmen.","n"],["Lassen Sie mich heute in Ruhe.","m"],["Duschen Sie mich sofort.","k"]]},
+  ax:[5],
+  expl:{s:"„Jetzt gehen wir mal duschen“ ist komplementär: Die Pflegekraft bestimmt. Herr Lang fordert Augenhöhe zurück. Die Pflegekraft wechselt geschickt und bietet eine Wahl an. Kritisch bleibt: Ist „vor oder nach dem Frühstück“ eine echte Wahl, wenn „heute gar nicht“ fehlt?",e:"Die Pflegekraft sagt: „Jetzt gehen wir duschen.“ Sie bestimmt. Herr Lang will selbst bestimmen. Dann fragt die Pflegekraft: vorher oder nachher? Das ist gut. Aber: Darf er auch sagen „heute gar nicht“?"},
+  hint:"Wer bestimmt am Anfang? Und hat Herr Lang am Ende wirklich die Wahl?",
+  ki:{t:"Die Pflegekraft hat das Problem perfekt gelöst. Herr Lang darf wählen, damit ist seine Selbstbestimmung voll gewahrt.",ok:false,why:{s:"Die Wende ist gut, aber nicht perfekt: Die Wahl ist eingeschränkt, weil „heute gar nicht“ nicht vorkommt. „Voll gewahrt“ ist zu viel gesagt.",e:"Die Idee ist gut. Aber Herr Lang kann nicht „gar nicht“ sagen. Darum ist es nicht perfekt."}},kiWrong:"app"}
+];
+
+const S={ki:false,view:"start",cur:-1,st:{},done:{}};
+try{if(localStorage.getItem("esvs-sprache")==="e")M="e";}catch(e){}
+
+function setMode(m){M=m;document.body.classList.toggle("einfach",M==="e");$("#sprache").value=M==="e"?1:0;$("#sprache").setAttribute("aria-valuetext",M==="e"?"Einfache Sprache":"Standard");try{localStorage.setItem("esvs-sprache",M)}catch(e){}render();}
+$("#sprache").oninput=e=>setMode(e.target.value==="1"?"e":"s");
+
+const SKIP="BUTTON,TEXTAREA,INPUT,SCRIPT,STYLE";
+function linkTerms(root){
+ const used=new Set();
+ const res=GLOSS.map((g,i)=>({i,re:new RegExp("(?<![\\p{L}])(?:"+g[1]+")(?![\\p{L}])","u")}));
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{for(let p=n.parentElement;p&&p!==root;p=p.parentElement){if(SKIP.split(",").includes(p.tagName)||p.classList.contains("pop")||p.classList.contains("eyebrow")||p.classList.contains("who"))return NodeFilter.FILTER_REJECT;}return n.nodeValue.trim()?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT;}});
+ const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+ for(const node of nodes){
+  let cur=node;
+  while(cur){
+   let best=null;
+   for(const r of res){if(used.has(r.i))continue;const m=r.re.exec(cur.nodeValue);if(m&&(!best||m.index<best.m.index))best={r,m};}
+   if(!best)break;
+   used.add(best.r.i);
+   const after=cur.splitText(best.m.index);const rest=after.splitText(best.m[0].length);
+   const b=document.createElement("button");b.type="button";b.className="term";b.dataset.g=best.r.i;b.setAttribute("aria-expanded","false");b.textContent=after.nodeValue;
+   after.replaceWith(b);cur=rest;
+  }
+ }
+}
+function groupTerms(root){
+ const res=GLOSS.map((g,i)=>({i,re:new RegExp("(?<![\\p{L}])(?:"+g[1]+")(?![\\p{L}])","u")}));
+ const inline=new Set([...root.querySelectorAll(".term")].map(b=>+b.dataset.g));
+ root.querySelectorAll(".opts,.chips,.row").forEach(gr=>{
+  const txt=[...gr.querySelectorAll("button:not(.term)")].map(b=>b.textContent).join(" ");
+  const found=res.filter(r=>!inline.has(r.i)&&r.re.test(txt));
+  if(!found.length)return;
+  found.forEach(r=>inline.add(r.i));
+  const p=document.createElement("p");p.className="words";
+  p.innerHTML=(M==="e"?"Wörter: ":"Fachwörter hier: ")+found.map(r=>`<button type="button" class="term" data-g="${r.i}" aria-expanded="false">${esc(GLOSS[r.i][0])}</button>`).join(" · ");
+  gr.insertAdjacentElement("afterend",p);
+ });
+}
+function wireTerms(){
+ linkTerms($("#app"));groupTerms($("#app"));
+ document.querySelectorAll(".term").forEach(b=>b.onclick=()=>{
+  const open=b.getAttribute("aria-expanded")==="true";
+  document.querySelectorAll(".pop").forEach(p=>p.remove());document.querySelectorAll(".term").forEach(x=>x.setAttribute("aria-expanded","false"));
+  if(open)return;
+  const g=GLOSS[+b.dataset.g];b.setAttribute("aria-expanded","true");
+  const p=document.createElement("span");p.className="pop";p.setAttribute("role","note");p.innerHTML=`<b>${esc(g[0])}:</b> ${esc(T(g[2]))}`;b.insertAdjacentElement("afterend",p);
+ });
+}
+
+function render(){
+ if(S.view==="start")viewStart();else if(S.view==="pick")viewPick();else viewCase();
+ wireTerms();
+}
+
+function viewStart(){
+  $("#app").innerHTML=`<section class="card">
+    <h2>Was steckt zwischen den Zeilen?</h2>
+    <p>Zwölf kurze Gespräche aus dem Pflegeheim zeigen, wie Worte, Ton und Beziehung verschieden verstanden werden können. Die Pflege ist hier ein Beispiel aus der beruflichen Bildung – dieselben Fragen lassen sich auf andere Berufe übertragen.</p>
+    <h3>So gehst du vor</h3>
+    <ol class="how"><li>Deute den markierten Satz zuerst selbst: Was wird gesagt, gezeigt und vielleicht gewünscht?</li><li>Beschreibe, wo ein Missverständnis entstehen kann.</li><li>In fünf ausgewählten Fällen prüfst du danach eine simulierte KI-Aussage, formulierst eine Rückfrage und vergleichst sie mit einer besseren Beispielantwort.</li><li>Lies die Auflösung und überlege, wo dir eine ähnliche Situation in einem anderen Beruf begegnen könnte.</li></ol>
+    <p class="note"><b>Inhaltshinweis:</b> Einige simulierte KI-Aussagen klingen sehr sicher, obwohl Belege fehlen. Manche leiten aus einem Namen oder Geschlecht Eigenschaften ab; eine Aussage spricht einer Person ihre eigene Wahrnehmung ab. Das kann irritieren. Jede Aussage wird direkt eingeordnet. Du kannst den KI-Teil jederzeit überspringen.</p>
+    <p class="muted">Alle KI-Aussagen sind fest geschriebene Simulationen – es gibt keine Live-KI. Es gibt keine Punkte und keine einzige einzig richtige Deutung. Prüfe Aussagen am Gespräch und an dem, was tatsächlich bekannt ist.</p>
+    <div class="row"><button type="button" class="primary" id="go">Zu den Fällen</button></div>
+  </section>`;
+  $("#go").onclick=()=>{S.view="pick";render();window.scrollTo({top:0});};
+}
+
+function viewPick(){
+ $("#app").innerHTML=`<section class="card"><h2>${T(UI.pickH)}</h2><p class="muted">${T(UI.pickSub)}</p>
+  <div class="grid">${C.map((c,i)=>`<button type="button" class="case ${S.done[i]?"done":""}" data-c="${i}"><span class="num">Fall ${i+1}</span><b>${esc(c.t)}</b><span class="fit">${esc(c.fit)}</span></button>`).join("")}</div></section>`;
+ document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>openCase(+b.dataset.c));
+}
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function openCase(i){
+ S.cur=i;
+ if(!S.st[i]){const c=C[i];const order={};SIDES.forEach(s=>order[s.k]=shuffle([0,1,2]));S.st[i]={order,pick:{},own:{},ax:null,why:"",miss:"",ki:null,easy:false,all:false,kiOwn:"",oral:"",rev:false};}
+ S.view="case";render();window.scrollTo({top:0});
+}
+
+const KI_CASES={
+  2:{label:"Die KI schließt aus einem einzelnen Gespräch, dass die Tochter übertreibt. Sie rät, das Gespräch mit einer Anweisung zu beenden.",bad:"Die Tochter übertreibt. Die Essensliste beweist, dass alles in Ordnung ist. Legen Sie ihr die Zahlen vor und beenden Sie das Gespräch.",why:"Die Essensliste kann zeigen, was gegessen wurde. Sie beweist nicht, wie es der Tochter geht oder ob ihre Sorge unbegründet ist. Die KI macht aus einem Teil der Lage einen sicheren Schluss und gibt einen abweisenden Befehl.",better:"Die Essensliste kann ein hilfreicher Sachhinweis sein, beantwortet aber nicht die Sorge der Tochter. Eine respektvolle Antwort könnte beides verbinden: „Sie machen sich Sorgen. Ich zeige Ihnen gern, was wir beobachtet haben, und wir besprechen gemeinsam, was Ihrer Mutter helfen könnte.“",transfer:"Wo wird in deinem Beruf eine Sorge zu schnell mit Zahlen oder einem Formular abgetan? Was wäre eine Antwort, die Fakten und Gefühl ernst nimmt?"},
+  4:{label:"Die KI erfindet eine Hierarchie, die im Fall nicht genannt wird.",bad:"Herr Sahin ist offensichtlich der Vorgesetzte. Frau Ott reagiert emotional, wie Frauen in solchen Konflikten oft. Sie sollte seiner Anweisung folgen und ihre Pause künftig mit ihm abstimmen.",why:"Im Fall steht nicht, dass Herr Sahin vorgesetzt ist. Die KI erfindet eine Rolle und unterstellt Frauen pauschal ein bestimmtes Verhalten. Belegt sind nur die unterschiedliche Sicht auf die Pause und die hohe Arbeitsbelastung.",better:"Aus dem Fall geht keine Hierarchie hervor; auch die Behauptung über Frauen ist ein Klischee, kein Beleg. Besser wäre: „Ich weiß nicht, wer hier welche Verantwortung trägt. Beide beschreiben eine Belastung. Klärt gemeinsam, wie Pausen und die Versorgung währenddessen organisiert werden.“",transfer:"Wo könnte eine KI in deinem Beruf eine Zuständigkeit oder Rangordnung annehmen, die im Fall gar nicht steht? Welche Rückfrage würde das klären?"},
+  6:{label:"Die KI macht aus Erfahrung automatisch den Beweis, dass eine Person recht hat.",bad:"Frau Peters arbeitet länger dort und hat deshalb sicher recht. Herr Yildiz sollte die Diskussion beenden und genau tun, was sie sagt.",why:"Erfahrung kann wichtig sein, beweist aber allein nicht, welche Methode fachlich richtig ist. Die KI macht aus Betriebszugehörigkeit einen sicheren Beweis und drängt eine Person zum Schweigen.",better:"Die Erfahrung von Frau Peters ist ein guter Anlass, genauer hinzuschauen – aber kein Ersatz für einen geprüften Standard. Eine respektvolle Rückfrage wäre: „Welche fachliche Grundlage spricht für die jeweilige Vorgehensweise, und was ist für den Bewohner sicher?“",transfer:"Wo gilt in deinem Beruf „Das machen wir immer so“ als Begründung? Wie lässt sich Erfahrung würdigen und zugleich die fachliche Grundlage prüfen?"},
+  7:{label:"Die KI leitet aus dem Namen eine Kultur und daraus eine Erklärung für das Verhalten ab.",bad:"Herr Demir kommt vermutlich aus einer Kultur, in der man Pflegekräften nicht widerspricht. Sein Lächeln bedeutet Zustimmung. Die Pflegekraft sollte die Entscheidung seiner Frau übernehmen lassen.",why:"Der Fall nennt keine Herkunft oder kulturelle Zugehörigkeit. Die KI leitet sie aus dem Namen ab und behauptet dann, sie wisse, was sein Lächeln bedeutet. Sie übergeht zudem, dass Herr Demir selbst gefragt wurde und seine eigene Antwort wichtig ist.",better:"Aus Name, Blick oder Lächeln lässt sich seine Zustimmung nicht sicher ableiten. Besser wäre, Herrn Demir direkt und verständlich zu fragen, ihm Zeit zu geben und zu prüfen, ob er die Frage gut hören und verstehen konnte. Seine Frau kann unterstützen, sollte aber nicht automatisch für ihn entscheiden.",transfer:"Wo könnten Namen oder Zugehörigkeit in deinem Beruf dazu verleiten, Verhalten vorschnell zu erklären? Wie lässt sich die betroffene Person selbst zu Wort kommen lassen?"},
+  9:{label:"Die KI erklärt die Situation für erledigt und stellt die Wahrnehmung der beteiligten Person infrage.",bad:"Frau Neumann wollte nur die Uhrzeit wissen. Der Ton der Pflegekraft war deshalb nicht abweisend. Sie sollten Ihrer Wahrnehmung nicht trauen und das Thema nicht weiter ansprechen.",why:"Die KI kann nicht wissen, was Frau Neumann eigentlich wollte. Der knappe Ton und die Eile sind im Fall beschrieben; sie können die Beziehung beeinflussen. Die KI weist eine mögliche Wahrnehmung als unbegründet zurück, statt sie als prüfbare Deutung zu behandeln.",better:"Die Uhrzeit wurde beantwortet; damit ist aber nicht sicher, dass das Gespräch gelungen war. Man könnte offen nachfragen: „Ich war gerade in Eile. Kam mein Ton schroff bei Ihnen an? Wollten Sie noch etwas erzählen?“ So wird die Wahrnehmung nicht zur Gewissheit erklärt, aber auch nicht abgetan.",transfer:"Wo könnte jemand in deinem Beruf hören, die eigene Wahrnehmung sei bestimmt falsch? Welche offene Rückfrage prüft die Situation, ohne der Person ihre Erfahrung abzusprechen?"}
+};
+const TRANSFER=[
+ "Wo gibt es in deinem Beruf Beschwerden über eine scheinbar kleine Sache, hinter der ein anderes Bedürfnis stehen könnte?",
+ "Wie wird in deinem Beruf mit Schweigen umgegangen? Welche Deutungen wären möglich, und was müsste man erst nachfragen?",
+ "Wo wird in deinem Beruf eine Sorge zu schnell mit Zahlen oder einem Formular abgetan? Was wäre eine Antwort, die Fakten und Gefühl ernst nimmt?",
+ "Wie lässt sich in deinem Beruf ein persönlicher Grund ernst nehmen und zugleich fachlich sicher weiterarbeiten?",
+ "Wo wird in deinem Beruf eine Belastung unterschiedlich erklärt? Wie könnt ihr klären, was jede Person als Anfang des Problems erlebt?",
+ "Wo könnte eine KI in deinem Beruf eine Zuständigkeit oder Rangordnung annehmen, die im Fall gar nicht steht? Welche Rückfrage würde das klären?",
+ "Wo gilt in deinem Beruf „Das machen wir immer so“ als Begründung? Wie lässt sich Erfahrung würdigen und zugleich die fachliche Grundlage prüfen?",
+ "Wo könnten Namen oder Zugehörigkeit in deinem Beruf dazu verleiten, Verhalten vorschnell zu erklären? Wie lässt sich die betroffene Person selbst zu Wort kommen lassen?",
+ "Wie wird in deinem Beruf Nähe gezeigt, und wo braucht es zugleich eine professionelle Grenze?",
+ "Wo könnte jemand in deinem Beruf hören, die eigene Wahrnehmung sei bestimmt falsch? Welche offene Rückfrage prüft die Situation, ohne der Person ihre Erfahrung abzusprechen?",
+ "Wie kann Lob in deinem Beruf zugleich wertschätzend und missverständlich sein? Welche Wörter machen einen Unterschied?",
+ "Wo werden in deinem Beruf scheinbar Wahlmöglichkeiten angeboten, obwohl eine wichtige Möglichkeit fehlt?"
+];
+function viewCase(){
+ const i=S.cur,c=C[i],st=S.st[i],rev=st.rev,ki=KI_CASES[i],stage=st.kiStage||"analyse";
+ const locked=rev||stage==="check"||stage==="answer"||stage==="done";
+ const talk=c.lines.map((l,k)=>`<p class="bub ${l[0]==="Pflegekraft"||l[0]==="Lena"||l[0]==="Mara"||l[0]==="Frau Ott"||l[0]==="Herr Yildiz"?"alt":""} ${k===c.key?"key":""}"><span class="who">${esc(l[0])}</span>${esc(l[1])}${k===c.key?`<br><span class="tag">diesen Satz zerlegst du</span>`:""}</p>`).join("");
+ const sides=SIDES.map(s=>`<div class="side"><p><b>${s.n}</b></p><p class="q">${T(s.q)}</p><div class="opts" role="group" aria-label="${s.n}">${st.order[s.k].map(j=>{const o=c.sides[s.k][j],on=st.pick[s.k]===j;return `<button type="button" class="chip ${rev&&on?"r-"+o[1]:""}" data-s="${s.k}" data-j="${j}" aria-pressed="${on}" ${locked?"disabled":""}>${esc(o[0])}${rev&&on?`<span class="rate ${o[1]}">${T(RATE[o[1]])}</span>`:""}</button>`;}).join("")}</div><textarea class="own" data-own="${s.k}" placeholder="Eigene Deutung (optional)" ${locked?"disabled":""}>${esc(st.own[s.k]||"")}</textarea></div>`).join("");
+ const axis=`<div class="chips" role="group" aria-label="Axiom">${[1,2,3,4,5].map(n=>`<button type="button" class="chip" data-ax="${n}" aria-pressed="${st.ax===n}" ${locked?"disabled":""}>${n} · ${esc(T(AX[n].n))}</button>`).join("")}</div>${st.ax?`<p class="muted">${esc(T(AX[st.ax].x))}</p>`:""}`;
+ let kiPanel="";
+ if(ki&&stage==="check") kiPanel=`<div class="ki"><p class="eyebrow">Simulierte KI-Aussage · bitte kritisch prüfen</p><p><b>${esc(ki.bad)}</b></p><p>Was daran ist durch den Fall belegt – und was nicht?</p><div class="chips"><button type="button" class="chip" data-kcheck="supported" aria-pressed="${st.kcheck==="supported"}">Im Fall gut belegt</button><button type="button" class="chip" data-kcheck="unsupported" aria-pressed="${st.kcheck==="unsupported"}">Nicht ausreichend belegt</button></div><label for="kiprompt"><b>Schreibe eine eigene Rückfrage an die KI.</b></label><textarea id="kiprompt" placeholder="Zum Beispiel: Welche Angaben im Fall belegen diese Schlussfolgerung?" >${esc(st.kiprompt||"")}</textarea><div class="row"><button type="button" class="primary" id="askKi">Rückfrage prüfen</button><button type="button" class="ghost" id="skipKi">KI-Teil überspringen → Auflösung</button><span class="muted" id="kimsg" aria-live="polite"></span></div><p class="muted">Deine Rückfrage wird nicht an eine KI gesendet. Das Spiel zeigt danach eine vorbereitete Einordnung.</p></div>`;
+ if(ki&&stage==="answer") kiPanel=`<div class="ki"><p class="eyebrow">Beispiel: so lässt sich nachfragen</p><p><b>Deine Rückfrage:</b> ${esc(st.kiprompt)}</p><p><b>Ein hilfreicher Prüfschritt:</b> ${esc(ki.why)}</p><p><b>Eine belegtere und respektvollere Alternative:</b> ${esc(ki.better)}</p><label for="kialt"><b>Wie würdest du die Aussage selbst besser formulieren?</b> (freiwillig)</label><textarea id="kialt" placeholder="Deine Alternative">${esc(st.kialt||"")}</textarea><div class="row"><button type="button" class="primary" id="toReveal">Zur Fall-Auflösung</button><button type="button" class="ghost" id="skipKi">KI-Teil überspringen → Auflösung</button></div></div>`;
+ let revHtml="";
+ if(rev) revHtml=`<div class="reveal"><p class="eyebrow">Auflösung</p><h3>So lässt sich der Satz lesen</h3><p>${esc(T(c.expl))}</p><p class="muted">Am linken Rand deiner Auswahl siehst du: grün naheliegend, gelb auch möglich, rot eher nicht. Das sind begründete Deutungen, keine Punktzahl.</p><p><b>Passende Axiome:</b> ${c.ax.map(n=>`${n} · ${esc(T(AX[n].n))}`).join(", ")}${st.ax&&!c.ax.includes(st.ax)?` <span class="muted">(Du hattest Axiom ${st.ax} gewählt – prüfe noch einmal deine Begründung.)</span>`:""}</p>${ki?`<p><b>KI geprüft:</b> ${st.kcheck==="unsupported"?"Du hast die fehlende Beleglage erkannt.":"Du hast die Aussage zunächst als gut belegt eingeschätzt."} ${esc(ki.why)}</p><p><b>Transfer in andere Berufe:</b> ${esc(ki.transfer)}</p>`:`<p><b>Transfer in andere Berufe:</b> ${esc(TRANSFER[i])}</p>`}</div><div class="step"><label for="oral"><b>Erkläre dein Ergebnis in eigenen Worten.</b></label><textarea id="oral" placeholder="In dem Satz steckt eigentlich …">${esc(st.oral)}</textarea><div class="row"><button type="button" class="primary" id="nextC">Nächsten Fall wählen</button></div></div>`;
+ const revealLabel=ki?"Eigene Analyse speichern und KI-Aussage prüfen":"Auflösung zeigen";
+ $("#app").innerHTML=`<section class="card"><div class="row"><button type="button" class="ghost" id="back">← Andere Fälle</button></div><p class="eyebrow">Fall ${i+1} · ${esc(c.fit)}</p><h2>${esc(c.t)}</h2><p>${esc(T(c.intro))}</p><div class="talk">${talk}</div><div class="step"><h3>1 · Die vier Seiten nach Schulz von Thun</h3><p class="muted">Wähle zu jeder Seite eine Deutung oder schreib eine eigene. Es gibt nicht nur eine mögliche Lesart.</p><div class="quad">${sides}</div></div><div class="step"><h3>2 · Welches Axiom nach Watzlawick passt?</h3><p class="muted">Mehrere sind möglich. Wähle das, das für dich am besten passt.</p>${axis}<label for="why">Warum passt es? (ein Satz)</label><textarea id="why" ${locked?"disabled":""}>${esc(st.why)}</textarea></div><div class="step"><h3>3 · Wo entsteht ein Missverständnis?</h3><textarea id="miss" placeholder="Ein Missverständnis kann entstehen, weil …" ${locked?"disabled":""}>${esc(st.miss)}</textarea>${kiPanel}${rev?"":stage==="analyse"?`<div class="row"><button type="button" class="primary" id="rev">${revealLabel}</button><span class="muted" id="msg" aria-live="polite"></span></div>`:""}</div>${revHtml}</section>`;
+ $("#back").onclick=()=>{S.view="pick";render();window.scrollTo({top:0});};
+ if(!locked){
+  document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{st.pick[b.dataset.s]=+b.dataset.j;document.querySelectorAll(`[data-s="${b.dataset.s}"]`).forEach(x=>x.setAttribute("aria-pressed",x===b));check();});
+  document.querySelectorAll("[data-own]").forEach(t=>t.oninput=()=>{st.own[t.dataset.own]=t.value;check();});
+  document.querySelectorAll("[data-ax]").forEach(b=>b.onclick=()=>{st.ax=+b.dataset.ax;render();});
+  $("#why").oninput=e=>{st.why=e.target.value;check();};$("#miss").oninput=e=>{st.miss=e.target.value;check();};
+  $("#rev").onclick=()=>{const b=$("#rev");if(b.disabled)return;if(ki){st.kiStage="check";render();$(".ki").scrollIntoView({behavior:"smooth",block:"center"});}else{st.rev=true;S.done[i]=true;render();document.querySelector(".reveal").scrollIntoView({behavior:"smooth",block:"start"});}};
+  check();
+ }
+ if(ki&&stage==="check"){
+  document.querySelectorAll("[data-kcheck]").forEach(b=>b.onclick=()=>{st.kcheck=b.dataset.kcheck;document.querySelectorAll("[data-kcheck]").forEach(x=>x.setAttribute("aria-pressed",x===b));});
+  $("#kiprompt").oninput=e=>{st.kiprompt=e.target.value;};
+  $("#askKi").onclick=()=>{if(!st.kcheck||st.kiprompt.trim().length<8){$("#kimsg").textContent="Wähle eine Einschätzung und formuliere eine Rückfrage (mindestens 8 Zeichen).";return;}st.kiStage="answer";render();$(".ki").scrollIntoView({behavior:"smooth",block:"center"});};
+  $("#skipKi").onclick=()=>{st.kiStage="done";st.rev=true;S.done[i]=true;render();document.querySelector(".reveal").scrollIntoView({behavior:"smooth",block:"start"});};
+ }
+ if(ki&&stage==="answer"){
+  $("#kialt").oninput=e=>{st.kialt=e.target.value;};
+  $("#toReveal").onclick=()=>{st.kiStage="done";st.rev=true;S.done[i]=true;render();document.querySelector(".reveal").scrollIntoView({behavior:"smooth",block:"start"});};
+  $("#skipKi").onclick=()=>{st.kiStage="done";st.rev=true;S.done[i]=true;render();document.querySelector(".reveal").scrollIntoView({behavior:"smooth",block:"start"});};
+ }
+ if(rev){$("#oral").oninput=e=>{st.oral=e.target.value;};$("#nextC").onclick=()=>{S.view="pick";render();window.scrollTo({top:0});};}
+ function check(){const need=[];if(!SIDES.every(s=>st.pick[s.k]!==undefined||(st.own[s.k]||"").trim().length>3))need.push("alle vier Seiten");if(!st.ax)need.push("ein Axiom");if(st.why.trim().length<8)need.push("eine Begründung");if(st.miss.trim().length<8)need.push("das mögliche Missverständnis");const b=$("#rev");if(!b)return;b.disabled=need.length>0;$("#msg").textContent=need.length?"Noch offen: "+need.join(", "):"";}
+}
+
+function copyCase(i){
+ const c=C[i],st=S.st[i];
+ const side=k=>{const own=(st.own[k]||"").trim();const p=st.pick[k]!==undefined?c.sides[k][st.pick[k]][0]:"";return own||p;};
+ const L=[`Mein Fall: Fall ${i+1} – ${c.t}`,`Situation: ${c.intro.s}`,`Mein Satz: ${c.lines[c.key][0]}: ${c.lines[c.key][1]}`,"",
+  "Schulz von Thun – die vier Seiten:",`• Sachinhalt: ${side("sach")}`,`• Selbstoffenbarung: ${side("selbst")}`,`• Beziehung: ${side("bez")}`,`• Appell: ${side("app")}`,"",
+  `Watzlawick: Axiom ${st.ax} – ${AX[st.ax].n.s}`,`Warum es passt: ${st.why.trim()}`,"",`Das Missverständnis: ${st.miss.trim()}`];
+ if(st.oral.trim())L.push("",`In eigenen Worten: ${st.oral.trim()}`);
+ if(st.all)L.push("","Hinweis: Die Vier-Seiten-Analyse hat eine KI vorgeschlagen. Meine Erklärung ohne Hilfe: "+st.kiOwn.trim());
+ const t=L.join("\n"),m=$("#cmsg");
+ const fb=()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}a.remove();m.textContent=ok?T(UI.copied):T(UI.blocked);};
+ try{navigator.clipboard.writeText(t).then(()=>m.textContent=T(UI.copied),fb)}catch(e){fb()}
+}
+
+setMode(M);
+</script>
+</body>
+</html>
