@@ -179,6 +179,10 @@ body{font-size:clamp(16px,1.1vw,18px);background:#14231d}
 /* Geöffnete Fenster liegen über den Desktop-Symbolen und bleiben vollständig anklickbar. */
 #win{z-index:2}
 #sticky{z-index:1}
+
+/* Beim Öffnen eines Fensters werden Desktop-Symbole aus dem Weg genommen. */
+#win{z-index:20!important}
+#screen.window-open #icons,#screen.window-open #sticky{visibility:hidden;pointer-events:none}
 </style>
 </head>
 <body>
@@ -366,9 +370,10 @@ function DEC_OF(id){return S.items.find(x=>x.id===id)?.dec;}
 
 function toast(t){const el=$("#toast");el.innerHTML=t;el.classList.remove("off");clearTimeout(toast.h);toast.h=setTimeout(()=>el.classList.add("off"),4200);}
 
-function win(name,html){$("#winName").textContent=name;$("#winBody").innerHTML=html;$("#win").hidden=false;$("#winBody").scrollTop=0;}
-$("#winX").onclick=()=>{$("#win").hidden=true;};
-document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#win").hidden=true;});
+function win(name,html){$("#winName").textContent=name;$("#winBody").innerHTML=html;$("#win").hidden=false;$("#screen").classList.add("window-open");$("#winBody").scrollTop=0;}
+function closeWin(){$("#win").hidden=true;$("#screen").classList.remove("window-open");}
+$("#winX").onclick=closeWin;
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeWin();});
 
 function openCase(backId){
  const v=CASE.views[0];
