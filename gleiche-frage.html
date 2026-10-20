@@ -49,9 +49,12 @@ button:focus-visible,textarea:focus-visible{outline:3px solid var(--pink);outlin
 .side h3{font-size:16px}
 .q{font-weight:600}
 .bot{font-family:var(--mono);font-size:12px;color:var(--muted)}
-.sent{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);padding:9px 11px;font-size:16px;line-height:1.45;font-weight:400;color:var(--ink)}
+.sent{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);padding:10px 12px;font-size:16px;line-height:1.45;font-weight:400;color:var(--ink);box-shadow:0 2px 0 var(--line);transition:box-shadow .18s,transform .18s}
+.sent::after{content:"↗ Antippen zum Markieren";display:block;margin-top:6px;font-size:12px;font-weight:600;color:var(--pink-dark)}
+.sent:hover,.sent:focus-visible{box-shadow:0 4px 12px rgba(36,56,44,.16);transform:translateY(-1px)}
 .sent:disabled{cursor:default}
-.sent[aria-pressed="true"]{background:var(--mark);border-color:var(--mark-line)}
+.sent[aria-pressed="true"]{background:var(--mark);border-color:var(--mark-line);box-shadow:inset 4px 0 0 var(--mark-line),0 2px 0 var(--line)}
+@media(prefers-reduced-motion:reduce){.sent{transition:none}}
 .sent.built{box-shadow:inset 4px 0 0 var(--pink)}
 .step{display:grid;gap:10px;border-top:1px solid var(--line);padding-top:14px}
 .step h3{font-size:17px}

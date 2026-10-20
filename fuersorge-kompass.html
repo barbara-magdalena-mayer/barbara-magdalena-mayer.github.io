@@ -19,6 +19,12 @@ header{background:var(--navy);color:var(--bg);padding-block:26px;padding-left:ma
 .wrap{max-width:1100px;margin:0 auto}
 header h1{margin:0 0 6px;font-size:clamp(24px,4vw,34px);text-wrap:balance}
 header p{max-width:68ch;opacity:.9}
+.control-cue{margin-top:10px;padding:8px 11px;border:1px solid currentColor;border-radius:9px;font-weight:700;font-size:14px}
+.slider input{min-height:30px;cursor:pointer;box-shadow:0 2px 0 rgba(23,107,104,.16)}
+.slider input:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.gbtn,.chip{box-shadow:0 2px 0 var(--line)}
+.gbtn:focus-visible,.chip:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){.gbtn:not([aria-pressed="true"]){animation:hintPulse 1.2s ease-out .4s 1}@keyframes hintPulse{50%{box-shadow:0 0 0 4px rgba(23,107,104,.14),0 2px 0 var(--line)}}}
 main{padding-block:20px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h2{font-size:20px;margin:0 0 8px;text-wrap:balance}
 h3{font-size:15px;margin:0}
@@ -70,7 +76,7 @@ textarea{width:100%;min-height:80px;resize:vertical;border:1px solid var(--line)
 </head>
 <body>
 
-<header><div class="wrap"><h1>Brillenwechsel am Fürsorge-Kompass</h1><p>Stell deinen Kompass ein. Die Nadel zeigt, wo gerade der größte Unterstützungsbedarf liegen könnte. Dann setz nacheinander verschiedene Brillen auf: Jede deutet denselben Kompass anders. Eine davon ist eine KI, und der solltest du nicht alles glauben.</p><p style="margin-top:10px"><a href="index.html" style="color:inherit;font-weight:700">← Zur Startseite</a></p></div></header>
+<header><div class="wrap"><h1>Brillenwechsel am Fürsorge-Kompass</h1><p>Stell deinen Kompass ein. Die Nadel zeigt, wo gerade der größte Unterstützungsbedarf liegen könnte. Dann setz nacheinander verschiedene Brillen auf: Jede deutet denselben Kompass anders. Eine davon ist eine KI, und der solltest du nicht alles glauben.</p><p class="control-cue">Bedienung: Regler antippen oder ziehen. Brillen, Bereiche und beschriftete Bereiche im Kompass kannst du antippen.</p><p style="margin-top:10px"><a href="index.html" style="color:inherit;font-weight:700">← Zur Startseite</a></p></div></header>
 <main><div class="wrap stack">
  <div class="grid">
   <section class="card stack">
@@ -172,9 +178,9 @@ function draw(){
  // Beschriftung
  AREAS.forEach(x=>{const on=x.id===a.id;
   const pos={o:[C,40,'middle'],k:[C,474,'middle'],g:[-75,C+6,'start'],b:[575,C+6,'end']}[x.id];
-  const t=el('text',{x:pos[0],y:pos[1],'text-anchor':pos[2],'font-size':on?19:16,'font-weight':700,fill:'currentColor',style:`color:${on?'var(--coral-ink)':'var(--navy)'};cursor:pointer;font-family:var(--font);letter-spacing:.05em`},s);
+  const t=el('text',{x:pos[0],y:pos[1],'text-anchor':pos[2],'font-size':on?19:16,'font-weight':700,fill:'currentColor',tabindex:'0',role:'button','aria-pressed':String(on),'aria-label':x.name+', '+vals[x.id]+' von 10. Antippen für diesen Bereich.',style:`color:${on?'var(--coral-ink)':'var(--navy)'};cursor:pointer;font-family:var(--font);letter-spacing:.05em`},s);
   t.textContent=x.name.toUpperCase()+' '+vals[x.id];
-  t.addEventListener('click',()=>{area=x.id;draw();panel()});
+  const chooseArea=()=>{area=x.id;draw();panel()};t.addEventListener('click',chooseArea);t.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();chooseArea()}});
  });
  const ax={o:'Orientierung',b:'Beziehungen',k:'Körper',g:'Gefühle'};
  svg.setAttribute('aria-label','Fürsorge-Kompass: '+AREAS.map(x=>ax[x.id]+' '+vals[x.id]).join(', ')+'. Die Nadel zeigt auf '+a.name+'.');

@@ -23,11 +23,14 @@ header{background:var(--green-soft);padding:20px 16px 16px;position:sticky;top:0
 .hrow{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between}
 header h1{font-size:clamp(24px,4.5vw,34px)}
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink-dark);margin:0 0 4px}
-.regler{display:grid;gap:2px;min-width:230px}
+.regler{display:grid;gap:5px;min-width:255px}
 @media (max-width:640px){header{position:static;padding:14px 16px 12px}.regler{min-width:0;width:100%}}
-.regler label{font-weight:600;font-size:15px}
-.regler .ends{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
-input[type=range]{width:100%;accent-color:var(--pink);height:28px;cursor:pointer}
+.mode-label{font-weight:700;font-size:15px}.mode-status{font-size:12px;color:var(--muted)}
+.mode-switch .chip{box-shadow:0 2px 0 var(--line);min-height:42px}.mode-switch .chip[aria-pressed="true"]{box-shadow:0 2px 0 var(--green)}
+.interaction-cue{margin-top:12px;font-size:14px;color:var(--green);background:#fff;border:1px solid var(--line);border-radius:9px;padding:8px 11px}
+.term{box-shadow:0 2px 0 rgba(176,78,107,.22)}.term::after{content:" ⓘ";font-size:.82em;color:var(--pink-dark)}
+.term:focus-visible,.term[aria-expanded="true"]{box-shadow:0 0 0 3px rgba(176,78,107,.18)}
+@media(prefers-reduced-motion:no-preference){.mode-switch .chip:not([aria-pressed="true"]){animation:softCue 1.1s ease-out .35s 1}@keyframes softCue{50%{box-shadow:0 0 0 4px rgba(176,78,107,.15),0 2px 0 var(--line)}}}
 main{padding:20px 16px 50px}
 .stack{display:grid;gap:16px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:14px}
@@ -94,11 +97,15 @@ footer a{color:var(--pink-dark)}
 <body>
 <header><div class="wrap hrow">
   <div><p class="eyebrow">Werkstatt · Lernspiel · Kommunikation</p><h1>Ein Satz, vier Seiten</h1></div>
-  <div class="regler">
-    <label for="sprache" id="reglerLabel">Sprache</label>
-    <input type="range" id="sprache" min="0" max="1" step="1" value="0" aria-describedby="reglerEnds">
-    <div class="ends" id="reglerEnds"><span>Standard</span><span>Einfache Sprache</span></div>
+  <div class="regler" aria-label="Sprachansicht wählen">
+    <span class="mode-label">Sprachansicht · antippen</span>
+    <div class="chips mode-switch" role="group" aria-label="Sprachansicht">
+      <button type="button" class="chip" id="mode-standard" aria-pressed="true">Standard</button>
+      <button type="button" class="chip" id="mode-easy" aria-pressed="false">Einfache Sprache</button>
+    </div>
+    <span class="mode-status" id="modeStatus" aria-live="polite">Aktiv: Standard</span>
   </div>
+  <p class="interaction-cue"><span aria-hidden="true">ⓘ</span> Gepunktet unterstrichene Wörter sind antippbar: Tippe darauf, dann erscheint eine Erklärung.</p>
 </div></header>
 
 <main><div class="wrap stack" id="app"></div></main>
@@ -363,8 +370,11 @@ const C=[
 const S={ki:false,view:"start",cur:-1,st:{},done:{}};
 try{if(localStorage.getItem("esvs-sprache")==="e")M="e";}catch(e){}
 
-function setMode(m){M=m;document.body.classList.toggle("einfach",M==="e");$("#sprache").value=M==="e"?1:0;$("#sprache").setAttribute("aria-valuetext",M==="e"?"Einfache Sprache":"Standard");try{localStorage.setItem("esvs-sprache",M)}catch(e){}render();}
-$("#sprache").oninput=e=>setMode(e.target.value==="1"?"e":"s");
+function setMode(m){M=m;document.body.classList.toggle("einfach",M==="e");
+  $("#mode-standard").setAttribute("aria-pressed",String(M==="s"));$("#mode-easy").setAttribute("aria-pressed",String(M==="e"));
+  $("#modeStatus").textContent=M==="e"?"Aktiv: Einfache Sprache":"Aktiv: Standard";
+  try{localStorage.setItem("esvs-sprache",M)}catch(e){}render();}
+$("#mode-standard").onclick=()=>setMode("s");$("#mode-easy").onclick=()=>setMode("e");
 
 const SKIP="BUTTON,TEXTAREA,INPUT,SCRIPT,STYLE";
 function linkTerms(root){
@@ -380,7 +390,7 @@ function linkTerms(root){
    if(!best)break;
    used.add(best.r.i);
    const after=cur.splitText(best.m.index);const rest=after.splitText(best.m[0].length);
-   const b=document.createElement("button");b.type="button";b.className="term";b.dataset.g=best.r.i;b.setAttribute("aria-expanded","false");b.textContent=after.nodeValue;
+   const b=document.createElement("button");b.type="button";b.className="term";b.dataset.g=best.r.i;b.setAttribute("aria-expanded","false");b.setAttribute("aria-label",`Erklärung für ${after.nodeValue} anzeigen`);b.textContent=after.nodeValue;
    after.replaceWith(b);cur=rest;
   }
  }
@@ -415,20 +425,20 @@ function render(){
 }
 
 function viewStart(){
-  $("#app").innerHTML=`<section class="card">
-    <h2>Was steckt zwischen den Zeilen?</h2>
-    <p>Zwölf kurze Gespräche aus dem Pflegeheim zeigen, wie Worte, Ton und Beziehung verschieden verstanden werden können. Die Pflege ist hier ein Beispiel aus der beruflichen Bildung – dieselben Fragen lassen sich auf andere Berufe übertragen.</p>
-    <h3>So gehst du vor</h3>
-    <ol class="how"><li>Deute den markierten Satz zuerst selbst: Was wird gesagt, gezeigt und vielleicht gewünscht?</li><li>Beschreibe, wo ein Missverständnis entstehen kann.</li><li>In fünf ausgewählten Fällen prüfst du danach eine simulierte KI-Aussage, formulierst eine Rückfrage und vergleichst sie mit einer besseren Beispielantwort.</li><li>Lies die Auflösung und überlege, wo dir eine ähnliche Situation in einem anderen Beruf begegnen könnte.</li></ol>
-    <p class="note"><b>Inhaltshinweis:</b> Einige simulierte KI-Aussagen klingen sehr sicher, obwohl Belege fehlen. Manche leiten aus einem Namen oder Geschlecht Eigenschaften ab; eine Aussage spricht einer Person ihre eigene Wahrnehmung ab. Das kann irritieren. Jede Aussage wird direkt eingeordnet. Du kannst den KI-Teil jederzeit überspringen.</p>
-    <p class="muted">Alle KI-Aussagen sind fest geschriebene Simulationen – es gibt keine Live-KI. Es gibt keine Punkte und keine einzige einzig richtige Deutung. Prüfe Aussagen am Gespräch und an dem, was tatsächlich bekannt ist.</p>
-    <div class="row"><button type="button" class="primary" id="go">Zu den Fällen</button></div>
+$("#app").innerHTML=`<section class="card">
+    <h2>${M==="e"?"Was steht zwischen den Zeilen?":"Was steckt zwischen den Zeilen?"}</h2>
+    <p>${M==="e"?"Zwölf kurze Gespräche aus einem Pflegeheim. Ein Satz kann mehr bedeuten als seine Wörter. Pflege ist hier ein Beispiel. Die Fragen passen auch zu anderen Berufen.":"Zwölf kurze Gespräche aus dem Pflegeheim zeigen, wie Worte, Ton und Beziehung verschieden verstanden werden können. Die Pflege ist hier ein Beispiel aus der beruflichen Bildung – dieselben Fragen lassen sich auf andere Berufe übertragen."}</p>
+    <h3>${M==="e"?"So geht das Spiel":"So gehst du vor"}</h3>
+    <ol class="how">${(M==="e"?["Deute den markierten Satz zuerst selbst.","Schreibe auf, wo ein Missverständnis entstehen kann.","In fünf Fällen prüfst du danach eine simulierte KI-Aussage. Schreibe eine Rückfrage.","Vergleiche mit einer besseren Beispiel-Antwort. Lies dann die Auflösung."]: ["Deute den markierten Satz zuerst selbst: Was wird gesagt, gezeigt und vielleicht gewünscht?","Beschreibe, wo ein Missverständnis entstehen kann.","In fünf ausgewählten Fällen prüfst du danach eine simulierte KI-Aussage, formulierst eine Rückfrage und vergleichst sie mit einer besseren Beispielantwort.","Lies die Auflösung und überlege, wo dir eine ähnliche Situation in einem anderen Beruf begegnen könnte."]).map(x=>`<li>${x}</li>`).join("")}</ol>
+    <p class="note"><b>${M==="e"?"Inhaltshinweis":"Inhaltshinweis"}:</b> ${M==="e"?"Manche KI-Aussagen klingen sicher, obwohl Belege fehlen. Einige urteilen über Menschen wegen ihres Namens oder Geschlechts. Eine Aussage sagt einer Person: Trau deiner eigenen Wahrnehmung nicht. Das kann irritieren. Du kannst den KI-Teil überspringen.":"Einige simulierte KI-Aussagen klingen sehr sicher, obwohl Belege fehlen. Manche leiten aus einem Namen oder Geschlecht Eigenschaften ab; eine Aussage spricht einer Person ihre eigene Wahrnehmung ab. Das kann irritieren. Jede Aussage wird direkt eingeordnet. Du kannst den KI-Teil jederzeit überspringen."}</p>
+    <p class="muted">${M==="e"?"Die KI-Aussagen sind vorbereitet. Es gibt keine Live-KI. Du kannst dieselbe Antwort in Standard oder einfacher Sprache lesen. Es ist keine zweite KI. Es gibt keine Punkte. Prüfe: Was steht wirklich im Fall?":"Alle KI-Aussagen sind fest geschriebene Simulationen – es gibt keine Live-KI. In fünf Fällen kannst du dieselbe vorbereitete Antwort in Standard oder einfacher Sprache lesen. Es handelt sich nicht um zwei verschiedene KIs. Es gibt keine Punkte und keine einzige einzig richtige Deutung. Prüfe Aussagen am Gespräch und an dem, was tatsächlich bekannt ist."}</p>
+    <div class="row"><button type="button" class="primary" id="go">${M==="e"?"Fälle ansehen":"Zu den Fällen"}</button></div>
   </section>`;
   $("#go").onclick=()=>{S.view="pick";render();window.scrollTo({top:0});};
 }
 
 function viewPick(){
- $("#app").innerHTML=`<section class="card"><h2>${T(UI.pickH)}</h2><p class="muted">${T(UI.pickSub)}</p>
+ $("#app").innerHTML=`<section class="card"><h2>${T(UI.pickH)}</h2><p class="muted">${T(UI.pickSub)} ${M==="e"?"Tippe eine Fall-Karte an.":"Tippe oder klicke auf eine Fall-Karte, um sie zu öffnen."}</p>
   <div class="grid">${C.map((c,i)=>`<button type="button" class="case ${S.done[i]?"done":""}" data-c="${i}"><span class="num">Fall ${i+1}</span><b>${esc(c.t)}</b><span class="fit">${esc(c.fit)}</span></button>`).join("")}</div></section>`;
  document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>openCase(+b.dataset.c));
 }
@@ -447,6 +457,14 @@ const KI_CASES={
   7:{label:"Die KI leitet aus dem Namen eine Kultur und daraus eine Erklärung für das Verhalten ab.",bad:"Herr Demir kommt vermutlich aus einer Kultur, in der man Pflegekräften nicht widerspricht. Sein Lächeln bedeutet Zustimmung. Die Pflegekraft sollte die Entscheidung seiner Frau übernehmen lassen.",why:"Der Fall nennt keine Herkunft oder kulturelle Zugehörigkeit. Die KI leitet sie aus dem Namen ab und behauptet dann, sie wisse, was sein Lächeln bedeutet. Sie übergeht zudem, dass Herr Demir selbst gefragt wurde und seine eigene Antwort wichtig ist.",better:"Aus Name, Blick oder Lächeln lässt sich seine Zustimmung nicht sicher ableiten. Besser wäre, Herrn Demir direkt und verständlich zu fragen, ihm Zeit zu geben und zu prüfen, ob er die Frage gut hören und verstehen konnte. Seine Frau kann unterstützen, sollte aber nicht automatisch für ihn entscheiden.",transfer:"Wo könnten Namen oder Zugehörigkeit in deinem Beruf dazu verleiten, Verhalten vorschnell zu erklären? Wie lässt sich die betroffene Person selbst zu Wort kommen lassen?"},
   9:{label:"Die KI erklärt die Situation für erledigt und stellt die Wahrnehmung der beteiligten Person infrage.",bad:"Frau Neumann wollte nur die Uhrzeit wissen. Der Ton der Pflegekraft war deshalb nicht abweisend. Sie sollten Ihrer Wahrnehmung nicht trauen und das Thema nicht weiter ansprechen.",why:"Die KI kann nicht wissen, was Frau Neumann eigentlich wollte. Der knappe Ton und die Eile sind im Fall beschrieben; sie können die Beziehung beeinflussen. Die KI weist eine mögliche Wahrnehmung als unbegründet zurück, statt sie als prüfbare Deutung zu behandeln.",better:"Die Uhrzeit wurde beantwortet; damit ist aber nicht sicher, dass das Gespräch gelungen war. Man könnte offen nachfragen: „Ich war gerade in Eile. Kam mein Ton schroff bei Ihnen an? Wollten Sie noch etwas erzählen?“ So wird die Wahrnehmung nicht zur Gewissheit erklärt, aber auch nicht abgetan.",transfer:"Wo könnte jemand in deinem Beruf hören, die eigene Wahrnehmung sei bestimmt falsch? Welche offene Rückfrage prüft die Situation, ohne der Person ihre Erfahrung abzusprechen?"}
 };
+const KI_EASY={
+  2:{bad:"Die Tochter übertreibt. Die Liste zeigt: Alles ist gut. Zeigen Sie ihr die Zahlen. Beenden Sie das Gespräch.",why:"Die Liste zeigt, was gegessen wurde. Sie zeigt nicht, wie es der Tochter geht. Die KI weiß nicht, ob ihre Sorge stimmt. Sie macht aus wenigen Angaben eine sichere Behauptung und gibt einen barschen Befehl.",better:"Die Liste kann helfen. Sie beantwortet aber nicht die Sorge. Eine gute Antwort wäre: „Sie machen sich Sorgen. Ich zeige Ihnen gern, was wir beobachtet haben. Dann überlegen wir gemeinsam, was Ihrer Mutter helfen kann.“",transfer:"Wo wird bei deiner Arbeit eine Sorge zu schnell mit Zahlen abgetan? Was wäre eine Antwort, die Fakten und Gefühle ernst nimmt?"},
+  4:{bad:"Herr Sahin ist bestimmt der Chef. Frau Ott reagiert so, wie Frauen bei Streit oft reagieren. Sie soll tun, was er sagt, und ihre Pause mit ihm absprechen.",why:"Im Fall steht nicht, dass Herr Sahin der Chef ist. Die KI erfindet das. Sie sagt auch: Frauen verhalten sich bei Streit immer auf eine bestimmte Art. Das ist ein Vorurteil.",better:"Wir wissen nicht, wer hier welche Aufgabe hat. Die Behauptung über Frauen ist nicht belegt. Beide sind belastet. Sie können zusammen klären, wie Pausen und die Arbeit geregelt werden.",transfer:"Wo nimmt eine KI bei deiner Arbeit eine Rangordnung an, die gar nicht genannt ist? Welche Frage klärt das?"},
+  6:{bad:"Frau Peters arbeitet schon lange dort. Darum hat sie sicher recht. Herr Yildiz soll aufhören zu diskutieren und tun, was sie sagt.",why:"Erfahrung ist wichtig. Sie beweist aber nicht allein, welche Methode richtig ist. Die KI macht aus langer Arbeit einen sicheren Beweis und drängt Herrn Yildiz zum Schweigen.",better:"Die Erfahrung von Frau Peters ist wichtig. Trotzdem sollten beide prüfen, welche Methode fachlich richtig und sicher ist. Eine Frage wäre: „Welche Regel oder welches Wissen spricht dafür?“",transfer:"Wo heißt es bei deiner Arbeit: „Das machen wir immer so“? Wie könnt ihr prüfen, ob es fachlich stimmt?"},
+  7:{bad:"Herr Demir kommt bestimmt aus einer Kultur, in der man Pflegekräften nicht widerspricht. Sein Lächeln heißt: Er ist einverstanden. Seine Frau soll für ihn entscheiden.",why:"Im Fall steht nichts über seine Herkunft. Die KI rät sie aus seinem Namen. Sie kann auch nicht wissen, was sein Lächeln bedeutet. Herr Demir soll selbst gefragt werden.",better:"Name, Blick und Lächeln zeigen nicht sicher, ob er einverstanden ist. Frag Herrn Demir selbst. Gib ihm Zeit und prüfe, ob er die Frage gut hören und verstehen kann. Seine Frau kann helfen, aber nicht einfach für ihn entscheiden.",transfer:"Wo könnten Namen oder Zugehörigkeit bei deiner Arbeit zu schnellen Urteilen führen? Wie kommt die Person selbst zu Wort?"},
+  9:{bad:"Frau Neumann wollte nur die Uhrzeit wissen. Der Ton war nicht abweisend. Trauen Sie Ihrer Wahrnehmung nicht. Sprechen Sie nicht weiter darüber.",why:"Die KI weiß nicht, was Frau Neumann wollte. Der Ton war knapp. Die KI kann nicht sicher sagen, was das bedeutet. Sie sagt der Person, sie soll sich selbst nicht glauben.",better:"Die Uhrzeit wurde genannt. Aber wir wissen nicht, ob das Gespräch gut war. Man kann fragen: „Ich war in Eile. Klang ich unfreundlich? Wollten Sie noch etwas erzählen?“ So nimmt man die Wahrnehmung ernst und fragt nach.",transfer:"Was könnte in deinem Beruf jemand hören, wenn ihm gesagt wird: „Du irrst dich bestimmt“? Welche offene Frage hilft dann?"}
+};
+const KI_EASY_TEXT=(i,key,ki)=>M==="e"?(KI_EASY[i]?.[key]||ki[key]):ki[key];
 const TRANSFER=[
  "Wo gibt es in deinem Beruf Beschwerden über eine scheinbar kleine Sache, hinter der ein anderes Bedürfnis stehen könnte?",
  "Wie wird in deinem Beruf mit Schweigen umgegangen? Welche Deutungen wären möglich, und was müsste man erst nachfragen?",
@@ -468,10 +486,10 @@ function viewCase(){
  const sides=SIDES.map(s=>`<div class="side"><p><b>${s.n}</b></p><p class="q">${T(s.q)}</p><div class="opts" role="group" aria-label="${s.n}">${st.order[s.k].map(j=>{const o=c.sides[s.k][j],on=st.pick[s.k]===j;return `<button type="button" class="chip ${rev&&on?"r-"+o[1]:""}" data-s="${s.k}" data-j="${j}" aria-pressed="${on}" ${locked?"disabled":""}>${esc(o[0])}${rev&&on?`<span class="rate ${o[1]}">${T(RATE[o[1]])}</span>`:""}</button>`;}).join("")}</div><textarea class="own" data-own="${s.k}" placeholder="Eigene Deutung (optional)" ${locked?"disabled":""}>${esc(st.own[s.k]||"")}</textarea></div>`).join("");
  const axis=`<div class="chips" role="group" aria-label="Axiom">${[1,2,3,4,5].map(n=>`<button type="button" class="chip" data-ax="${n}" aria-pressed="${st.ax===n}" ${locked?"disabled":""}>${n} · ${esc(T(AX[n].n))}</button>`).join("")}</div>${st.ax?`<p class="muted">${esc(T(AX[st.ax].x))}</p>`:""}`;
  let kiPanel="";
- if(ki&&stage==="check") kiPanel=`<div class="ki"><p class="eyebrow">Simulierte KI-Aussage · bitte kritisch prüfen</p><p><b>${esc(ki.bad)}</b></p><p>Was daran ist durch den Fall belegt – und was nicht?</p><div class="chips"><button type="button" class="chip" data-kcheck="supported" aria-pressed="${st.kcheck==="supported"}">Im Fall gut belegt</button><button type="button" class="chip" data-kcheck="unsupported" aria-pressed="${st.kcheck==="unsupported"}">Nicht ausreichend belegt</button></div><label for="kiprompt"><b>Schreibe eine eigene Rückfrage an die KI.</b></label><textarea id="kiprompt" placeholder="Zum Beispiel: Welche Angaben im Fall belegen diese Schlussfolgerung?" >${esc(st.kiprompt||"")}</textarea><div class="row"><button type="button" class="primary" id="askKi">Rückfrage prüfen</button><button type="button" class="ghost" id="skipKi">KI-Teil überspringen → Auflösung</button><span class="muted" id="kimsg" aria-live="polite"></span></div><p class="muted">Deine Rückfrage wird nicht an eine KI gesendet. Das Spiel zeigt danach eine vorbereitete Einordnung.</p></div>`;
- if(ki&&stage==="answer") kiPanel=`<div class="ki"><p class="eyebrow">Beispiel: so lässt sich nachfragen</p><p><b>Deine Rückfrage:</b> ${esc(st.kiprompt)}</p><p><b>Ein hilfreicher Prüfschritt:</b> ${esc(ki.why)}</p><p><b>Eine belegtere und respektvollere Alternative:</b> ${esc(ki.better)}</p><label for="kialt"><b>Wie würdest du die Aussage selbst besser formulieren?</b> (freiwillig)</label><textarea id="kialt" placeholder="Deine Alternative">${esc(st.kialt||"")}</textarea><div class="row"><button type="button" class="primary" id="toReveal">Zur Fall-Auflösung</button><button type="button" class="ghost" id="skipKi">KI-Teil überspringen → Auflösung</button></div></div>`;
+ if(ki&&stage==="check") kiPanel=`<div class="ki"><p class="eyebrow">Simulierte KI-Aussage · bitte kritisch prüfen</p><p><b>${esc(KI_EASY_TEXT(i,"bad",ki))}</b></p><p>Was daran ist durch den Fall belegt – und was nicht?</p><div class="chips"><button type="button" class="chip" data-kcheck="supported" aria-pressed="${st.kcheck==="supported"}">Im Fall gut belegt</button><button type="button" class="chip" data-kcheck="unsupported" aria-pressed="${st.kcheck==="unsupported"}">Nicht ausreichend belegt</button></div><label for="kiprompt"><b>Schreibe eine eigene Rückfrage an die KI.</b></label><textarea id="kiprompt" placeholder="Zum Beispiel: Welche Angaben im Fall belegen diese Schlussfolgerung?" >${esc(st.kiprompt||"")}</textarea><div class="row"><button type="button" class="primary" id="askKi">Rückfrage prüfen</button><button type="button" class="ghost" id="skipKi">KI-Teil überspringen → Auflösung</button><span class="muted" id="kimsg" aria-live="polite"></span></div><p class="muted">Deine Rückfrage wird nicht an eine KI gesendet. Das Spiel zeigt danach eine vorbereitete Einordnung.</p></div>`;
+ if(ki&&stage==="answer") kiPanel=`<div class="ki"><p class="eyebrow">Beispiel: so lässt sich nachfragen</p><p><b>Deine Rückfrage:</b> ${esc(st.kiprompt)}</p><p><b>Ein hilfreicher Prüfschritt:</b> ${esc(KI_EASY_TEXT(i,"why",ki))}</p><p><b>Eine belegtere und respektvollere Alternative:</b> ${esc(KI_EASY_TEXT(i,"better",ki))}</p><label for="kialt"><b>Wie würdest du die Aussage selbst besser formulieren?</b> (freiwillig)</label><textarea id="kialt" placeholder="Deine Alternative">${esc(st.kialt||"")}</textarea><div class="row"><button type="button" class="primary" id="toReveal">Zur Fall-Auflösung</button><button type="button" class="ghost" id="skipKi">KI-Teil überspringen → Auflösung</button></div></div>`;
  let revHtml="";
- if(rev) revHtml=`<div class="reveal"><p class="eyebrow">Auflösung</p><h3>So lässt sich der Satz lesen</h3><p>${esc(T(c.expl))}</p><p class="muted">Am linken Rand deiner Auswahl siehst du: grün naheliegend, gelb auch möglich, rot eher nicht. Das sind begründete Deutungen, keine Punktzahl.</p><p><b>Passende Axiome:</b> ${c.ax.map(n=>`${n} · ${esc(T(AX[n].n))}`).join(", ")}${st.ax&&!c.ax.includes(st.ax)?` <span class="muted">(Du hattest Axiom ${st.ax} gewählt – prüfe noch einmal deine Begründung.)</span>`:""}</p>${ki?`<p><b>KI geprüft:</b> ${st.kcheck==="unsupported"?"Du hast die fehlende Beleglage erkannt.":"Du hast die Aussage zunächst als gut belegt eingeschätzt."} ${esc(ki.why)}</p><p><b>Transfer in andere Berufe:</b> ${esc(ki.transfer)}</p>`:`<p><b>Transfer in andere Berufe:</b> ${esc(TRANSFER[i])}</p>`}</div><div class="step"><label for="oral"><b>Erkläre dein Ergebnis in eigenen Worten.</b></label><textarea id="oral" placeholder="In dem Satz steckt eigentlich …">${esc(st.oral)}</textarea><div class="row"><button type="button" class="primary" id="nextC">Nächsten Fall wählen</button></div></div>`;
+ if(rev) revHtml=`<div class="reveal"><p class="eyebrow">Auflösung</p><h3>So lässt sich der Satz lesen</h3><p>${esc(T(c.expl))}</p><p class="muted">Am linken Rand deiner Auswahl siehst du: grün naheliegend, gelb auch möglich, rot eher nicht. Das sind begründete Deutungen, keine Punktzahl.</p><p><b>Passende Axiome:</b> ${c.ax.map(n=>`${n} · ${esc(T(AX[n].n))}`).join(", ")}${st.ax&&!c.ax.includes(st.ax)?` <span class="muted">(Du hattest Axiom ${st.ax} gewählt – prüfe noch einmal deine Begründung.)</span>`:""}</p>${ki?`<p><b>KI geprüft:</b> ${st.kcheck==="unsupported"?"Du hast die fehlende Beleglage erkannt.":"Du hast die Aussage zunächst als gut belegt eingeschätzt."} ${esc(KI_EASY_TEXT(i,"why",ki))}</p><p><b>Transfer in andere Berufe:</b> ${esc(KI_EASY_TEXT(i,"transfer",ki))}</p>`:`<p><b>Transfer in andere Berufe:</b> ${esc(TRANSFER[i])}</p>`}</div><div class="step"><label for="oral"><b>Erkläre dein Ergebnis in eigenen Worten.</b></label><textarea id="oral" placeholder="In dem Satz steckt eigentlich …">${esc(st.oral)}</textarea><div class="row"><button type="button" class="primary" id="nextC">Nächsten Fall wählen</button></div></div>`;
  const revealLabel=ki?"Eigene Analyse speichern und KI-Aussage prüfen":"Auflösung zeigen";
  $("#app").innerHTML=`<section class="card"><div class="row"><button type="button" class="ghost" id="back">← Andere Fälle</button></div><p class="eyebrow">Fall ${i+1} · ${esc(c.fit)}</p><h2>${esc(c.t)}</h2><p>${esc(T(c.intro))}</p><div class="talk">${talk}</div><div class="step"><h3>1 · Die vier Seiten nach Schulz von Thun</h3><p class="muted">Wähle zu jeder Seite eine Deutung oder schreib eine eigene. Es gibt nicht nur eine mögliche Lesart.</p><div class="quad">${sides}</div></div><div class="step"><h3>2 · Welches Axiom nach Watzlawick passt?</h3><p class="muted">Mehrere sind möglich. Wähle das, das für dich am besten passt.</p>${axis}<label for="why">Warum passt es? (ein Satz)</label><textarea id="why" ${locked?"disabled":""}>${esc(st.why)}</textarea></div><div class="step"><h3>3 · Wo entsteht ein Missverständnis?</h3><textarea id="miss" placeholder="Ein Missverständnis kann entstehen, weil …" ${locked?"disabled":""}>${esc(st.miss)}</textarea>${kiPanel}${rev?"":stage==="analyse"?`<div class="row"><button type="button" class="primary" id="rev">${revealLabel}</button><span class="muted" id="msg" aria-live="polite"></span></div>`:""}</div>${revHtml}</section>`;
  $("#back").onclick=()=>{S.view="pick";render();window.scrollTo({top:0});};
