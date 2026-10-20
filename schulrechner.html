@@ -171,6 +171,10 @@ body{font-size:clamp(16px,1.1vw,18px);background:#14231d}
 }
 @media (prefers-reduced-motion:reduce){#win,.ico,.primary,.chip,.item{animation:none;transition:none}}
 
+
+.risk-item[aria-pressed="true"]{background:var(--pink-soft);border-color:var(--pink)}
+.risk-item[aria-pressed="true"] .dotn{background:var(--pink)}
+.risk-item.done{transform:translateX(2px)}
 </style>
 </head>
 <body>
@@ -204,6 +208,7 @@ body{font-size:clamp(16px,1.1vw,18px);background:#14231d}
       <li>Öffne Posteingang und Schulchat. Neue Nachrichten erkennst du am pinken Punkt.</li>
       <li>Entscheide, wie du reagierst, und begründe es in einem Satz. Jede Entscheidung wird ein Baustein deiner Regeln.</li>
       <li>Wenn der Tag erledigt ist, geht es mit „Feierabend“ weiter.</li>
+      <li>Öffne die Fallakte: Vergleiche drei Perspektiven, markiere Risiken und baue einen Regelbaustein.</li>
     </ul>
     <p>Es gibt keine Punkte und kein Richtig oder Falsch. Jeder Weg hat ein Plus und einen Preis.</p>
     <div class="decide" style="border:0;padding:0">
@@ -233,7 +238,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const DAYS=["Montag","Dienstag","Mittwoch","Donnerstag","Freitag"];
 const TIME=["07:48","13:15","09:40","11:05","14:30"];
-const S={net:"zu",ki:true,day:0,items:[],dec:{},kiAsked:{},trash:false,browser:false,found:new Set()};
+const S={net:"zu",ki:true,day:0,items:[],dec:{},kiAsked:{},trash:false,browser:false,caseDone:false,riskScore:0,ruleChoice:[],found:new Set()};
 const KI_LIMIT_DAY=3;
 
 const DEC={
@@ -293,6 +298,28 @@ DOCS.klausur={titel:"Klausur_Kommunikation_KI.docx",head:"Klausur: Kommunikation
   {t:"Gesamtpunktzahl: 16 Punkte · Bearbeitungszeit: 45 Minuten",c:"Die Punkte stimmen nicht: 4 + 1 + 6 + 4 ergibt 15, nicht 16. KI rechnet in solchen Zusammenstellungen oft falsch."}]};
 const CLUES=Object.values(DOCS).reduce((n,d)=>n+d.parts.filter(p=>p.c).length,0);
 
+const CASE={
+ titel:"Fallakte: KI im Praxisbericht",
+ intro:"Drei Personen schildern denselben Vorfall. Lies alle Perspektiven, markiere die riskanten Aussagen und stelle danach einen Regelbaustein zusammen.",
+ views:[
+  {id:"lernende",name:"Mia · Auszubildende",role:"Lernende",text:"Ich wollte meinen Praxisbericht sprachlich verbessern. Die KI hat sofort geholfen. Den Namen der Bewohnerin habe ich erst später bemerkt. Ich dachte, wenn ich ihn lösche, ist alles anonym.",items:[
+   {t:"Die KI hat sofort geholfen.",risk:false,why:"Eine hilfreiche Antwort ist noch kein Beleg für einen sicheren Umgang."},
+   {t:"Im Bericht stand der Name einer Bewohnerin.",risk:true,why:"Personenbezogene Daten gehören nicht in öffentliche KI-Systeme."},
+   {t:"Namen löschen macht einen Bericht immer anonym.",risk:true,why:"Auch Angaben zu Alter, Datum, Zimmer oder Situation können eine Person erkennbar machen."}]},
+  {id:"kollegium",name:"Frau Lenz · Kollegin",role:"Kollegium",text:"Ich finde, wir sollten solche Versuche nicht dramatisieren. Mia wollte nur lernen. Wenn wir jede Unsicherheit melden, traut sich bald niemand mehr, KI auszuprobieren.",items:[
+   {t:"Mia wollte lernen.",risk:false,why:"Die Absicht erklärt den Vorfall, hebt die Verantwortung aber nicht auf."},
+   {t:"Wir sollten die Unsicherheit nicht melden.",risk:true,why:"Nur wenn Vorfälle besprochen werden, kann die Schule daraus lernen und schützen."},
+   {t:"Eine klare Grenze hilft beim Ausprobieren.",risk:false,why:"Regeln können Nutzung ermöglichen, wenn sie verständlich und besprechbar sind."}]},
+  {id:"betrieb",name:"Herr Kaya · Ausbildungsbetrieb",role:"Ausbildungsbetrieb",text:"Bei uns gelten eigene Regeln für Bewohnerdaten. Wir müssen wissen, was in der Schule erlaubt ist, sonst bekommt Mia an zwei Lernorten widersprüchliche Hinweise.",items:[
+   {t:"Im Betrieb gelten eigene Regeln für Bewohnerdaten.",risk:false,why:"Praxisbetriebe können zusätzliche Schutzvorgaben haben."},
+   {t:"Schule und Betrieb müssen nichts abstimmen.",risk:true,why:"Gemeinsame Absprachen verhindern widersprüchliche Erwartungen."},
+   {t:"Die Lernende braucht eine klare, gemeinsame Orientierung.",risk:false,why:"Eine verständliche Regel unterstützt Lernen an beiden Lernorten."}]}
+ ],rules:[
+  {id:"schutz",t:"Keine echten Personen- oder Falldaten in öffentliche KI-Systeme eingeben.",tag:"Datenschutz"},
+  {id:"melden",t:"Unsicherheiten und Fehler werden angesprochen, nicht verschwiegen.",tag:"Lernkultur"},
+  {id:"praxis",t:"Schule und Ausbildungsbetrieb klären Regeln für gemeinsame Lernaufgaben.",tag:"Praxis"}
+]};
+
 function dayItems(d){
  const zu=S.net==="zu";
  return [
@@ -300,7 +327,8 @@ function dayItems(d){
    {id:"it",app:"mail",from:"IT-Abteilung des Trägers",subj:zu?"Sperrung von KI-Seiten im Schulnetz":"Hinweis zur Nutzung von KI-Seiten",body:zu?["Aus Gründen der Informationssicherheit sind KI-Chatbots im Netz des Trägers ab sofort gesperrt.","Ausnahmen sind über einen Antrag möglich."]:["KI-Seiten sind im Schulnetz erreichbar. Wir weisen darauf hin, dass alle Eingaben bei externen Anbietern gespeichert werden können.","Bitte beachten Sie den Datenschutz."],dec:"zugang"}],
   [{id:"mia",app:"chat",from:"Mia (Auszubildende)",chat:["Hallo, darf ich kurz was fragen?","Ich habe meinen Praxisbericht in ChatGPT kopiert, damit er besser klingt. Da stand aber noch der Name von der Bewohnerin drin. Ist das schlimm? 😬"],dec:"daten"}],
   [{id:"berg",app:"mail",from:"Frau Berg (Kollegin)",subj:"Hausarbeit von Tim",body:["Hallo,","die Hausarbeit von Tim ist auffällig glatt, kein einziger Fehler, und so redet er sonst nicht. Ich würde sie gern mit einem KI-Detektor prüfen und bei einem Treffer mit ungenügend bewerten. Wie siehst du das? Das sollte doch in die Regeln.","Die Arbeit hängt an. Schau sie dir vorher gern selbst an."],dec:"pruefung",doc:"tim"}],
-  [{id:"kaya",app:"mail",from:"Herr Kaya (Praxisanleitung)",subj:"Lernaufgabe mit KI?",body:["Guten Tag,","ein Auszubildender hat seine Arbeits- und Lernaufgabe offenbar mit KI geschrieben. Bei uns im Betrieb gibt es dazu keine Regel. Ist das bei Ihnen erlaubt? Was soll ich ihm sagen?","Freundliche Grüße"],dec:"praxis"},
+  [{id:"fallakte",app:"case",from:"Fallakte",subj:"Drei Perspektiven auf einen KI-Vorfall",body:["Eine neue Fallakte wartet auf dich.","Vergleiche Lernende, Kollegium und Ausbildungsbetrieb."],case:true},
+   {id:"kaya",app:"mail",from:"Herr Kaya (Praxisanleitung)",subj:"Lernaufgabe mit KI?",body:["Guten Tag,","ein Auszubildender hat seine Arbeits- und Lernaufgabe offenbar mit KI geschrieben. Bei uns im Betrieb gibt es dazu keine Regel. Ist das bei Ihnen erlaubt? Was soll ich ihm sagen?","Freundliche Grüße"],dec:"praxis"},
    {id:"lenz",app:"chat",from:"Herr Lenz (Kollege)",chat:["Hab gehört, du schreibst KI-Regeln.","Ich sag's gleich: Ich mache da nicht mit. Ich bin seit 25 Jahren Lehrer, das hab ich nie gebraucht."],dec:"kollegium"},
    {id:"gruppe",app:"chat",from:"Gruppe 3 (Lernende)",chat:["Unser Infoblatt ist fertig!! 🎉","Haben wir mit KI gemacht, ging super schnell. Können wir das so in der Klasse aufhängen?"],doc:"infoblatt"}],
   [{id:"jonas",app:"chat",from:"Jonas (Auszubildender)",chat:["Frau/Herr …, meine Kalkulation ist falsch bewertet worden. Ich hab das doch von der KI rechnen lassen, die kann das!","Die hat gesagt, 15 % von 240 sind 32. Klang total sicher."],dec:"lernen"},
@@ -314,6 +342,7 @@ const ICONS=[
  {app:"web",label:"Browser",svg:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#fff" stroke="#2f5240" stroke-width="2"/><path d="M6 20h28M20 6c-6 7-6 21 0 28M20 6c6 7 6 21 0 28" fill="none" stroke="#2f5240" stroke-width="2"/></svg>'},
  {app:"doc",label:"Regel-Entwurf",svg:'<svg viewBox="0 0 40 40"><path d="M10 4h14l7 7v25H10z" fill="#fff" stroke="#2f5240" stroke-width="2" stroke-linejoin="round"/><path d="M24 4v7h7M14 18h12M14 23h12M14 28h8" stroke="#b04e6b" stroke-width="2"/></svg>'},
  {app:"ki",label:"Assistentin",svg:'<svg viewBox="0 0 40 40"><rect x="7" y="10" width="26" height="20" rx="8" fill="#f7e3e9" stroke="#b04e6b" stroke-width="2"/><circle cx="16" cy="20" r="2.5" fill="#b04e6b"/><circle cx="24" cy="20" r="2.5" fill="#b04e6b"/><path d="M20 10V5" stroke="#b04e6b" stroke-width="2"/><circle cx="20" cy="4" r="2" fill="#b04e6b"/></svg>'},
+ {app:"case",label:"Fallakte",svg:'<svg viewBox="0 0 40 40"><path d="M7 10h26v24H7z" fill="#fff" stroke="#2f5240" stroke-width="2"/><path d="M13 10V6h14v4M12 17h16M12 23h13M12 29h9" stroke="#b04e6b" stroke-width="2" fill="none"/></svg>'},
  {app:"tools",label:"KI-Werkstatt",svg:'<svg viewBox="0 0 40 40"><rect x="5" y="9" width="30" height="22" rx="3" fill="#fff" stroke="#2f5240" stroke-width="2"/><path d="M12 17l4 3-4 3M19 24h8" stroke="#b04e6b" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'},
  {app:"trash",label:"Papierkorb",svg:'<svg viewBox="0 0 40 40"><path d="M10 12h20l-2 23H12z" fill="#fff" stroke="#2f5240" stroke-width="2" stroke-linejoin="round"/><path d="M7 12h26M16 12V7h8v5" stroke="#2f5240" stroke-width="2" fill="none"/></svg>'}
 ];
@@ -337,11 +366,31 @@ function win(name,html){$("#winName").textContent=name;$("#winBody").innerHTML=h
 $("#winX").onclick=()=>{$("#win").hidden=true;};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#win").hidden=true;});
 
+function openCase(backId){
+ const v=CASE.views[0];
+ const tabs=CASE.views.map((x,i)=>`<button type="button" class="chip" data-pers="${x.id}" aria-pressed="${i===0}">${x.role}</button>`).join("");
+ const render=x=>`<div class="plus"><p class="eyebrow">${esc(x.name)}</p><p>${esc(x.text)}</p></div><div class="list" aria-label="Aussagen markieren">${x.items.map((q,i)=>`<button type="button" class="item risk-item" data-risk="${x.id}:${i}" data-correct="${q.risk}" aria-pressed="false"><span class="dotn"></span><span><b>${esc(q.t)}</b><small>Tippen, wenn du hier ein Risiko siehst.</small></span></button>`).join("")}</div>`;
+ win(CASE.titel,`<p>${CASE.intro}</p><div class="tabs" role="tablist">${tabs}</div><div id="caseView">${render(v)}</div><div class="row"><button type="button" class="primary" id="checkCase">Risiken prüfen</button></div><div id="caseFeedback"></div>`);
+ document.querySelectorAll("[data-pers]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-pers]").forEach(x=>x.setAttribute("aria-pressed",x===b));$("#caseView").innerHTML=render(CASE.views.find(x=>x.id===b.dataset.pers));wireRiskButtons();});
+ const wireRiskButtons=()=>document.querySelectorAll("[data-risk]").forEach(b=>b.onclick=()=>{b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true");b.classList.toggle("done",b.getAttribute("aria-pressed")==="true");});
+ wireRiskButtons();
+ $("#checkCase").onclick=()=>{
+  const chosen=[...document.querySelectorAll("[data-risk][aria-pressed=\"true\"]")];
+  const expected=CASE.views.flatMap(x=>x.items.map((q,i)=>`${x.id}:${i}`).filter((_,i)=>x.items[i].risk));
+  const right=chosen.filter(b=>b.dataset.correct==="true").length;
+  const missed=expected.length-right;
+  S.riskScore=right;
+  $("#caseFeedback").innerHTML=`<div class="${right>=4&&missed<=1?"plus":"ki"}"><p><b>${right} Risiken richtig markiert.</b> ${missed?"Einige Risiken sind noch offen.":"Du hast die zentralen Risiken erkannt."}</p><p class="muted">Jetzt wählst du die Regelbausteine, die aus allen drei Perspektiven folgen.</p></div><div class="form">${CASE.rules.map(r=>`<label class="check"><input type="checkbox" data-rule="${r.id}" ${S.ruleChoice.includes(r.id)?"checked":""}><span><b>${r.tag}:</b> ${r.t}</span></label>`).join("")}</div><div class="row"><button type="button" class="primary" id="saveCase">Bausteine übernehmen</button></div>`;
+  $("#saveCase").onclick=()=>{S.ruleChoice=[...document.querySelectorAll("[data-rule]:checked")].map(x=>x.dataset.rule);S.caseDone=true;const it=S.items.find(x=>x.id===backId);if(it)it.read=true;toast("📄 Fallakte ausgewertet · Regelbausteine übernommen.");openCase(backId);};
+ };
+}
+
 function openApp(app){
  if(app==="mail"||app==="chat"){
   const list=visible().filter(i=>i.app===app);
   win(app==="mail"?"Posteingang":"Schulchat",list.length?`<div class="list">${list.slice().reverse().map(i=>`<button type="button" class="item ${i.dec&&S.dec[i.dec]?"done":""}" data-it="${i.id}"><span class="dotn ${i.read?"read":""}"></span><span><b>${esc(i.from)}</b><small>${esc(i.subj||i.chat[0])}</small></span><small>${i.dec?(S.dec[i.dec]?"erledigt":"offen"):""}</small></button>`).join("")}</div>`:`<p class="muted">Noch nichts da.</p>`);
   document.querySelectorAll("[data-it]").forEach(b=>b.onclick=()=>openItem(b.dataset.it));
+ } else if(app==="case"){openCase("fallakte");
  } else if(app==="web"){
   S.browser=true;
   win("Browser",`<p class="url">https://ki-chat.example/</p>`+(S.net==="zu"?`<div class="blocked"><h3>Diese Seite ist gesperrt</h3><p>Die Kategorie „Künstliche Intelligenz“ ist im Netz Ihres Trägers nicht freigegeben.</p><p class="muted">Freigabe beantragen? Bitte wenden Sie sich an die IT.</p></div><p class="muted">Deine Lernenden haben dieses Problem zu Hause nicht. Dort ist die Seite offen.</p>`:`<div class="plus"><h3>KI-Chat</h3><p>Wie kann ich helfen?</p><p class="muted">Hinweis des Anbieters: Eingaben können zur Verbesserung des Dienstes gespeichert werden.</p></div><p class="muted">Offen heißt nicht geregelt: Was mit den Eingaben passiert, entscheidet der Anbieter.</p>`));
@@ -361,10 +410,12 @@ function openItem(id){
  if(it.app==="mail"){h=`<div class="mailhead"><span class="from">Von: ${esc(it.from)}</span><h3>${esc(it.subj)}</h3></div>${it.body.map(p=>`<p>${esc(p)}</p>`).join("")}`;}
  else{h=`<div class="list">${it.chat.map(m=>`<p class="msg"><span class="who">${esc(it.from)}</span>${esc(m)}</p>`).join("")}${S.dec[it.dec]?`<p class="msg me"><span class="who">Du</span>${esc(S.dec[it.dec].why)}</p>`:""}</div>`;}
  if(it.doc){const d=DOCS[it.doc];h+=`<div class="row"><button type="button" class="ghost" id="att">📎 ${esc(d.titel)} öffnen</button></div>`;}
+ if(it.case){h+=`<div class="row"><button type="button" class="primary" id="openCase">Fallakte öffnen</button></div>`;}
  if(it.final){h+=`<div class="decide"><div class="row"><button type="button" class="primary" id="toDoc">Entwurf öffnen und abschicken</button></div></div>`;}
  if(it.dec)h+=decideHtml(it.dec);
  win(it.app==="mail"?"Posteingang":"Schulchat",h);
  if(it.doc)$("#att").onclick=()=>openDocAtt(it.doc,it.id);
+ if(it.case)$("#openCase").onclick=()=>openCase(it.id);
  if(it.final)$("#toDoc").onclick=()=>openDoc(true);
  if(it.dec)wireDecide(it.dec);
  drawIcons();
@@ -499,7 +550,9 @@ function wireDecide(k){
 }
 
 function ruleList(){
- return Object.keys(DEC).map(k=>{const d=S.dec[k];if(!d)return `<li class="gap">${esc(DEC[k].titel)}: noch offen</li>`;const o=DEC[k].opts.find(x=>x.id===d.opt);return `<li><b>${esc(DEC[k].titel)}.</b> ${esc(o.regel)}</li>`;}).join("");
+ const base=Object.keys(DEC).map(k=>{const d=S.dec[k];if(!d)return `<li class="gap">${esc(DEC[k].titel)}: noch offen</li>`;const o=DEC[k].opts.find(x=>x.id===d.opt);return `<li><b>${esc(DEC[k].titel)}.</b> ${esc(o.regel)}</li>`;});
+ if(S.ruleChoice.length)base.push(...S.ruleChoice.map(id=>{const r=CASE.rules.find(x=>x.id===id);return `<li><b>${esc(r.tag)}.</b> ${esc(r.t)}</li>`;}));
+ return base.join("");
 }
 function openDoc(final){
  win("Regel-Entwurf.docx",`<div class="doc"><p class="eyebrow">Entwurf · Stand ${DAYS[S.day]}</p><h3>Regeln zur Nutzung von KI an unserer Schule</h3>
@@ -523,10 +576,11 @@ function finish(){
  const finds=[S.browser&&"den Browser",S.trash&&"den Papierkorb",S.tools&&"die KI-Werkstatt"].filter(Boolean);
  const foundTxt=`<p>In den Anhängen hast du <b>${S.found.size} von ${CLUES}</b> Hinweisen gefunden: KI-Spuren, erfundene Quellen und Verzerrungen. KI-Texte verraten sich oft durch Kleinigkeiten, aber nicht immer. Ein Hinweis ist kein Beweis.</p>`;
  $("#endCard").innerHTML=`<p class="eyebrow">Freitag, 17:02 · Reflexion</p><h2>Dein Entwurf ist unterwegs</h2>
-  <p>Aus fünf Tagen und sechs Entscheidungen ist ein erster Regel-Entwurf entstanden. Jeder Baustein hat ein Plus und einen Preis. Ein gutes Konzept wählt nicht den „richtigen“ Weg, es benennt, welchen Preis es bewusst zahlt.</p>
+  <p>Aus fünf Tagen, sechs Entscheidungen und einer mehrperspektivischen Fallakte ist ein erster Regel-Entwurf entstanden. Jeder Baustein hat ein Plus und einen Preis. Ein gutes Konzept wählt nicht den „richtigen“ Weg, es benennt, welchen Preis es bewusst zahlt.</p>
   <div class="tablewrap"><table><thead><tr><th>Baustein</th><th>Deine Wahl</th><th>Deine Begründung</th></tr></thead><tbody>${rows}</tbody></table></div>
   ${S.ki?`<h3>Und die Assistentin?</h3><p class="muted">Sie wurde von Tag zu Tag unzuverlässiger: erst hilfreich, dann überzeugend falsch, am Donnerstag nicht verfügbar, am Freitag unsinnig.</p><div class="tablewrap"><table><thead><tr><th>Baustein</th><th>Du hast sie</th><th>So war es</th></tr></thead><tbody>${kiRows}</tbody></table></div>`:""}
   ${foundTxt}
+  ${S.caseDone?`<div class="plus"><p><b>Fallakte:</b> Du hast ${S.riskScore} Risiken richtig erkannt und ${S.ruleChoice.length} Regelbausteine übernommen.</p></div>`:`<p class="muted">Die Fallakte blieb offen.</p>`}
   ${finds.length?`<p class="muted">Nebenbei entdeckt: ${finds.join(" und ")}.</p>`:`<p class="muted">Übrigens: Browser, Papierkorb und KI-Werkstatt hättest du auch öffnen können.</p>`}
   <label for="final">Welchen Baustein würdest du an deiner eigenen Schule als Erstes angehen, und warum?</label>
   <textarea id="final" placeholder="Als Erstes würde ich …"></textarea>
@@ -537,6 +591,7 @@ function finish(){
  $("#copy").onclick=()=>{
   const L=["Regeln zur Nutzung von KI an unserer Schule (Entwurf)",""];
   Object.keys(DEC).forEach((k,n)=>{const d=S.dec[k],o=DEC[k].opts.find(x=>x.id===d.opt);L.push(`${n+1}. ${DEC[k].titel}: ${o.regel}`,`   Begründung: ${d.why}`,`   Plus: ${o.plus} Preis: ${o.preis}`);});
+  if(S.ruleChoice.length)L.push("","Fallakte-Bausteine:",...S.ruleChoice.map(id=>"- "+CASE.rules.find(x=>x.id===id).t));
   L.push("","Als Erstes: "+$("#final").value.trim());
   const t=L.join("\n"),m=$("#cmsg");
   const fb=()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}a.remove();m.textContent=ok?"Kopiert.":"Kopieren wurde blockiert.";};
