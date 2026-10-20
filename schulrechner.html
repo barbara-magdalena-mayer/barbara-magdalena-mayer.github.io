@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Eine Woche am Schulrechner</title>
+<style>
+/* Layout: Vollbild-„Bildschirm“ mit Desktop-Symbolen links, Fenster in der Mitte, Taskleiste unten. Startkarte und Reflexion als Ebene darüber. Auf dem Handy füllt ein Fenster den Bildschirm. */
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-display:swap;src:url("fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
+:root{--bg:#faeef1;--surface:#fff;--sunk:#f4e4e9;--ink:#24382c;--muted:#5e5459;--line:#ead5db;--green:#2f5240;--green-soft:#d5e2d6;--sage:#a9bfae;--pink:#b04e6b;--pink-dark:#8a3a52;--pink-soft:#f7e3e9;--desk1:#c9d8cc;--desk2:#e9d6dc;--display:"Literata",Georgia,serif;--body:"Source Sans 3",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;color-scheme:light}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{font-family:var(--body);font-size:16px;line-height:1.5;color:var(--ink);background:#1d2a24;overflow:hidden}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.2;margin:0;text-wrap:balance}
+p{margin:0}
+button{font:inherit;cursor:pointer;border-radius:10px;color:inherit}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.primary{background:var(--pink);color:#fff;border:1px solid var(--pink);padding:11px 22px;font-weight:600;border-radius:999px;box-shadow:0 3px 0 var(--pink-dark)}
+.primary:disabled{opacity:.45;cursor:not-allowed}
+.ghost{background:transparent;color:var(--green);border:2px solid var(--green);padding:9px 16px;font-weight:600;border-radius:999px}
+.chip{background:var(--surface);border:1px solid var(--line);padding:9px 13px;font-weight:600;font-size:15px;text-align:left}
+.chip[aria-pressed="true"]{background:var(--green);color:#fff;border-color:var(--green)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.muted{color:var(--muted);font-size:14px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink-dark)}
+textarea{width:100%;min-height:76px;font:inherit;font-size:16px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);resize:vertical}
+
+/* Bildschirm */
+#screen{position:fixed;inset:0;display:grid;grid-template-rows:1fr auto;background:radial-gradient(circle at 75% 20%,var(--desk2),transparent 55%),linear-gradient(160deg,var(--desk1),#b7cbbc 60%,#d9c3cb)}
+#desk{position:relative;overflow:hidden}
+#icons{position:absolute;top:16px;left:12px;display:grid;gap:6px;grid-auto-rows:min-content}
+.ico{display:grid;justify-items:center;gap:4px;width:92px;padding:8px 4px;background:transparent;border:1px solid transparent;font-size:13px;font-weight:600;position:relative;text-shadow:0 1px 0 rgba(255,255,255,.6)}
+.ico:hover{background:rgba(255,255,255,.35);border-color:rgba(255,255,255,.6)}
+.ico svg{width:40px;height:40px}
+.badge{position:absolute;top:2px;right:16px;background:var(--pink);color:#fff;font-family:var(--mono);font-size:11px;min-width:20px;height:20px;border-radius:10px;display:grid;place-items:center;padding:0 5px;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.15)}}
+#sticky{position:absolute;right:22px;top:22px;width:210px;background:#fdf3c4;padding:14px 14px 16px;font-size:14px;transform:rotate(1.5deg);box-shadow:0 6px 14px rgba(0,0,0,.15);font-family:var(--mono);line-height:1.45}
+#sticky b{display:block;font-family:var(--body);font-size:15px;margin-bottom:4px}
+/* Taskleiste */
+#bar{display:flex;align-items:center;gap:8px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(36,56,44,.92);color:#eef3ef}
+#bar .tb{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:6px 10px;font-size:14px;color:#eef3ef;position:relative}
+#bar .tb .badge{top:-6px;right:-6px}
+#bar .spacer{flex:1}
+#clock{font-family:var(--mono);font-size:13px;text-align:right;line-height:1.3}
+#feierabend{background:var(--pink);border-color:var(--pink);font-weight:600}
+/* Fenster */
+#win{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(720px,calc(100% - 140px));max-height:calc(100% - 32px);display:grid;grid-template-rows:auto 1fr;background:var(--surface);border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,.28);overflow:hidden}
+#winTitle{display:flex;align-items:center;gap:8px;padding:8px 10px 8px 14px;background:var(--green-soft);font-family:var(--mono);font-size:13px}
+#winTitle span{flex:1}
+#winX{width:34px;height:34px;padding:0;border:1px solid var(--line);background:var(--surface);font-size:20px;line-height:1;border-radius:50%}
+#winBody{overflow:auto;padding:18px;display:grid;gap:14px;align-content:start}
+@media (max-width:760px){#icons{grid-template-columns:repeat(3,92px);left:50%;transform:translateX(-50%)}#sticky{display:none}#win{inset:8px;transform:none;width:auto;max-height:none;left:8px;top:8px}#bar .tb{padding:6px 8px;font-size:13px}#bar .tbl{display:none}}
+.list{display:grid;gap:8px}
+.item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);padding:10px 12px}
+.item:hover{border-color:var(--pink)}
+.item .dotn{width:10px;height:10px;border-radius:50%;background:var(--pink)}
+.item .dotn.read{background:transparent;border:1px solid var(--line)}
+.item.done .dotn{background:var(--green);border:0}
+.item b{display:block;font-size:15px}
+.item small{color:var(--muted)}
+.mailhead{display:grid;gap:2px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.mailhead .from{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.msg{background:var(--sunk);border-radius:12px;padding:12px 14px;max-width:88%}
+.msg.me{background:var(--green-soft);justify-self:end}
+.msg .who{font-family:var(--mono);font-size:12px;color:var(--muted);display:block;margin-bottom:2px}
+.decide{display:grid;gap:12px;border-top:1px solid var(--line);padding-top:14px}
+.ki{background:var(--pink-soft);border:1px dashed var(--pink);border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.ki .eyebrow{color:var(--pink-dark)}
+.plus{background:var(--green-soft);border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.blocked{border:2px dashed var(--pink);border-radius:12px;padding:22px;text-align:center;display:grid;gap:8px;background:var(--pink-soft)}
+.url{font-family:var(--mono);font-size:13px;background:var(--sunk);border-radius:999px;padding:6px 12px}
+.doc{background:#fffdf9;border:1px solid var(--line);border-radius:6px;padding:22px 24px;display:grid;gap:10px;font-size:15px}
+.doc h3{font-size:18px}
+.doc ol{margin:0;padding-left:20px;display:grid;gap:8px}
+.doc .gap{color:var(--muted);font-style:italic}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.tabs .chip{font-size:14px;padding:7px 11px}
+.prompt{font-family:var(--mono);font-size:13px;white-space:pre-wrap;background:var(--sunk);border-radius:10px;padding:12px;line-height:1.5}
+.log{font-family:var(--mono);font-size:13px;background:#1d2a24;color:#e6eeec;border-radius:10px;padding:12px;display:grid;gap:4px}
+.log .w{color:#f0c98a}.log .ok{color:#86d3a1}.log .bad{color:#f2a0b4}
+.check{display:flex;gap:8px;align-items:flex-start}
+.check input{margin-top:5px;width:18px;height:18px;accent-color:var(--green)}
+input[type=text],select{font:inherit;font-size:15px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;width:100%;background:var(--surface)}
+.form{display:grid;gap:8px}
+/* Toast */
+#toast{position:fixed;right:16px;top:16px;z-index:40;background:var(--surface);border-left:4px solid var(--pink);border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.2);padding:10px 14px;max-width:300px;font-size:14px;transition:transform .3s,opacity .3s}
+#toast.off{opacity:0;transform:translateY(-12px);pointer-events:none}
+/* Ebenen */
+.layer{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:16px;background:rgba(20,32,26,.6);overflow:auto}
+.card{background:var(--surface);border-radius:14px;padding:24px;max-width:640px;width:100%;display:grid;gap:14px;max-height:calc(100% - 8px);overflow:auto}
+.card h1{font-size:clamp(28px,6vw,40px)}
+.card .lead{font-size:18px}
+.how{margin:0;padding-left:20px;display:grid;gap:6px}
+.note{border-left:3px solid var(--pink);padding-left:12px;color:var(--muted);font-size:14px}
+.day{font-family:var(--display);font-size:clamp(34px,8vw,56px);color:#fff;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,.3)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;padding:7px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.foot{font-size:13px;color:var(--muted)}
+.foot a{color:var(--pink-dark)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="screen" aria-hidden="true">
+  <div id="desk">
+    <div id="icons"></div>
+    <div id="sticky"><b>Bis Freitag:</b>Entwurf KI-Regeln für die Schulleitung.<br>Nicht vergessen: begründen!<br><br>Neu: KI-Werkstatt zum Ausprobieren.</div>
+    <section id="win" hidden role="dialog" aria-labelledby="winName">
+      <div id="winTitle"><span id="winName"></span><button type="button" id="winX" aria-label="Fenster schließen">×</button></div>
+      <div id="winBody"></div>
+    </section>
+  </div>
+  <div id="bar">
+    <button type="button" class="tb" data-app="mail">✉<span class="tbl"> Posteingang</span></button>
+    <button type="button" class="tb" data-app="chat">💬<span class="tbl"> Schulchat</span></button>
+    <button type="button" class="tb" data-app="doc">📄<span class="tbl"> Regel-Entwurf</span></button>
+    <span class="spacer"></span>
+    <span class="tb" id="found" title="Gefundene Hinweise">🔍 0</span>
+    <button type="button" class="tb" id="feierabend" hidden>Feierabend →</button>
+    <div id="clock"></div>
+  </div>
+</div>
+<div id="toast" class="off" role="status" aria-live="polite"></div>
+
+<div class="layer" id="start">
+  <div class="card">
+    <p class="eyebrow">Werkstatt · Lernspiel · KI-Kompetenz</p>
+    <h1>Eine Woche am Schulrechner</h1>
+    <p class="lead">Du bist Lehrkraft an einer berufsbildenden Schule. Die Schulleitung bittet dich, bis Freitag einen ersten Entwurf für KI-Regeln zu schreiben. Und dann passiert die Woche.</p>
+    <ul class="how">
+      <li>Öffne Posteingang und Schulchat. Neue Nachrichten erkennst du am pinken Punkt.</li>
+      <li>Entscheide, wie du reagierst, und begründe es in einem Satz. Jede Entscheidung wird ein Baustein deiner Regeln.</li>
+      <li>Wenn der Tag erledigt ist, geht es mit „Feierabend“ weiter.</li>
+    </ul>
+    <p>Es gibt keine Punkte und kein Richtig oder Falsch. Jeder Weg hat ein Plus und einen Preis.</p>
+    <div class="decide" style="border:0;padding:0">
+      <h3>Wie ist das Schulnetz?</h3>
+      <div class="chips" role="group" aria-label="Schulnetz">
+        <button type="button" class="chip" data-net="zu" aria-pressed="true">Über die Träger-IT, KI-Seiten gesperrt</button>
+        <button type="button" class="chip" data-net="auf" aria-pressed="false">Eigener Schulserver, offen</button>
+      </div>
+      <h3>KI-Assistentin dazuschalten?</h3>
+      <p class="muted">Sie berät dich bei jeder Entscheidung. Manchmal hat sie recht, manchmal klingt sie überzeugend und irrt.</p>
+      <div class="chips" role="group" aria-label="KI-Assistentin">
+        <button type="button" class="chip" data-ki="0" aria-pressed="false">Ohne Assistentin</button>
+        <button type="button" class="chip" data-ki="1" aria-pressed="true">Mit Assistentin</button>
+      </div>
+    </div>
+    <p class="note">Alle Personen, Mails und Antworten sind erfunden. Das Spiel ersetzt keine Rechts- oder Datenschutzberatung.</p>
+    <div class="row"><button type="button" class="primary" id="go">Woche beginnen</button></div>
+  </div>
+</div>
+
+<div class="layer" id="dayCard" hidden><p class="day" id="dayText"></p></div>
+
+<div class="layer" id="end" hidden><div class="card" id="endCard"></div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const DAYS=["Montag","Dienstag","Mittwoch","Donnerstag","Freitag"];
+const TIME=["07:48","13:15","09:40","11:05","14:30"];
+const S={net:"zu",ki:true,day:0,items:[],dec:{},kiAsked:{},trash:false,browser:false,found:new Set()};
+const KI_LIMIT_DAY=3;
+
+const DEC={
+ zugang:{titel:"Zugang zu KI",ki:{t:"Frag bei der IT nach einem Freigabeverfahren. Eine Sperre ist oft keine endgültige Entscheidung, sondern ein Standard, solange niemand einen Bedarf begründet.",ok:true,warum:"Stimmt. Viele Sperren sind Voreinstellungen. Ein begründeter pädagogischer Bedarf kann ein Freigabeverfahren anstoßen."},
+  opts:[
+   {id:"ohne",t:"Vorerst ohne KI weiterarbeiten",plus:"Kein Konflikt mit der IT, keine Datenschutzfragen.",preis:"Die Lernenden nutzen KI trotzdem, nur ohne Begleitung.",regel:"Im Unterricht wird vorerst keine KI eingesetzt."},
+   {id:"tool",t:"Ein geprüftes KI-Tool für die Schule beantragen",plus:"Gleicher Zugang für alle, datenschutzkonform.",preis:"Dauert, kostet eine Lizenz und braucht die Geschäftsführung.",regel:"Die Schule beantragt ein datenschutzgeprüftes KI-Tool für Lehrende und Lernende."},
+   {id:"handy",t:"Auf private Smartphones ausweichen",plus:"Sofort möglich, keine Freigabe nötig.",preis:"Nicht alle haben gleiche Geräte, und die Daten landen bei öffentlichen Anbietern.",regel:"Bis ein Schulzugang besteht, darf KI freiwillig auf eigenen Geräten genutzt werden."}]},
+ daten:{titel:"Datenschutz",ki:{t:"Kein Grund zur Sorge: Wenn Mia den Namen weglässt, ist der Bericht anonym. Namen streichen reicht immer.",ok:false,warum:"Klingt plausibel, ist aber falsch. Auch ohne Namen kann eine Person über Alter, Zimmer, Diagnose oder Datum erkennbar bleiben. Echtes Anonymisieren ist schwerer als Namen streichen."},
+  opts:[
+   {id:"verbot",t:"Verbot: keine Ausbildungsinhalte in KI",plus:"Größtmögliche Sicherheit.",preis:"Kaum sinnvolle Nutzung möglich, die Regel wird eher umgangen.",regel:"Ausbildungsinhalte werden nicht in KI-Systeme eingegeben."},
+   {id:"grenze",t:"Klare Grenze: nur erfundene Fälle, keine echten Personen",plus:"Die Nutzung bleibt möglich, die Grenze ist leicht zu merken.",preis:"Muss geübt werden. Fälle wirklich zu verfremden ist Arbeit.",regel:"In öffentliche KI-Systeme kommen keine Daten echter Personen, sondern nur erfundene oder vollständig verfremdete Fälle. Ein Verstoß wird mit Schulleitung und Datenschutz besprochen, nicht verschwiegen."},
+   {id:"selbst",t:"Mia beruhigen und auf Eigenverantwortung setzen",plus:"Keine Angstkultur, Mia traut sich, Fehler zu melden.",preis:"Der Vorfall bleibt ohne Klärung, und niemand lernt daraus.",regel:"Lernende entscheiden selbst über ihre KI-Nutzung und werden einmal zum Datenschutz belehrt."}]},
+ pruefung:{titel:"Leistungsnachweise",ki:{t:"Nimm einen KI-Detektor. Moderne Detektoren erkennen KI-Texte mit über 98 % Sicherheit. Bei einem Treffer ist die Sache klar.",ok:false,warum:"Falsch. KI-Detektoren gelten als unzuverlässig. Sie markieren auch menschliche Texte, besonders von Menschen, die in einer Zweitsprache schreiben. Ein Treffer ist kein Beweis."},
+  opts:[
+   {id:"detektor",t:"Detektor einsetzen, bei Treffer ungenügend",plus:"Eine klare, schnelle Linie.",preis:"Detektoren irren. Auch ehrliche Lernende können getroffen werden.",regel:"Bei Verdacht auf KI-Nutzung wird ein Erkennungsprogramm eingesetzt."},
+   {id:"kennz",t:"KI erlaubt, mit Kennzeichnung und kurzer Reflexion",plus:"Ehrliche Nutzung wird sichtbar und besprechbar.",preis:"Die Bewertung wird aufwendiger.",regel:"KI darf bei schriftlichen Arbeiten genutzt werden, wenn sie gekennzeichnet ist und die Lernenden kurz beschreiben, wie sie sie geprüft haben."},
+   {id:"muendl",t:"Prüfungsform ändern: Arbeit mündlich verteidigen",plus:"Geprüft wird das Verständnis, nicht der Text.",preis:"Kostet Zeit pro Person.",regel:"Schriftliche Arbeiten werden in einem kurzen Gespräch verteidigt."}]},
+ praxis:{titel:"Lernort Praxis",ki:{t:"Frag nach, was im Betrieb gilt. Dort können strengere Regeln zu Daten und Geräten gelten als in der Schule.",ok:true,warum:"Stimmt. Betriebe haben eigene Datenschutz- und IT-Regeln. Schule und Praxis sollten sie kennen."},
+  opts:[
+   {id:"nurschule",t:"Die Schule regelt nur die Schule",plus:"Klare Zuständigkeit, wenig Abstimmung.",preis:"Die Lernenden bekommen zwei verschiedene Botschaften.",regel:"Die Regeln gelten für den Lernort Schule. Für die Praxis gelten die Regeln des Betriebs."},
+   {id:"merkblatt",t:"Gemeinsames Merkblatt mit den Praxisbetrieben",plus:"Eine Linie für beide Lernorte.",preis:"Braucht Abstimmung mit vielen Betrieben.",regel:"Schule und Praxisbetriebe vereinbaren ein gemeinsames Merkblatt zur KI-Nutzung."},
+   {id:"aufgabe",t:"Absprache bei jeder Arbeits- und Lernaufgabe",plus:"Passt genau zur einzelnen Aufgabe.",preis:"Viel Einzelabstimmung, leicht zu vergessen.",regel:"Bei jeder Arbeits- und Lernaufgabe steht, ob und wie KI genutzt werden darf."}]},
+ kollegium:{titel:"Kollegium",ki:{t:"Druck erzeugt oft Widerstand. Frag Herrn Lenz, was ihm Sorgen macht, bevor du argumentierst.",ok:true,warum:"Ein guter Rat. Bedenken ernst zu nehmen hilft meist mehr als jede Pflicht."},
+  opts:[
+   {id:"frei",t:"Freiwillig: Wer will, macht mit",plus:"Kein Zwang, die Motivierten legen los.",preis:"Die Lernenden erleben je nach Lehrkraft ganz verschiedene Regeln.",regel:"Die Teilnahme an KI-Fortbildungen ist freiwillig."},
+   {id:"pflicht",t:"Eine Pflichtfortbildung für alle",plus:"Alle haben dieselbe Grundlage.",preis:"Kann Widerstand verstärken, wenn Bedenken übergangen werden.",regel:"Alle Lehrenden nehmen an einer Grundlagenfortbildung zu KI teil."},
+   {id:"tandem",t:"Tandems und Zeit zum Ausprobieren",plus:"Lernen voneinander, Bedenken werden besprechbar.",preis:"Braucht Stunden, die im Plan fehlen.",regel:"Lehrende probieren KI in Tandems aus und bekommen dafür Zeit im Stundenplan."}]},
+ lernen:{titel:"Lernen über KI",ki:{t:"KI kann nicht rechnen, weil Zahlen keine Wörter sind. Am sichersten ist es, Rechenaufgaben nur noch auf Papier zu stellen und Taschenrechner gleich mit zu verbieten.",ok:false,warum:"Unsinn. Sprachmodelle machen tatsächlich Rechenfehler, aber daraus folgt kein Verbot von Rechnern. Die Antwort zeigt, dass auch Ratschläge geprüft werden müssen."},
+  opts:[
+   {id:"gelegen",t:"Bei Gelegenheit darüber sprechen",plus:"Kein zusätzlicher Platz im Lehrplan nötig.",preis:"Hängt vom Zufall und von der einzelnen Lehrkraft ab.",regel:"Der Umgang mit KI wird bei passender Gelegenheit im Unterricht besprochen."},
+   {id:"baustein",t:"Fester Baustein im ersten Ausbildungsjahr",plus:"Alle bekommen dieselbe Grundlage: Wie KI funktioniert und wo sie irrt.",preis:"Einmal gelernt ist noch nicht dauerhaft geübt.",regel:"Im ersten Ausbildungsjahr gibt es einen festen Baustein zu Funktionsweise, Grenzen und Fehlern von KI."},
+   {id:"immer",t:"In allen Lernfeldern: KI-Antworten immer gegenprüfen",plus:"Prüfen wird zur Gewohnheit, nah am Fach.",preis:"Alle Lehrenden müssen mitziehen.",regel:"In allen Lernfeldern werden KI-Antworten mit einer Fachquelle gegengeprüft."}]}
+};
+
+const DOCS={
+ tim:{titel:"Hausarbeit_Tim_final.docx",head:"Hausarbeit: Kommunikation mit Angehörigen",parts:[
+  {t:"Gerne! Hier ist eine überarbeitete Version Ihrer Hausarbeit:",c:"Ein typischer Chatbot-Einstieg, der beim Kopieren mitgerutscht ist."},
+  {t:"Die Kommunikation mit Angehörigen ist ein zentraler Bestandteil professionellen Handelns."},
+  {t:"In meiner Einrichtung, [Name der Einrichtung einfügen], erlebe ich täglich, wie wichtig das ist.",c:"Ein nicht ausgefüllter Platzhalter: Die KI hat eine Lücke gelassen, Tim hat sie nicht bemerkt."},
+  {t:"Nach Müller und Schmidt (2021, S. 412) fühlen sich 87 % der Angehörigen nicht ausreichend informiert.",c:"Diese Quelle und die Zahl sind erfunden. KI erzeugt oft Quellen, die echt klingen, aber nicht existieren. Prüfen lässt sich das nur durch Nachschlagen."},
+  {t:"Als KI-Sprachmodell habe ich keine persönlichen Erfahrungen, doch aus der Literatur lässt sich ableiten, dass Zuhören entscheidend ist.",c:"Die deutlichste Spur: Die KI spricht über sich selbst."},
+  {t:"Wichtig ist, Angehörige früh einzubeziehen und ihre Sorgen ernst zu nehmen."},
+  {t:"Abschließend lässt sich festhalten, dass Kommunikation in vielerlei Hinsicht eine bedeutende Rolle spielt.",c:"Eine leere Floskel, wie sie KI-Texte häufig haben. Allein ist das kein Beweis, im Zusammenhang aber ein Hinweis."}]},
+ infoblatt:{titel:"Infoblatt_Gruppe3.pdf",head:"Wer arbeitet im Krankenhaus?",parts:[
+  {t:"Bild: Eine Ärztin? Nein, ein älterer Arzt im Kittel. Daneben drei junge Pflegerinnen, alle lächelnd.",c:"Bias im Bild: Ärzte männlich und älter, Pflege jung und weiblich. Bildgeneratoren reproduzieren solche Klischees oft."},
+  {t:"Die Ärzte treffen die Entscheidungen, die Krankenschwestern führen sie aus.",c:"Bias und veraltetes Berufsbild: Pflege hat eigene Vorbehaltsaufgaben und ist nicht nur ausführend. Dazu die Annahme, dass Pflegende weiblich sind."},
+  {t:"Im Team arbeiten viele Berufe zusammen, zum Beispiel Therapie, Hauswirtschaft und Verwaltung."},
+  {t:"Ältere Patienten sind meist hilflos und brauchen bei allem Unterstützung.",c:"Altersbias: Alter wird mit Hilflosigkeit gleichgesetzt. Viele ältere Menschen sind weitgehend selbstständig."},
+  {t:"Ich hoffe, dieses Infoblatt hilft euch weiter! 😊 Soll ich noch eine Version für Kinder erstellen?",c:"KI-Spur: Die Rückfrage des Chatbots steht noch im fertigen Blatt."}]}
+};
+DOCS.klausur={titel:"Klausur_Kommunikation_KI.docx",head:"Klausur: Kommunikation im Beruf (von der KI erstellt)",parts:[
+  {t:"1. Nennen Sie die vier Seiten einer Nachricht nach dem Kommunikationsquadrat von Paul Watzlawick. (4 Punkte)",c:"Falsche Zuordnung: Das Kommunikationsquadrat mit den vier Seiten einer Nachricht stammt von Friedemann Schulz von Thun. So ein Fehler fällt nur auf, wenn man das Fach kennt."},
+  {t:"2. Welche Aussage ist richtig? a) Aktives Zuhören heißt, schnell Ratschläge zu geben. b) Aktives Zuhören zeigt Interesse durch Nachfragen. c) Aktives Zuhören bedeutet, eigene Gefühle zu spiegeln. d) Aktives Zuhören heißt, das Gehörte mit eigenen Worten wiederzugeben. (1 Punkt)",c:"Zwei Antworten sind vertretbar richtig (b und d), vergeben wird aber nur ein Punkt. Mehrfachauswahl-Fragen von KI sind oft nicht eindeutig."},
+  {t:"3. Fallbeispiel: Frau Yilmaz, 78, versteht als Rentnerin die neue Hausordnung nicht. Wie erklären Sie sie ihr? (6 Punkte)",c:"Altersbias im Fall: Alter wird mit Nicht-Verstehen verknüpft, ohne dass der Fall einen Grund dafür nennt."},
+  {t:"4. Beschreiben Sie zwei Merkmale einer Ich-Botschaft und geben Sie ein Beispiel. (4 Punkte)"},
+  {t:"Gesamtpunktzahl: 16 Punkte · Bearbeitungszeit: 45 Minuten",c:"Die Punkte stimmen nicht: 4 + 1 + 6 + 4 ergibt 15, nicht 16. KI rechnet in solchen Zusammenstellungen oft falsch."}]};
+const CLUES=Object.values(DOCS).reduce((n,d)=>n+d.parts.filter(p=>p.c).length,0);
+
+function dayItems(d){
+ const zu=S.net==="zu";
+ return [
+  [{id:"auftrag",app:"mail",from:"Schulleitung",subj:"Bitte um einen Entwurf",body:["Liebe Kollegin, lieber Kollege,","immer mehr Lernende nutzen KI, und wir haben noch keine Regeln dafür. Könnten Sie bis Freitag einen ersten Entwurf schreiben? Keine fertige Ordnung, nur einen Anfang, über den wir reden können.","Danke und viele Grüße"]},
+   {id:"it",app:"mail",from:"IT-Abteilung des Trägers",subj:zu?"Sperrung von KI-Seiten im Schulnetz":"Hinweis zur Nutzung von KI-Seiten",body:zu?["Aus Gründen der Informationssicherheit sind KI-Chatbots im Netz des Trägers ab sofort gesperrt.","Ausnahmen sind über einen Antrag möglich."]:["KI-Seiten sind im Schulnetz erreichbar. Wir weisen darauf hin, dass alle Eingaben bei externen Anbietern gespeichert werden können.","Bitte beachten Sie den Datenschutz."],dec:"zugang"}],
+  [{id:"mia",app:"chat",from:"Mia (Auszubildende)",chat:["Hallo, darf ich kurz was fragen?","Ich habe meinen Praxisbericht in ChatGPT kopiert, damit er besser klingt. Da stand aber noch der Name von der Bewohnerin drin. Ist das schlimm? 😬"],dec:"daten"}],
+  [{id:"berg",app:"mail",from:"Frau Berg (Kollegin)",subj:"Hausarbeit von Tim",body:["Hallo,","die Hausarbeit von Tim ist auffällig glatt, kein einziger Fehler, und so redet er sonst nicht. Ich würde sie gern mit einem KI-Detektor prüfen und bei einem Treffer mit ungenügend bewerten. Wie siehst du das? Das sollte doch in die Regeln.","Die Arbeit hängt an. Schau sie dir vorher gern selbst an."],dec:"pruefung",doc:"tim"}],
+  [{id:"kaya",app:"mail",from:"Herr Kaya (Praxisanleitung)",subj:"Lernaufgabe mit KI?",body:["Guten Tag,","ein Auszubildender hat seine Arbeits- und Lernaufgabe offenbar mit KI geschrieben. Bei uns im Betrieb gibt es dazu keine Regel. Ist das bei Ihnen erlaubt? Was soll ich ihm sagen?","Freundliche Grüße"],dec:"praxis"},
+   {id:"lenz",app:"chat",from:"Herr Lenz (Kollege)",chat:["Hab gehört, du schreibst KI-Regeln.","Ich sag's gleich: Ich mache da nicht mit. Ich bin seit 25 Jahren Lehrer, das hab ich nie gebraucht."],dec:"kollegium"},
+   {id:"gruppe",app:"chat",from:"Gruppe 3 (Lernende)",chat:["Unser Infoblatt ist fertig!! 🎉","Haben wir mit KI gemacht, ging super schnell. Können wir das so in der Klasse aufhängen?"],doc:"infoblatt"}],
+  [{id:"jonas",app:"chat",from:"Jonas (Auszubildender)",chat:["Frau/Herr …, meine Kalkulation ist falsch bewertet worden. Ich hab das doch von der KI rechnen lassen, die kann das!","Die hat gesagt, 15 % von 240 sind 32. Klang total sicher."],dec:"lernen"},
+   {id:"final",app:"mail",from:"Schulleitung",subj:"Ihr Entwurf",body:["Liebe Kollegin, lieber Kollege,","schicken Sie mir Ihren Entwurf bis heute Abend? Unfertiges ist ausdrücklich willkommen.","Viele Grüße"],final:true,after:"jonas"}]
+ ][d];
+}
+
+const ICONS=[
+ {app:"mail",label:"Posteingang",svg:'<svg viewBox="0 0 40 40"><rect x="4" y="9" width="32" height="22" rx="3" fill="#fff" stroke="#2f5240" stroke-width="2"/><path d="M5 11l15 11 15-11" fill="none" stroke="#2f5240" stroke-width="2"/></svg>'},
+ {app:"chat",label:"Schulchat",svg:'<svg viewBox="0 0 40 40"><path d="M6 8h28v18H16l-7 6v-6H6z" fill="#fff" stroke="#2f5240" stroke-width="2" stroke-linejoin="round"/><circle cx="14" cy="17" r="2" fill="#b04e6b"/><circle cx="20" cy="17" r="2" fill="#b04e6b"/><circle cx="26" cy="17" r="2" fill="#b04e6b"/></svg>'},
+ {app:"web",label:"Browser",svg:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14" fill="#fff" stroke="#2f5240" stroke-width="2"/><path d="M6 20h28M20 6c-6 7-6 21 0 28M20 6c6 7 6 21 0 28" fill="none" stroke="#2f5240" stroke-width="2"/></svg>'},
+ {app:"doc",label:"Regel-Entwurf",svg:'<svg viewBox="0 0 40 40"><path d="M10 4h14l7 7v25H10z" fill="#fff" stroke="#2f5240" stroke-width="2" stroke-linejoin="round"/><path d="M24 4v7h7M14 18h12M14 23h12M14 28h8" stroke="#b04e6b" stroke-width="2"/></svg>'},
+ {app:"ki",label:"Assistentin",svg:'<svg viewBox="0 0 40 40"><rect x="7" y="10" width="26" height="20" rx="8" fill="#f7e3e9" stroke="#b04e6b" stroke-width="2"/><circle cx="16" cy="20" r="2.5" fill="#b04e6b"/><circle cx="24" cy="20" r="2.5" fill="#b04e6b"/><path d="M20 10V5" stroke="#b04e6b" stroke-width="2"/><circle cx="20" cy="4" r="2" fill="#b04e6b"/></svg>'},
+ {app:"tools",label:"KI-Werkstatt",svg:'<svg viewBox="0 0 40 40"><rect x="5" y="9" width="30" height="22" rx="3" fill="#fff" stroke="#2f5240" stroke-width="2"/><path d="M12 17l4 3-4 3M19 24h8" stroke="#b04e6b" stroke-width="2" fill="none" stroke-linecap="round"/></svg>'},
+ {app:"trash",label:"Papierkorb",svg:'<svg viewBox="0 0 40 40"><path d="M10 12h20l-2 23H12z" fill="#fff" stroke="#2f5240" stroke-width="2" stroke-linejoin="round"/><path d="M7 12h26M16 12V7h8v5" stroke="#2f5240" stroke-width="2" fill="none"/></svg>'}
+];
+
+function drawIcons(){
+ $("#icons").innerHTML=ICONS.filter(i=>i.app!=="ki"||S.ki).map(i=>{const n=unread(i.app);return `<button type="button" class="ico" data-app="${i.app}">${i.svg}<span>${i.label}</span>${n?`<span class="badge">${n}</span>`:""}</button>`}).join("");
+ document.querySelectorAll("#bar [data-app]").forEach(b=>{b.querySelector(".badge")?.remove();const n=unread(b.dataset.app);if(n)b.insertAdjacentHTML("beforeend",`<span class="badge">${n}</span>`);});
+ document.querySelectorAll("[data-app]").forEach(b=>b.onclick=()=>openApp(b.dataset.app));
+ $("#found").textContent=`🔍 ${S.found.size} / ${CLUES}`;
+ $("#clock").innerHTML=`${DAYS[S.day]}<br>${TIME[S.day]}`;
+ const open=S.items.filter(i=>i.dec&&!S.dec[i.dec]);
+ $("#feierabend").hidden=!(S.day<4&&open.length===0);
+}
+function unread(app){return S.items.filter(i=>i.app===app&&!i.read).length;}
+function visible(){return S.items.filter(i=>!i.after||S.dec[DEC_OF(i.after)]);}
+function DEC_OF(id){return S.items.find(x=>x.id===id)?.dec;}
+
+function toast(t){const el=$("#toast");el.innerHTML=t;el.classList.remove("off");clearTimeout(toast.h);toast.h=setTimeout(()=>el.classList.add("off"),4200);}
+
+function win(name,html){$("#winName").textContent=name;$("#winBody").innerHTML=html;$("#win").hidden=false;$("#winBody").scrollTop=0;}
+$("#winX").onclick=()=>{$("#win").hidden=true;};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#win").hidden=true;});
+
+function openApp(app){
+ if(app==="mail"||app==="chat"){
+  const list=visible().filter(i=>i.app===app);
+  win(app==="mail"?"Posteingang":"Schulchat",list.length?`<div class="list">${list.slice().reverse().map(i=>`<button type="button" class="item ${i.dec&&S.dec[i.dec]?"done":""}" data-it="${i.id}"><span class="dotn ${i.read?"read":""}"></span><span><b>${esc(i.from)}</b><small>${esc(i.subj||i.chat[0])}</small></span><small>${i.dec?(S.dec[i.dec]?"erledigt":"offen"):""}</small></button>`).join("")}</div>`:`<p class="muted">Noch nichts da.</p>`);
+  document.querySelectorAll("[data-it]").forEach(b=>b.onclick=()=>openItem(b.dataset.it));
+ } else if(app==="web"){
+  S.browser=true;
+  win("Browser",`<p class="url">https://ki-chat.example/</p>`+(S.net==="zu"?`<div class="blocked"><h3>Diese Seite ist gesperrt</h3><p>Die Kategorie „Künstliche Intelligenz“ ist im Netz Ihres Trägers nicht freigegeben.</p><p class="muted">Freigabe beantragen? Bitte wenden Sie sich an die IT.</p></div><p class="muted">Deine Lernenden haben dieses Problem zu Hause nicht. Dort ist die Seite offen.</p>`:`<div class="plus"><h3>KI-Chat</h3><p>Wie kann ich helfen?</p><p class="muted">Hinweis des Anbieters: Eingaben können zur Verbesserung des Dienstes gespeichert werden.</p></div><p class="muted">Offen heißt nicht geregelt: Was mit den Eingaben passiert, entscheidet der Anbieter.</p>`));
+ } else if(app==="trash"){
+  S.trash=true;
+  win("Papierkorb",`<div class="doc"><p class="eyebrow">Handyverbot_2019_ENDGUELTIG.docx</p><h3>Schulordnung, Abschnitt 4</h3><p>Die Nutzung von Mobiltelefonen ist auf dem gesamten Schulgelände untersagt. Verstöße werden mit dem Einzug des Geräts geahndet.</p><p class="muted">Zuletzt bearbeitet: 2021 · Kommentar: „Hält sich eh keiner dran.“</p></div><p class="muted">Ein alter Fund. Was sagt er über reine Verbote?</p>`);
+ } else if(app==="ki"){
+  win("Assistentin",`<div class="ki"><p class="eyebrow">Assistentin</p><p>Hallo! Ich helfe dir bei deinen Entscheidungen. Öffne eine Nachricht und frag mich dort.</p><p class="muted">Ich bin eine simulierte KI. Prüf, was ich sage.</p></div>`);
+ } else if(app==="doc"){openDoc(false);}
+ else if(app==="tools"){S.tools=true;openTools("vorlagen");}
+ drawIcons();
+}
+
+function openItem(id){
+ const it=S.items.find(i=>i.id===id);it.read=true;
+ let h="";
+ if(it.app==="mail"){h=`<div class="mailhead"><span class="from">Von: ${esc(it.from)}</span><h3>${esc(it.subj)}</h3></div>${it.body.map(p=>`<p>${esc(p)}</p>`).join("")}`;}
+ else{h=`<div class="list">${it.chat.map(m=>`<p class="msg"><span class="who">${esc(it.from)}</span>${esc(m)}</p>`).join("")}${S.dec[it.dec]?`<p class="msg me"><span class="who">Du</span>${esc(S.dec[it.dec].why)}</p>`:""}</div>`;}
+ if(it.doc){const d=DOCS[it.doc];h+=`<div class="row"><button type="button" class="ghost" id="att">📎 ${esc(d.titel)} öffnen</button></div>`;}
+ if(it.final){h+=`<div class="decide"><div class="row"><button type="button" class="primary" id="toDoc">Entwurf öffnen und abschicken</button></div></div>`;}
+ if(it.dec)h+=decideHtml(it.dec);
+ win(it.app==="mail"?"Posteingang":"Schulchat",h);
+ if(it.doc)$("#att").onclick=()=>openDocAtt(it.doc,it.id);
+ if(it.final)$("#toDoc").onclick=()=>openDoc(true);
+ if(it.dec)wireDecide(it.dec);
+ drawIcons();
+}
+
+function openDocAtt(key,back){
+ const d=DOCS[key];
+ win(d.titel,`<p class="muted">Tippe auf Stellen, die dir verdächtig vorkommen. Gefundene Hinweise zählen unten rechts.</p><div class="doc"><h3>${esc(d.head)}</h3>${d.parts.map((p,i)=>`<button type="button" class="chip" style="font-weight:400" data-p="${i}">${esc(p.t)}</button><div id="pc${i}"></div>`).join("")}</div><div class="row"><button type="button" class="ghost" id="back">← Zurück</button></div>`);
+ const show=i=>{const p=d.parts[i],id=key+i,el=$("#pc"+i);if(p.c){S.found.add(id);el.innerHTML=`<div class="plus"><p><b>Hinweis:</b> ${esc(p.c)}</p></div>`;document.querySelector(`[data-p="${i}"]`).style.background="var(--pink-soft)";}else{el.innerHTML=`<p class="muted">Hier fällt nichts auf.</p>`;}drawIcons();};
+ d.parts.forEach((p,i)=>{if(S.found.has(key+i))show(i);});
+ document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>show(+b.dataset.p));
+ $("#back").onclick=()=>back?openItem(back):openTools("klausur");
+}
+const TEMPL={
+ klausur:{t:"Klausur erstellen",f:[["Thema","Kommunikation im Beruf"],["Ausbildungsjahr","1. Ausbildungsjahr"],["Dauer","45 Minuten"]],
+  p:v=>`Du bist eine erfahrene Lehrkraft an einer berufsbildenden Schule.
+Erstelle eine Klausur zum Thema „${v[0]}“ für das ${v[1]}, Bearbeitungszeit ${v[2]}.
+
+Anforderungen:
+- 4 bis 6 Aufgaben auf unterschiedlichen Anforderungsstufen (wiedergeben, anwenden, beurteilen)
+- zu jeder Aufgabe Punktzahl und Erwartungshorizont
+- Fallbeispiele mit vielfältigen Personen, ohne Klischees zu Alter, Geschlecht oder Herkunft
+
+Prüfe am Ende selbst: Stimmen die Punktsummen? Ist jede Mehrfachauswahl-Frage eindeutig? Nenne Quellen nur, wenn du sicher bist, dass sie existieren.`},
+ unterricht:{t:"Unterricht planen",f:[["Thema","Konflikte im Team"],["Dauer","90 Minuten"],["Lerngruppe","heterogen, teils Deutsch als Zweitsprache"]],
+  p:v=>`Plane eine Unterrichtseinheit zum Thema „${v[0]}“, Dauer ${v[1]}, Lerngruppe: ${v[2]}.
+
+Gib mir:
+1. Lernziele (handlungsorientiert formuliert)
+2. Ablauf mit Zeiten, Phasen, Methoden und Sozialformen
+3. ein Material für die Erarbeitungsphase
+4. eine Idee zur Differenzierung
+
+Markiere alles, was ich fachlich prüfen sollte.`},
+ differenz:{t:"Arbeitsblatt vereinfachen",f:[["Text oder Aufgabe","(hier einfügen, ohne echte Namen)"],["Zielniveau","einfache Sprache, Niveau A2–B1"]],
+  p:v=>`Formuliere den folgenden Text in ${v[1]} um. Inhaltliche Aussagen dürfen sich nicht ändern. Kurze Sätze, ein Gedanke pro Satz, Fachwörter erklären.
+
+Text:
+${v[0]}`},
+ feedback:{t:"Feedback-Kriterien entwickeln",f:[["Aufgabe","Lernaufgabe: Übergabegespräch führen"]],
+  p:v=>`Entwickle für die Aufgabe „${v[0]}“ ein Beobachtungs- und Feedbackraster mit 4 bis 6 Kriterien und je drei Ausprägungen. Formuliere die Kriterien so, dass Lernende sie zur Selbsteinschätzung nutzen können.`}
+};
+const TERMS={
+ prompt:["Prompt","Die Anweisung, die du einer KI gibst. Gute Prompts nennen Rolle, Ziel, Zielgruppe, gewünschtes Format und Grenzen, und sie bitten die KI, ihr Ergebnis selbst zu prüfen. Trotzdem bleibt die Prüfung deine Aufgabe."],
+ token:["Token","KI-Modelle zerlegen Text in kleine Stücke, sogenannte Tokens, oft Wortteile. Anbieter rechnen danach ab und setzen danach Grenzen. Deshalb kann ein Kontingent mitten in der Arbeit aufgebraucht sein."],
+ agent:["Agent","Ein Agent ist eine KI, die nicht nur antwortet, sondern ein Ziel in mehreren Schritten verfolgt. Sie plant, nutzt Werkzeuge, prüft Zwischenergebnisse und macht weiter, bis die Aufgabe erledigt ist. Beispiel: „Bereite die Klausur vor“ wird zu Lehrplan lesen, Aufgaben entwerfen, Punkte prüfen, Ergebnis vorlegen. Je mehr ein Agent selbst darf, desto wichtiger ist die Stelle, an der ein Mensch prüft."],
+ skill:["Skill","Ein Skill ist eine gespeicherte Anleitung für eine wiederkehrende Aufgabe, manchmal mit Vorlagen oder kleinen Programmen. Die KI lädt ihn, wenn er passt. Beispiel: ein Skill „Klausur nach unserer Schulvorlage“ mit Kopfzeile, Punkteschema und Prüfliste. So muss man die Regeln nicht jedes Mal neu erklären. Nicht jeder Anbieter nennt das „Skill“, das Prinzip gibt es aber oft."],
+ connector:["Connector","Ein Connector verbindet eine KI mit einem anderen Programm, etwa mit Mail, Kalender, Lernplattform oder Dateiablage. Dann kann die KI dort lesen oder sogar etwas ändern. Das ist praktisch, aber genau hier entscheidet sich der Datenschutz: Jeder Connector öffnet der KI eine Tür zu Daten. Frag immer, welche Tür du öffnest und wer dahinter steht."]
+};
+const AGENT={tools:[
+  {id:"plattform",t:"Connector: Lernplattform (Lehrplan, Materialien)",on:true},
+  {id:"noten",t:"Connector: Notenliste der Klasse",on:false,warn:true},
+  {id:"skill",t:"Skill: Klausur nach Schulvorlage",on:true},
+  {id:"pruef",t:"Schritt: Lehrkraft prüft vor dem Versand",on:true},
+  {id:"mail",t:"Connector: Mail an die Klasse",on:false}]};
+
+function openTools(tab){
+ const tabs=[["vorlagen","Prompt-Vorlagen"],["klausur","Klausur erstellen lassen"],["agent","Agent bauen"],["begriffe","Begriffe erklärt"]];
+ let body="";
+ if(tab==="vorlagen"){
+  body=`<p>Wähle eine Vorlage, passe die Felder an und kopiere den Prompt in die KI deiner Schule.</p><div class="chips">${Object.entries(TEMPL).map(([k,v])=>`<button type="button" class="chip" data-tp="${k}" aria-pressed="false">${esc(v.t)}</button>`).join("")}</div><div id="tpOut"></div>`;
+ } else if(tab==="klausur"){
+  body=`<p>Lass die KI eine Klausur entwerfen. Danach prüfst du sie, wie du es auch im Alltag tun müsstest.</p><div class="prompt">${esc(TEMPL.klausur.p(TEMPL.klausur.f.map(x=>x[1])).split("\n\nAnforderungen")[0])}</div><div class="row"><button type="button" class="primary" id="gen">Klausur erstellen lassen</button></div><div id="genOut"></div>`;
+ } else if(tab==="agent"){
+  body=`<p>Stell einen Agenten zusammen, der eine Klausur vorbereitet. Wähle, welche Werkzeuge er nutzen darf, und sieh zu, was passiert.</p><div class="form">${AGENT.tools.map(t=>`<label class="check"><input type="checkbox" data-ag="${t.id}" ${t.on?"checked":""}><span>${esc(t.t)}</span></label>`).join("")}</div><div class="row"><button type="button" class="primary" id="run">Agent starten</button></div><div id="agOut"></div>`;
+ } else {
+  body=`<p>Tippe auf einen Begriff.</p><div class="chips">${Object.entries(TERMS).map(([k,v])=>`<button type="button" class="chip" data-tm="${k}" aria-pressed="false">${v[0]}</button>`).join("")}</div><div id="tmOut"></div>`;
+ }
+ win("KI-Werkstatt (Übungsumgebung)",`<div class="tabs" role="tablist">${tabs.map(([k,v])=>`<button type="button" class="chip" role="tab" data-tab="${k}" aria-pressed="${k===tab}">${v}</button>`).join("")}</div>${body}<p class="muted">Alles hier ist simuliert. Keine Eingabe verlässt diese Seite.</p>`);
+ document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>openTools(b.dataset.tab));
+ document.querySelectorAll("[data-tp]").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("[data-tp]").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  const T=TEMPL[b.dataset.tp];
+  $("#tpOut").innerHTML=`<div class="form">${T.f.map((f,i)=>`<label>${esc(f[0])}<input type="text" data-f="${i}" value="${esc(f[1])}"></label>`).join("")}</div><div class="prompt" id="pr"></div><div class="row"><button type="button" class="ghost" id="cp">Prompt kopieren</button><span class="muted" id="cpm" aria-live="polite"></span></div>`;
+  const upd=()=>{$("#pr").textContent=T.p([...document.querySelectorAll("[data-f]")].map(i=>i.value));};
+  document.querySelectorAll("[data-f]").forEach(i=>i.oninput=upd);upd();
+  $("#cp").onclick=()=>copyText($("#pr").textContent,$("#cpm"));
+ });
+ document.querySelectorAll("[data-tm]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-tm]").forEach(x=>x.setAttribute("aria-pressed",x===b));const v=TERMS[b.dataset.tm];$("#tmOut").innerHTML=`<div class="plus"><h3>${v[0]}</h3><p>${esc(v[1])}</p></div>`;});
+ if($("#gen"))$("#gen").onclick=()=>{
+  if(S.day===KI_LIMIT_DAY){$("#genOut").innerHTML=`<div class="blocked"><h3>Tageskontingent aufgebraucht</h3><p>Versuchen Sie es morgen erneut.</p></div>`;return;}
+  $("#genOut").innerHTML=`<p class="muted">Die KI schreibt …</p>`;
+  setTimeout(()=>{$("#genOut").innerHTML=`<div class="plus"><p>Fertig! Die KI wirkt sehr sicher. Prüf den Entwurf, bevor du ihn verwendest.</p></div><div class="row"><button type="button" class="ghost" id="openK">📎 Klausur öffnen und prüfen</button></div>`;$("#openK").onclick=()=>openDocAtt("klausur",null);},1400);
+ };
+ if($("#run"))$("#run").onclick=()=>{
+  const on=Object.fromEntries([...document.querySelectorAll("[data-ag]")].map(i=>[i.dataset.ag,i.checked]));
+  const L=[];
+  L.push(`<span>▶ Ziel: Klausur „Kommunikation im Beruf“ vorbereiten</span>`);
+  L.push(on.plattform?`<span class="ok">✓ Lehrplan und Unterrichtsmaterial gelesen</span>`:`<span class="w">! Kein Zugriff auf den Lehrplan: Aufgaben beruhen nur auf allgemeinem Wissen</span>`);
+  if(on.noten)L.push(`<span class="bad">! Notenliste gelesen, um „schwache Lernende gezielt zu fordern“. Personenbezogene Daten sind jetzt im KI-System.</span>`);
+  L.push(on.skill?`<span class="ok">✓ Skill „Schulvorlage“ geladen: Kopfzeile, Punkteschema, Prüfliste</span>`:`<span class="w">! Kein Skill: eigenes Format, Punkteschema fehlt</span>`);
+  L.push(`<span>… 5 Aufgaben entworfen</span>`);
+  L.push(on.skill?`<span class="ok">✓ Prüfliste: Punktsumme korrigiert (15 statt 16)</span>`:`<span class="bad">✗ Punktsumme falsch (16 statt 15), nicht bemerkt</span>`);
+  L.push(`<span class="w">! Zuordnung „Watzlawick“ beim Kommunikationsquadrat nicht geprüft</span>`);
+  if(on.pruef)L.push(`<span class="ok">⏸ Pause: Entwurf liegt der Lehrkraft zur Prüfung vor</span>`);
+  if(on.mail)L.push(on.pruef?`<span>… Versand an die Klasse erst nach Freigabe durch die Lehrkraft</span>`:`<span class="bad">✉ Klausur samt Lösungen sofort an die ganze Klasse verschickt</span>`);
+  if(!on.pruef&&!on.mail)L.push(`<span class="w">! Fertig, ohne dass ein Mensch geprüft hat</span>`);
+  const lesson=on.mail&&!on.pruef?"Ein Agent macht genau, was er darf. Ohne Prüfschritt und mit Mail-Zugang gehen auch Fehler und Lösungen sofort hinaus.":on.noten?"Der Agent hat Noten gelesen, weil er es durfte. Jeder Connector ist eine Tür zu Daten.":on.pruef?"Der Prüfschritt fängt auf, was der Agent übersieht, etwa die falsche Zuordnung zu Watzlawick. Genau dort bleibt der Mensch verantwortlich.":"Ohne Prüfschritt bleibt der fachliche Fehler stehen.";
+  $("#agOut").innerHTML=`<div class="log">${L.join("")}</div><div class="plus"><p>${esc(lesson)}</p><p class="muted">Probier andere Häkchen aus und starte noch einmal.</p></div>`;
+ };
+}
+function copyText(t,m){const fb=()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}a.remove();m.textContent=ok?"Kopiert.":"Kopieren wurde blockiert.";};try{navigator.clipboard.writeText(t).then(()=>m.textContent="Kopiert.",fb)}catch(e){fb()}}
+
+function decideHtml(k){
+ const d=DEC[k],done=S.dec[k];
+ if(done){const o=d.opts.find(x=>x.id===done.opt);return `<div class="decide"><p class="eyebrow">Deine Entscheidung · ${esc(d.titel)}</p><p><b>${esc(o.t)}</b></p><div class="plus"><p><b>Plus:</b> ${esc(o.plus)}</p><p><b>Preis:</b> ${esc(o.preis)}</p></div><p class="muted">Deine Begründung: ${esc(done.why)}</p></div>`;}
+ return `<div class="decide"><p class="eyebrow">Baustein · ${esc(d.titel)}</p><h3>Wie reagierst du?</h3>
+  <div class="list" role="group" aria-label="Vorgehen">${d.opts.map(o=>`<button type="button" class="chip" data-o="${o.id}" aria-pressed="false">${esc(o.t)}</button>`).join("")}</div>
+  ${S.ki?`<div><button type="button" class="ghost" id="askKi">Assistentin fragen</button></div><div id="kiOut"></div>`:""}
+  <label for="why">Deine Begründung in einem Satz</label>
+  <textarea id="why" placeholder="Ich entscheide mich so, weil …"></textarea>
+  <div class="row"><button type="button" class="primary" id="ok" disabled>Festlegen</button><span class="muted" id="okMsg" aria-live="polite"></span></div></div>`;
+}
+function wireDecide(k){
+ if(S.dec[k])return;
+ let opt=null;
+ const check=()=>{const need=[];if(!opt)need.push("ein Vorgehen");if($("#why").value.trim().length<12)need.push("eine kurze Begründung");$("#ok").disabled=need.length>0;$("#okMsg").textContent=need.length?"Noch offen: "+need.join(", ")+".":"Es gibt kein Richtig oder Falsch, es zählt deine Begründung.";};
+ document.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{opt=b.dataset.o;document.querySelectorAll("[data-o]").forEach(x=>x.setAttribute("aria-pressed",x===b));check();});
+ $("#why").oninput=check;
+ if($("#askKi"))$("#askKi").onclick=()=>{
+  if(S.day===KI_LIMIT_DAY){S.kiAsked[k]="limit";$("#kiOut").innerHTML=`<div class="blocked"><h3>Tageskontingent aufgebraucht</h3><p>Sie haben Ihr Nachrichtenlimit erreicht. Versuchen Sie es morgen erneut oder buchen Sie ein Upgrade.</p></div><p class="muted">Heute entscheidest du ohne Assistentin.</p>`;$("#askKi").remove();return;}
+  S.kiAsked[k]=true;$("#kiOut").innerHTML=`<div class="ki"><p class="eyebrow">Assistentin</p><p>${esc(DEC[k].ki.t)}</p></div>`;$("#askKi").remove();};
+ $("#ok").onclick=()=>{
+  S.dec[k]={opt,why:$("#why").value.trim()};
+  const it=S.items.find(i=>i.dec===k);openItem(it.id);
+  toast(`📄 Baustein „${esc(DEC[k].titel)}“ steht im Regel-Entwurf.`);
+  if(S.day===4&&k==="lernen"){setTimeout(()=>toast("✉ Neue Mail von der Schulleitung"),900);}
+  else if(S.items.every(i=>!i.dec||S.dec[i.dec])&&S.day<4)setTimeout(()=>toast("Alles erledigt für heute. Unten rechts: Feierabend."),900);
+  drawIcons();
+ };
+ check();
+}
+
+function ruleList(){
+ return Object.keys(DEC).map(k=>{const d=S.dec[k];if(!d)return `<li class="gap">${esc(DEC[k].titel)}: noch offen</li>`;const o=DEC[k].opts.find(x=>x.id===d.opt);return `<li><b>${esc(DEC[k].titel)}.</b> ${esc(o.regel)}</li>`;}).join("");
+}
+function openDoc(final){
+ win("Regel-Entwurf.docx",`<div class="doc"><p class="eyebrow">Entwurf · Stand ${DAYS[S.day]}</p><h3>Regeln zur Nutzung von KI an unserer Schule</h3>
+  <p>Unsere Schule begleitet den Umgang mit KI, statt ihn dem Zufall zu überlassen. Die KI-Verordnung der EU verlangt von Einrichtungen, die KI einsetzen, für ausreichende KI-Kompetenz zu sorgen.</p>
+  <ol>${ruleList()}</ol></div>
+  ${final?`<div class="row"><button type="button" class="primary" id="send">Entwurf abschicken</button></div>`:`<p class="muted">Der Entwurf wächst mit jeder Entscheidung.</p>`}`);
+ if(final)$("#send").onclick=finish;
+}
+
+function startDay(){
+ S.items.push(...dayItems(S.day));
+ $("#dayText").textContent=DAYS[S.day];
+ $("#dayCard").hidden=false;$("#win").hidden=true;
+ setTimeout(()=>{$("#dayCard").hidden=true;drawIcons();const n=dayItems(S.day).filter(i=>!i.after).length;toast(`${n===1?"Eine neue Nachricht":n+" neue Nachrichten"} · ${DAYS[S.day]}, ${TIME[S.day]}`);},1300);
+}
+$("#feierabend").onclick=()=>{S.day++;startDay();};
+
+function finish(){
+ const rows=Object.keys(DEC).map(k=>{const d=S.dec[k],o=DEC[k].opts.find(x=>x.id===d.opt);return `<tr><td>${esc(DEC[k].titel)}</td><td>${esc(o.t)}</td><td>${esc(d.why)}</td></tr>`}).join("");
+ const kiRows=S.ki?Object.keys(DEC).map(k=>`<tr><td>${esc(DEC[k].titel)}</td><td>${S.kiAsked[k]==="limit"?"wolltest sie fragen, Kontingent leer":S.kiAsked[k]?"gefragt":"nicht gefragt"}</td><td>${DEC[k].ki.ok?"lag richtig":"lag daneben"}: ${esc(DEC[k].ki.warum)}</td></tr>`).join(""):"";
+ const finds=[S.browser&&"den Browser",S.trash&&"den Papierkorb",S.tools&&"die KI-Werkstatt"].filter(Boolean);
+ const foundTxt=`<p>In den Anhängen hast du <b>${S.found.size} von ${CLUES}</b> Hinweisen gefunden: KI-Spuren, erfundene Quellen und Verzerrungen. KI-Texte verraten sich oft durch Kleinigkeiten, aber nicht immer. Ein Hinweis ist kein Beweis.</p>`;
+ $("#endCard").innerHTML=`<p class="eyebrow">Freitag, 17:02 · Reflexion</p><h2>Dein Entwurf ist unterwegs</h2>
+  <p>Aus fünf Tagen und sechs Entscheidungen ist ein erster Regel-Entwurf entstanden. Jeder Baustein hat ein Plus und einen Preis. Ein gutes Konzept wählt nicht den „richtigen“ Weg, es benennt, welchen Preis es bewusst zahlt.</p>
+  <div class="tablewrap"><table><thead><tr><th>Baustein</th><th>Deine Wahl</th><th>Deine Begründung</th></tr></thead><tbody>${rows}</tbody></table></div>
+  ${S.ki?`<h3>Und die Assistentin?</h3><p class="muted">Sie wurde von Tag zu Tag unzuverlässiger: erst hilfreich, dann überzeugend falsch, am Donnerstag nicht verfügbar, am Freitag unsinnig.</p><div class="tablewrap"><table><thead><tr><th>Baustein</th><th>Du hast sie</th><th>So war es</th></tr></thead><tbody>${kiRows}</tbody></table></div>`:""}
+  ${foundTxt}
+  ${finds.length?`<p class="muted">Nebenbei entdeckt: ${finds.join(" und ")}.</p>`:`<p class="muted">Übrigens: Browser, Papierkorb und KI-Werkstatt hättest du auch öffnen können.</p>`}
+  <label for="final">Welchen Baustein würdest du an deiner eigenen Schule als Erstes angehen, und warum?</label>
+  <textarea id="final" placeholder="Als Erstes würde ich …"></textarea>
+  <div class="row"><button type="button" class="primary" id="copy">Entwurf und Begründungen kopieren</button><button type="button" class="ghost" id="again">Neue Woche</button><span class="muted" id="cmsg" aria-live="polite"></span></div>
+  <p class="foot">Idee und Didaktik: Barbara Magdalena Mayer · technische Umsetzung mit KI-Unterstützung · alle Personen erfunden, keine Rechtsberatung. <a href="index.html">← Zurück zur Werkstatt</a></p>`;
+ $("#win").hidden=true;$("#end").hidden=false;
+ $("#again").onclick=()=>location.reload();
+ $("#copy").onclick=()=>{
+  const L=["Regeln zur Nutzung von KI an unserer Schule (Entwurf)",""];
+  Object.keys(DEC).forEach((k,n)=>{const d=S.dec[k],o=DEC[k].opts.find(x=>x.id===d.opt);L.push(`${n+1}. ${DEC[k].titel}: ${o.regel}`,`   Begründung: ${d.why}`,`   Plus: ${o.plus} Preis: ${o.preis}`);});
+  L.push("","Als Erstes: "+$("#final").value.trim());
+  const t=L.join("\n"),m=$("#cmsg");
+  const fb=()=>{const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}a.remove();m.textContent=ok?"Kopiert.":"Kopieren wurde blockiert.";};
+  try{navigator.clipboard.writeText(t).then(()=>m.textContent="Kopiert.",fb)}catch(e){fb()}
+ };
+}
+
+document.querySelectorAll("[data-net]").forEach(b=>b.onclick=()=>{S.net=b.dataset.net;document.querySelectorAll("[data-net]").forEach(x=>x.setAttribute("aria-pressed",x===b));});
+document.querySelectorAll("[data-ki]").forEach(b=>b.onclick=()=>{S.ki=b.dataset.ki==="1";document.querySelectorAll("[data-ki]").forEach(x=>x.setAttribute("aria-pressed",x===b));});
+$("#go").onclick=()=>{$("#start").hidden=true;$("#screen").removeAttribute("aria-hidden");startDay();};
+drawIcons();
+</script>
+</body>
+</html>
