@@ -183,6 +183,10 @@ body{font-size:clamp(16px,1.1vw,18px);background:#14231d}
 /* Beim Öffnen eines Fensters werden Desktop-Symbole aus dem Weg genommen. */
 #win{z-index:20!important}
 #screen.window-open #icons,#screen.window-open #sticky{visibility:hidden;pointer-events:none}
+
+/* Fallback ohne JavaScript: sobald #win sichtbar ist, verschwinden die Desktop-Symbole. */
+#desk:has(#win:not([hidden])) #icons,#desk:has(#win:not([hidden])) #sticky{display:none!important}
+#win:not([hidden]){z-index:9999!important}
 </style>
 </head>
 <body>
