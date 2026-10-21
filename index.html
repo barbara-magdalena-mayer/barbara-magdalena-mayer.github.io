@@ -33,6 +33,19 @@ p{margin:0;max-width:66ch}
 .tags{display:flex;flex-wrap:wrap;gap:8px}.tag{font-size:.86rem;background:var(--green-soft);color:var(--green);border-radius:999px;padding:3px 11px}
 .section{display:flex;flex-direction:column;gap:14px}
 
+.media-note{border:2px solid var(--pink);background:#fff9f5;border-radius:14px;padding:16px;display:grid;gap:10px;box-shadow:0 4px 14px rgba(176,78,107,.1)}
+.media-note-head{display:flex;align-items:center;gap:10px}
+.media-note-icon{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--pink);color:#fff;font-size:1.25rem;line-height:1}
+.media-note h3{color:var(--pink-dark);font-size:1.02rem}
+.media-note p{font-size:.92rem}
+.media-note details{border-top:1px solid var(--line);padding-top:8px}
+.media-note summary{cursor:pointer;color:var(--green);font-weight:600}
+.browser-steps{display:grid;gap:8px;margin-top:8px}
+.browser-steps p{font-size:.88rem}
+.media-note a{color:var(--green);font-weight:600;text-decoration:underline}
+@media(prefers-reduced-motion:no-preference){.media-note-icon{animation:media-note-pulse .75s ease-out 1s 2}@keyframes media-note-pulse{50%{transform:scale(1.12);box-shadow:0 0 0 5px rgba(176,78,107,.17)}}}
+@media(prefers-reduced-motion:reduce){.media-note-icon{animation:none}}
+
 /* Mini-Erlebnis */
 .plus-experience{background:#fff9f5;border:1px solid var(--line);border-radius:18px;padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:16px;box-shadow:0 12px 35px rgba(36,56,44,.055)}
 .plus-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -121,6 +134,15 @@ footer details summary{cursor:pointer;color:var(--ink);font-weight:600}footer a{
     <span class="eyebrow">Arbeitsproben</span>
     <h2 id="h-arbeiten">Zum Ausprobieren</h2>
     <p class="muted">Alles hier habe ich selbst konzipiert und gebaut. Die Pflege ist dabei nur das Beispiel – die Bauweise lässt sich auf andere Berufe übertragen. Am besten in dieser Reihenfolge ansehen. Viele Arbeiten sind Prototypen, die ich weiterentwickle.</p>
+    <aside class="media-note" role="note" aria-labelledby="media-note-title">
+      <div class="media-note-head"><span class="media-note-icon" aria-hidden="true">♪</span><h3 id="media-note-title">Fehlt Ton oder wirkt ein Spiel unvollständig?</h3></div>
+      <p>Nicht jedes Lernspiel hat Ton. Im 3D-Lernfall „Nachtdienst, Zimmer 14“ gibt es Geräusche und gesprochene Passagen. Fehlt dort Ton oder lädt ein Teil der Szene nicht, kann ein Inhaltsblocker oder eine Browser- bzw. Geräteeinstellung mitwirken. Du musst nichts ändern. Wenn du testen möchtest, lockere den Schutz nur für diese Website, lade die Seite neu und schalte ihn danach wieder ein.</p>
+      <details><summary>Wo prüfe ich das in meinem Browser?</summary><div class="browser-steps">
+        <p><strong>Safari auf iPad/iPhone:</strong> Öffne das Seitenmenü links neben der Adresszeile und wähle „Erweiterungen verwalten“. Prüfe den Inhaltsblocker nur für diese Website. <a href="https://support.apple.com/guide/iphone/get-extensions-iphab0432bf6/ios">Apple-Anleitung</a>.</p>
+        <p><strong>Firefox auf iPad/iPhone:</strong> Tippe auf das Schild neben der Adresse und prüfe den „Schutz vor Aktivitätenverfolgung“ für diese Website. <a href="https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-ios">Mozilla-Anleitung</a>.</p>
+        <p><strong>Chrome:</strong> Der eingebaute Filter betrifft aufdringliche Werbung, nicht allgemein den Ton. Bei einer zusätzlichen Blocker-Erweiterung öffne deren Symbol oder Menü und erlaube die Website dort. <a href="https://support.google.com/chrome/answer/7632919?hl=de&amp;co=GENIE.Platform%3DDesktop">Google-Anleitung zum Chrome-Werbeblocker</a>.</p>
+      </div></details>
+    </aside>
   </section>
 
   <article class="work" aria-labelledby="h-bias">
