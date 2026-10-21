@@ -61,7 +61,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px soli
 .kiquote{font-style:italic;background:var(--surface);border-radius:10px;padding:10px 12px}
 .fb{border-radius:10px;padding:10px 12px}
 .fb.ok{background:var(--good-bg)}.fb.no{background:var(--bad-bg)}
-textarea{width:100%;min-height:80px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;background:var(--surface);color:var(--fg)}
+textarea{display:block;width:100%;min-height:80px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:16px;line-height:1.5;background:var(--surface);color:var(--fg);-webkit-text-fill-color:var(--fg);caret-color:var(--coral-ink);-webkit-appearance:none;appearance:none;-webkit-user-select:text;user-select:text;touch-action:auto}
 .primary{background:var(--coral-ink);color:#fff;border:0;padding:11px 20px;font-weight:700;border-radius:999px}
 .ghost{background:transparent;border:2px solid var(--teal);color:var(--teal);padding:8px 16px;font-weight:700;border-radius:999px}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -96,7 +96,7 @@ textarea{width:100%;min-height:80px;resize:vertical;border:1px solid var(--line)
     <h2>Dein nächster kleiner Schritt</h2>
     <p class="muted">Für die nächsten sieben Tage. So konkret, dass du später prüfen kannst, ob er stattgefunden hat.</p>
     <label for="mystep" class="label">Mein Schritt</label>
-    <textarea id="mystep" placeholder="Zum Beispiel: Am Mittwoch nach dem Dienst zehn Minuten mit meiner Vertrauensperson telefonieren."></textarea>
+    <textarea id="mystep" inputmode="text" autocapitalize="sentences" spellcheck="true" placeholder="Zum Beispiel: Am Mittwoch nach dem Dienst zehn Minuten mit meiner Vertrauensperson telefonieren."></textarea>
     <div class="row"><button class="primary" id="check">Schritt prüfen</button></div>
     <div id="checkres" aria-live="polite"></div>
    </div>
