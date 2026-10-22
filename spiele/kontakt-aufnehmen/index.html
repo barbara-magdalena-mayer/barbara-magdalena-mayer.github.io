@@ -1,127 +1,174 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Grundlage · Kontakt aufnehmen</title><style>
-:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#faf8f3;background:#111a20}*{box-sizing:border-box}body{margin:0;background:#111a20}
-header{display:flex;justify-content:space-between;align-items:center;padding:12px clamp(12px,3vw,36px);gap:12px}h1{font-size:clamp(17px,2.1vw,25px);font-weight:600;margin:0}header small{color:#b9c6c9}
-button{font:inherit;cursor:pointer}.layout{max-width:1520px;margin:auto;padding:0 12px 18px}
-.stage{position:relative}
-.scene{position:relative;overflow:hidden;border-radius:14px;aspect-ratio:1262/844;background:#736f68;isolation:isolate}
-.world{position:absolute;inset:0;transition:transform .75s ease;transform-origin:50% 50%}
-.picture{position:absolute;inset:0;background-size:100% 100%;background-position:center}
-.shade{pointer-events:none;position:absolute;inset:0;z-index:1;background:linear-gradient(0deg,#0d1728aa,transparent 29%),linear-gradient(90deg,#111c254c,transparent 27%)}
-.guide-figure{position:absolute;z-index:2;right:1.5%;bottom:0;height:78%;max-width:34%;object-fit:contain;object-position:bottom right;pointer-events:none;filter:drop-shadow(0 8px 12px #0005)}.spot{position:absolute;z-index:3;width:46px;height:46px;border:1px solid #fff9;border-radius:50%;transform:translate(-50%,-50%);background:#18272d61;backdrop-filter:blur(3px);color:white;display:grid;place-items:center;box-shadow:0 0 0 6px #ffffff18;font-size:22px;transition:background .2s,scale .2s,opacity .3s}
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Grundlage · Kontakt aufnehmen</title><style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#faf8f3;background:#111a20}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:#111a20}
+button{font:inherit;cursor:pointer;color:inherit}
+.app{height:100vh;height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr)}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 14px;flex-wrap:wrap}
+h1{font-size:clamp(16px,1.9vw,21px);font-weight:600;margin:0}header small{color:#b9c6c9;font-size:12px;display:block}
+.hbtns{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hbtn{border:1px solid #6a8589;background:#243239;border-radius:9px;padding:7px 11px;font-size:14px}.hbtn:hover,.hbtn:focus-visible{background:#41616a}
+.back{color:#c3e5f3;text-decoration:none;font-size:14px}.back:hover{text-decoration:underline}
+.count{font-size:13px;color:#c3e5f3;border:1px solid #33434b;border-radius:999px;padding:5px 10px}
+.main{display:grid;min-height:0;gap:12px;padding:0 12px 12px;grid-template-columns:minmax(0,1fr) minmax(290px,360px)}
+.stagewrap{min-height:0;min-width:0;display:flex;align-items:center;justify-content:center}
+.scene{position:relative;overflow:hidden;border-radius:14px;aspect-ratio:1262/844;width:min(100%,calc((100dvh - 84px) * 1.4953));background:#736f68;isolation:isolate}
+.world{position:absolute;inset:0;transform-origin:50% 50%}
+@media(prefers-reduced-motion:no-preference){.world{transition:transform .7s ease,filter .5s ease}}
+.scene.door .world{filter:brightness(.5) blur(2px)}
+.picture{position:absolute;inset:0;background-size:100% 100%}
+.shade{pointer-events:none;position:absolute;inset:0;z-index:1;background:linear-gradient(0deg,#0d172888,transparent 25%)}
+.tag{position:absolute;z-index:2;bottom:10px;left:10px;background:#13202bd9;border-radius:9px;padding:6px 10px;font-size:13px;max-width:calc(100% - 20px)}
+.spot{position:absolute;z-index:3;width:40px;height:40px;border:1px dashed #fffb;border-radius:50%;transform:translate(-50%,-50%);background:#18272d70;backdrop-filter:blur(3px);display:grid;place-items:center;box-shadow:0 0 0 5px #ffffff1c;font-size:15px;padding:0;transition:background .2s,scale .2s}
 .spot:hover,.spot:focus-visible{background:#ffffff60;outline:2px solid #fff;scale:1.12}
-.spot span{position:absolute;top:52px;left:50%;transform:translateX(-50%);background:#15212de6;border-radius:7px;padding:5px 10px;font-size:12px;white-space:nowrap;opacity:0;pointer-events:none}
+.spot.seen{border-style:solid;background:#c3b290b0;color:#111a20}
+.spot.person{border-style:solid;border-color:#fff}
+.spot span{position:absolute;top:44px;left:50%;transform:translateX(-50%);background:#15212de6;color:#fff;border-radius:7px;padding:4px 9px;font-size:12px;white-space:nowrap;opacity:0;pointer-events:none}
 .spot:hover span,.spot:focus-visible span{opacity:1}
-.spot.self{border-style:dashed}
-.info{position:absolute;z-index:3;top:16px;left:16px;background:#13202bd9;backdrop-filter:blur(12px);border-radius:12px;padding:13px 17px;max-width:300px}
-.info strong{font-size:17px}.info p{color:#d7e0e1;font-size:13px;line-height:1.45;margin:5px 0 0}
-.toast{position:absolute;z-index:3;bottom:18px;left:18px;max-width:min(530px,calc(100% - 36px));padding:11px 15px;background:#13202bd9;border:1px solid #ffffff30;border-radius:11px;font-size:14px}
-.panel{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:14px}
-.card{background:#1c2931;border:1px solid #33434b;border-radius:13px;padding:17px;min-height:180px}.card h2{font-size:17px;margin:0 0 10px}.card p{color:#d6dedf;line-height:1.55;margin:8px 0}
-.choices{display:flex;gap:8px;flex-wrap:wrap}
-.choice,.muted{border:1px solid #6a8589;background:#2c424b;color:#fff;border-radius:9px;padding:11px 13px;text-align:left}
-.choice:hover,.choice:focus-visible,.muted:hover,.muted:focus-visible{background:#41616a}.muted{background:#243239}
-.response{border-left:3px solid #c3b290;padding:4px 0 4px 13px;margin:10px 0 15px!important;color:#fff!important}
-.subtle{font-size:13px;color:#9eb0b5!important}.actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.hidden{display:none!important}
-textarea{width:100%;min-height:96px;background:#101d24;color:#fff;border:1px solid #637d83;border-radius:9px;padding:11px;font:inherit;resize:vertical}
-.reflection{margin-top:12px}.exercise-card{margin-top:14px}.exercise-block{border-top:1px solid #40525a;padding-top:13px;margin-top:13px}.exercise-block:first-of-type{border-top:0;padding-top:0;margin-top:0}.exercise-block h3{font-size:15px;margin:0 0 7px}.exercise-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.exercise-options button{flex:1 1 220px}.exercise-feedback{min-height:22px;margin:9px 0 0;color:#d7e6c7;font-size:14px;line-height:1.45}.exercise-feedback.bad{color:#f2c7b9}.score{color:#c3e5f3;font-size:13px;margin-top:8px}.exercise-note{width:100%;min-height:70px;margin-top:8px}.exercise-card hr{border:0;border-top:1px solid #40525a;margin:16px 0}@media(max-width:700px){.exercise-options button{flex-basis:100%}}summary{cursor:pointer;padding:8px 0}a{color:#c3e5f3}
-@media(max-width:700px){
- header{align-items:flex-start}
- .scene{border-radius:12px}
- .info,.toast{position:static;max-width:none;margin-top:10px;backdrop-filter:none;background:#1c2931;border:1px solid #33434b}
- .guide-figure{right:-2%;height:52%;max-width:42%;opacity:.96}.spot{width:34px;height:34px;font-size:17px;box-shadow:0 0 0 4px #ffffff18}
- .spot span{top:40px}
- .panel{grid-template-columns:1fr}.card{min-height:0}}
-.head-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}.back{color:#c3e5f3;text-decoration:none;font-size:14px}.back:hover{text-decoration:underline}.signature{display:flex;justify-content:flex-end;margin-top:22px;border-top:1px solid #33434b;padding-top:6px}.signature img{height:150px;display:block;filter:drop-shadow(0 6px 10px #0006)}@media(max-width:700px){.signature img{height:110px}}
-@media(prefers-reduced-motion:reduce){.world{transition:none}}
-@media(prefers-reduced-motion:no-preference){.scene .world{transition:transform .75s ease,filter .6s ease}}.scene.door .world{filter:brightness(.55) blur(2px)}#extra:not(:empty){margin:4px 0 14px}.chips{border:0;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:6px}.chips legend{font-size:13px;color:#9eb0b5;margin-bottom:6px;padding:0}.chip{border:1px solid #6a8589;background:#1c2931;color:#fff;border-radius:999px;padding:7px 12px;font-size:14px}.chip:hover,.chip:focus-visible{background:#2c424b}.chip[aria-pressed="true"]{background:#c3b290;border-color:#c3b290;color:#111a20}.note{display:block;margin-top:14px;font-size:13px;color:#9eb0b5}.note textarea{margin-top:6px;min-height:70px}.own{min-height:80px}.hint{font-size:13px;color:#c3e5f3!important;margin:12px 0 0!important}#log,.path{padding-left:20px;color:#d6dedf;font-size:14px;line-height:1.5;margin:8px 0}#log li,.path li{margin:4px 0}#heading:focus{outline:none}
+.panel{min-height:0;overflow:auto;background:#1c2931;border:1px solid #33434b;border-radius:14px;padding:16px;display:flex;flex-direction:column}
+.panel h2{font-size:18px;margin:0 0 8px}.panel h2:focus{outline:none}
+.panel p{color:#d6dedf;line-height:1.5;margin:6px 0}
+.response{border-left:3px solid #c3b290;padding:3px 0 3px 12px;margin:8px 0 10px!important;color:#fff!important}
+.hidden{display:none!important}
+#extra:not(:empty){margin:2px 0 10px}
+.choices{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:6px}
+.choice{border:1px solid #6a8589;background:#2c424b;border-radius:9px;padding:9px 11px;text-align:left;font-size:14px;line-height:1.35;min-height:44px}
+.choice:hover,.choice:focus-visible{background:#41616a}.choice.wide{grid-column:1/-1}.choice.quiet{background:#22323a}
+.chips{border:0;padding:0;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+.chips legend{font-size:13px;color:#9eb0b5;margin-bottom:5px;padding:0}
+.chip{border:1px solid #6a8589;background:#1c2931;border-radius:999px;padding:6px 11px;font-size:14px}
+.chip:hover,.chip:focus-visible{background:#2c424b}.chip[aria-pressed="true"]{background:#c3b290;border-color:#c3b290;color:#111a20}
+.note{display:block;margin-top:10px;font-size:13px;color:#9eb0b5}
+textarea{width:100%;min-height:62px;margin-top:5px;background:#101d24;color:#fff;border:1px solid #637d83;border-radius:9px;padding:9px;font:inherit;font-size:15px;resize:vertical}
+.hint{font-size:13px;color:#c3e5f3!important;margin:8px 0 0!important}
+.subtle{font-size:13px;color:#9eb0b5!important}
+.sig{margin-top:auto;padding-top:12px;display:flex;justify-content:flex-end}.sig img{height:72px;display:block;filter:drop-shadow(0 5px 8px #0006)}
+dialog{background:#1c2931;color:#faf8f3;border:1px solid #33434b;border-radius:14px;max-width:min(560px,92vw);width:100%;padding:18px}
+dialog::backdrop{background:#000a}dialog h2{margin:0 0 8px;font-size:19px}
+#log,.path{padding-left:20px;color:#d6dedf;font-size:14px;line-height:1.5;margin:8px 0}#log li,.path li{margin:3px 0}
+.dlg-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+@media (max-aspect-ratio:1/1),(max-width:760px){
+ .main{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+ .scene{width:100%}
+ .spot{width:32px;height:32px;font-size:13px;box-shadow:0 0 0 3px #ffffff1c}.spot span{top:36px}
+ .sig img{height:56px}
+}
+@media (max-height:520px) and (min-aspect-ratio:1/1){header{padding:4px 12px}.panel{padding:12px}}
 </style>
-<!-- HINTERGRUNDBILD: Für ein neues Bild nur die URL in der nächsten Zeile ersetzen.
-     Das Bild sollte keine eingezeichneten Bedienelemente enthalten (keine Knöpfe, Punkte, Texte).
-     Bei anderem Seitenverhältnis: .scene{aspect-ratio:BREITE/HÖHE} oben anpassen
-     und die Punkte (style="left:…;top:…" an den .spot-Buttons) neu setzen. -->
 <style id="hintergrundbild">.picture{background-image:url('zimmer-4.webp')}</style>
 </head><body>
-<header><div><h1>Grundlage · Kontakt aufnehmen</h1><small>Lernen am Optimum · Ein erster Entwicklungsraum</small></div><div class="head-actions"><a class="back" href="../../">← Zurück zur Werkstatt</a><button class="muted" id="restart">↺ Neu erleben</button></div></header>
-<main class="layout">
-<div class="stage">
- <div class="scene" id="scene">
-  <div class="world" id="world">
-   <div class="picture" role="img" aria-label="Patientenzimmer am Nachmittag: Eine Pflegeperson steht im Raum, eine ältere Person sitzt auf der Bettkante."></div>
-   <!-- Punkte: Position in Prozent vom Bild (left = von links, top = von oben) -->
-   <button class="spot self" data-spot="self"   style="left:42.8%;top:39%"   aria-label="Bei mir innehalten">◌<span>Bei mir</span></button>
-   <button class="spot"      data-spot="patient" style="left:66.8%;top:46%"   aria-label="Zur Person gehen">◌<span>Person</span></button>
-   <button class="spot"      data-spot="table"   style="left:87.5%;top:51.5%" aria-label="Tisch am Bett erkunden">◌<span>Tisch am Bett</span></button>
-   <button class="spot"      data-spot="bed"     style="left:58%;top:71%"     aria-label="Bett erkunden">◌<span>Bett</span></button>
-   <button class="spot"      data-spot="photo"   style="left:15%;top:43%"     aria-label="Foto auf dem Schrank erkunden">◌<span>Foto auf dem Schrank</span></button>
+<div class="app">
+<header>
+ <div><h1>Grundlage · Kontakt aufnehmen</h1><small>Lernen am Optimum · Ein Zimmer, zwei Begegnungen</small></div>
+ <div class="hbtns"><span class="count" id="count" aria-live="polite">0 / 12 entdeckt</span><button class="hbtn" id="openweg">Mein Weg</button><button class="hbtn" id="restart">↺ Neu</button><a class="back" href="../../">← Werkstatt</a></div>
+</header>
+<div class="main">
+ <div class="stagewrap">
+  <div class="scene" id="scene">
+   <div class="world" id="world">
+    <div class="picture" role="img" aria-label="Patientenzimmer am Nachmittag: Eine Pflegeperson steht im Raum, eine ältere Person sitzt auf der Bettkante."></div>
+   </div>
+   <div class="shade"></div>
+   <div class="tag" id="tag">Zimmer 4</div>
   </div>
-  <div class="shade"></div>
  </div>
- <div class="info"><strong>Zimmer 4</strong><p>Ein Zimmer, zwei Begegnungen. Du darfst erst einmal wahrnehmen. Du musst niemanden zufriedenstellen.</p></div>
- <div class="toast" id="toast" aria-live="polite">Wähle unten, mit welcher Begegnung du beginnst.</div>
-</div>
-<div class="panel">
- <section class="card"><h2 id="heading" tabindex="-1">Zwei Begegnungen</h2><p id="description"></p><p id="response" class="response hidden" aria-live="polite"></p><div id="extra"></div><div class="choices" id="choices"></div></section>
- <section class="card"><h2>Dein Weg</h2><p class="subtle" id="status">Noch hat nichts begonnen.</p>
-  <ol id="log"></ol><p class="subtle" id="log-empty">Hier erscheint Schritt für Schritt, was du wahrgenommen, gespürt und gewählt hast. Keine Bewertung, keine Musterlösung.</p>
-  <div class="actions"><button class="muted" id="save">Meinen Weg als Textdatei sichern</button></div>
-  <p class="subtle">Deine Notizen bleiben auf diesem Gerät.</p>
-  <details><summary>Später: meine professionelle Rolle</summary><p>Was ich empfinde, darf da sein. Ich kann trotzdem entscheiden, wie ich in meiner Rolle handle.</p><p class="subtle">Nächste Sequenz: in der Rolle bleiben</p></details>
+ <section class="panel">
+  <h2 id="heading" tabindex="-1"></h2><p id="description"></p><p id="response" class="response hidden" aria-live="polite"></p><div id="extra"></div><div class="choices" id="choices"></div>
+  <div class="sig"><img src="../../bilder/barbara-figur.webp" alt="Barbara, die diese Lernwelt gebaut hat"></div>
  </section>
 </div>
-<section class="card exercise-card" aria-labelledby="exercise-title">
- <h2 id="exercise-title">Zusätzliche Übungen: Innere Schau</h2>
- <p class="subtle">Es gibt nicht nur eine richtige Empfindung. Die Übungen helfen dir, zwischen Wahrnehmen, Bewerten und Handeln zu unterscheiden.</p>
- <div class="exercise-block">
-  <h3>1. Was gehört zur inneren Schau?</h3>
-  <p>Die Person sagt: „Ich möchte jetzt meine Ruhe.“ Welche Antwort beschreibt am ehesten eine Wahrnehmung?</p>
-  <div class="exercise-options" role="group" aria-label="Antworten zu Übung 1">
-   <button class="choice" data-ex1="no">Die Person ist unhöflich.</button>
-   <button class="choice" data-ex1="yes">Ich bemerke, dass ich angespannt und enttäuscht bin.</button>
-   <button class="choice" data-ex1="no">Ich muss die Stimmung sofort verbessern.</button>
-  </div>
-  <p class="exercise-feedback" id="feedback1" aria-live="polite"></p>
- </div>
- <div class="exercise-block">
-  <h3>2. Wahrnehmung oder Bewertung?</h3>
-  <p>Ordne die Aussage zu: <strong>„Meine Schultern sind angespannt und ich atme flacher.“</strong></p>
-  <div class="exercise-options" role="group" aria-label="Antworten zu Übung 2">
-   <button class="choice" data-ex2="yes">Wahrnehmung</button>
-   <button class="choice" data-ex2="no">Bewertung</button>
-  </div>
-  <p class="exercise-feedback" id="feedback2" aria-live="polite"></p>
- </div>
- <div class="exercise-block">
-  <h3>3. Transfer in die Rolle</h3>
-  <p>Welcher nächste Schritt passt zur Kontaktaufnahme?</p>
-  <div class="exercise-options" role="group" aria-label="Antworten zu Übung 3">
-   <button class="choice" data-ex3="no">Meine Empfindung wegdrücken und sofort weiterreden.</button>
-   <button class="choice" data-ex3="yes">Einen Moment wahrnehmen und dann bewusst entscheiden, wie ich handle.</button>
-   <button class="choice" data-ex3="no">Die Person davon überzeugen, dass sie anders fühlen sollte.</button>
-  </div>
-  <p class="exercise-feedback" id="feedback3" aria-live="polite"></p>
- </div>
- <div class="exercise-block">
-  <h3>4. Eigene Formulierung</h3>
-  <p>Vervollständige den Satz: <em>„Ich bemerke gerade ..., und ich entscheide mich dafür, ...“</em></p>
-  <textarea class="exercise-note" id="transfer-note" placeholder="Ein kurzer Satz genügt." aria-label="Eigene Formulierung"></textarea>
-  <div class="actions"><button class="muted" id="check-transfer">Antwort festhalten</button></div>
-  <p class="exercise-feedback" id="feedback4" aria-live="polite"></p>
- </div>
- <p class="score" id="exercise-score" aria-live="polite">0 von 3 Auswahlfragen beantwortet.</p>
-</section>
-<footer class="signature"><img src="../../bilder/barbara-figur.webp" alt="Barbara, die diese Lernwelt gebaut hat"></footer>
-</main>
+</div>
+<dialog id="weg" aria-labelledby="weg-title">
+ <h2 id="weg-title">Mein Weg</h2>
+ <p class="subtle" id="weg-empty">Hier erscheint Schritt für Schritt, was du wahrgenommen, gespürt und gewählt hast. Keine Bewertung, keine Musterlösung. Deine Notizen bleiben auf diesem Gerät.</p>
+ <ol id="log"></ol>
+ <div class="dlg-actions"><button class="choice" id="save">Als Textdatei sichern</button><button class="choice quiet" id="closeweg">Schließen</button></div>
+</dialog>
 <script>(()=>{'use strict';
 const $=id=>document.getElementById(id),world=$('world'),scene=$('scene'),choices=$('choices'),extra=$('extra');
-const KEY='lernen-am-optimum-kontakt-v2';
+const KEY='lernen-am-optimum-kontakt-v3';
 let notes={};try{notes=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){notes={}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(notes))}catch(e){}}
+const by=(v)=>typeof v==='string'||Array.isArray(v)?v:v[S.sit];
 
-/* ---------- Inhalte ---------- */
+/* ---------- Dinge im Zimmer ---------- */
+const THINGS={
+ photo:{x:15,y:43,title:'Foto auf dem Schrank',
+  see:{ruhe:'Ein gerahmtes Foto: ein Kind, vielleicht zehn Jahre alt, lachend vor einem Gartenzaun. Daneben eine Pflanze.',still:'Ein gerahmtes Foto: ein Kind, vielleicht zehn Jahre alt, lachend vor einem Gartenzaun. Es ist so gedreht, dass man es vom Bett aus sehen kann.'},
+  q:'Was könnte das Foto über die Person erzählen?',
+  read:['Da gibt es jemanden, der wichtig ist.','Die Person richtet sich auf einen längeren Aufenthalt ein.','Das Foto hat jemand anderes hingestellt.'],
+  other:'Ein Foto zeigt, was jemandem wichtig war, als es aufgestellt wurde – nicht unbedingt, wie es jetzt ist.',
+  open:{say:'„Wer ist denn auf dem Foto?“',ruhe:'„Mein Enkel. Der kommt morgen mit meiner Tochter.“ Kurze Pause. „Hoffentlich.“',still:'Lange Stille. Dann, leise: „Mein Enkel. Er war gestern nicht da.“'}},
+ card:{x:28.5,y:32,title:'Karte „Gute Tage“',
+  see:'Eine Karte mit einem Herz und der Aufschrift „Gute Tage“, mit einem Streifen Klebeband an die Wand geklebt. Ob jemand sie mitgebracht hat oder ob sie schon vorher hier hing, weißt du nicht.',
+  q:'Wem gilt dieser Wunsch?',
+  read:['Jemand wünscht der Person Gutes.','Die Karte hing schon für die Person davor hier.','Sie ist für alle gedacht, die das Zimmer betreten.'],
+  other:'Manchmal hängt etwas an der Wand, das niemand mehr sieht. Auch danach kann man fragen.',
+  open:{say:'„Die Karte da – ‚Gute Tage‘. Ist die von jemandem, den Sie kennen?“',ruhe:'„Keine Ahnung. Hing schon da.“ Ein schiefes Lächeln. „Gute Tage. Na ja.“',still:'Der Blick geht zur Karte. Ein kaum sichtbares Kopfschütteln.'}},
+ pics:{x:37,y:21,title:'Bilder über dem Bett',
+  see:'Zwei kleine Bilder an der Wand: ein Leuchtturm, ein Boot. Die gleichen hängen in vielen Zimmern der Station.',
+  q:'Was sagt so ein Raum über das Ankommen?',
+  read:['Das Zimmer gehört der Station, nicht der Person.','Die Bilder sollen beruhigen.','Darüber denkt hier niemand nach.'],
+  other:'Für dich ist es der Arbeitsplatz. Für die Person ist es gerade ein Zuhause auf Zeit.'},
+ bell:{x:58,y:25,title:'Anschlüsse über dem Bett',
+  see:'Wandanschlüsse, eine Steckdosenleiste – und die Klingel. Ihr Kabel ist um einen Haken an der Wand gewickelt. Von der Bettkante aus ist sie nicht zu erreichen.',
+  q:'Was bedeutet es, wenn die Klingel nicht erreichbar ist?',
+  read:['Die Person kann nicht selbst Hilfe holen.','Wahrscheinlich braucht die Person sie gerade nicht.','Jemand hat vergessen, sie hinzulegen.'],
+  other:'Ob Absicht oder Zufall – die Folge ist dieselbe: Wer klingeln will, kann es nicht.',
+  open:{say:'Die Klingel vom Haken nehmen und in Reichweite legen.',act:true,ruhe:'Ein kurzer Blick auf die Klingel. „Danke. Die hat vorhin keiner gefunden.“',still:'Die Hand der Person legt sich kurz auf die Klingel. Dann wieder in den Schoß.'}},
+ lamp:{x:58,y:11,title:'Leselampe',
+  see:{ruhe:'Die Leselampe über dem Bett ist eingeschaltet, obwohl es draußen hell ist.',still:'Die Leselampe über dem Bett ist aus. Der Schalter hängt hinter dem Kopfteil, schwer zu erreichen.'},
+  q:'Kann aus so einer Kleinigkeit etwas folgen?',
+  read:{ruhe:['Jemand hat vergessen, sie auszuschalten.','Die Person will lesen und braucht mehr Licht.','Es bedeutet gar nichts.'],still:['Die Person will es lieber dunkler.','Die Person kommt nicht an den Schalter.','Es bedeutet gar nichts.']},
+  other:'Nicht jede Beobachtung hat eine Bedeutung. Manche bekommt erst eine, wenn man nachfragt.'},
+ window:{x:93,y:22,title:'Fenster',
+  see:{ruhe:'Nachmittagssonne, draußen ein Wohnhaus und Bäume. Das Fenster ist gekippt, von unten hört man Verkehr.',still:'Nachmittagssonne, draußen ein Wohnhaus und Bäume. Dorthin schaut die Person die meiste Zeit.'},
+  q:'Was könnte der Blick nach draußen bedeuten?',
+  read:['Die Person wäre lieber woanders.','Draußen ist es leichter als hier drinnen.','Das Licht tut einfach gut.'],
+  other:'Wohin jemand schaut, zeigt nicht zuverlässig, woran jemand denkt.',
+  open:{say:'„Von hier sieht man ja bis zu den Bäumen.“',ruhe:'„Die sehe ich jetzt seit drei Stunden.“ Fast ein Lachen.',still:'Eine lange Pause. Dann: „Da wohne ich. Hinter den Bäumen.“'}},
+ flowers:{x:86.5,y:38,title:'Blumen',
+  see:{ruhe:'Ein frischer Strauß in einer Vase. Ein kleines Kärtchen steckt noch darin, ungeöffnet.',still:'Ein Strauß in einer Vase. Die Blüten lassen die Köpfe hängen, das Wasser ist trüb.'},
+  q:{ruhe:'Warum ist das Kärtchen noch zu?',still:'Was erzählen welke Blumen?'},
+  read:{ruhe:['Die Person hatte noch keine Kraft dafür.','Die Blumen sind von jemandem, mit dem es schwierig ist.','Es ist einfach untergegangen.'],still:['Seit ein paar Tagen war niemand zu Besuch.','Niemand hat daran gedacht, das Wasser zu wechseln.','Die Person will sie trotzdem behalten.']},
+  other:{ruhe:'Ein ungeöffneter Gruß kann vieles heißen. Was er heißt, weiß nur die Person.',still:'Welke Blumen können ein Hinweis sein – oder einfach welke Blumen.'},
+  open:{say:{ruhe:'„Schöne Blumen. Wissen Sie schon, von wem sie sind?“',still:'„Soll ich den Blumen frisches Wasser geben?“'},ruhe:'„Nein. Hab das Kärtchen noch nicht aufgemacht.“ Ein Blick zur Vase.',still:'Ein Nicken. Das erste deutliche an diesem Nachmittag.'}},
+ glass:{x:80,y:50,title:'Glas und Karaffe',
+  see:{ruhe:'Die Karaffe ist halb leer, das Glas frisch eingeschenkt.',still:'Die Karaffe ist randvoll, das Glas unberührt. Daneben ein Strohhalm, noch in der Folie.'},
+  q:'Was weißt du – und was vermutest du?',
+  read:{ruhe:['Die Person trinkt selbstständig.','Jemand hat gerade eingeschenkt.','Daraus kann ich nichts schließen.'],still:['Die Person hat länger nichts getrunken.','Das Wasser wurde gerade erst gebracht.','Die Person mag kein Leitungswasser.']},
+  other:{ruhe:'Halb leer heißt nicht unbedingt: getrunken.',still:'Eine volle Karaffe sagt nicht, wann sie gefüllt wurde. Das lässt sich klären – im Gespräch oder in der Dokumentation.'},
+  open:{say:{ruhe:'„Soll ich Ihnen etwas Warmes zu trinken holen?“',still:'„Mögen Sie einen Schluck trinken? Ich halte Ihnen das Glas.“'},ruhe:'„Einen Tee. Wenn’s keine Umstände macht.“',still:'Ein Zögern. Dann ein kleiner Schluck. „Danke.“'}},
+ book:{x:94,y:51,title:'Buch',
+  see:{ruhe:'Ein Taschenbuch, aufgeschlagen, mit einem Kassenzettel als Lesezeichen etwa in der Mitte.',still:'Ein Taschenbuch, zugeklappt. Das Lesezeichen steckt ganz vorne.'},
+  q:'Was liest du daraus?',
+  read:['Die Person liest gern.','Das Buch hat jemand mitgebracht, gelesen wird es nicht.','Lesen fällt gerade schwer.'],
+  other:'Ein Buch auf dem Tisch ist ein möglicher Gesprächsanfang – kein Befund.',
+  open:{say:'„Was lesen Sie da gerade?“',ruhe:'„Einen Krimi. Wenn man mich lässt.“ Fast ein Lächeln.',still:'Ein Schulterzucken. „Nichts. Ich kann mich nicht konzentrieren.“'}},
+ bed:{x:58,y:71,title:'Bett',
+  see:{ruhe:'Die Bettdecke ist ordentlich zurückgeschlagen, das Kissen aufgeschüttelt. Auf dem Laken liegt eine gefaltete Strickjacke.',still:'Die Bettdecke ist zerwühlt, das Kissen liegt quer – als hätte die Person lange gelegen und sich erst eben aufgesetzt.'},
+  q:'Was kannst du aus einem Bett lesen?',
+  read:{ruhe:['Die Person war schon auf und hat das Bett gemacht.','Das Bett hat jemand vom Team gemacht.','Daraus lässt sich nichts schließen.'],still:['Die Person hat unruhig gelegen.','Die Person hat sich gerade erst aufgesetzt.','Daraus lässt sich nichts schließen.']},
+  other:'Das Bett erzählt von den letzten Stunden – aber nicht, wie sie sich angefühlt haben.'},
+ shoes:{x:70,y:81,title:'Hausschuhe',
+  see:{ruhe:'Ein Paar Hausschuhe, ordentlich nebeneinander, die Fersen zum Bett.',still:'Ein Paar Hausschuhe, einer umgekippt halb unter dem Bett.'},
+  q:'Was könnten die Hausschuhe bedeuten?',
+  read:['Die Person will bald aufstehen.','Die Person ist heute noch nicht viel gelaufen.','Jemand hat sie hingestellt, für alle Fälle.'],
+  other:'Hausschuhe sind auch eine Frage der Sicherheit. Ob die Person sicher aufstehen kann, weißt du noch nicht.',
+  open:{say:'„Möchten Sie später aufstehen? Die Hausschuhe stehen ja schon bereit.“',ruhe:'„Später vielleicht. Jetzt nicht.“',still:'Ein Blick auf die Hausschuhe. Ein kleines Kopfschütteln.'}},
+ chair:{x:95,y:80,title:'Sessel mit Decke',
+  see:{ruhe:'Ein Sessel in der Ecke, eine Wolldecke darüber. Daneben eine Reisetasche, noch nicht ausgepackt.',still:'Ein Sessel in der Ecke, eine Wolldecke darüber, sorgfältig gefaltet – als hätte hier lange niemand gesessen.'},
+  q:{ruhe:'Was erzählt eine Tasche, die noch nicht ausgepackt ist?',still:'Wer könnte hier sitzen?'},
+  read:{ruhe:['Die Person ist noch nicht angekommen.','Es war bisher keine Kraft dafür.','Die Person rechnet damit, bald wieder zu gehen.'],still:['Hier war länger niemand zu Besuch.','Das Team hat aufgeräumt.','Der Sessel ist für Besuch gedacht.']},
+  other:{ruhe:'Ankommen braucht Zeit. Neu aufgenommen heißt auch: Alles ist fremd.',still:'Ein leerer Sessel kann auch eine Einladung sein – für dich.'},
+  open:{say:{ruhe:'„Soll ich Ihnen später beim Auspacken helfen?“',still:'Fragen, ob du dich einen Moment in den Sessel setzen darfst.'},act:{still:true},ruhe:'„Später. Vielleicht.“ Ein Blick zur Tasche. „Das ist nett.“',still:'Ein Schulterzucken, das wie ein Ja aussieht. Als du sitzt, seid ihr auf Augenhöhe.'}}
+};
+const N=Object.keys(THINGS).length;
+
+/* ---------- Begegnungen ---------- */
 const SIT={
  ruhe:{label:'Die Person will ihre Ruhe',
   flur:'Auf dem Flur sagt dir eine Kollegin: „In der 4 ist heute neu aufgenommen worden.“ Du stehst vor der Tür.',
-  intro:'Die Person sitzt auf der Bettkante. Du weißt noch nicht, wie sie auf dich reagieren wird.',
+  intro:'Die Person sitzt auf der Bettkante. Du weißt noch nicht, wie sie auf dich reagieren wird. Tippe im Bild auf die Punkte, um dich umzusehen – oder geh direkt zur Person.',
   approach:'Die Person blickt auf, als du näherkommst. Ein kurzes Lächeln.',
   entries:{
    intro:['Du stellst dich mit deinem Namen vor. Das Lächeln wird schmaler.','„Schon wieder jemand Neues. Ich kann mir die ganzen Namen nicht merken. Ich will einfach meine Ruhe.“'],
@@ -134,13 +181,13 @@ const SIT={
    sache:['„Hier ist heute viel los. Soll ich die Tür schließen, damit es ruhiger wird?“','„Ja. Das wäre gut.“ Die Schultern der Person sinken ein wenig.'],
    selbst:['„Sie klingen erschöpft.“','„Bin ich auch.“ Ein langer Atemzug. „Seit heute Morgen geht das so.“'],
    bez:['„Ich merke, ich bin gerade einer zu viel. Das ist in Ordnung.“','„Sie können ja nichts dafür.“ Der Ton ist weicher geworden.'],
-   app:['„Gut. Ich lasse Sie in Ruhe und schaue in einer Stunde noch einmal vorbei. Wenn vorher etwas ist: Hier ist die Klingel.“','Ein knappes Nicken. „Danke.“']},
+   app:['„Gut. Ich lasse Sie in Ruhe und schaue in einer Stunde noch einmal vorbei.“','Ein knappes Nicken. „Danke.“']},
   ends:{wieder:'Die Person nickt kaum merklich. „Ist gut.“',bleiben:'Eine Weile bleibt es still zwischen euch. Dann gehst du. „Bis später“, hörst du hinter dir.',stumm:'Die Person schaut dir nicht nach.'},
-  obs:()=>'„Hat gesagt: ‚Ich will einfach meine Ruhe.‘ Wirkte angespannt.'+(S.reply==='photo'?' Wartet auf die Familie, die morgen kommen soll.':'')+' Ich schaue um drei noch mal rein.“',
+  obs:()=>'„Hat gesagt: ‚Ich will einfach meine Ruhe.‘ Wirkte angespannt.'+(S.said.has('photo')?' Wartet auf Besuch morgen.':'')+(S.said.has('chair')?' Tasche ist noch nicht ausgepackt.':'')+' Ich schaue um drei noch mal rein.“',
   colleague:'Die Kollegin nickt. „Neu aufgenommen, das ist viel auf einmal. Danke dir.“'},
  still:{label:'Die Person schweigt',
   flur:'Auf dem Flur sagt dir eine Kollegin: „Die 4 hat seit Mittag kein Wort gesagt und nichts gegessen.“ Du stehst vor der Tür.',
-  intro:'Die Person sitzt auf der Bettkante. Du weißt noch nicht, ob sie überhaupt mit dir sprechen wird.',
+  intro:'Die Person sitzt auf der Bettkante. Du weißt noch nicht, ob sie überhaupt mit dir sprechen wird. Tippe im Bild auf die Punkte, um dich umzusehen – oder geh direkt zur Person.',
   approach:'Ein kurzer Blick zu dir, als du näherkommst. Dann wandert er zurück zum Fenster.',
   entries:{
    intro:['Du stellst dich mit deinem Namen vor. Ein kurzer Blick zu dir, dann wieder weg.','Keine Antwort.'],
@@ -153,9 +200,9 @@ const SIT={
    sache:['„Sie müssen nichts sagen.“','Die Person schaut dich an. Ein kurzes Nicken.'],
    selbst:['„Mir scheint, heute ist kein guter Tag.“','Ein leises Ausatmen. Der Blick bleibt diesmal bei dir.'],
    bez:['„Ich bin heute zum ersten Mal bei Ihnen. Sie kennen mich noch nicht.“','Ein prüfender Blick. Dann, leise: „Und wie lange bleiben Sie?“'],
-   app:['„Ich setze mich einen Moment hierher. Sie müssen nichts sagen.“','Kein Widerspruch. Nach einer Weile wird die Decke wieder ein Stück heruntergezogen.']},
+   app:['„Ich bleibe einen Moment hier. Sie müssen nichts sagen.“','Kein Widerspruch. Nach einer Weile wird die Decke wieder ein Stück heruntergezogen.']},
   ends:{wieder:'Ein kurzer Blick zu dir. Vielleicht ein Nicken.',bleiben:'Als du gehst, folgt dir der Blick bis zur Tür.',stumm:'Die Person schaut weiter zur Wand.'},
-  obs:()=>'„Hat kaum gesprochen und noch nichts gegessen, schaut viel zur Wand.'+(S.reply==='photo'?' Hat vom Enkel erzählt, der gestern nicht da war.':'')+' Ich schaue um drei noch mal rein.“',
+  obs:()=>'„Hat kaum gesprochen, schaut viel zum Fenster.'+(S.said.has('glass')?' Hat bei mir einen Schluck getrunken.':' Das Glas war unberührt.')+(S.said.has('photo')?' Hat vom Enkel erzählt, der gestern nicht da war.':'')+(S.said.has('window')?' Wohnt hinter den Bäumen gegenüber.':'')+' Ich schaue um drei noch mal rein.“',
   colleague:'„Die redet sowieso nie. Das ist halt so.“'}
 };
 const ENTRY_LABEL={intro:'Mich vorstellen',ask:'Fragen, wie es geht',silent:'Erst einmal nichts sagen',wait:'Abstand halten und warten'};
@@ -163,42 +210,33 @@ const EARS=[{k:'sache',label:'Es geht um die Sache'},{k:'selbst',label:'Es sagt 
 const R={
  abwehr:{say:'„Ach, so schlimm ist es doch nicht. Anderen geht es viel schlechter.“',ruhe:'„Na, dann gehen Sie doch zu denen.“ Die Person dreht sich zum Fenster.',still:'Keine Reaktion. Der Blick geht zurück zur Wand.'},
  mitleid:{say:'„Oh je, das ist ja furchtbar. Ich könnte das auch nicht aushalten.“',ruhe:'„Jetzt fangen Sie nicht auch noch an.“',still:'Die Person schließt kurz die Augen und sagt nichts.'},
- photo:{need:'photo',say:'„Wer ist denn auf dem Foto?“',ruhe:'„Meine Familie. Die kommen morgen.“ Kurze Pause. „Hoffentlich.“',still:'Lange Stille. Dann, leise: „Mein Enkel. Er war gestern nicht da.“'},
- book:{need:'table',say:'„Was lesen Sie da gerade?“',ruhe:'„Einen Krimi. Wenn man mich lässt.“ Fast ein Lächeln.',still:'Ein Schulterzucken. „Nichts. Ich kann mich nicht konzentrieren.“'},
- shoes:{need:'bed',say:'„Möchten Sie später aufstehen? Die Hausschuhe stehen ja schon bereit.“',ruhe:'„Später vielleicht. Jetzt nicht.“',still:'Ein Blick auf die Hausschuhe. Ein kleines Kopfschütteln.'},
  bleiben:{say:'Nichts sagen. Einen Moment bleiben.',ruhe:'Es bleibt still. Nach einer Weile: „Sie sind ja hartnäckig.“ Es klingt nicht mehr ganz so scharf.',still:'Die Stille hält. Sie fühlt sich anders an als vorhin – weniger abweisend, so scheint es dir.'},
  go:{say:'Gehen.',ruhe:'Du verlässt das Zimmer. Hinter dir bleibt es still.',still:'Du verlässt das Zimmer. Hinter dir bleibt es still.'}
-};
-const LOOK={
- table:['Am Tisch','Eine Karaffe, ein Glas Wasser, ein aufgeschlagenes Buch, ein paar Blumen. Ob die Person etwas davon braucht, weißt du noch nicht.'],
- bed:['Am Bett','Die Bettdecke ist zurückgeschlagen. Vor dem Bett stehen ein Paar Hausschuhe.'],
- photo:['Das Foto auf dem Schrank','Ein gerahmtes Foto, daneben eine Pflanze. Jemand hat Persönliches mitgebracht. Wer darauf zu sehen ist, weißt du nicht.']
 };
 
 /* ---------- Zustand & Hilfen ---------- */
 let S=null;const done=new Set();
-function fresh(sit){S={sit,phase:'door',paused:false,seen:new Set(),entry:null,body:[],feel:[],urge:[],ear:null,reply:null,after:[],handover:'',log:[]};renderLog()}
+function fresh(sit){S={sit,phase:'door',paused:false,seen:new Set(),hint:new Set(),said:new Set(),entry:null,body:[],feel:[],urge:[],ear:null,turns:0,after:[],log:[]};renderLog();markSpots();count()}
 const fmt=a=>a.length?a.join(', '):'nichts ausgewählt';
 function log(t){S.log.push(t);renderLog()}
-function renderLog(){const ol=$('log'),items=S?S.log:[];ol.replaceChildren(...items.map(t=>{const li=document.createElement('li');li.textContent=t;return li}));$('log-empty').hidden=items.length>0}
-function status(t){$('status').textContent=t}
-function toast(t){$('toast').textContent=t}
+function renderLog(){const items=S?S.log:[];$('log').replaceChildren(...items.map(t=>el('li','',t)));$('weg-empty').hidden=items.length>0;$('openweg').textContent='Mein Weg'+(items.length?' ('+items.length+')':'')}
+function count(){$('count').textContent=(S?S.seen.size:0)+' / '+N+' entdeckt'}
+function tag(t){$('tag').textContent=t}
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
+function hint(t){return el('p','hint',t)}
 function zoomTo(place){
  scene.classList.toggle('door',place==='door');
  const spot=place&&document.querySelector('[data-spot="'+place+'"]');
  if(!spot){world.style.transform='none';return}
  world.style.transformOrigin=spot.style.left+' '+spot.style.top;world.style.transform='scale(1.15)';
 }
-function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
-function hint(t){return el('p','hint',t)}
 function show(place,title,desc,reply,opts,parts){
  zoomTo(place);
- $('heading').textContent=title;$('description').textContent=desc||'';
+ $('heading').textContent=title;$('description').textContent=desc||'';$('description').classList.toggle('hidden',!desc);
  $('response').textContent=reply||'';$('response').classList.toggle('hidden',!reply);
- toast(reply||title);
  extra.replaceChildren(...(parts||[]));choices.replaceChildren();
- (opts||[]).forEach(([label,fn])=>{const b=el('button','choice',label);b.addEventListener('click',fn);choices.append(b)});
- $('heading').focus({preventScroll:true});
+ (opts||[]).forEach(o=>{const [label,fn,cls]=o;const b=el('button','choice'+(cls?' '+cls:''),label);b.addEventListener('click',fn);choices.append(b)});
+ $('heading').parentElement.scrollTop=0;$('heading').focus({preventScroll:true});
 }
 function chipGroup(label,items,arr){
  const fs=el('fieldset','chips');fs.append(el('legend','',label));
@@ -208,120 +246,156 @@ function chipGroup(label,items,arr){
 }
 function noteField(key,label){
  const l=el('label','note');l.append(el('span','',label));
- const t=document.createElement('textarea');t.value=notes[key]||'';t.placeholder='Wenn du magst, in eigenen Worten. Auch „nichts“ ist eine Antwort.';
+ const t=document.createElement('textarea');t.value=notes[key]||'';t.placeholder='Wenn du magst, in eigenen Worten.';
  t.addEventListener('input',()=>{notes[key]=t.value;persist()});l.append(t);return l;
 }
 const T=()=>SIT[S.sit];
 
+/* ---------- Punkte im Bild ---------- */
+function buildSpots(){
+ const frag=document.createDocumentFragment();
+ const mk=(key,x,y,label,cls,sym)=>{const b=el('button','spot'+(cls?' '+cls:''));b.dataset.spot=key;b.style.left=x+'%';b.style.top=y+'%';b.setAttribute('aria-label',label);b.append(document.createTextNode(sym||'◌'),el('span','',label));frag.append(b)};
+ mk('self',42.8,39,'Bei mir innehalten','person','◎');mk('patient',66.8,46,'Zur Person gehen','person','◎');
+ Object.entries(THINGS).forEach(([k,t])=>mk(k,t.x,t.y,t.title));
+ world.append(frag);
+ world.querySelectorAll('[data-spot]').forEach(b=>b.addEventListener('click',()=>spotClick(b.dataset.spot)));
+}
+function markSpots(){world.querySelectorAll('[data-spot]').forEach(b=>{const k=b.dataset.spot;if(!THINGS[k])return;const s=S&&S.seen.has(k);b.classList.toggle('seen',!!s);b.firstChild.textContent=s?'✓':'◌'})}
+function spotClick(k){
+ if(!S){flash('Wähle zuerst rechts eine Begegnung.');return}
+ if(S.phase==='door')enter();
+ if(S.phase!=='room'){flash('Du bist gerade mitten in der Begegnung. Der Raum bleibt da.');return}
+ if(k==='self')selfCheck();else if(k==='patient')approach();else look(k);
+}
+function flash(t){const p=hint(t);extra.prepend(p);setTimeout(()=>p.remove(),3500)}
+
 /* ---------- Ablauf ---------- */
 function start(){
- S=null;renderLog();status('Noch hat nichts begonnen.');
- const opts=Object.keys(SIT).map(k=>['Begegnung: '+SIT[k].label+(done.has(k)?' ✓':''),()=>door(k)]);
- show(null,'Zwei Begegnungen, ein Zimmer','Im selben Zimmer warten zwei verschiedene Begegnungen auf dich. Du entscheidest, womit du beginnst. Die andere kannst du danach erleben.','',opts);
- toast('Wähle unten, mit welcher Begegnung du beginnst.');
+ S=null;renderLog();markSpots();count();tag('Zimmer 4');
+ show(null,'Zwei Begegnungen, ein Zimmer','Im selben Zimmer warten zwei verschiedene Begegnungen auf dich. Du entscheidest, womit du beginnst. Die andere kannst du danach erleben. Es gibt keine Punkte und kein Richtig oder Falsch.','',
+  Object.keys(SIT).map(k=>[SIT[k].label+(done.has(k)?' ✓':''),()=>door(k),'wide']));
 }
 function door(sit){
- fresh(sit);log('Begegnung: '+T().label);status('Du stehst vor der Tür.');
+ fresh(sit);tag('Zimmer 4 · '+T().label);log('Begegnung: '+T().label);
  show('door','Vor der Tür',T().flur,'',[['Kurz innehalten, bevor ich eintrete',pause],['Eintreten',enter]]);
 }
 function pause(){
  S.paused=true;log('An der Tür innegehalten');
- show('door','Im Türrahmen','Du bleibst einen Atemzug lang stehen. Du spürst deine Füße auf dem Boden. Was war gerade vorher? Was nimmst du mit in dieses Zimmer?','',[['Eintreten',enter]],[noteField(S.sit+'-tuer','Was bringe ich mit in diesen Raum?')]);
+ show('door','Im Türrahmen','Du bleibst einen Atemzug lang stehen und spürst deine Füße auf dem Boden. Was war gerade vorher? Was nimmst du mit in dieses Zimmer?','',[['Eintreten',enter,'wide']],[noteField(S.sit+'-tuer','Was bringe ich mit in diesen Raum?')]);
 }
-function enter(){if(!S.paused)log('Direkt eingetreten');S.phase='room';status('Du bist im Zimmer. Sieh dich um, so lange du willst.');room()}
+function enter(){if(!S.paused)log('Direkt eingetreten');S.phase='room';room()}
 function room(){
- S.phase='room';
- show('room','Im Zimmer',T().intro,'',[['Zur Person gehen',approach],['Tisch am Bett ansehen',()=>look('table')],['Bett ansehen',()=>look('bed')],['Foto ansehen',()=>look('photo')],['Kurz bei mir sein',selfCheck]]);
+ S.phase='room';const left=N-S.seen.size;
+ show('room','Im Zimmer',T().intro,'',[['Zur Person gehen',approach,'wide'],['Kurz bei mir sein',selfCheck]],
+  [hint(left===N?'Im Bild gibt es '+N+' Dinge zu entdecken.':left?'Noch '+left+' von '+N+' Dingen unentdeckt. Was du entdeckst, kann dir später im Gespräch weitere Wege öffnen.':'Du hast alles im Zimmer angesehen.')]);
 }
 function look(k){
- if(!S.seen.has(k)){S.seen.add(k);log('Angesehen: '+LOOK[k][0].replace(/^(Am|Das) /,''))}
- show(k,LOOK[k][0],LOOK[k][1],'',[['Zur Person gehen',approach],['Weiter umsehen',room]]);
+ const t=THINGS[k];const first=!S.seen.has(k);
+ if(first){S.seen.add(k);markSpots();count();log('Entdeckt: '+t.title)}
+ const reads=by(t.read);
+ const opts=reads.map(r=>[r,()=>think(k,r)]);opts.push(['Weiß ich nicht – das würde ich nachfragen',()=>think(k,null)],['Zurück in den Raum',room,'quiet']);
+ show(k,t.title,by(t.see),'',opts,[el('p','',by(t.q))]);
+}
+function think(k,r){
+ const t=THINGS[k];log(r?'Vermutung ('+t.title+'): '+r:'Offene Frage ('+t.title+')');
+ show(k,t.title,r?'Deine Vermutung: '+r:'Du würdest nachfragen.',by(t.other),[['Zurück in den Raum',room,'wide'],['Zur Person gehen',approach]],
+  t.open?[hint('Das kannst du später im Gespräch aufgreifen.')]:[]);
 }
 function selfCheck(){
  show('self','Bei dir','Du stehst kurz still. Atem, Schultern, die Situation vor dir. Du musst noch nichts lösen.','',[['Zur Person gehen',approach],['Zurück in den Raum',room]],[noteField(S.sit+'-vorher','Wie geht es mir, bevor ich Kontakt aufnehme?')]);
 }
 function approach(){
- S.phase='meet';status('Die Begegnung beginnt.');
+ S.phase='meet';
  show('patient','Die Begegnung beginnt',T().approach,'',Object.keys(ENTRY_LABEL).map(k=>[ENTRY_LABEL[k],()=>entry(k)]));
 }
 function entry(k){
  S.entry=k;log('Einstieg: '+ENTRY_LABEL[k]);
- if(S.sit==='still'&&k==='wait')S.seen.add('photo');
+ if(S.sit==='still'&&k==='wait')S.hint.add('photo');
  const [lead,reply]=T().entries[k];
- show('patient','Eine Reaktion',lead,reply,[['Einen Moment bei mir bleiben',schau]]);
+ show('patient','Eine Reaktion',lead,reply,[['Einen Moment bei mir bleiben',schau,'wide']]);
 }
 function schau(){
- S.phase='schau';status('Innere Schau: Du darfst empfinden, ohne sofort handeln zu müssen.');
+ S.phase='schau';
  show('self','Innere Schau','Die Reaktion ist noch im Raum. Du musst sie nicht sofort verändern. Was passiert gerade in dir?','',
-  [['Weiter',()=>{log('Gespürt: '+fmt(S.body)+' · Gefühl: '+fmt(S.feel)+' · Impuls: '+fmt(S.urge));hear()}]],
+  [['Weiter',()=>{log('Gespürt: '+fmt(S.body)+' · Gefühl: '+fmt(S.feel)+' · Impuls: '+fmt(S.urge));hear()},'wide']],
   [chipGroup('Im Körper',['Schultern angespannt','Atem flacher','Wärme im Gesicht','Unruhe im Bauch','Kloß im Hals','Nichts Besonderes'],S.body),
    chipGroup('Gefühl',['Ärger','Kränkung','Unsicherheit','Hilflosigkeit','Mitgefühl','Ungeduld','Erleichterung','Weiß nicht'],S.feel),
    chipGroup('Impuls – was würde ich am liebsten tun?',['Die Stimmung retten','Mich rechtfertigen','Schnell gehen','Bleiben','Etwas in Ordnung bringen','Gar nichts'],S.urge),
    hint('Alles davon darf da sein. Ein Impuls ist noch keine Handlung. Du musst nichts reparieren.'),
-   noteField(S.sit+'-schau','In eigenen Worten: Was empfinde ich gerade?')]);
+   noteField(S.sit+'-schau','In eigenen Worten')]);
 }
 function hear(){
  S.phase='hear';
  show('patient','Hinhören',T().hearQ,'',EARS.map(e=>[e.label+': '+T().ears[e.k],()=>{S.ear=e.k;log('Gehört als: '+e.label.replace(/^Es /,'es ')+' – '+T().ears[e.k]);answer()}]),
   [hint('Alle vier Lesarten können gleichzeitig stimmen. Du entscheidest, worauf du antwortest.')]);
 }
+function openers(){return Object.keys(THINGS).filter(k=>THINGS[k].open&&!S.said.has(k)&&(S.seen.has(k)||S.hint.has(k)))}
 function answer(){
- S.phase='answer';const ear=T().earReply[S.ear];
+ S.phase='answer';const ear=T().earReply[S.ear];const ops=openers();
  const opts=[['Sagen: '+R.abwehr.say,()=>reply('abwehr')],['Sagen: '+ear[0],()=>reply('ear')],['Sagen: '+R.mitleid.say,()=>reply('mitleid')]];
- ['photo','book','shoes'].forEach(k=>{if(S.seen.has(R[k].need))opts.push(['Sagen: '+R[k].say,()=>reply(k)])});
+ if(ops.length)opts.push(['Etwas aus dem Zimmer aufgreifen ('+ops.length+')',pickOpener,'wide']);
  opts.push([R.bleiben.say,()=>reply('bleiben')],[R.go.say,()=>reply('go')]);
- show('patient','Was tust du jetzt?','Du hast die Reaktion wahrgenommen – auch deine eigene. Wie gehst du weiter?','',opts,
-  S.seen.size?[]:[hint('Was du im Raum entdeckst, kann dir weitere Möglichkeiten eröffnen.')]);
+ show('patient',S.turns?'Und jetzt?':'Was tust du?',S.turns?'Die Begegnung geht weiter. Du kannst noch etwas aufgreifen oder zum Abschluss kommen.':'Du hast die Reaktion wahrgenommen – auch deine eigene. Wie gehst du weiter?','',
+  S.turns?[...ops.length?[['Noch etwas aus dem Zimmer aufgreifen ('+ops.length+')',pickOpener,'wide']]:[],['Zum Abschluss kommen',schau2,'wide']]:opts,
+  !S.turns&&!S.seen.size?[hint('Was du im Zimmer entdeckst, öffnet dir hier weitere Wege. Du hast dich noch nicht umgesehen.')]:[]);
+}
+function pickOpener(){
+ const ops=openers();
+ show('patient','Etwas aus dem Zimmer aufgreifen','Was du entdeckt hast, kann ein Anfang sein. Was greifst du auf?','',
+  [...ops.map(k=>{const o=THINGS[k].open,say=by(o.say);return[(o.act===true||(o.act&&o.act[S.sit])?'Tun: ':'Sagen: ')+say,()=>reply(k)]}),['Zurück',answer,'quiet']]);
 }
 function reply(k){
- S.reply=k;
- const said=k==='ear'?T().earReply[S.ear][0]:R[k].say,react=k==='ear'?T().earReply[S.ear][1]:R[k][S.sit];
- log((k==='go'||k==='bleiben')?'Gewählt: '+said:'Gesagt: '+said);
- if(k==='go'){show('door','Du gehst',react,'',[['Kurz nachspüren',schau2]]);return}
- show('patient','Was jetzt passiert',k==='bleiben'?'Du sagst nichts und bleibst.':'Du sagst: '+said,react,[['Kurz nachspüren',schau2]]);
+ let said,react;
+ if(k==='ear'){[said,react]=T().earReply[S.ear]}
+ else if(THINGS[k]){const o=THINGS[k].open;said=by(o.say);react=o[S.sit];S.said.add(k)}
+ else{said=R[k].say;react=R[k][S.sit]}
+ log((k==='go'||k==='bleiben'||!said.startsWith('„')?'Gewählt: ':'Gesagt: ')+said);
+ if(k==='go'){show('door','Du gehst',react,'',[['Kurz nachspüren',schau2,'wide']]);S.left=true;return}
+ S.turns++;
+ const more=openers().length;
+ show('patient','Was jetzt passiert',said.startsWith('„')?'Du sagst: '+said:said,react,
+  [...(more?[['Noch etwas aufgreifen ('+more+')',pickOpener]]:[]),['Zum Abschluss kommen',schau2]]);
 }
 function schau2(){
- S.phase='schau2';status('Noch einmal nach innen.');
+ S.phase='schau2';
  show('self','Noch einmal nach innen','Was hat sich in dir verändert – seit der ersten Reaktion?','',
-  [['Weiter',()=>{log('Danach: '+fmt(S.after));S.reply==='go'?flur():ending()}]],
+  [['Weiter',()=>{log('Danach: '+fmt(S.after));S.left?flur():ending()},'wide']],
   [hint('Vorhin hast du gewählt: '+fmt(S.feel)+'.'),chipGroup('Jetzt gerade',['Ruhiger','Angespannter','Unsicher','Erleichtert','Enttäuscht','Neugierig','Nichts verändert'],S.after),
    noteField(S.sit+'-nachher','Was nehme ich aus dieser Begegnung mit?')]);
 }
 function ending(){
- S.phase='ending';
  const L={wieder:'Sagen, wann ich wiederkomme',bleiben:'Noch etwas bleiben, dann gehen',stumm:'Gehen, ohne etwas zu sagen'};
- show('patient','Die Begegnung abschließen','Wie verlässt du das Zimmer?','',Object.keys(L).map(k=>[L[k],()=>{log('Abschluss: '+L[k]);show('door','Du verlässt das Zimmer','',T().ends[k],[['Auf den Flur',flur]])}]));
+ show('patient','Die Begegnung abschließen','Wie verlässt du das Zimmer?','',Object.keys(L).map(k=>[L[k],()=>{log('Abschluss: '+L[k]);show('door','Du verlässt das Zimmer','',T().ends[k],[['Auf den Flur',flur,'wide']])}]));
 }
 function flur(){
- S.phase='flur';status('Auf dem Flur.');
+ S.phase='flur';
  show('door','Auf dem Flur','Die Kollegin von vorhin kommt vorbei: „Und, wie war’s in der 4?“ – Was sagst du?','',
-  [['„Ist unkooperativ.“',()=>hand('„Ist unkooperativ.“')],['„Ist halt schwierig drauf.“',()=>hand('„Ist halt schwierig drauf.“')],[T().obs(),()=>hand(T().obs())],['Selbst formulieren',own]]);
+  [['„Ist unkooperativ.“',()=>hand('„Ist unkooperativ.“')],['„Ist halt schwierig drauf.“',()=>hand('„Ist halt schwierig drauf.“')],[T().obs(),()=>hand(T().obs()),'wide'],['Selbst formulieren',own]]);
 }
 function own(){
  const t=document.createElement('textarea');t.className='own';t.setAttribute('aria-label','Dein Satz an die Kollegin');t.placeholder='Was sagst du der Kollegin?';
- show('door','In deinen Worten','Was sagst du der Kollegin über Zimmer 4?','',[['Weiter',()=>{const v=t.value.trim();if(!v){toast('Schreib einen kurzen Satz – es gibt keine Musterlösung.');t.focus();return}hand('„'+v.replace(/^[„"]|[“"]$/g,'')+'“')}],['Zurück',flur]],[t]);
+ show('door','In deinen Worten','Was sagst du der Kollegin über Zimmer 4?','',[['Weiter',()=>{const v=t.value.trim();if(!v){flash('Schreib einen kurzen Satz – es gibt keine Musterlösung.');t.focus();return}hand('„'+v.replace(/^[„"]|[“"]$/g,'')+'“')}],['Zurück',flur,'quiet']],[t]);
  t.focus({preventScroll:true});
 }
 function hand(s){
- S.handover=s;log('Übergabe: '+s);
- show('door','Dein Satz','Du sagst: '+s,'',[['Weiter',colleague]],
+ log('Übergabe: '+s);
+ show('door','Dein Satz','Du sagst: '+s,'',[['Weiter',colleague,'wide']],
   [hint('Würde die Person diesen Satz über sich so stehen lassen? Steht darin, was du gesehen und gehört hast – oder was du darüber denkst? Es gibt keine Musterlösung.')]);
 }
 function colleague(){
- if(S.sit==='ruhe'){show('door','Die Kollegin','',T().colleague,[['Zum Abschluss',finish]]);return}
+ if(S.sit==='ruhe'){show('door','Die Kollegin','',T().colleague,[['Zum Abschluss',finish,'wide']]);return}
  const L={zu:'Zustimmen: „Ja, scheint so.“',erz:'Erzählen, was ich erlebt habe',nix:'Nichts dazu sagen'};
  const RE={zu:'Die Kollegin geht weiter. Der Satz bleibt bei dir.',erz:'„Echt? Hm.“ Die Kollegin geht weiter, langsamer als vorher.',nix:'Die Kollegin geht weiter. Du bleibst mit dem Satz auf dem Flur stehen.'};
  show('door','Die Kollegin','',T().colleague,Object.keys(L).map(k=>[L[k],()=>{log('Auf „Die redet sowieso nie“: '+L[k]);
-  show('door','Ein Satz, der bleibt','',RE[k],[['Zum Abschluss',finish]],[hint('Was so ein Satz mit deiner Rolle macht, ist Thema der nächsten Sequenz: in der Rolle bleiben.')])}]));
+  show('door','Ein Satz, der bleibt','',RE[k],[['Zum Abschluss',finish,'wide']],[hint('Was so ein Satz mit deiner Rolle macht, ist Thema der nächsten Sequenz: in der Rolle bleiben.')])}]));
 }
 function finish(){
- S.phase='end';done.add(S.sit);status('Diese Begegnung ist abgeschlossen. Dein Weg steht rechts – du kannst ihn sichern und später vergleichen.');
+ S.phase='end';done.add(S.sit);
  const other=S.sit==='ruhe'?'still':'ruhe';
- const ol=el('ol','path');S.log.forEach(t=>ol.append(el('li','',t)));
- show(null,'Die Begegnung darf offen bleiben','Du hast in deiner Rolle gehandelt. Ob die Person zufrieden ist, entscheidet nicht allein über deine Professionalität.','',
-  [['Andere Begegnung erleben: '+SIT[other].label,()=>door(other)],['Diese Begegnung neu erleben',()=>door(S.sit)],['Meinen Weg als Textdatei sichern',save],['Zur Auswahl',start]],
-  [el('p','subtle','Dein Weg durch Zimmer 4:'),ol]);
+ show(null,'Die Begegnung darf offen bleiben','Du hast in deiner Rolle gehandelt. Ob die Person zufrieden ist, entscheidet nicht allein über deine Professionalität. Du hast '+S.seen.size+' von '+N+' Dingen im Zimmer entdeckt.','',
+  [['Andere Begegnung: '+SIT[other].label,()=>door(other),'wide'],['Mein Weg ansehen',openWeg],['Neu erleben',()=>door(S.sit)],['Als Textdatei sichern',save],['Zur Auswahl',start,'quiet']]);
 }
+function openWeg(){const d=$('weg');try{d.showModal()}catch(e){d.setAttribute('open','')}}
 function save(){
  const L={tuer:'An der Tür – was bringe ich mit?',vorher:'Vor der Begegnung',schau:'Innere Schau',nachher:'Was nehme ich mit?'};
  let txt='Lernen am Optimum – Grundlage: Kontakt aufnehmen\n\n';
@@ -330,25 +404,7 @@ function save(){
  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
  a.href=url;a.download='Mein_Weg_Kontakt_aufnehmen.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500);
 }
-
-/* ---------- Punkte im Bild ---------- */
-const SPOT={self:selfCheck,patient:approach,table:()=>look('table'),bed:()=>look('bed'),photo:()=>look('photo')};
-document.querySelectorAll('[data-spot]').forEach(b=>b.addEventListener('click',()=>{
- if(!S){toast('Wähle zuerst unten eine Begegnung.');return}
- if(S.phase==='door')enter();
- if(S.phase!=='room'){toast('Du bist gerade mitten in der Begegnung. Der Raum bleibt da.');return}
- SPOT[b.dataset.spot]();
-}));
-$('restart').onclick=start;$('save').onclick=save;
-let exerciseScore=0;const answered={};
-function markExercise(n,correct,message){
-  if(!answered[n]){answered[n]=true;exerciseScore++}
-  const f=$('feedback'+n);f.textContent=message;f.classList.toggle('bad',!correct);
-  $('exercise-score').textContent=exerciseScore+' von 3 Auswahlfragen beantwortet.';
-}
-document.querySelectorAll('[data-ex1]').forEach(b=>b.addEventListener('click',()=>markExercise(1,b.dataset.ex1==='yes',b.dataset.ex1==='yes'?'Ja. Du benennst deine eigene Empfindung, ohne die Person zu bewerten.':'Das beschreibt eher eine Bewertung oder einen Handlungsdruck. Kehre zu deiner eigenen Empfindung zurück.')));
-document.querySelectorAll('[data-ex2]').forEach(b=>b.addEventListener('click',()=>markExercise(2,b.dataset.ex2==='yes',b.dataset.ex2==='yes'?'Richtig. Körperliche Signale können beobachtet werden, ohne sie sofort zu bewerten.':'Das ist eine beobachtbare körperliche Veränderung und damit zunächst eine Wahrnehmung.')));
-document.querySelectorAll('[data-ex3]').forEach(b=>b.addEventListener('click',()=>markExercise(3,b.dataset.ex3==='yes',b.dataset.ex3==='yes'?'Richtig. Wahrnehmen schafft einen kurzen Spielraum für eine bewusste Entscheidung.':'Das überspringt die innere Schau oder verschiebt die Verantwortung auf die andere Person.')));
-$('check-transfer').onclick=()=>{const value=$('transfer-note').value.trim();$('feedback4').textContent=value?'Gut: Du hast Wahrnehmen und Entscheiden miteinander verbunden. Lies deinen Satz noch einmal und prüfe, ob beides darin vorkommt.':'Schreibe einen kurzen Satz. Es gibt dabei keine Musterlösung.'};
+buildSpots();
+$('restart').onclick=start;$('save').onclick=save;$('openweg').onclick=openWeg;$('closeweg').onclick=()=>{const d=$('weg');d.close?d.close():d.removeAttribute('open')};
 start();
 })();</script></body></html>
