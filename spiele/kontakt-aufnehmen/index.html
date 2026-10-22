@@ -1,0 +1,230 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Grundlage · Kontakt aufnehmen</title><style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#faf8f3;background:#111a20}*{box-sizing:border-box}body{margin:0;background:#111a20}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px clamp(12px,3vw,36px);gap:12px}h1{font-size:clamp(17px,2.1vw,25px);font-weight:600;margin:0}header small{color:#b9c6c9}
+button{font:inherit;cursor:pointer}.layout{max-width:1520px;margin:auto;padding:0 12px 18px}
+.stage{position:relative}
+.scene{position:relative;overflow:hidden;border-radius:14px;aspect-ratio:1262/844;background:#736f68;isolation:isolate}
+.world{position:absolute;inset:0;transition:transform .75s ease;transform-origin:50% 50%}
+.picture{position:absolute;inset:0;background-size:100% 100%;background-position:center}
+.shade{pointer-events:none;position:absolute;inset:0;z-index:1;background:linear-gradient(0deg,#0d1728aa,transparent 29%),linear-gradient(90deg,#111c254c,transparent 27%)}
+.guide-figure{position:absolute;z-index:2;right:1.5%;bottom:0;height:78%;max-width:34%;object-fit:contain;object-position:bottom right;pointer-events:none;filter:drop-shadow(0 8px 12px #0005)}.spot{position:absolute;z-index:3;width:46px;height:46px;border:1px solid #fff9;border-radius:50%;transform:translate(-50%,-50%);background:#18272d61;backdrop-filter:blur(3px);color:white;display:grid;place-items:center;box-shadow:0 0 0 6px #ffffff18;font-size:22px;transition:background .2s,scale .2s,opacity .3s}
+.spot:hover,.spot:focus-visible{background:#ffffff60;outline:2px solid #fff;scale:1.12}
+.spot span{position:absolute;top:52px;left:50%;transform:translateX(-50%);background:#15212de6;border-radius:7px;padding:5px 10px;font-size:12px;white-space:nowrap;opacity:0;pointer-events:none}
+.spot:hover span,.spot:focus-visible span{opacity:1}
+.spot.self{border-style:dashed}
+.info{position:absolute;z-index:3;top:16px;left:16px;background:#13202bd9;backdrop-filter:blur(12px);border-radius:12px;padding:13px 17px;max-width:300px}
+.info strong{font-size:17px}.info p{color:#d7e0e1;font-size:13px;line-height:1.45;margin:5px 0 0}
+.toast{position:absolute;z-index:3;bottom:18px;left:18px;max-width:min(530px,calc(100% - 36px));padding:11px 15px;background:#13202bd9;border:1px solid #ffffff30;border-radius:11px;font-size:14px}
+.panel{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:14px}
+.card{background:#1c2931;border:1px solid #33434b;border-radius:13px;padding:17px;min-height:180px}.card h2{font-size:17px;margin:0 0 10px}.card p{color:#d6dedf;line-height:1.55;margin:8px 0}
+.choices{display:flex;gap:8px;flex-wrap:wrap}
+.choice,.muted{border:1px solid #6a8589;background:#2c424b;color:#fff;border-radius:9px;padding:11px 13px;text-align:left}
+.choice:hover,.choice:focus-visible,.muted:hover,.muted:focus-visible{background:#41616a}.muted{background:#243239}
+.response{border-left:3px solid #c3b290;padding:4px 0 4px 13px;margin:10px 0 15px!important;color:#fff!important}
+.subtle{font-size:13px;color:#9eb0b5!important}.actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.hidden{display:none!important}
+textarea{width:100%;min-height:96px;background:#101d24;color:#fff;border:1px solid #637d83;border-radius:9px;padding:11px;font:inherit;resize:vertical}
+.reflection{margin-top:12px}.exercise-card{margin-top:14px}.exercise-block{border-top:1px solid #40525a;padding-top:13px;margin-top:13px}.exercise-block:first-of-type{border-top:0;padding-top:0;margin-top:0}.exercise-block h3{font-size:15px;margin:0 0 7px}.exercise-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.exercise-options button{flex:1 1 220px}.exercise-feedback{min-height:22px;margin:9px 0 0;color:#d7e6c7;font-size:14px;line-height:1.45}.exercise-feedback.bad{color:#f2c7b9}.score{color:#c3e5f3;font-size:13px;margin-top:8px}.exercise-note{width:100%;min-height:70px;margin-top:8px}.exercise-card hr{border:0;border-top:1px solid #40525a;margin:16px 0}@media(max-width:700px){.exercise-options button{flex-basis:100%}}summary{cursor:pointer;padding:8px 0}a{color:#c3e5f3}
+@media(max-width:700px){
+ header{align-items:flex-start}
+ .scene{border-radius:12px}
+ .info,.toast{position:static;max-width:none;margin-top:10px;backdrop-filter:none;background:#1c2931;border:1px solid #33434b}
+ .guide-figure{right:-2%;height:52%;max-width:42%;opacity:.96}.spot{width:34px;height:34px;font-size:17px;box-shadow:0 0 0 4px #ffffff18}
+ .spot span{top:40px}
+ .panel{grid-template-columns:1fr}.card{min-height:0}}
+.signature{display:flex;justify-content:flex-end;margin-top:22px;border-top:1px solid #33434b;padding-top:6px}.signature img{height:150px;display:block;filter:drop-shadow(0 6px 10px #0006)}@media(max-width:700px){.signature img{height:110px}}
+@media(prefers-reduced-motion:reduce){.world{transition:none}}
+</style>
+<!-- HINTERGRUNDBILD: Für ein neues Bild nur die URL in der nächsten Zeile ersetzen.
+     Das Bild sollte keine eingezeichneten Bedienelemente enthalten (keine Knöpfe, Punkte, Texte).
+     Bei anderem Seitenverhältnis: .scene{aspect-ratio:BREITE/HÖHE} oben anpassen
+     und die Punkte (style="left:…;top:…" an den .spot-Buttons) neu setzen. -->
+<style id="hintergrundbild">.picture{background-image:url('zimmer-4.webp')}</style>
+</head><body>
+<header><div><h1>Grundlage · Kontakt aufnehmen</h1><small>Lernen am Optimum · Ein erster Entwicklungsraum</small></div><button class="muted" id="restart">↺ Neu erleben</button></header>
+<main class="layout">
+<div class="stage">
+ <div class="scene" id="scene">
+  <div class="world" id="world">
+   <div class="picture" role="img" aria-label="Patientenzimmer am Nachmittag: Eine Pflegeperson steht im Raum, eine ältere Frau sitzt auf der Bettkante."></div>
+   <!-- Punkte: Position in Prozent vom Bild (left = von links, top = von oben) -->
+   <button class="spot self" data-spot="self"   style="left:42.8%;top:39%"   aria-label="Bei mir innehalten">◌<span>Bei mir</span></button>
+   <button class="spot"      data-spot="patient" style="left:66.8%;top:46%"   aria-label="Person erkunden">◌<span>Person</span></button>
+   <button class="spot"      data-spot="table"   style="left:87.5%;top:51.5%" aria-label="Tisch am Bett erkunden">◌<span>Tisch am Bett</span></button>
+   <button class="spot"      data-spot="bed"     style="left:58%;top:71%"     aria-label="Bett erkunden">◌<span>Bett</span></button>
+   <button class="spot"      data-spot="photo"   style="left:15%;top:43%"     aria-label="Foto auf dem Schrank erkunden">◌<span>Foto auf dem Schrank</span></button>
+  </div>
+  <div class="shade"></div>
+  </div>
+ <div class="info"><strong>Zimmer 4</strong><p>Du darfst erst einmal wahrnehmen. Du musst niemanden zufriedenstellen.</p></div>
+ <div class="toast" id="toast" aria-live="polite">Erkunde den Raum. Nimm Kontakt auf. Beobachte auch dich selbst.</div>
+</div>
+<div class="panel">
+ <section class="card"><h2 id="heading">Vor der Begegnung</h2><p id="description">Die Person sitzt auf der Bettkante. Du kannst das Zimmer erkunden und Kontakt aufnehmen.</p><p id="response" class="response hidden" aria-live="polite"></p><div class="choices" id="choices"></div></section>
+ <section class="card"><h2>Innere Schau</h2><p>Du musst die Stimmung der anderen Person nicht verändern. Nimm wahr, was die Begegnung in dir auslöst.</p><p class="subtle" id="status">Die Begegnung hat noch nicht begonnen.</p>
+  <div class="actions"><button class="muted" id="observe">Raum ansehen</button><button class="muted" id="reflect">Empfindung notieren</button></div>
+  <div id="reflection" class="reflection hidden"><label for="notes"><strong id="question">Was habe ich gerade empfunden?</strong></label><textarea id="notes" placeholder="Schreibe in deinen eigenen Worten. Auch Unsicherheit, Ärger oder gar nichts zu empfinden ist möglich."></textarea><p class="subtle">Keine Bewertung. Keine Musterlösung. Deine Notiz bleibt auf diesem Gerät und kann als Textdatei gesichert werden.</p>
+   <div class="actions"><button class="muted" id="save">Notiz als Textdatei sichern</button><button class="muted" id="continue">Weiter</button></div>
+   <details><summary>Später: meine professionelle Rolle</summary><p>Was ich empfinde, darf da sein. Ich kann trotzdem entscheiden, wie ich in meiner Rolle handle.</p><p class="subtle">Anknüpfung: Rolle verstehen · Kommunikation und Emotionen</p></details>
+  </div>
+ </section>
+</div>
+<section class="card exercise-card" aria-labelledby="exercise-title">
+ <h2 id="exercise-title">Zusätzliche Übungen: Innere Schau</h2>
+ <p class="subtle">Es gibt nicht nur eine richtige Empfindung. Die Übungen helfen dir, zwischen Wahrnehmen, Bewerten und Handeln zu unterscheiden.</p>
+ <div class="exercise-block">
+  <h3>1. Was gehört zur inneren Schau?</h3>
+  <p>Die Person sagt: „Ich möchte jetzt meine Ruhe.“ Welche Antwort beschreibt am ehesten eine Wahrnehmung?</p>
+  <div class="exercise-options" role="group" aria-label="Antworten zu Übung 1">
+   <button class="choice" data-ex1="no">Die Person ist unhöflich.</button>
+   <button class="choice" data-ex1="yes">Ich bemerke, dass ich angespannt und enttäuscht bin.</button>
+   <button class="choice" data-ex1="no">Ich muss die Stimmung sofort verbessern.</button>
+  </div>
+  <p class="exercise-feedback" id="feedback1" aria-live="polite"></p>
+ </div>
+ <div class="exercise-block">
+  <h3>2. Wahrnehmung oder Bewertung?</h3>
+  <p>Ordne die Aussage zu: <strong>„Meine Schultern sind angespannt und ich atme flacher.“</strong></p>
+  <div class="exercise-options" role="group" aria-label="Antworten zu Übung 2">
+   <button class="choice" data-ex2="yes">Wahrnehmung</button>
+   <button class="choice" data-ex2="no">Bewertung</button>
+  </div>
+  <p class="exercise-feedback" id="feedback2" aria-live="polite"></p>
+ </div>
+ <div class="exercise-block">
+  <h3>3. Transfer in die Rolle</h3>
+  <p>Welcher nächste Schritt passt zur Kontaktaufnahme?</p>
+  <div class="exercise-options" role="group" aria-label="Antworten zu Übung 3">
+   <button class="choice" data-ex3="no">Meine Empfindung wegdrücken und sofort weiterreden.</button>
+   <button class="choice" data-ex3="yes">Einen Moment wahrnehmen und dann bewusst entscheiden, wie ich handle.</button>
+   <button class="choice" data-ex3="no">Die Person davon überzeugen, dass sie anders fühlen sollte.</button>
+  </div>
+  <p class="exercise-feedback" id="feedback3" aria-live="polite"></p>
+ </div>
+ <div class="exercise-block">
+  <h3>4. Eigene Formulierung</h3>
+  <p>Vervollständige den Satz: <em>„Ich bemerke gerade ..., und ich entscheide mich dafür, ...“</em></p>
+  <textarea class="exercise-note" id="transfer-note" placeholder="Ein kurzer Satz genügt." aria-label="Eigene Formulierung"></textarea>
+  <div class="actions"><button class="muted" id="check-transfer">Antwort festhalten</button></div>
+  <p class="exercise-feedback" id="feedback4" aria-live="polite"></p>
+ </div>
+ <p class="score" id="exercise-score" aria-live="polite">0 von 3 Auswahlfragen beantwortet.</p>
+</section>
+<footer class="signature"><img src="../../bilder/barbara-figur.webp" alt="Barbara, die diese Lernwelt gebaut hat"></footer>
+</main>
+<script>(()=>{'use strict';
+const $=id=>document.getElementById(id),world=$('world'),choices=$('choices');
+const stored='lernen-am-optimum-kontakt-innere-schau-v1';
+// Zustand: met = Begegnung hat stattgefunden, reflectedAfter = innere Schau nach der Reaktion, ended = Abschluss gewählt
+let met=false,reflectedAfter=false,ended=false;
+
+function zoomTo(place){
+  const spot=document.querySelector('[data-spot="'+place+'"]');
+  if(!spot){world.style.transform='none';return}
+  world.style.transformOrigin=spot.style.left+' '+spot.style.top;
+  world.style.transform='scale(1.15)';
+}
+function show(place,title,description,reply='',opts=[]){
+  zoomTo(place);
+  $('heading').textContent=title;$('description').textContent=description;
+  $('response').textContent=reply;$('response').classList.toggle('hidden',!reply);
+  $('toast').textContent=reply||'Du kannst den Raum in deinem Tempo erkunden.';
+  choices.replaceChildren();
+  opts.forEach(([label,fn])=>{const b=document.createElement('button');b.className='choice';b.textContent=label;b.addEventListener('click',fn);choices.append(b)});
+}
+function room(){
+  show('room','Im Patientenzimmer',met?'Du stehst wieder im Raum. Die Person sitzt noch auf der Bettkante.':'Die Person sitzt auf der Bettkante. Du weißt noch nicht, wie sie auf dich reagieren wird.','',
+   [['Zur Person gehen',patient],['Kurz bei mir innehalten',self],['Tisch am Bett ansehen',table],['Bett ansehen',bed],['Foto ansehen',photo]]);
+}
+function self(){
+  show('self','Bei mir','Du stehst kurz still. Du bemerkst deinen Atem, deine Schultern und die Situation vor dir. Du musst noch nichts lösen.','',
+   [['Empfindung notieren',openReflection],['Zur Person gehen',patient],['Raum ansehen',room]]);
+}
+function table(){
+  show('table','Am Tisch','Eine Karaffe, ein Glas Wasser, ein Buch, ein paar Blumen. Noch weißt du nicht, ob die Person etwas davon braucht.','',
+   [['Zur Person gehen',patient],['Zurück zum Raum',room]]);
+}
+function bed(){
+  show('bed','Am Bett','Die Bettdecke ist zurückgeschlagen. Vor dem Bett stehen ein Paar Hausschuhe.','',
+   [['Zur Person gehen',patient],['Zurück zum Raum',room]]);
+}
+function photo(){
+  show('photo','Das Foto auf dem Schrank','Ein gerahmtes Foto, daneben eine Pflanze. Jemand hat Persönliches mitgebracht. Wer darauf zu sehen ist, weißt du nicht.','',
+   [['Zur Person gehen',patient],['Zurück zum Raum',room]]);
+}
+const encounters={
+  intro:['Du stellst dich mit deinem Namen vor. Das Lächeln der Person wird schmaler.','„Schon wieder jemand Neues. Ich kann mir die ganzen Namen nicht merken. Ich will einfach meine Ruhe.“'],
+  ask:['Du fragst, wie es ihr geht. Die Person hebt die Augenbrauen.','„Hier fragt dauernd jemand irgendetwas. Ich will einfach meine Ruhe. Können Sie das nicht verstehen?“'],
+  silent:['Du bleibst still neben ihr stehen. Die Person schaut dich eine Weile an.','„Was stehen Sie denn da so herum? Wenn Sie nichts wollen, können Sie auch wieder gehen.“'],
+  wait:['Du bleibst mit etwas Abstand stehen und wartest. Die Person wendet sich dir zu.','„Wollen Sie was oder nicht? Ich habe heute schon genug Leute gesehen.“']
+};
+function patient(){
+  if(!met){
+    show('patient','Die Begegnung beginnt','Die Person blickt auf, als du näherkommst. Sie lächelt dir entgegen.','',
+     [['Mich vorstellen',()=>encounter('intro')],['Nach ihrem Befinden fragen',()=>encounter('ask')],['Zunächst schweigen',()=>encounter('silent')],['Abstand halten und warten',()=>encounter('wait')]]);
+  }else if(!reflectedAfter){
+    show('patient','Die Reaktion bleibt im Raum','Die Person ist unzufrieden. Du musst das nicht sofort ändern.','„Sie können ja nichts dafür. Aber ich habe jetzt wirklich keine Lust auf noch ein Gespräch.“',
+     [['Einen Moment bleiben und spüren',openReflection],['Meine Empfindung notieren',openReflection]]);
+  }else if(!ended){
+    show('patient','Nach der inneren Schau','Du hast deine Empfindung wahrgenommen. Die Person wartet nicht auf eine perfekte Antwort.','„Ich möchte jetzt erst einmal meine Ruhe.“',
+     [['Den Wunsch respektieren',()=>end('„Danke“, sagt die Person knapp und wendet sich wieder dem Fenster zu.')],
+      ['Ruhig sagen, dass ich später wiederkomme',()=>end('Die Person nickt kaum merklich. Sie wirkt weiterhin angespannt.')],
+      ['Noch einen Moment still bleiben',()=>end('Es bleibt still. Die Person schaut aus dem Fenster.')],
+      ['Erneut meine Empfindung notieren',openReflection]]);
+  }else{
+    show('patient','Die Begegnung darf offen bleiben','Du hast in deiner Rolle gehandelt. Ob die Person zufrieden ist, entscheidet nicht allein über deine Professionalität.','',
+     [['Noch einmal meine Empfindung ansehen',openReflection],['Die Szene neu erleben',restart]]);
+  }
+}
+function encounter(kind){
+  met=true;const [lead,reply]=encounters[kind];
+  $('question').textContent='Was habe ich gerade empfunden?';$('continue').textContent='Begegnung fortsetzen';
+  show('patient','Eine schwierige Reaktion',lead,reply,[['Einen Moment aushalten',openReflection],['Was empfinde ich gerade?',openReflection]]);
+  $('status').textContent='Die Person hat reagiert. Nimm zunächst deine eigene Empfindung wahr.';
+}
+function openReflection(){
+  $('reflection').classList.remove('hidden');
+  if(!met){
+    $('question').textContent='Was bringe ich gerade mit in diesen Raum?';
+    $('status').textContent='Innere Schau vor der Begegnung: Wie geht es dir, bevor du Kontakt aufnimmst?';
+    $('continue').textContent='Zurück in den Raum';
+    show('self','Bei dir, vor der Begegnung','Noch hat niemand etwas gesagt. Du darfst wahrnehmen, mit welcher Stimmung du hier stehst.','',[['Zurück in den Raum',room],['Zur Person gehen',patient]]);
+  }else{
+    reflectedAfter=true;
+    $('question').textContent='Was habe ich gerade empfunden?';
+    $('status').textContent='Innere Schau: Du darfst empfinden, ohne sofort handeln zu müssen.';
+    $('continue').textContent='Begegnung fortsetzen';
+    show('self','Bei dir bleiben','Die Worte der Person klingen noch nach. Vorhin hat sie gelächelt. Du musst deine Reaktion nicht bewerten.','Was hast du in diesem Moment empfunden?',[['Nach meiner Notiz weitergehen',patient]]);
+  }
+  $('notes').focus({preventScroll:true});
+}
+function end(reply){
+  ended=true;
+  show('patient','Die Begegnung darf offen bleiben','Du hast in deiner Rolle gehandelt. Ob die Person zufrieden ist, entscheidet nicht allein über deine Professionalität.',reply,
+   [['Noch einmal meine Empfindung ansehen',openReflection],['Die Szene neu erleben',restart]]);
+  $('status').textContent='Die Begegnung ist beendet. Deine Notiz kannst du behalten und später vergleichen.';
+}
+function restart(){
+  met=false;reflectedAfter=false;ended=false;
+  $('reflection').classList.add('hidden');$('status').textContent='Die Begegnung hat noch nicht begonnen.';
+  room();
+}
+const spots={self,patient,table,bed,photo};
+document.querySelectorAll('[data-spot]').forEach(b=>b.addEventListener('click',()=>spots[b.dataset.spot]()));
+$('observe').onclick=room;$('reflect').onclick=openReflection;
+$('continue').onclick=()=>met?patient():room();
+$('restart').onclick=restart;
+try{$('notes').value=localStorage.getItem(stored)||''}catch(e){}
+$('notes').addEventListener('input',()=>{try{localStorage.setItem(stored,$('notes').value)}catch(e){}});
+$('save').onclick=()=>{const content='Lernen am Optimum – Grundlage: Kontakt aufnehmen\nInnere Schau: Was habe ich empfunden?\n\n'+$('notes').value;const blob=new Blob([content],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Meine_innere_Schau_Kontakt_aufnehmen.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500)};
+let exerciseScore=0;const answered={};
+function markExercise(n,correct,message){
+  if(!answered[n]){answered[n]=true;if(correct)exerciseScore++}
+  const f=$('feedback'+n);f.textContent=message;f.classList.toggle('bad',!correct);
+  $('exercise-score').textContent=exerciseScore+' von 3 Auswahlfragen beantwortet.';
+}
+document.querySelectorAll('[data-ex1]').forEach(b=>b.addEventListener('click',()=>markExercise(1,b.dataset.ex1==='yes',b.dataset.ex1==='yes'?'Ja. Du benennst deine eigene Empfindung, ohne die Person zu bewerten.':'Das beschreibt eher eine Bewertung oder einen Handlungsdruck. Kehre zu deiner eigenen Empfindung zurück.')));
+document.querySelectorAll('[data-ex2]').forEach(b=>b.addEventListener('click',()=>markExercise(2,b.dataset.ex2==='yes',b.dataset.ex2==='yes'?'Richtig. Körperliche Signale können beobachtet werden, ohne sie sofort zu bewerten.':'Das ist eine beobachtbare körperliche Veränderung und damit zunächst eine Wahrnehmung.')));
+document.querySelectorAll('[data-ex3]').forEach(b=>b.addEventListener('click',()=>markExercise(3,b.dataset.ex3==='yes',b.dataset.ex3==='yes'?'Richtig. Wahrnehmen schafft einen kurzen Spielraum für eine bewusste Entscheidung.':'Das überspringt die innere Schau oder verschiebt die Verantwortung auf die andere Person.')));
+$('check-transfer').onclick=()=>{const value=$('transfer-note').value.trim();$('feedback4').textContent=value?'Gut: Du hast Wahrnehmen und Entscheiden miteinander verbunden. Lies deinen Satz noch einmal und prüfe, ob beides darin vorkommt.':'Schreibe einen kurzen Satz. Es gibt dabei keine Musterlösung.'};
+room();
+})();</script></body></html>
