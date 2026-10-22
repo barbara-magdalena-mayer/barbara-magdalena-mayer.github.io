@@ -58,7 +58,7 @@ dialog::backdrop{background:#000a}dialog h2{margin:0 0 8px;font-size:19px}
 </head><body>
 <div class="app">
 <header>
- <div><h1>Grundlage · Kontakt aufnehmen</h1><small>Lernen am Optimum · Ein Zimmer, zwei Begegnungen</small></div>
+ <div><h1>Grundlage · Kontakt aufnehmen</h1><small>Lernen am Optimum · Ein Zimmer, drei Begegnungen</small></div>
  <div class="hbtns"><span class="count" id="count" aria-live="polite">0 / 12 entdeckt</span><button class="hbtn" id="openweg">Mein Weg</button><button class="hbtn" id="restart">↺ Neu</button><a class="back" href="../../">← Werkstatt</a></div>
 </header>
 <div class="main">
@@ -88,7 +88,7 @@ const $=id=>document.getElementById(id),world=$('world'),scene=$('scene'),choice
 const KEY='lernen-am-optimum-kontakt-v3';
 let notes={};try{notes=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){notes={}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(notes))}catch(e){}}
-const by=(v)=>typeof v==='string'||Array.isArray(v)?v:v[S.sit];
+const by=(v)=>typeof v==='string'||Array.isArray(v)?v:(v[S.sit]??v.ruhe);
 
 /* ---------- Dinge im Zimmer ---------- */
 const THINGS={
@@ -97,13 +97,13 @@ const THINGS={
   q:'Was könnte das Foto über die Person erzählen?',
   read:['Da gibt es jemanden, der wichtig ist.','Die Person richtet sich auf einen längeren Aufenthalt ein.','Das Foto hat jemand anderes hingestellt.'],
   other:'Ein Foto zeigt, was jemandem wichtig war, als es aufgestellt wurde – nicht unbedingt, wie es jetzt ist.',
-  open:{say:'„Wer ist denn auf dem Foto?“',ruhe:'„Mein Enkel. Der kommt morgen mit meiner Tochter.“ Kurze Pause. „Hoffentlich.“',still:'Lange Stille. Dann, leise: „Mein Enkel. Er war gestern nicht da.“'}},
+  open:{say:'„Wer ist denn auf dem Foto?“',laut:'„Lassen Sie das Foto aus dem Spiel!“ Dann, leiser: „Der wartet auf mich. Zu Hause.“',ruhe:'„Mein Enkel. Der kommt morgen mit meiner Tochter.“ Kurze Pause. „Hoffentlich.“',still:'Lange Stille. Dann, leise: „Mein Enkel. Er war gestern nicht da.“'}},
  card:{x:28.5,y:32,title:'Karte „Gute Tage“',
   see:'Eine Karte mit einem Herz und der Aufschrift „Gute Tage“, mit einem Streifen Klebeband an die Wand geklebt. Ob jemand sie mitgebracht hat oder ob sie schon vorher hier hing, weißt du nicht.',
   q:'Wem gilt dieser Wunsch?',
   read:['Jemand wünscht der Person Gutes.','Die Karte hing schon für die Person davor hier.','Sie ist für alle gedacht, die das Zimmer betreten.'],
   other:'Manchmal hängt etwas an der Wand, das niemand mehr sieht. Auch danach kann man fragen.',
-  open:{say:'„Die Karte da – ‚Gute Tage‘. Ist die von jemandem, den Sie kennen?“',ruhe:'„Keine Ahnung. Hing schon da.“ Ein schiefes Lächeln. „Gute Tage. Na ja.“',still:'Der Blick geht zur Karte. Ein kaum sichtbares Kopfschütteln.'}},
+  open:{say:'„Die Karte da – ‚Gute Tage‘. Ist die von jemandem, den Sie kennen?“',laut:'„Gute Tage! Dass ich nicht lache.“',ruhe:'„Keine Ahnung. Hing schon da.“ Ein schiefes Lächeln. „Gute Tage. Na ja.“',still:'Der Blick geht zur Karte. Ein kaum sichtbares Kopfschütteln.'}},
  pics:{x:37,y:21,title:'Bilder über dem Bett',
   see:'Zwei kleine Bilder an der Wand: ein Leuchtturm, ein Boot. Die gleichen hängen in vielen Zimmern der Station.',
   q:'Was sagt so ein Raum über das Ankommen?',
@@ -114,7 +114,7 @@ const THINGS={
   q:'Was bedeutet es, wenn die Klingel nicht erreichbar ist?',
   read:['Die Person kann nicht selbst Hilfe holen.','Wahrscheinlich braucht die Person sie gerade nicht.','Jemand hat vergessen, sie hinzulegen.'],
   other:'Ob Absicht oder Zufall – die Folge ist dieselbe: Wer klingeln will, kann es nicht.',
-  open:{say:'Die Klingel vom Haken nehmen und in Reichweite legen.',act:true,ruhe:'Ein kurzer Blick auf die Klingel. „Danke. Die hat vorhin keiner gefunden.“',still:'Die Hand der Person legt sich kurz auf die Klingel. Dann wieder in den Schoß.'}},
+  open:{say:'Die Klingel vom Haken nehmen und in Reichweite legen.',act:true,laut:'„Ach! Da hängt die! Und ich ruf mir die Seele aus dem Leib.“ Ein langer Atemzug. „Na endlich.“',ruhe:'Ein kurzer Blick auf die Klingel. „Danke. Die hat vorhin keiner gefunden.“',still:'Die Hand der Person legt sich kurz auf die Klingel. Dann wieder in den Schoß.'}},
  lamp:{x:58,y:11,title:'Leselampe',
   see:{ruhe:'Die Leselampe über dem Bett ist eingeschaltet, obwohl es draußen hell ist.',still:'Die Leselampe über dem Bett ist aus. Der Schalter hängt hinter dem Kopfteil, schwer zu erreichen.'},
   q:'Kann aus so einer Kleinigkeit etwas folgen?',
@@ -125,25 +125,25 @@ const THINGS={
   q:'Was könnte der Blick nach draußen bedeuten?',
   read:['Die Person wäre lieber woanders.','Draußen ist es leichter als hier drinnen.','Das Licht tut einfach gut.'],
   other:'Wohin jemand schaut, zeigt nicht zuverlässig, woran jemand denkt.',
-  open:{say:'„Von hier sieht man ja bis zu den Bäumen.“',ruhe:'„Die sehe ich jetzt seit drei Stunden.“ Fast ein Lachen.',still:'Eine lange Pause. Dann: „Da wohne ich. Hinter den Bäumen.“'}},
+  open:{say:'„Von hier sieht man ja bis zu den Bäumen.“',laut:'„Da will ich hin. Raus hier.“ Es klingt weniger wütend als müde.',ruhe:'„Die sehe ich jetzt seit drei Stunden.“ Fast ein Lachen.',still:'Eine lange Pause. Dann: „Da wohne ich. Hinter den Bäumen.“'}},
  flowers:{x:86.5,y:38,title:'Blumen',
   see:{ruhe:'Ein frischer Strauß in einer Vase. Ein kleines Kärtchen steckt noch darin, ungeöffnet.',still:'Ein Strauß in einer Vase. Die Blüten lassen die Köpfe hängen, das Wasser ist trüb.'},
   q:{ruhe:'Warum ist das Kärtchen noch zu?',still:'Was erzählen welke Blumen?'},
   read:{ruhe:['Die Person hatte noch keine Kraft dafür.','Die Blumen sind von jemandem, mit dem es schwierig ist.','Es ist einfach untergegangen.'],still:['Seit ein paar Tagen war niemand zu Besuch.','Niemand hat daran gedacht, das Wasser zu wechseln.','Die Person will sie trotzdem behalten.']},
   other:{ruhe:'Ein ungeöffneter Gruß kann vieles heißen. Was er heißt, weiß nur die Person.',still:'Welke Blumen können ein Hinweis sein – oder einfach welke Blumen.'},
-  open:{say:{ruhe:'„Schöne Blumen. Wissen Sie schon, von wem sie sind?“',still:'„Soll ich den Blumen frisches Wasser geben?“'},ruhe:'„Nein. Hab das Kärtchen noch nicht aufgemacht.“ Ein Blick zur Vase.',still:'Ein Nicken. Das erste deutliche an diesem Nachmittag.'}},
+  open:{say:{ruhe:'„Schöne Blumen. Wissen Sie schon, von wem sie sind?“',still:'„Soll ich den Blumen frisches Wasser geben?“'},laut:'„Ist mir doch egal!“ Ein Blick zur Vase. „Von meiner Schwester. Die meint es ja gut.“',ruhe:'„Nein. Hab das Kärtchen noch nicht aufgemacht.“ Ein Blick zur Vase.',still:'Ein Nicken. Das erste deutliche an diesem Nachmittag.'}},
  glass:{x:80,y:50,title:'Glas und Karaffe',
   see:{ruhe:'Die Karaffe ist halb leer, das Glas frisch eingeschenkt.',still:'Die Karaffe ist randvoll, das Glas unberührt. Daneben ein Strohhalm, noch in der Folie.'},
   q:'Was weißt du – und was vermutest du?',
   read:{ruhe:['Die Person trinkt selbstständig.','Jemand hat gerade eingeschenkt.','Daraus kann ich nichts schließen.'],still:['Die Person hat länger nichts getrunken.','Das Wasser wurde gerade erst gebracht.','Die Person mag kein Leitungswasser.']},
   other:{ruhe:'Halb leer heißt nicht unbedingt: getrunken.',still:'Eine volle Karaffe sagt nicht, wann sie gefüllt wurde. Das lässt sich klären – im Gespräch oder in der Dokumentation.'},
-  open:{say:{ruhe:'„Soll ich Ihnen etwas Warmes zu trinken holen?“',still:'„Mögen Sie einen Schluck trinken? Ich halte Ihnen das Glas.“'},ruhe:'„Einen Tee. Wenn’s keine Umstände macht.“',still:'Ein Zögern. Dann ein kleiner Schluck. „Danke.“'}},
+  open:{say:{ruhe:'„Soll ich Ihnen etwas Warmes zu trinken holen?“',still:'„Mögen Sie einen Schluck trinken? Ich halte Ihnen das Glas.“'},laut:'„Endlich fragt mal einer!“ Dann ein Nicken. „Tee. Schwarz.“',ruhe:'„Einen Tee. Wenn’s keine Umstände macht.“',still:'Ein Zögern. Dann ein kleiner Schluck. „Danke.“'}},
  book:{x:94,y:51,title:'Buch',
   see:{ruhe:'Ein Taschenbuch, aufgeschlagen, mit einem Kassenzettel als Lesezeichen etwa in der Mitte.',still:'Ein Taschenbuch, zugeklappt. Das Lesezeichen steckt ganz vorne.'},
   q:'Was liest du daraus?',
   read:['Die Person liest gern.','Das Buch hat jemand mitgebracht, gelesen wird es nicht.','Lesen fällt gerade schwer.'],
   other:'Ein Buch auf dem Tisch ist ein möglicher Gesprächsanfang – kein Befund.',
-  open:{say:'„Was lesen Sie da gerade?“',ruhe:'„Einen Krimi. Wenn man mich lässt.“ Fast ein Lächeln.',still:'Ein Schulterzucken. „Nichts. Ich kann mich nicht konzentrieren.“'}},
+  open:{say:'„Was lesen Sie da gerade?“',laut:'„Lesen? Bei dem Betrieb hier?“',ruhe:'„Einen Krimi. Wenn man mich lässt.“ Fast ein Lächeln.',still:'Ein Schulterzucken. „Nichts. Ich kann mich nicht konzentrieren.“'}},
  bed:{x:58,y:71,title:'Bett',
   see:{ruhe:'Die Bettdecke ist ordentlich zurückgeschlagen, das Kissen aufgeschüttelt. Auf dem Laken liegt eine gefaltete Strickjacke.',still:'Die Bettdecke ist zerwühlt, das Kissen liegt quer – als hätte die Person lange gelegen und sich erst eben aufgesetzt.'},
   q:'Was kannst du aus einem Bett lesen?',
@@ -154,13 +154,13 @@ const THINGS={
   q:'Was könnten die Hausschuhe bedeuten?',
   read:['Die Person will bald aufstehen.','Die Person ist heute noch nicht viel gelaufen.','Jemand hat sie hingestellt, für alle Fälle.'],
   other:'Hausschuhe sind auch eine Frage der Sicherheit. Ob die Person sicher aufstehen kann, weißt du noch nicht.',
-  open:{say:'„Möchten Sie später aufstehen? Die Hausschuhe stehen ja schon bereit.“',ruhe:'„Später vielleicht. Jetzt nicht.“',still:'Ein Blick auf die Hausschuhe. Ein kleines Kopfschütteln.'}},
+  open:{say:'„Möchten Sie später aufstehen? Die Hausschuhe stehen ja schon bereit.“',laut:'„Ich will hier nicht aufstehen, ich will hier raus!“',ruhe:'„Später vielleicht. Jetzt nicht.“',still:'Ein Blick auf die Hausschuhe. Ein kleines Kopfschütteln.'}},
  chair:{x:95,y:80,title:'Sessel mit Decke',
   see:{ruhe:'Ein Sessel in der Ecke, eine Wolldecke darüber. Daneben eine Reisetasche, noch nicht ausgepackt.',still:'Ein Sessel in der Ecke, eine Wolldecke darüber, sorgfältig gefaltet – als hätte hier lange niemand gesessen.'},
   q:{ruhe:'Was erzählt eine Tasche, die noch nicht ausgepackt ist?',still:'Wer könnte hier sitzen?'},
   read:{ruhe:['Die Person ist noch nicht angekommen.','Es war bisher keine Kraft dafür.','Die Person rechnet damit, bald wieder zu gehen.'],still:['Hier war länger niemand zu Besuch.','Das Team hat aufgeräumt.','Der Sessel ist für Besuch gedacht.']},
   other:{ruhe:'Ankommen braucht Zeit. Neu aufgenommen heißt auch: Alles ist fremd.',still:'Ein leerer Sessel kann auch eine Einladung sein – für dich.'},
-  open:{say:{ruhe:'„Soll ich Ihnen später beim Auspacken helfen?“',still:'Fragen, ob du dich einen Moment in den Sessel setzen darfst.'},act:{still:true},ruhe:'„Später. Vielleicht.“ Ein Blick zur Tasche. „Das ist nett.“',still:'Ein Schulterzucken, das wie ein Ja aussieht. Als du sitzt, seid ihr auf Augenhöhe.'}}
+  open:{say:{ruhe:'„Soll ich Ihnen später beim Auspacken helfen?“',still:'Fragen, ob du dich einen Moment in den Sessel setzen darfst.'},act:{still:true},laut:'„Auspacken? Ich bleibe hier keinen Tag länger!“',ruhe:'„Später. Vielleicht.“ Ein Blick zur Tasche. „Das ist nett.“',still:'Ein Schulterzucken, das wie ein Ja aussieht. Als du sitzt, seid ihr auf Augenhöhe.'}}
 };
 const N=Object.keys(THINGS).length;
 
@@ -185,6 +185,25 @@ const SIT={
   ends:{wieder:'Die Person nickt kaum merklich. „Ist gut.“',bleiben:'Eine Weile bleibt es still zwischen euch. Dann gehst du. „Bis später“, hörst du hinter dir.',stumm:'Die Person schaut dir nicht nach.'},
   obs:()=>'„Hat gesagt: ‚Ich will einfach meine Ruhe.‘ Wirkte angespannt.'+(S.said.has('photo')?' Wartet auf Besuch morgen.':'')+(S.said.has('chair')?' Tasche ist noch nicht ausgepackt.':'')+' Ich schaue um drei noch mal rein.“',
   colleague:'Die Kollegin nickt. „Neu aufgenommen, das ist viel auf einmal. Danke dir.“'},
+ laut:{label:'Die Person wird laut und beleidigend',warn:true,
+  flur:'Auf dem Flur sagt dir eine Kollegin: „Pass auf in der 4. Da ist heute schon zweimal die Stimmung gekippt.“ Du stehst vor der Tür.',
+  intro:'Die Person sitzt auf der Bettkante und verfolgt jede deiner Bewegungen. Du weißt noch nicht, was dich erwartet. Tippe im Bild auf die Kreise, um dich umzusehen – oder geh direkt zur Person.',
+  approach:'Die Person sieht dich kommen. Der Blick wird hart.',
+  entries:{
+   intro:['Du stellst dich mit deinem Namen vor.','„Interessiert mich nicht, wie Sie heißen! Seit Stunden rufe ich, und keiner kommt. Ihr seid doch alle unfähig!“'],
+   ask:['Du fragst, wie es geht.','„Wie soll es mir schon gehen?! Was ist das für eine dämliche Frage? Sie haben doch keine Ahnung!“'],
+   silent:['Du bleibst still neben dem Bett stehen.','„Was glotzen Sie so? Stehen Sie da nicht rum wie bestellt und nicht abgeholt – verschwinden Sie!“'],
+   wait:['Du bleibst mit etwas Abstand stehen und wartest.','„Ach, jetzt traut sich keiner mehr ran, was? Feige seid ihr. Alle miteinander!“']},
+  hearQ:'Die Person ist laut geworden und hat dich beleidigt. – Wie hörst du das?',
+  ears:{sache:'„Hier läuft etwas schief.“',selbst:'„Ich habe Angst und fühle mich ausgeliefert.“',bez:'„Ich traue euch nicht mehr.“',app:'„Kümmern Sie sich endlich um mich!“'},
+  earReply:{
+   sache:['„Sie haben gerufen, und es kam niemand. Das ärgert Sie.“','„Ja, verdammt!“ Etwas leiser: „Seit dem Mittag.“'],
+   selbst:['„Ich höre, wie aufgebracht Sie sind. Ich bleibe hier und höre zu.“','Ein Schnauben. Dann, schon etwas leiser: „Sie müssen ja nicht hier liegen.“'],
+   bez:['„Ich bin jetzt da. Sagen Sie mir, was los ist – aber bitte ohne Beleidigungen.“','Einen Moment ist es still. „Na gut. Aber ohne Ausreden.“'],
+   app:['„Ich kümmere mich. Was brauchen Sie jetzt als Erstes?“','„Ein Arzt soll kommen. Und was zu trinken.“ Die Fäuste öffnen sich ein wenig.']},
+  ends:{wieder:'„Wehe, Sie kommen nicht.“ Es klingt mehr nach Sorge als nach Drohung.',bleiben:'Die Person atmet schwer. Nach einer Weile wird es ruhiger. Dann gehst du.',stumm:'Hinter dir: „Ja, hauen Sie nur ab!“'},
+  obs:()=>'„War laut und hat mich beleidigt: ‚Ihr seid doch alle unfähig.‘ Sagt, seit Stunden komme niemand.'+(S.said.has('bell')?' Die Klingel hing am Haken – liegt jetzt in Reichweite.':'')+' Ich gehe um drei wieder rein, nicht allein.“',
+  colleague:'„Ach, die 4. Mich hat sie heute Morgen auch angeschrien. Alles okay bei dir?“'},
  still:{label:'Die Person schweigt',
   flur:'Auf dem Flur sagt dir eine Kollegin: „Die 4 hat seit Mittag kein Wort gesagt und nichts gegessen.“ Du stehst vor der Tür.',
   intro:'Die Person sitzt auf der Bettkante. Du weißt noch nicht, ob sie überhaupt mit dir sprechen wird. Tippe im Bild auf die Punkte, um dich umzusehen – oder geh direkt zur Person.',
@@ -208,10 +227,13 @@ const SIT={
 const ENTRY_LABEL={intro:'Mich vorstellen',ask:'Fragen, wie es geht',silent:'Erst einmal nichts sagen',wait:'Abstand halten und warten'};
 const EARS=[{k:'sache',label:'Es geht um die Sache'},{k:'selbst',label:'Es sagt etwas über die Person'},{k:'bez',label:'Es sagt etwas über euch beide'},{k:'app',label:'Es ist eine Bitte'}];
 const R={
- abwehr:{say:'„Ach, so schlimm ist es doch nicht. Anderen geht es viel schlechter.“',ruhe:'„Na, dann gehen Sie doch zu denen.“ Die Person dreht sich zum Fenster.',still:'Keine Reaktion. Der Blick geht zurück zur Wand.'},
- mitleid:{say:'„Oh je, das ist ja furchtbar. Ich könnte das auch nicht aushalten.“',ruhe:'„Jetzt fangen Sie nicht auch noch an.“',still:'Die Person schließt kurz die Augen und sagt nichts.'},
- bleiben:{say:'Nichts sagen. Einen Moment bleiben.',ruhe:'Es bleibt still. Nach einer Weile: „Sie sind ja hartnäckig.“ Es klingt nicht mehr ganz so scharf.',still:'Die Stille hält. Sie fühlt sich anders an als vorhin – weniger abweisend, so scheint es dir.'},
- go:{say:'Gehen.',ruhe:'Du verlässt das Zimmer. Hinter dir bleibt es still.',still:'Du verlässt das Zimmer. Hinter dir bleibt es still.'}
+ abwehr:{say:'„Ach, so schlimm ist es doch nicht. Anderen geht es viel schlechter.“',laut:'„Schlimm?! Was wissen Sie denn schon!“ Die Stimme wird noch lauter.',ruhe:'„Na, dann gehen Sie doch zu denen.“ Die Person dreht sich zum Fenster.',still:'Keine Reaktion. Der Blick geht zurück zur Wand.'},
+ mitleid:{say:'„Oh je, das ist ja furchtbar. Ich könnte das auch nicht aushalten.“',laut:'„Ihr Mitleid können Sie sich sparen!“',ruhe:'„Jetzt fangen Sie nicht auch noch an.“',still:'Die Person schließt kurz die Augen und sagt nichts.'},
+ bleiben:{say:'Nichts sagen. Einen Moment bleiben.',laut:'Die Person schimpft weiter, dann wird es leiser. Du merkst, wie viel Kraft es dich kostet, stehen zu bleiben.',ruhe:'Es bleibt still. Nach einer Weile: „Sie sind ja hartnäckig.“ Es klingt nicht mehr ganz so scharf.',still:'Die Stille hält. Sie fühlt sich anders an als vorhin – weniger abweisend, so scheint es dir.'},
+ grenze:{say:'„So möchte ich nicht angesprochen werden. Ich will Ihnen helfen – dafür brauchen wir einen anderen Ton.“',laut:'„Ach, jetzt auch noch frech werden?“ Dann, nach einer Pause, deutlich leiser: „Schon gut.“'},
+ abstand:{say:'Einen Schritt zurücktreten, sodass die Tür hinter dir frei bleibt.',laut:'Die Person bemerkt es. „Ich tu Ihnen doch nichts.“ Der Ton ist etwas ruhiger.'},
+ hilfe:{say:'Eine Kollegin dazuholen: kurz Bescheid sagen und das Zimmer verlassen.',laut:'„Ich hole eine Kollegin dazu und komme gleich wieder.“ Draußen atmest du einmal tief durch.'},
+ go:{say:'Gehen.',laut:'Du verlässt das Zimmer. Hinter dir wird noch etwas gerufen.',ruhe:'Du verlässt das Zimmer. Hinter dir bleibt es still.',still:'Du verlässt das Zimmer. Hinter dir bleibt es still.'}
 };
 
 /* ---------- Zustand & Hilfen ---------- */
@@ -273,10 +295,11 @@ function flash(t){const p=el('p','response',t);extra.prepend(p);setTimeout(()=>p
 /* ---------- Ablauf ---------- */
 function start(){
  S=null;renderLog();markSpots();count();tag('Zimmer 4');
- show(null,'Zwei Begegnungen, ein Zimmer','Im selben Zimmer warten zwei verschiedene Begegnungen auf dich. Du entscheidest, womit du beginnst. Die andere kannst du danach erleben. Es gibt keine Punkte und kein Richtig oder Falsch.','',
-  Object.keys(SIT).map(k=>[SIT[k].label+(done.has(k)?' ✓':''),()=>door(k),'wide']));
+ show(null,'Drei Begegnungen, ein Zimmer','Im selben Zimmer warten drei verschiedene Begegnungen auf dich: abweisend, schweigend, laut. Du entscheidest, womit du beginnst. Die anderen kannst du danach erleben. Es gibt keine Punkte und kein Richtig oder Falsch.','',
+  ['ruhe','still','laut'].map(k=>[SIT[k].label+(done.has(k)?' ✓':'')+(SIT[k].warn?' · mit Inhaltshinweis':''),()=>door(k),'wide']));
 }
-function door(sit){
+function door(sit,ok){
+ if(SIT[sit].warn&&!ok){S=null;renderLog();markSpots();count();show(null,'Inhaltshinweis','In dieser Begegnung wird die Person laut, abwertend und beleidigt dich persönlich. Es gibt keine körperliche Gewalt. Du kannst jederzeit über „Neu“ abbrechen.','',[['Ich möchte die Begegnung erleben',()=>door(sit,true),'wide'],['Lieber eine andere Begegnung',start,'quiet']]);return}
  fresh(sit);tag('Zimmer 4 · '+T().label);log('Begegnung: '+T().label);
  show('door','Vor der Tür',T().flur,'',[['Kurz innehalten, bevor ich eintrete',pause],['Eintreten',enter]]);
 }
@@ -320,9 +343,9 @@ function schau(){
  S.phase='schau';
  show('self','Innere Schau','Die Reaktion ist noch im Raum. Du musst sie nicht sofort verändern. Was passiert gerade in dir?','',
   [['Weiter',()=>{log('Gespürt: '+fmt(S.body)+' · Gefühl: '+fmt(S.feel)+' · Impuls: '+fmt(S.urge));hear()},'wide']],
-  [chipGroup('Im Körper',['Schultern angespannt','Atem flacher','Wärme im Gesicht','Unruhe im Bauch','Kloß im Hals','Nichts Besonderes'],S.body),
-   chipGroup('Gefühl',['Ärger','Kränkung','Unsicherheit','Hilflosigkeit','Mitgefühl','Ungeduld','Erleichterung','Weiß nicht'],S.feel),
-   chipGroup('Impuls – was würde ich am liebsten tun?',['Die Stimmung retten','Mich rechtfertigen','Schnell gehen','Bleiben','Etwas in Ordnung bringen','Gar nichts'],S.urge),
+  [chipGroup('Im Körper',['Schultern angespannt','Atem flacher','Herz klopft schneller','Wärme im Gesicht','Unruhe im Bauch','Kloß im Hals','Nichts Besonderes'],S.body),
+   chipGroup('Gefühl',['Ärger','Kränkung','Angst','Unsicherheit','Hilflosigkeit','Mitgefühl','Ungeduld','Erleichterung','Weiß nicht'],S.feel),
+   chipGroup('Impuls – was würde ich am liebsten tun?',['Die Stimmung retten','Mich rechtfertigen','Zurückschimpfen','Schnell gehen','Bleiben','Etwas in Ordnung bringen','Gar nichts'],S.urge),
    hint('Alles davon darf da sein. Ein Impuls ist noch keine Handlung. Du musst nichts reparieren.'),
    noteField(S.sit+'-schau','In eigenen Worten')]);
 }
@@ -335,6 +358,7 @@ function openers(){return Object.keys(THINGS).filter(k=>THINGS[k].open&&!S.said.
 function answer(){
  S.phase='answer';const ear=T().earReply[S.ear];const ops=openers();
  const opts=[['Sagen: '+R.abwehr.say,()=>reply('abwehr')],['Sagen: '+ear[0],()=>reply('ear')],['Sagen: '+R.mitleid.say,()=>reply('mitleid')]];
+ if(S.sit==='laut')opts.push(['Sagen: '+R.grenze.say,()=>reply('grenze')],['Tun: '+R.abstand.say,()=>reply('abstand')],['Tun: '+R.hilfe.say,()=>reply('hilfe')]);
  if(ops.length)opts.push(['Etwas aus dem Zimmer aufgreifen ('+ops.length+')',pickOpener,'wide']);
  opts.push([R.bleiben.say,()=>reply('bleiben')],[R.go.say,()=>reply('go')]);
  show('patient',S.turns?'Und jetzt?':'Was tust du?',S.turns?'Die Begegnung geht weiter. Du kannst noch etwas aufgreifen oder zum Abschluss kommen.':'Du hast die Reaktion wahrgenommen – auch deine eigene. Wie gehst du weiter?','',
@@ -352,7 +376,7 @@ function reply(k){
  else if(THINGS[k]){const o=THINGS[k].open;said=by(o.say);react=o[S.sit];S.said.add(k)}
  else{said=R[k].say;react=R[k][S.sit]}
  log((k==='go'||k==='bleiben'||!said.startsWith('„')?'Gewählt: ':'Gesagt: ')+said);
- if(k==='go'){show('door','Du gehst',react,'',[['Kurz nachspüren',schau2,'wide']]);S.left=true;return}
+ if(k==='go'||k==='hilfe'){show('door',k==='hilfe'?'Du holst Hilfe':'Du gehst',react,'',[['Kurz nachspüren',schau2,'wide']]);S.left=true;return}
  S.turns++;S.phase='answer';
  const more=openers().length;
  show('patient','Was jetzt passiert',said.startsWith('„')?'Du sagst: '+said:said,react,
@@ -386,6 +410,12 @@ function hand(s){
 }
 function colleague(){
  if(S.sit==='ruhe'){show('door','Die Kollegin','',T().colleague,[['Zum Abschluss',finish,'wide']]);return}
+ if(S.sit==='laut'){
+  const L2={ok:'„Ja, passt schon.“',hit:'„Ehrlich gesagt: Das hat mich getroffen.“',team:'„Ich möchte das im Team ansprechen.“'};
+  const RE2={ok:'„Sicher? Sag Bescheid, wenn doch nicht.“',hit:'„Kenn ich. Komm, wir trinken gleich kurz einen Kaffee. Und um drei gehen wir zusammen rein.“',team:'„Gute Idee. Bei der Übergabe – ich bin dabei.“'};
+  show('door','Die Kollegin','',T().colleague,Object.keys(L2).map(k=>[L2[k],()=>{log('Auf „Alles okay bei dir?“: '+L2[k]);
+   show('door','Nach der Begegnung','',RE2[k],[['Zum Abschluss',finish,'wide']],[hint('Beleidigt zu werden gehört nicht einfach „zum Job“. Was so etwas mit dir in deiner Rolle macht, ist Thema der nächsten Sequenz: in der Rolle bleiben.')])}]));
+  return}
  const L={zu:'Zustimmen: „Ja, scheint so.“',erz:'Erzählen, was ich erlebt habe',nix:'Nichts dazu sagen'};
  const RE={zu:'Die Kollegin geht weiter. Der Satz bleibt bei dir.',erz:'„Echt? Hm.“ Die Kollegin geht weiter, langsamer als vorher.',nix:'Die Kollegin geht weiter. Du bleibst mit dem Satz auf dem Flur stehen.'};
  show('door','Die Kollegin','',T().colleague,Object.keys(L).map(k=>[L[k],()=>{log('Auf „Die redet sowieso nie“: '+L[k]);
@@ -393,9 +423,8 @@ function colleague(){
 }
 function finish(){
  S.phase='end';done.add(S.sit);
- const other=S.sit==='ruhe'?'still':'ruhe';
  show(null,'Die Begegnung darf offen bleiben','Du hast in deiner Rolle gehandelt. Ob die Person zufrieden ist, entscheidet nicht allein über deine Professionalität. Du hast '+S.seen.size+' von '+N+' Dingen im Zimmer entdeckt.','',
-  [['Andere Begegnung: '+SIT[other].label,()=>door(other),'wide'],['Mein Weg ansehen',openWeg],['Neu erleben',()=>door(S.sit)],['Als Textdatei sichern',save],['Zur Auswahl',start,'quiet']]);
+  [...Object.keys(SIT).filter(k=>k!==S.sit).map(k=>['Andere Begegnung: '+SIT[k].label+(done.has(k)?' ✓':''),()=>door(k),'wide']),['Mein Weg ansehen',openWeg],['Neu erleben',()=>door(S.sit)],['Als Textdatei sichern',save],['Zur Auswahl',start,'quiet']]);
 }
 function openWeg(){const d=$('weg');try{d.showModal()}catch(e){d.setAttribute('open','')}}
 function save(){
