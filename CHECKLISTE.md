@@ -5,7 +5,7 @@ Damit kein Spiel irgendwo fehlt. Jeder Punkt muss erledigt sein, bevor ein Spiel
 ## 1. Ablage
 - [ ] Eigener Ordner: `spiele/<kurzer-name>/index.html`
 - [ ] Bilder als eigene Dateien daneben (WebP), **nicht** in die HTML-Datei eingebettet
-- [ ] Signatur-Figur unten rechts aus `bilder/barbara-figur.webp` (Pfad im Spiel: `../../bilder/barbara-figur.webp`)
+- [ ] Figur aus `bilder/barbara-figur.webp` einbauen (Pfad im Spiel: `../../bilder/barbara-figur.webp`): auf normalen Seiten den `bmm-figur`-Block vor `</body>` kopieren (z. B. aus `index.html`) – oben rechts, auf dem Handy am Seitenende; in Spielen ohne Seitenscrollen unten rechts im Spielbereich
 
 ## 2. Im Spiel selbst
 - [ ] `<meta name="robots" content="noindex">` im Kopf (Seite soll vorerst nicht auffindbar sein)
