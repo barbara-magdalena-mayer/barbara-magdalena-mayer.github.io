@@ -31,7 +31,7 @@ textarea{width:100%;min-height:96px;background:#101d24;color:#fff;border:1px sol
  .guide-figure{right:-2%;height:52%;max-width:42%;opacity:.96}.spot{width:34px;height:34px;font-size:17px;box-shadow:0 0 0 4px #ffffff18}
  .spot span{top:40px}
  .panel{grid-template-columns:1fr}.card{min-height:0}}
-.signature{display:flex;justify-content:flex-end;margin-top:22px;border-top:1px solid #33434b;padding-top:6px}.signature img{height:150px;display:block;filter:drop-shadow(0 6px 10px #0006)}@media(max-width:700px){.signature img{height:110px}}
+.head-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}.back{color:#c3e5f3;text-decoration:none;font-size:14px}.back:hover{text-decoration:underline}.signature{display:flex;justify-content:flex-end;margin-top:22px;border-top:1px solid #33434b;padding-top:6px}.signature img{height:150px;display:block;filter:drop-shadow(0 6px 10px #0006)}@media(max-width:700px){.signature img{height:110px}}
 @media(prefers-reduced-motion:reduce){.world{transition:none}}
 </style>
 <!-- HINTERGRUNDBILD: Für ein neues Bild nur die URL in der nächsten Zeile ersetzen.
@@ -40,7 +40,7 @@ textarea{width:100%;min-height:96px;background:#101d24;color:#fff;border:1px sol
      und die Punkte (style="left:…;top:…" an den .spot-Buttons) neu setzen. -->
 <style id="hintergrundbild">.picture{background-image:url('zimmer-4.webp')}</style>
 </head><body>
-<header><div><h1>Grundlage · Kontakt aufnehmen</h1><small>Lernen am Optimum · Ein erster Entwicklungsraum</small></div><button class="muted" id="restart">↺ Neu erleben</button></header>
+<header><div><h1>Grundlage · Kontakt aufnehmen</h1><small>Lernen am Optimum · Ein erster Entwicklungsraum</small></div><div class="head-actions"><a class="back" href="../../">← Zurück zur Werkstatt</a><button class="muted" id="restart">↺ Neu erleben</button></div></header>
 <main class="layout">
 <div class="stage">
  <div class="scene" id="scene">
@@ -218,7 +218,7 @@ $('notes').addEventListener('input',()=>{try{localStorage.setItem(stored,$('note
 $('save').onclick=()=>{const content='Lernen am Optimum – Grundlage: Kontakt aufnehmen\nInnere Schau: Was habe ich empfunden?\n\n'+$('notes').value;const blob=new Blob([content],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Meine_innere_Schau_Kontakt_aufnehmen.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500)};
 let exerciseScore=0;const answered={};
 function markExercise(n,correct,message){
-  if(!answered[n]){answered[n]=true;if(correct)exerciseScore++}
+  if(!answered[n]){answered[n]=true;exerciseScore++}
   const f=$('feedback'+n);f.textContent=message;f.classList.toggle('bad',!correct);
   $('exercise-score').textContent=exerciseScore+' von 3 Auswahlfragen beantwortet.';
 }
