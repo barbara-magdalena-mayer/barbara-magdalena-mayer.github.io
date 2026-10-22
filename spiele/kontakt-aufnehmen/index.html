@@ -264,10 +264,11 @@ function markSpots(){world.querySelectorAll('[data-spot]').forEach(b=>{const k=b
 function spotClick(k){
  if(!S){flash('Wähle zuerst rechts eine Begegnung.');return}
  if(S.phase==='door')enter();
- if(S.phase!=='room'){flash('Du bist gerade mitten in der Begegnung. Der Raum bleibt da.');return}
+ if(S.phase==='answer'){if(THINGS[k])look(k);else flash('Du bist schon bei der Person. Tippe auf ein Ding im Zimmer, um es anzusehen.');return}
+ if(S.phase!=='room'){flash('Gleich kannst du wieder auf Dinge im Zimmer tippen – jetzt bist du gerade bei dir oder im Gespräch.');return}
  if(k==='self')selfCheck();else if(k==='patient')approach();else look(k);
 }
-function flash(t){const p=hint(t);extra.prepend(p);setTimeout(()=>p.remove(),3500)}
+function flash(t){const p=el('p','response',t);extra.prepend(p);setTimeout(()=>p.remove(),4500)}
 
 /* ---------- Ablauf ---------- */
 function start(){
@@ -287,19 +288,20 @@ function enter(){if(!S.paused)log('Direkt eingetreten');S.phase='room';room()}
 function room(){
  S.phase='room';const left=N-S.seen.size;
  show('room','Im Zimmer',T().intro,'',[['Zur Person gehen',approach,'wide'],['Kurz bei mir sein',selfCheck]],
-  [hint(left===N?'Im Bild gibt es '+N+' Dinge zu entdecken.':left?'Noch '+left+' von '+N+' Dingen unentdeckt. Was du entdeckst, kann dir später im Gespräch weitere Wege öffnen.':'Du hast alles im Zimmer angesehen.')]);
+  [hint(left===N?'Im Bild gibt es '+N+' Dinge zu entdecken – tippe auf die Kreise. Du kannst auch später im Gespräch noch auf Dinge tippen.':left?'Noch '+left+' von '+N+' Dingen unentdeckt. Was du entdeckst, kannst du im Gespräch aufgreifen.':'Du hast alles im Zimmer angesehen.')]);
 }
 function look(k){
  const t=THINGS[k];const first=!S.seen.has(k);
  if(first){S.seen.add(k);markSpots();count();log('Entdeckt: '+t.title)}
  const reads=by(t.read);
- const opts=reads.map(r=>[r,()=>think(k,r)]);opts.push(['Weiß ich nicht – das würde ich nachfragen',()=>think(k,null)],['Zurück in den Raum',room,'quiet']);
+ const opts=reads.map(r=>[r,()=>think(k,r)]);opts.push(['Weiß ich nicht – das würde ich nachfragen',()=>think(k,null)],S.phase==='answer'?['Zurück zum Gespräch',answer,'quiet']:['Zurück in den Raum',room,'quiet']);
  show(k,t.title,by(t.see),'',opts,[el('p','',by(t.q))]);
 }
 function think(k,r){
  const t=THINGS[k];log(r?'Vermutung ('+t.title+'): '+r:'Offene Frage ('+t.title+')');
- show(k,t.title,r?'Deine Vermutung: '+r:'Du würdest nachfragen.',by(t.other),[['Zurück in den Raum',room,'wide'],['Zur Person gehen',approach]],
-  t.open?[hint('Das kannst du später im Gespräch aufgreifen.')]:[]);
+ const conv=S.phase==='answer';
+ show(k,t.title,r?'Deine Vermutung: '+r:'Du würdest nachfragen.',by(t.other),conv?[['Zurück zum Gespräch',answer,'wide']]:[['Weiter umsehen',room],['Zur Person gehen',approach]],
+  [hint((t.open?'Das kannst du im Gespräch aufgreifen. ':'')+'Noch '+(N-S.seen.size)+' von '+N+' Dingen unentdeckt – tippe im Bild auf die Kreise.')]);
 }
 function selfCheck(){
  show('self','Bei dir','Du stehst kurz still. Atem, Schultern, die Situation vor dir. Du musst noch nichts lösen.','',[['Zur Person gehen',approach],['Zurück in den Raum',room]],[noteField(S.sit+'-vorher','Wie geht es mir, bevor ich Kontakt aufnehme?')]);
@@ -337,7 +339,7 @@ function answer(){
  opts.push([R.bleiben.say,()=>reply('bleiben')],[R.go.say,()=>reply('go')]);
  show('patient',S.turns?'Und jetzt?':'Was tust du?',S.turns?'Die Begegnung geht weiter. Du kannst noch etwas aufgreifen oder zum Abschluss kommen.':'Du hast die Reaktion wahrgenommen – auch deine eigene. Wie gehst du weiter?','',
   S.turns?[...ops.length?[['Noch etwas aus dem Zimmer aufgreifen ('+ops.length+')',pickOpener,'wide']]:[],['Zum Abschluss kommen',schau2,'wide']]:opts,
-  !S.turns&&!S.seen.size?[hint('Was du im Zimmer entdeckst, öffnet dir hier weitere Wege. Du hast dich noch nicht umgesehen.')]:[]);
+  [hint(S.seen.size<N?'Du kannst jetzt noch im Bild auf Dinge tippen. Was du entdeckst, kannst du hier aufgreifen.':'Du hast alles im Zimmer entdeckt.')]);
 }
 function pickOpener(){
  const ops=openers();
@@ -351,7 +353,7 @@ function reply(k){
  else{said=R[k].say;react=R[k][S.sit]}
  log((k==='go'||k==='bleiben'||!said.startsWith('„')?'Gewählt: ':'Gesagt: ')+said);
  if(k==='go'){show('door','Du gehst',react,'',[['Kurz nachspüren',schau2,'wide']]);S.left=true;return}
- S.turns++;
+ S.turns++;S.phase='answer';
  const more=openers().length;
  show('patient','Was jetzt passiert',said.startsWith('„')?'Du sagst: '+said:said,react,
   [...(more?[['Noch etwas aufgreifen ('+more+')',pickOpener]]:[]),['Zum Abschluss kommen',schau2]]);
