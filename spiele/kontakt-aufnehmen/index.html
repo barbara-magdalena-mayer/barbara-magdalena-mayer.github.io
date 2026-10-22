@@ -33,6 +33,7 @@ textarea{width:100%;min-height:96px;background:#101d24;color:#fff;border:1px sol
  .panel{grid-template-columns:1fr}.card{min-height:0}}
 .head-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}.back{color:#c3e5f3;text-decoration:none;font-size:14px}.back:hover{text-decoration:underline}.signature{display:flex;justify-content:flex-end;margin-top:22px;border-top:1px solid #33434b;padding-top:6px}.signature img{height:150px;display:block;filter:drop-shadow(0 6px 10px #0006)}@media(max-width:700px){.signature img{height:110px}}
 @media(prefers-reduced-motion:reduce){.world{transition:none}}
+@media(prefers-reduced-motion:no-preference){.scene .world{transition:transform .75s ease,filter .6s ease}}.scene.door .world{filter:brightness(.55) blur(2px)}#extra:not(:empty){margin:4px 0 14px}.chips{border:0;padding:0;margin:12px 0 0;display:flex;flex-wrap:wrap;gap:6px}.chips legend{font-size:13px;color:#9eb0b5;margin-bottom:6px;padding:0}.chip{border:1px solid #6a8589;background:#1c2931;color:#fff;border-radius:999px;padding:7px 12px;font-size:14px}.chip:hover,.chip:focus-visible{background:#2c424b}.chip[aria-pressed="true"]{background:#c3b290;border-color:#c3b290;color:#111a20}.note{display:block;margin-top:14px;font-size:13px;color:#9eb0b5}.note textarea{margin-top:6px;min-height:70px}.own{min-height:80px}.hint{font-size:13px;color:#c3e5f3!important;margin:12px 0 0!important}#log,.path{padding-left:20px;color:#d6dedf;font-size:14px;line-height:1.5;margin:8px 0}#log li,.path li{margin:4px 0}#heading:focus{outline:none}
 </style>
 <!-- HINTERGRUNDBILD: Für ein neues Bild nur die URL in der nächsten Zeile ersetzen.
      Das Bild sollte keine eingezeichneten Bedienelemente enthalten (keine Knöpfe, Punkte, Texte).
@@ -45,27 +46,26 @@ textarea{width:100%;min-height:96px;background:#101d24;color:#fff;border:1px sol
 <div class="stage">
  <div class="scene" id="scene">
   <div class="world" id="world">
-   <div class="picture" role="img" aria-label="Patientenzimmer am Nachmittag: Eine Pflegeperson steht im Raum, eine ältere Frau sitzt auf der Bettkante."></div>
+   <div class="picture" role="img" aria-label="Patientenzimmer am Nachmittag: Eine Pflegeperson steht im Raum, eine ältere Person sitzt auf der Bettkante."></div>
    <!-- Punkte: Position in Prozent vom Bild (left = von links, top = von oben) -->
    <button class="spot self" data-spot="self"   style="left:42.8%;top:39%"   aria-label="Bei mir innehalten">◌<span>Bei mir</span></button>
-   <button class="spot"      data-spot="patient" style="left:66.8%;top:46%"   aria-label="Person erkunden">◌<span>Person</span></button>
+   <button class="spot"      data-spot="patient" style="left:66.8%;top:46%"   aria-label="Zur Person gehen">◌<span>Person</span></button>
    <button class="spot"      data-spot="table"   style="left:87.5%;top:51.5%" aria-label="Tisch am Bett erkunden">◌<span>Tisch am Bett</span></button>
    <button class="spot"      data-spot="bed"     style="left:58%;top:71%"     aria-label="Bett erkunden">◌<span>Bett</span></button>
    <button class="spot"      data-spot="photo"   style="left:15%;top:43%"     aria-label="Foto auf dem Schrank erkunden">◌<span>Foto auf dem Schrank</span></button>
   </div>
   <div class="shade"></div>
-  </div>
- <div class="info"><strong>Zimmer 4</strong><p>Du darfst erst einmal wahrnehmen. Du musst niemanden zufriedenstellen.</p></div>
- <div class="toast" id="toast" aria-live="polite">Erkunde den Raum. Nimm Kontakt auf. Beobachte auch dich selbst.</div>
+ </div>
+ <div class="info"><strong>Zimmer 4</strong><p>Ein Zimmer, zwei Begegnungen. Du darfst erst einmal wahrnehmen. Du musst niemanden zufriedenstellen.</p></div>
+ <div class="toast" id="toast" aria-live="polite">Wähle unten, mit welcher Begegnung du beginnst.</div>
 </div>
 <div class="panel">
- <section class="card"><h2 id="heading">Vor der Begegnung</h2><p id="description">Die Person sitzt auf der Bettkante. Du kannst das Zimmer erkunden und Kontakt aufnehmen.</p><p id="response" class="response hidden" aria-live="polite"></p><div class="choices" id="choices"></div></section>
- <section class="card"><h2>Innere Schau</h2><p>Du musst die Stimmung der anderen Person nicht verändern. Nimm wahr, was die Begegnung in dir auslöst.</p><p class="subtle" id="status">Die Begegnung hat noch nicht begonnen.</p>
-  <div class="actions"><button class="muted" id="observe">Raum ansehen</button><button class="muted" id="reflect">Empfindung notieren</button></div>
-  <div id="reflection" class="reflection hidden"><label for="notes"><strong id="question">Was habe ich gerade empfunden?</strong></label><textarea id="notes" placeholder="Schreibe in deinen eigenen Worten. Auch Unsicherheit, Ärger oder gar nichts zu empfinden ist möglich."></textarea><p class="subtle">Keine Bewertung. Keine Musterlösung. Deine Notiz bleibt auf diesem Gerät und kann als Textdatei gesichert werden.</p>
-   <div class="actions"><button class="muted" id="save">Notiz als Textdatei sichern</button><button class="muted" id="continue">Weiter</button></div>
-   <details><summary>Später: meine professionelle Rolle</summary><p>Was ich empfinde, darf da sein. Ich kann trotzdem entscheiden, wie ich in meiner Rolle handle.</p><p class="subtle">Anknüpfung: Rolle verstehen · Kommunikation und Emotionen</p></details>
-  </div>
+ <section class="card"><h2 id="heading" tabindex="-1">Zwei Begegnungen</h2><p id="description"></p><p id="response" class="response hidden" aria-live="polite"></p><div id="extra"></div><div class="choices" id="choices"></div></section>
+ <section class="card"><h2>Dein Weg</h2><p class="subtle" id="status">Noch hat nichts begonnen.</p>
+  <ol id="log"></ol><p class="subtle" id="log-empty">Hier erscheint Schritt für Schritt, was du wahrgenommen, gespürt und gewählt hast. Keine Bewertung, keine Musterlösung.</p>
+  <div class="actions"><button class="muted" id="save">Meinen Weg als Textdatei sichern</button></div>
+  <p class="subtle">Deine Notizen bleiben auf diesem Gerät.</p>
+  <details><summary>Später: meine professionelle Rolle</summary><p>Was ich empfinde, darf da sein. Ich kann trotzdem entscheiden, wie ich in meiner Rolle handle.</p><p class="subtle">Nächste Sequenz: in der Rolle bleiben</p></details>
  </section>
 </div>
 <section class="card exercise-card" aria-labelledby="exercise-title">
@@ -112,110 +112,234 @@ textarea{width:100%;min-height:96px;background:#101d24;color:#fff;border:1px sol
 <footer class="signature"><img src="../../bilder/barbara-figur.webp" alt="Barbara, die diese Lernwelt gebaut hat"></footer>
 </main>
 <script>(()=>{'use strict';
-const $=id=>document.getElementById(id),world=$('world'),choices=$('choices');
-const stored='lernen-am-optimum-kontakt-innere-schau-v1';
-// Zustand: met = Begegnung hat stattgefunden, reflectedAfter = innere Schau nach der Reaktion, ended = Abschluss gewählt
-let met=false,reflectedAfter=false,ended=false;
+const $=id=>document.getElementById(id),world=$('world'),scene=$('scene'),choices=$('choices'),extra=$('extra');
+const KEY='lernen-am-optimum-kontakt-v2';
+let notes={};try{notes=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){notes={}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(notes))}catch(e){}}
 
-function zoomTo(place){
-  const spot=document.querySelector('[data-spot="'+place+'"]');
-  if(!spot){world.style.transform='none';return}
-  world.style.transformOrigin=spot.style.left+' '+spot.style.top;
-  world.style.transform='scale(1.15)';
-}
-function show(place,title,description,reply='',opts=[]){
-  zoomTo(place);
-  $('heading').textContent=title;$('description').textContent=description;
-  $('response').textContent=reply;$('response').classList.toggle('hidden',!reply);
-  $('toast').textContent=reply||'Du kannst den Raum in deinem Tempo erkunden.';
-  choices.replaceChildren();
-  opts.forEach(([label,fn])=>{const b=document.createElement('button');b.className='choice';b.textContent=label;b.addEventListener('click',fn);choices.append(b)});
-}
-function room(){
-  show('room','Im Patientenzimmer',met?'Du stehst wieder im Raum. Die Person sitzt noch auf der Bettkante.':'Die Person sitzt auf der Bettkante. Du weißt noch nicht, wie sie auf dich reagieren wird.','',
-   [['Zur Person gehen',patient],['Kurz bei mir innehalten',self],['Tisch am Bett ansehen',table],['Bett ansehen',bed],['Foto ansehen',photo]]);
-}
-function self(){
-  show('self','Bei mir','Du stehst kurz still. Du bemerkst deinen Atem, deine Schultern und die Situation vor dir. Du musst noch nichts lösen.','',
-   [['Empfindung notieren',openReflection],['Zur Person gehen',patient],['Raum ansehen',room]]);
-}
-function table(){
-  show('table','Am Tisch','Eine Karaffe, ein Glas Wasser, ein Buch, ein paar Blumen. Noch weißt du nicht, ob die Person etwas davon braucht.','',
-   [['Zur Person gehen',patient],['Zurück zum Raum',room]]);
-}
-function bed(){
-  show('bed','Am Bett','Die Bettdecke ist zurückgeschlagen. Vor dem Bett stehen ein Paar Hausschuhe.','',
-   [['Zur Person gehen',patient],['Zurück zum Raum',room]]);
-}
-function photo(){
-  show('photo','Das Foto auf dem Schrank','Ein gerahmtes Foto, daneben eine Pflanze. Jemand hat Persönliches mitgebracht. Wer darauf zu sehen ist, weißt du nicht.','',
-   [['Zur Person gehen',patient],['Zurück zum Raum',room]]);
-}
-const encounters={
-  intro:['Du stellst dich mit deinem Namen vor. Das Lächeln der Person wird schmaler.','„Schon wieder jemand Neues. Ich kann mir die ganzen Namen nicht merken. Ich will einfach meine Ruhe.“'],
-  ask:['Du fragst, wie es ihr geht. Die Person hebt die Augenbrauen.','„Hier fragt dauernd jemand irgendetwas. Ich will einfach meine Ruhe. Können Sie das nicht verstehen?“'],
-  silent:['Du bleibst still neben ihr stehen. Die Person schaut dich eine Weile an.','„Was stehen Sie denn da so herum? Wenn Sie nichts wollen, können Sie auch wieder gehen.“'],
-  wait:['Du bleibst mit etwas Abstand stehen und wartest. Die Person wendet sich dir zu.','„Wollen Sie was oder nicht? Ich habe heute schon genug Leute gesehen.“']
+/* ---------- Inhalte ---------- */
+const SIT={
+ ruhe:{label:'Die Person will ihre Ruhe',
+  flur:'Auf dem Flur sagt dir eine Kollegin: „In der 4 ist heute neu aufgenommen worden.“ Du stehst vor der Tür.',
+  intro:'Die Person sitzt auf der Bettkante. Du weißt noch nicht, wie sie auf dich reagieren wird.',
+  approach:'Die Person blickt auf, als du näherkommst. Ein kurzes Lächeln.',
+  entries:{
+   intro:['Du stellst dich mit deinem Namen vor. Das Lächeln wird schmaler.','„Schon wieder jemand Neues. Ich kann mir die ganzen Namen nicht merken. Ich will einfach meine Ruhe.“'],
+   ask:['Du fragst, wie es geht. Die Augenbrauen gehen hoch.','„Hier fragt dauernd jemand irgendwas. Ich will einfach meine Ruhe. Können Sie das nicht verstehen?“'],
+   silent:['Du bleibst still neben dem Bett stehen. Die Person schaut dich eine Weile an.','„Was stehen Sie denn da so herum? Wenn Sie nichts wollen, können Sie auch wieder gehen. Ich will einfach meine Ruhe.“'],
+   wait:['Du bleibst mit etwas Abstand stehen und wartest. Die Person wendet sich dir zu.','„Wollen Sie was oder nicht? Ich habe heute schon genug Leute gesehen. Ich will einfach meine Ruhe.“']},
+  hearQ:'„Ich will einfach meine Ruhe.“ – Wie hörst du diesen Satz?',
+  ears:{sache:'„Hier ist zu viel los.“',selbst:'„Ich bin erschöpft.“',bez:'„Sie sind mir gerade zu viel.“',app:'„Lassen Sie mich allein.“'},
+  earReply:{
+   sache:['„Hier ist heute viel los. Soll ich die Tür schließen, damit es ruhiger wird?“','„Ja. Das wäre gut.“ Die Schultern der Person sinken ein wenig.'],
+   selbst:['„Sie klingen erschöpft.“','„Bin ich auch.“ Ein langer Atemzug. „Seit heute Morgen geht das so.“'],
+   bez:['„Ich merke, ich bin gerade einer zu viel. Das ist in Ordnung.“','„Sie können ja nichts dafür.“ Der Ton ist weicher geworden.'],
+   app:['„Gut. Ich lasse Sie in Ruhe und schaue in einer Stunde noch einmal vorbei. Wenn vorher etwas ist: Hier ist die Klingel.“','Ein knappes Nicken. „Danke.“']},
+  ends:{wieder:'Die Person nickt kaum merklich. „Ist gut.“',bleiben:'Eine Weile bleibt es still zwischen euch. Dann gehst du. „Bis später“, hörst du hinter dir.',stumm:'Die Person schaut dir nicht nach.'},
+  obs:()=>'„Hat gesagt: ‚Ich will einfach meine Ruhe.‘ Wirkte angespannt.'+(S.reply==='photo'?' Wartet auf die Familie, die morgen kommen soll.':'')+' Ich schaue um drei noch mal rein.“',
+  colleague:'Die Kollegin nickt. „Neu aufgenommen, das ist viel auf einmal. Danke dir.“'},
+ still:{label:'Die Person schweigt',
+  flur:'Auf dem Flur sagt dir eine Kollegin: „Die 4 hat seit Mittag kein Wort gesagt und nichts gegessen.“ Du stehst vor der Tür.',
+  intro:'Die Person sitzt auf der Bettkante. Du weißt noch nicht, ob sie überhaupt mit dir sprechen wird.',
+  approach:'Ein kurzer Blick zu dir, als du näherkommst. Dann wandert er zurück zum Fenster.',
+  entries:{
+   intro:['Du stellst dich mit deinem Namen vor. Ein kurzer Blick zu dir, dann wieder weg.','Keine Antwort.'],
+   ask:['Du fragst: „Geht es Ihnen gut?“ Die Person schaut zur Wand.','Ein kaum hörbares „Mhm.“'],
+   silent:['Du bleibst still neben dem Bett stehen. Eine Weile passiert nichts.','Dann wird die Decke ein Stück höher gezogen.'],
+   wait:['Du bleibst mit etwas Abstand stehen und wartest. Der Blick der Person wandert langsam durch den Raum.','Er bleibt kurz am Foto auf dem Schrank hängen.']},
+  hearQ:'Die Person schweigt. – Was könnte dieses Schweigen sagen?',
+  ears:{sache:'„Es gibt nichts zu sagen.“',selbst:'„Mir geht es nicht gut.“',bez:'„Ich weiß nicht, ob ich Ihnen trauen kann.“',app:'„Lassen Sie mir Zeit.“'},
+  earReply:{
+   sache:['„Sie müssen nichts sagen.“','Die Person schaut dich an. Ein kurzes Nicken.'],
+   selbst:['„Mir scheint, heute ist kein guter Tag.“','Ein leises Ausatmen. Der Blick bleibt diesmal bei dir.'],
+   bez:['„Ich bin heute zum ersten Mal bei Ihnen. Sie kennen mich noch nicht.“','Ein prüfender Blick. Dann, leise: „Und wie lange bleiben Sie?“'],
+   app:['„Ich setze mich einen Moment hierher. Sie müssen nichts sagen.“','Kein Widerspruch. Nach einer Weile wird die Decke wieder ein Stück heruntergezogen.']},
+  ends:{wieder:'Ein kurzer Blick zu dir. Vielleicht ein Nicken.',bleiben:'Als du gehst, folgt dir der Blick bis zur Tür.',stumm:'Die Person schaut weiter zur Wand.'},
+  obs:()=>'„Hat kaum gesprochen und noch nichts gegessen, schaut viel zur Wand.'+(S.reply==='photo'?' Hat vom Enkel erzählt, der gestern nicht da war.':'')+' Ich schaue um drei noch mal rein.“',
+  colleague:'„Die redet sowieso nie. Das ist halt so.“'}
 };
-function patient(){
-  if(!met){
-    show('patient','Die Begegnung beginnt','Die Person blickt auf, als du näherkommst. Sie lächelt dir entgegen.','',
-     [['Mich vorstellen',()=>encounter('intro')],['Nach ihrem Befinden fragen',()=>encounter('ask')],['Zunächst schweigen',()=>encounter('silent')],['Abstand halten und warten',()=>encounter('wait')]]);
-  }else if(!reflectedAfter){
-    show('patient','Die Reaktion bleibt im Raum','Die Person ist unzufrieden. Du musst das nicht sofort ändern.','„Sie können ja nichts dafür. Aber ich habe jetzt wirklich keine Lust auf noch ein Gespräch.“',
-     [['Einen Moment bleiben und spüren',openReflection],['Meine Empfindung notieren',openReflection]]);
-  }else if(!ended){
-    show('patient','Nach der inneren Schau','Du hast deine Empfindung wahrgenommen. Die Person wartet nicht auf eine perfekte Antwort.','„Ich möchte jetzt erst einmal meine Ruhe.“',
-     [['Den Wunsch respektieren',()=>end('„Danke“, sagt die Person knapp und wendet sich wieder dem Fenster zu.')],
-      ['Ruhig sagen, dass ich später wiederkomme',()=>end('Die Person nickt kaum merklich. Sie wirkt weiterhin angespannt.')],
-      ['Noch einen Moment still bleiben',()=>end('Es bleibt still. Die Person schaut aus dem Fenster.')],
-      ['Erneut meine Empfindung notieren',openReflection]]);
-  }else{
-    show('patient','Die Begegnung darf offen bleiben','Du hast in deiner Rolle gehandelt. Ob die Person zufrieden ist, entscheidet nicht allein über deine Professionalität.','',
-     [['Noch einmal meine Empfindung ansehen',openReflection],['Die Szene neu erleben',restart]]);
-  }
+const ENTRY_LABEL={intro:'Mich vorstellen',ask:'Fragen, wie es geht',silent:'Erst einmal nichts sagen',wait:'Abstand halten und warten'};
+const EARS=[{k:'sache',label:'Es geht um die Sache'},{k:'selbst',label:'Es sagt etwas über die Person'},{k:'bez',label:'Es sagt etwas über euch beide'},{k:'app',label:'Es ist eine Bitte'}];
+const R={
+ abwehr:{say:'„Ach, so schlimm ist es doch nicht. Anderen geht es viel schlechter.“',ruhe:'„Na, dann gehen Sie doch zu denen.“ Die Person dreht sich zum Fenster.',still:'Keine Reaktion. Der Blick geht zurück zur Wand.'},
+ mitleid:{say:'„Oh je, das ist ja furchtbar. Ich könnte das auch nicht aushalten.“',ruhe:'„Jetzt fangen Sie nicht auch noch an.“',still:'Die Person schließt kurz die Augen und sagt nichts.'},
+ photo:{need:'photo',say:'„Wer ist denn auf dem Foto?“',ruhe:'„Meine Familie. Die kommen morgen.“ Kurze Pause. „Hoffentlich.“',still:'Lange Stille. Dann, leise: „Mein Enkel. Er war gestern nicht da.“'},
+ book:{need:'table',say:'„Was lesen Sie da gerade?“',ruhe:'„Einen Krimi. Wenn man mich lässt.“ Fast ein Lächeln.',still:'Ein Schulterzucken. „Nichts. Ich kann mich nicht konzentrieren.“'},
+ shoes:{need:'bed',say:'„Möchten Sie später aufstehen? Die Hausschuhe stehen ja schon bereit.“',ruhe:'„Später vielleicht. Jetzt nicht.“',still:'Ein Blick auf die Hausschuhe. Ein kleines Kopfschütteln.'},
+ bleiben:{say:'Nichts sagen. Einen Moment bleiben.',ruhe:'Es bleibt still. Nach einer Weile: „Sie sind ja hartnäckig.“ Es klingt nicht mehr ganz so scharf.',still:'Die Stille hält. Sie fühlt sich anders an als vorhin – weniger abweisend, so scheint es dir.'},
+ go:{say:'Gehen.',ruhe:'Du verlässt das Zimmer. Hinter dir bleibt es still.',still:'Du verlässt das Zimmer. Hinter dir bleibt es still.'}
+};
+const LOOK={
+ table:['Am Tisch','Eine Karaffe, ein Glas Wasser, ein aufgeschlagenes Buch, ein paar Blumen. Ob die Person etwas davon braucht, weißt du noch nicht.'],
+ bed:['Am Bett','Die Bettdecke ist zurückgeschlagen. Vor dem Bett stehen ein Paar Hausschuhe.'],
+ photo:['Das Foto auf dem Schrank','Ein gerahmtes Foto, daneben eine Pflanze. Jemand hat Persönliches mitgebracht. Wer darauf zu sehen ist, weißt du nicht.']
+};
+
+/* ---------- Zustand & Hilfen ---------- */
+let S=null;const done=new Set();
+function fresh(sit){S={sit,phase:'door',paused:false,seen:new Set(),entry:null,body:[],feel:[],urge:[],ear:null,reply:null,after:[],handover:'',log:[]};renderLog()}
+const fmt=a=>a.length?a.join(', '):'nichts ausgewählt';
+function log(t){S.log.push(t);renderLog()}
+function renderLog(){const ol=$('log'),items=S?S.log:[];ol.replaceChildren(...items.map(t=>{const li=document.createElement('li');li.textContent=t;return li}));$('log-empty').hidden=items.length>0}
+function status(t){$('status').textContent=t}
+function toast(t){$('toast').textContent=t}
+function zoomTo(place){
+ scene.classList.toggle('door',place==='door');
+ const spot=place&&document.querySelector('[data-spot="'+place+'"]');
+ if(!spot){world.style.transform='none';return}
+ world.style.transformOrigin=spot.style.left+' '+spot.style.top;world.style.transform='scale(1.15)';
 }
-function encounter(kind){
-  met=true;const [lead,reply]=encounters[kind];
-  $('question').textContent='Was habe ich gerade empfunden?';$('continue').textContent='Begegnung fortsetzen';
-  show('patient','Eine schwierige Reaktion',lead,reply,[['Einen Moment aushalten',openReflection],['Was empfinde ich gerade?',openReflection]]);
-  $('status').textContent='Die Person hat reagiert. Nimm zunächst deine eigene Empfindung wahr.';
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
+function hint(t){return el('p','hint',t)}
+function show(place,title,desc,reply,opts,parts){
+ zoomTo(place);
+ $('heading').textContent=title;$('description').textContent=desc||'';
+ $('response').textContent=reply||'';$('response').classList.toggle('hidden',!reply);
+ toast(reply||title);
+ extra.replaceChildren(...(parts||[]));choices.replaceChildren();
+ (opts||[]).forEach(([label,fn])=>{const b=el('button','choice',label);b.addEventListener('click',fn);choices.append(b)});
+ $('heading').focus({preventScroll:true});
 }
-function openReflection(){
-  $('reflection').classList.remove('hidden');
-  if(!met){
-    $('question').textContent='Was bringe ich gerade mit in diesen Raum?';
-    $('status').textContent='Innere Schau vor der Begegnung: Wie geht es dir, bevor du Kontakt aufnimmst?';
-    $('continue').textContent='Zurück in den Raum';
-    show('self','Bei dir, vor der Begegnung','Noch hat niemand etwas gesagt. Du darfst wahrnehmen, mit welcher Stimmung du hier stehst.','',[['Zurück in den Raum',room],['Zur Person gehen',patient]]);
-  }else{
-    reflectedAfter=true;
-    $('question').textContent='Was habe ich gerade empfunden?';
-    $('status').textContent='Innere Schau: Du darfst empfinden, ohne sofort handeln zu müssen.';
-    $('continue').textContent='Begegnung fortsetzen';
-    show('self','Bei dir bleiben','Die Worte der Person klingen noch nach. Vorhin hat sie gelächelt. Du musst deine Reaktion nicht bewerten.','Was hast du in diesem Moment empfunden?',[['Nach meiner Notiz weitergehen',patient]]);
-  }
-  $('notes').focus({preventScroll:true});
+function chipGroup(label,items,arr){
+ const fs=el('fieldset','chips');fs.append(el('legend','',label));
+ items.forEach(it=>{const b=el('button','chip',it);b.type='button';b.setAttribute('aria-pressed',String(arr.includes(it)));
+  b.addEventListener('click',()=>{const i=arr.indexOf(it);i<0?arr.push(it):arr.splice(i,1);b.setAttribute('aria-pressed',String(arr.includes(it)))});fs.append(b)});
+ return fs;
 }
-function end(reply){
-  ended=true;
-  show('patient','Die Begegnung darf offen bleiben','Du hast in deiner Rolle gehandelt. Ob die Person zufrieden ist, entscheidet nicht allein über deine Professionalität.',reply,
-   [['Noch einmal meine Empfindung ansehen',openReflection],['Die Szene neu erleben',restart]]);
-  $('status').textContent='Die Begegnung ist beendet. Deine Notiz kannst du behalten und später vergleichen.';
+function noteField(key,label){
+ const l=el('label','note');l.append(el('span','',label));
+ const t=document.createElement('textarea');t.value=notes[key]||'';t.placeholder='Wenn du magst, in eigenen Worten. Auch „nichts“ ist eine Antwort.';
+ t.addEventListener('input',()=>{notes[key]=t.value;persist()});l.append(t);return l;
 }
-function restart(){
-  met=false;reflectedAfter=false;ended=false;
-  $('reflection').classList.add('hidden');$('status').textContent='Die Begegnung hat noch nicht begonnen.';
-  room();
+const T=()=>SIT[S.sit];
+
+/* ---------- Ablauf ---------- */
+function start(){
+ S=null;renderLog();status('Noch hat nichts begonnen.');
+ const opts=Object.keys(SIT).map(k=>['Begegnung: '+SIT[k].label+(done.has(k)?' ✓':''),()=>door(k)]);
+ show(null,'Zwei Begegnungen, ein Zimmer','Im selben Zimmer warten zwei verschiedene Begegnungen auf dich. Du entscheidest, womit du beginnst. Die andere kannst du danach erleben.','',opts);
+ toast('Wähle unten, mit welcher Begegnung du beginnst.');
 }
-const spots={self,patient,table,bed,photo};
-document.querySelectorAll('[data-spot]').forEach(b=>b.addEventListener('click',()=>spots[b.dataset.spot]()));
-$('observe').onclick=room;$('reflect').onclick=openReflection;
-$('continue').onclick=()=>met?patient():room();
-$('restart').onclick=restart;
-try{$('notes').value=localStorage.getItem(stored)||''}catch(e){}
-$('notes').addEventListener('input',()=>{try{localStorage.setItem(stored,$('notes').value)}catch(e){}});
-$('save').onclick=()=>{const content='Lernen am Optimum – Grundlage: Kontakt aufnehmen\nInnere Schau: Was habe ich empfunden?\n\n'+$('notes').value;const blob=new Blob([content],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Meine_innere_Schau_Kontakt_aufnehmen.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500)};
+function door(sit){
+ fresh(sit);log('Begegnung: '+T().label);status('Du stehst vor der Tür.');
+ show('door','Vor der Tür',T().flur,'',[['Kurz innehalten, bevor ich eintrete',pause],['Eintreten',enter]]);
+}
+function pause(){
+ S.paused=true;log('An der Tür innegehalten');
+ show('door','Im Türrahmen','Du bleibst einen Atemzug lang stehen. Du spürst deine Füße auf dem Boden. Was war gerade vorher? Was nimmst du mit in dieses Zimmer?','',[['Eintreten',enter]],[noteField(S.sit+'-tuer','Was bringe ich mit in diesen Raum?')]);
+}
+function enter(){if(!S.paused)log('Direkt eingetreten');S.phase='room';status('Du bist im Zimmer. Sieh dich um, so lange du willst.');room()}
+function room(){
+ S.phase='room';
+ show('room','Im Zimmer',T().intro,'',[['Zur Person gehen',approach],['Tisch am Bett ansehen',()=>look('table')],['Bett ansehen',()=>look('bed')],['Foto ansehen',()=>look('photo')],['Kurz bei mir sein',selfCheck]]);
+}
+function look(k){
+ if(!S.seen.has(k)){S.seen.add(k);log('Angesehen: '+LOOK[k][0].replace(/^(Am|Das) /,''))}
+ show(k,LOOK[k][0],LOOK[k][1],'',[['Zur Person gehen',approach],['Weiter umsehen',room]]);
+}
+function selfCheck(){
+ show('self','Bei dir','Du stehst kurz still. Atem, Schultern, die Situation vor dir. Du musst noch nichts lösen.','',[['Zur Person gehen',approach],['Zurück in den Raum',room]],[noteField(S.sit+'-vorher','Wie geht es mir, bevor ich Kontakt aufnehme?')]);
+}
+function approach(){
+ S.phase='meet';status('Die Begegnung beginnt.');
+ show('patient','Die Begegnung beginnt',T().approach,'',Object.keys(ENTRY_LABEL).map(k=>[ENTRY_LABEL[k],()=>entry(k)]));
+}
+function entry(k){
+ S.entry=k;log('Einstieg: '+ENTRY_LABEL[k]);
+ if(S.sit==='still'&&k==='wait')S.seen.add('photo');
+ const [lead,reply]=T().entries[k];
+ show('patient','Eine Reaktion',lead,reply,[['Einen Moment bei mir bleiben',schau]]);
+}
+function schau(){
+ S.phase='schau';status('Innere Schau: Du darfst empfinden, ohne sofort handeln zu müssen.');
+ show('self','Innere Schau','Die Reaktion ist noch im Raum. Du musst sie nicht sofort verändern. Was passiert gerade in dir?','',
+  [['Weiter',()=>{log('Gespürt: '+fmt(S.body)+' · Gefühl: '+fmt(S.feel)+' · Impuls: '+fmt(S.urge));hear()}]],
+  [chipGroup('Im Körper',['Schultern angespannt','Atem flacher','Wärme im Gesicht','Unruhe im Bauch','Kloß im Hals','Nichts Besonderes'],S.body),
+   chipGroup('Gefühl',['Ärger','Kränkung','Unsicherheit','Hilflosigkeit','Mitgefühl','Ungeduld','Erleichterung','Weiß nicht'],S.feel),
+   chipGroup('Impuls – was würde ich am liebsten tun?',['Die Stimmung retten','Mich rechtfertigen','Schnell gehen','Bleiben','Etwas in Ordnung bringen','Gar nichts'],S.urge),
+   hint('Alles davon darf da sein. Ein Impuls ist noch keine Handlung. Du musst nichts reparieren.'),
+   noteField(S.sit+'-schau','In eigenen Worten: Was empfinde ich gerade?')]);
+}
+function hear(){
+ S.phase='hear';
+ show('patient','Hinhören',T().hearQ,'',EARS.map(e=>[e.label+': '+T().ears[e.k],()=>{S.ear=e.k;log('Gehört als: '+e.label.replace(/^Es /,'es ')+' – '+T().ears[e.k]);answer()}]),
+  [hint('Alle vier Lesarten können gleichzeitig stimmen. Du entscheidest, worauf du antwortest.')]);
+}
+function answer(){
+ S.phase='answer';const ear=T().earReply[S.ear];
+ const opts=[['Sagen: '+R.abwehr.say,()=>reply('abwehr')],['Sagen: '+ear[0],()=>reply('ear')],['Sagen: '+R.mitleid.say,()=>reply('mitleid')]];
+ ['photo','book','shoes'].forEach(k=>{if(S.seen.has(R[k].need))opts.push(['Sagen: '+R[k].say,()=>reply(k)])});
+ opts.push([R.bleiben.say,()=>reply('bleiben')],[R.go.say,()=>reply('go')]);
+ show('patient','Was tust du jetzt?','Du hast die Reaktion wahrgenommen – auch deine eigene. Wie gehst du weiter?','',opts,
+  S.seen.size?[]:[hint('Was du im Raum entdeckst, kann dir weitere Möglichkeiten eröffnen.')]);
+}
+function reply(k){
+ S.reply=k;
+ const said=k==='ear'?T().earReply[S.ear][0]:R[k].say,react=k==='ear'?T().earReply[S.ear][1]:R[k][S.sit];
+ log((k==='go'||k==='bleiben')?'Gewählt: '+said:'Gesagt: '+said);
+ if(k==='go'){show('door','Du gehst',react,'',[['Kurz nachspüren',schau2]]);return}
+ show('patient','Was jetzt passiert',k==='bleiben'?'Du sagst nichts und bleibst.':'Du sagst: '+said,react,[['Kurz nachspüren',schau2]]);
+}
+function schau2(){
+ S.phase='schau2';status('Noch einmal nach innen.');
+ show('self','Noch einmal nach innen','Was hat sich in dir verändert – seit der ersten Reaktion?','',
+  [['Weiter',()=>{log('Danach: '+fmt(S.after));S.reply==='go'?flur():ending()}]],
+  [hint('Vorhin hast du gewählt: '+fmt(S.feel)+'.'),chipGroup('Jetzt gerade',['Ruhiger','Angespannter','Unsicher','Erleichtert','Enttäuscht','Neugierig','Nichts verändert'],S.after),
+   noteField(S.sit+'-nachher','Was nehme ich aus dieser Begegnung mit?')]);
+}
+function ending(){
+ S.phase='ending';
+ const L={wieder:'Sagen, wann ich wiederkomme',bleiben:'Noch etwas bleiben, dann gehen',stumm:'Gehen, ohne etwas zu sagen'};
+ show('patient','Die Begegnung abschließen','Wie verlässt du das Zimmer?','',Object.keys(L).map(k=>[L[k],()=>{log('Abschluss: '+L[k]);show('door','Du verlässt das Zimmer','',T().ends[k],[['Auf den Flur',flur]])}]));
+}
+function flur(){
+ S.phase='flur';status('Auf dem Flur.');
+ show('door','Auf dem Flur','Die Kollegin von vorhin kommt vorbei: „Und, wie war’s in der 4?“ – Was sagst du?','',
+  [['„Ist unkooperativ.“',()=>hand('„Ist unkooperativ.“')],['„Ist halt schwierig drauf.“',()=>hand('„Ist halt schwierig drauf.“')],[T().obs(),()=>hand(T().obs())],['Selbst formulieren',own]]);
+}
+function own(){
+ const t=document.createElement('textarea');t.className='own';t.setAttribute('aria-label','Dein Satz an die Kollegin');t.placeholder='Was sagst du der Kollegin?';
+ show('door','In deinen Worten','Was sagst du der Kollegin über Zimmer 4?','',[['Weiter',()=>{const v=t.value.trim();if(!v){toast('Schreib einen kurzen Satz – es gibt keine Musterlösung.');t.focus();return}hand('„'+v.replace(/^[„"]|[“"]$/g,'')+'“')}],['Zurück',flur]],[t]);
+ t.focus({preventScroll:true});
+}
+function hand(s){
+ S.handover=s;log('Übergabe: '+s);
+ show('door','Dein Satz','Du sagst: '+s,'',[['Weiter',colleague]],
+  [hint('Würde die Person diesen Satz über sich so stehen lassen? Steht darin, was du gesehen und gehört hast – oder was du darüber denkst? Es gibt keine Musterlösung.')]);
+}
+function colleague(){
+ if(S.sit==='ruhe'){show('door','Die Kollegin','',T().colleague,[['Zum Abschluss',finish]]);return}
+ const L={zu:'Zustimmen: „Ja, scheint so.“',erz:'Erzählen, was ich erlebt habe',nix:'Nichts dazu sagen'};
+ const RE={zu:'Die Kollegin geht weiter. Der Satz bleibt bei dir.',erz:'„Echt? Hm.“ Die Kollegin geht weiter, langsamer als vorher.',nix:'Die Kollegin geht weiter. Du bleibst mit dem Satz auf dem Flur stehen.'};
+ show('door','Die Kollegin','',T().colleague,Object.keys(L).map(k=>[L[k],()=>{log('Auf „Die redet sowieso nie“: '+L[k]);
+  show('door','Ein Satz, der bleibt','',RE[k],[['Zum Abschluss',finish]],[hint('Was so ein Satz mit deiner Rolle macht, ist Thema der nächsten Sequenz: in der Rolle bleiben.')])}]));
+}
+function finish(){
+ S.phase='end';done.add(S.sit);status('Diese Begegnung ist abgeschlossen. Dein Weg steht rechts – du kannst ihn sichern und später vergleichen.');
+ const other=S.sit==='ruhe'?'still':'ruhe';
+ const ol=el('ol','path');S.log.forEach(t=>ol.append(el('li','',t)));
+ show(null,'Die Begegnung darf offen bleiben','Du hast in deiner Rolle gehandelt. Ob die Person zufrieden ist, entscheidet nicht allein über deine Professionalität.','',
+  [['Andere Begegnung erleben: '+SIT[other].label,()=>door(other)],['Diese Begegnung neu erleben',()=>door(S.sit)],['Meinen Weg als Textdatei sichern',save],['Zur Auswahl',start]],
+  [el('p','subtle','Dein Weg durch Zimmer 4:'),ol]);
+}
+function save(){
+ const L={tuer:'An der Tür – was bringe ich mit?',vorher:'Vor der Begegnung',schau:'Innere Schau',nachher:'Was nehme ich mit?'};
+ let txt='Lernen am Optimum – Grundlage: Kontakt aufnehmen\n\n';
+ if(S){txt+='Mein Weg ('+T().label+')\n'+S.log.map((t,i)=>(i+1)+'. '+t).join('\n')+'\n\n'}
+ Object.keys(SIT).forEach(s=>{const n=Object.keys(L).filter(k=>(notes[s+'-'+k]||'').trim());if(n.length){txt+='Notizen – '+SIT[s].label+'\n'+n.map(k=>L[k]+': '+notes[s+'-'+k].trim()).join('\n')+'\n\n'}});
+ const blob=new Blob([txt],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='Mein_Weg_Kontakt_aufnehmen.txt';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),500);
+}
+
+/* ---------- Punkte im Bild ---------- */
+const SPOT={self:selfCheck,patient:approach,table:()=>look('table'),bed:()=>look('bed'),photo:()=>look('photo')};
+document.querySelectorAll('[data-spot]').forEach(b=>b.addEventListener('click',()=>{
+ if(!S){toast('Wähle zuerst unten eine Begegnung.');return}
+ if(S.phase==='door')enter();
+ if(S.phase!=='room'){toast('Du bist gerade mitten in der Begegnung. Der Raum bleibt da.');return}
+ SPOT[b.dataset.spot]();
+}));
+$('restart').onclick=start;$('save').onclick=save;
 let exerciseScore=0;const answered={};
 function markExercise(n,correct,message){
   if(!answered[n]){answered[n]=true;exerciseScore++}
@@ -226,5 +350,5 @@ document.querySelectorAll('[data-ex1]').forEach(b=>b.addEventListener('click',()
 document.querySelectorAll('[data-ex2]').forEach(b=>b.addEventListener('click',()=>markExercise(2,b.dataset.ex2==='yes',b.dataset.ex2==='yes'?'Richtig. Körperliche Signale können beobachtet werden, ohne sie sofort zu bewerten.':'Das ist eine beobachtbare körperliche Veränderung und damit zunächst eine Wahrnehmung.')));
 document.querySelectorAll('[data-ex3]').forEach(b=>b.addEventListener('click',()=>markExercise(3,b.dataset.ex3==='yes',b.dataset.ex3==='yes'?'Richtig. Wahrnehmen schafft einen kurzen Spielraum für eine bewusste Entscheidung.':'Das überspringt die innere Schau oder verschiebt die Verantwortung auf die andere Person.')));
 $('check-transfer').onclick=()=>{const value=$('transfer-note').value.trim();$('feedback4').textContent=value?'Gut: Du hast Wahrnehmen und Entscheiden miteinander verbunden. Lies deinen Satz noch einmal und prüfe, ob beides darin vorkommt.':'Schreibe einen kurzen Satz. Es gibt dabei keine Musterlösung.'};
-room();
+start();
 })();</script></body></html>
