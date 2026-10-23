@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Das Klassenbuch · Wie eine Lerneinheit mit der Lernplattform spricht</title>
+<meta name="description" content="Lernspiel in einfacher Sprache: Wie spricht eine Lerneinheit mit Moodle und Co.? Karten legen, abspielen, Fehler finden.">
+<style>
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("../../fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+:root{
+  --bg:#faeef1; --paper:#ffffff; --ink:#24382c; --muted:#5e5459; --line:#ead5db;
+  --green:#2f5240; --green-soft:#e3efe7; --pink:#b04e6b; --pink-soft:#f6e1e8; --teal:#7cc7bc;
+  --red:#a83232; --red-soft:#f8e0e0; --book:#f4ead2; --book-line:#d8c79e; --code-bg:#1f2a24; --code:#d8f0e4;
+  --display:"Literata",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#191416; --paper:#241d20; --ink:#efe6e9; --muted:#b3a5ab; --line:#3e3237;
+    --green:#7cc7a0; --green-soft:#1d3127; --pink:#e58aa6; --pink-soft:#3a2129; --red:#ef8b8b; --red-soft:#3c2222;
+    --book:#2e2a20; --book-line:#5a5038; --code-bg:#101713; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.55 var(--body)}
+.wrap{max-width:1120px;margin:0 auto;padding:16px 16px 48px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px;padding-right:110px}
+.top a,.top button{font:inherit;font-size:15px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--paper);border-radius:99px;padding:5px 12px;cursor:pointer}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:600}
+h1{font-family:var(--display);font-size:30px;line-height:1.2;margin:4px 0 6px}
+h2{font-family:var(--display);font-size:22px;margin:0 0 8px}
+h3{font-size:17px;margin:16px 0 6px}
+.lead{max-width:62ch;color:var(--muted);margin:0 0 14px}
+.steps{display:flex;gap:6px;margin:10px 0 18px}
+.steps span{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.steps span.done{background:var(--pink)}
+.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px}
+.task{background:var(--pink-soft);border-left:5px solid var(--pink);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px}
+.zone-title{font-size:14px;font-weight:600;color:var(--muted);margin:12px 0 6px}
+.cards{display:flex;flex-direction:column;gap:8px;min-height:60px}
+.pool{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.card{display:block;width:100%;text-align:left;font:inherit;cursor:pointer;background:var(--paper);color:var(--ink);
+  border:2px solid var(--line);border-radius:10px;padding:8px 12px;position:relative}
+.card:hover{border-color:var(--pink)}
+.card .say{font-weight:600}
+.card code,.codeline code{display:block;font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:2px;word-break:break-all}
+.card.used{opacity:.35;cursor:default}
+.card .num{position:absolute;right:10px;top:8px;font-size:13px;color:var(--muted)}
+.card.run{border-color:var(--green);background:var(--green-soft)}
+.card.bad{border-color:var(--red);background:var(--red-soft)}
+.empty{border:2px dashed var(--line);border-radius:10px;padding:12px;color:var(--muted);font-size:15px;text-align:center}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+button.main{font:inherit;font-weight:600;background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px 18px;cursor:pointer}
+button.ghost{font:inherit;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 14px;cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,a:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.msg{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:17px}
+.msg.ok{background:var(--green-soft)} .msg.bad{background:var(--red-soft)} .msg.info{background:var(--book)}
+.msg b{display:block}
+textarea{font:inherit;font-size:16px;width:100%;min-height:70px;margin-top:6px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+label.note{display:block;margin-top:12px;font-weight:600;font-size:16px}
+select{font:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);max-width:100%}
+.entry{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:8px}
+.entry label{font-size:15px;color:var(--muted)}
+/* Klassenbuch */
+.book{background:var(--book);border:1px solid var(--book-line);border-radius:14px;padding:16px;position:sticky;top:12px}
+@media(max-width:820px){.book{position:static}}
+.book h2{display:flex;align-items:center;gap:8px}
+.state{font-size:15px;padding:3px 10px;border-radius:99px;background:var(--paper);border:1px solid var(--book-line);display:inline-block}
+.state.on{background:var(--green-soft);border-color:var(--green)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.sheet{background:var(--paper);border:1px solid var(--book-line);border-radius:10px;padding:8px 10px;min-height:110px}
+.sheet h3{margin:0 0 4px;font-size:14px;color:var(--muted)}
+.sheet dl{margin:0;font-size:15px}
+.sheet dt{color:var(--muted);font-size:13px;margin-top:4px}
+.sheet dd{margin:0;font-weight:600}
+.sheet .none{color:var(--muted);font-size:14px}
+.sheet.flash{box-shadow:0 0 0 3px var(--green)}
+.log{margin-top:10px;background:var(--code-bg);color:var(--code);border-radius:10px;padding:8px 10px;font:13px/1.45 var(--mono);max-height:220px;overflow:auto}
+.log div{padding:2px 0;border-bottom:1px solid #ffffff14}
+.log .err{color:#ffb4b4}
+.log .ok{color:#a8f0c8}
+.toggle{display:flex;gap:8px;align-items:center;font-size:15px;margin-top:8px}
+.glossary{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:16px;margin:8px 0}
+.glossary dt{font-weight:600}
+.glossary dd{margin:0}
+.codeline{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;border:2px solid var(--line);border-radius:10px;padding:6px 10px;background:var(--paper)}
+.codeline .no{font:13px var(--mono);color:var(--muted)}
+.codeline .say{font-weight:600}
+.codeline .mv{display:flex;flex-direction:column;gap:2px}
+.codeline .mv button{font:inherit;font-size:14px;line-height:1;padding:4px 8px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.codeline.run{border-color:var(--green);background:var(--green-soft)}
+.codeline.bad{border-color:var(--red);background:var(--red-soft)}
+.mynotes{white-space:pre-wrap;background:var(--bg);border-radius:10px;padding:12px;font-size:16px}
+footer{margin-top:22px;font-size:14px;color:var(--muted)}
+footer a{color:inherit}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top" aria-label="Navigation">
+    <a href="../../">← Zurück zur Werkstatt</a>
+    <button type="button" id="restart">↺ Neu beginnen</button>
+  </nav>
+  <span class="eyebrow">Lernspiel · Wie Technik denkt · Einfache Sprache</span>
+  <h1>Das Klassenbuch</h1>
+  <p class="lead">Eine Lerneinheit läuft in einer Lernplattform, zum Beispiel in Moodle. Am Ende soll die Plattform wissen: Hat die Person bestanden? Dafür sprechen die beiden miteinander. Hier findest du heraus, wie.</p>
+  <div class="steps" aria-hidden="true" id="steps"><span></span><span></span><span></span><span></span></div>
+
+  <div class="grid">
+    <main class="panel" id="stage" aria-live="polite"></main>
+
+    <aside class="book" aria-label="Das Klassenbuch der Lernplattform">
+      <h2>📒 Das Klassenbuch</h2>
+      <p style="margin:0;font-size:15px;color:var(--muted)">So sieht die Lernplattform das Ganze.</p>
+      <div style="margin-top:8px"><span class="state" id="bookState">Niemand angemeldet</span></div>
+      <div class="cols">
+        <div class="sheet" id="pad"><h3>Notizzettel</h3><div class="body"></div></div>
+        <div class="sheet" id="saved"><h3>Im Buch gespeichert</h3><div class="body"></div></div>
+      </div>
+      <label class="toggle"><input type="checkbox" id="showLog" checked> Was die Technik sagt (echte Antworten)</label>
+      <div class="log" id="log" aria-label="Protokoll"></div>
+    </aside>
+  </div>
+
+  <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung ·
+    Das Klassenbuch ist vereinfacht nachgebaut, die Befehle und Fehlernummern stammen aus dem Standard SCORM 1.2 ·
+    <a href="https://github.com/barbara-magdalena-mayer/bauphysik-u-wert/blob/main/unit/scorm.js">So sieht der echte Code aus</a></footer>
+</div>
+
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ============================================================
+   Das Klassenbuch: eine vereinfachte Lernplattform (SCORM 1.2)
+   ============================================================ */
+const NAMES = { "cmi.core.lesson_status": "Status", "cmi.core.score.raw": "Punkte", "cmi.core.lesson_location": "Lesezeichen" };
+const STATUS_WORDS = ["passed","failed","completed","incomplete","browsed","not attempted"];
+const LMS = {
+  reset(){ this.found=false; this.on=false; this.done=false; this.pad={}; this.saved={}; render(); },
+  find(){ this.found=true; return { ok:true, tech:"api = findAPI(window)  → API gefunden", say:"Das Klassenbuch ist gefunden." }; },
+  init(){
+    if(!this.found) return { ok:false, crash:true, tech:"api.LMSInitialize(\"\")  → TypeError: Cannot read properties of null", say:"Das Programm stürzt ab. Es weiß gar nicht, mit wem es sprechen soll. Das Klassenbuch wurde noch nicht gesucht." };
+    if(this.done) return { ok:false, tech:"LMSInitialize → \"false\", Fehler 101", say:"Du hast dich schon abgemeldet. Für diesen Durchgang ist das Buch zu." };
+    this.on=true; return { ok:true, tech:"api.LMSInitialize(\"\")  → \"true\"", say:"Angemeldet. Das Klassenbuch hört jetzt zu." };
+  },
+  set(key,val){
+    const code = `api.LMSSetValue("${key}", "${val}")`;
+    if(!this.found) return { ok:false, crash:true, tech:code+"  → TypeError: Cannot read properties of null", say:"Das Programm stürzt ab. Es hat das Klassenbuch noch nicht gesucht." };
+    if(!this.on) return { ok:false, tech:code+"  → \"false\", Fehler 301 (Not initialized)", say:"Das Klassenbuch antwortet: Fehler 301. Das heißt: Du bist nicht angemeldet. Ohne Anmeldung schreibt es nichts auf." };
+    if(!(key in NAMES)) return { ok:false, tech:code+"  → \"false\", Fehler 201 (Invalid argument)", say:"Fehler 201: Diese Spalte gibt es im Klassenbuch nicht." };
+    if(key==="cmi.core.lesson_status" && !STATUS_WORDS.includes(val))
+      return { ok:false, tech:code+"  → \"false\", Fehler 405 (Incorrect data type)", say:`Fehler 405: Das Wort „${val}“ kennt das Klassenbuch nicht. In der Spalte Status sind nur feste englische Wörter erlaubt, zum Beispiel passed (bestanden) oder failed (nicht bestanden).` };
+    if(key==="cmi.core.score.raw" && !/^\d+(\.\d+)?$/.test(val))
+      return { ok:false, tech:code+"  → \"false\", Fehler 405 (Incorrect data type)", say:`Fehler 405: „${val}“ ist keine reine Zahl. In der Spalte Punkte steht nur eine Zahl, ohne Prozentzeichen und ohne Wörter.` };
+    if(key==="cmi.core.score.raw" && (+val<0 || +val>100))
+      return { ok:false, tech:code+"  → \"false\", Fehler 405", say:"Fehler 405: Punkte müssen zwischen 0 und 100 liegen." };
+    this.pad[key]=val; return { ok:true, tech:code+"  → \"true\"", say:`Auf dem Notizzettel steht jetzt: ${NAMES[key]} = ${val}.` };
+  },
+  commit(){
+    if(!this.found) return { ok:false, crash:true, tech:"api.LMSCommit(\"\")  → TypeError: Cannot read properties of null", say:"Das Programm stürzt ab. Das Klassenbuch wurde noch nicht gesucht." };
+    if(!this.on) return { ok:false, tech:"api.LMSCommit(\"\")  → \"false\", Fehler 301", say:"Fehler 301: Speichern geht nur, wenn du angemeldet bist." };
+    const n=Object.keys(this.pad).length; Object.assign(this.saved,this.pad); this.pad={};
+    return { ok:true, empty:n===0, tech:"api.LMSCommit(\"\")  → \"true\"", say: n ? "Gespeichert. Alles vom Notizzettel steht jetzt fest im Buch." : "Gespeichert, aber der Notizzettel war leer. Es wurde nichts ins Buch übertragen." };
+  },
+  finish(){
+    if(!this.found) return { ok:false, crash:true, tech:"api.LMSFinish(\"\")  → TypeError: Cannot read properties of null", say:"Das Programm stürzt ab. Das Klassenbuch wurde noch nicht gesucht." };
+    if(!this.on) return { ok:false, tech:"api.LMSFinish(\"\")  → \"false\", Fehler 301", say:"Fehler 301: Abmelden geht nur, wenn man vorher angemeldet war." };
+    Object.assign(this.saved,this.pad); this.pad={}; this.on=false; this.done=true;
+    return { ok:true, tech:"api.LMSFinish(\"\")  → \"true\"", say:"Abgemeldet. Beim Abmelden speichert die Plattform auch, was noch auf dem Notizzettel stand." };
+  }
+};
+
+function sheetHtml(obj){
+  const keys=Object.keys(obj);
+  return keys.length ? "<dl>"+keys.map(k=>`<dt>${NAMES[k]}</dt><dd>${esc(obj[k])}</dd>`).join("")+"</dl>" : '<span class="none">leer</span>';
+}
+function render(){
+  $("#pad .body").innerHTML=sheetHtml(LMS.pad);
+  $("#saved .body").innerHTML=sheetHtml(LMS.saved);
+  const st=$("#bookState");
+  st.textContent = LMS.on ? "Angemeldet: die Lerneinheit" : LMS.done ? "Abgemeldet" : LMS.found ? "Gefunden, aber noch nicht angemeldet" : "Niemand angemeldet";
+  st.classList.toggle("on",LMS.on);
+}
+function log(r){
+  const d=document.createElement("div"); d.className=r.ok?"ok":"err"; d.textContent=r.tech;
+  $("#log").appendChild(d); $("#log").scrollTop=1e9;
+}
+$("#showLog").onchange=e=>{$("#log").hidden=!e.target.checked;};
+function flash(id){ const el=$(id); el.classList.add("flash"); setTimeout(()=>el.classList.remove("flash"),700); }
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ============================================================
+   Notizen (bleiben nur auf diesem Gerät)
+   ============================================================ */
+const KEY="klassenbuch-notizen";
+let notes={}; try{ notes=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){}
+const saveNotes=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(notes)); }catch(e){} };
+function noteField(id,label,hint){
+  return `<label class="note" for="n_${id}">${label}</label>${hint?`<div style="font-size:15px;color:var(--muted)">${hint}</div>`:""}
+    <textarea id="n_${id}" data-note="${id}">${esc(notes[id]||"")}</textarea>`;
+}
+function bindNotes(){ document.querySelectorAll("textarea[data-note]").forEach(t=>t.oninput=()=>{notes[t.dataset.note]=t.value;saveNotes();}); }
+
+/* ============================================================
+   Runden
+   ============================================================ */
+let level=0;
+function setSteps(){ [...$("#steps").children].forEach((s,i)=>s.classList.toggle("done",i<=level)); }
+function go(n){ level=n; setSteps(); LMS.reset(); $("#log").innerHTML=""; [round1,round2,round3,finale][n](); window.scrollTo({top:0,behavior:"smooth"}); }
+
+/* ---------- Runde 1: Die Reihenfolge ---------- */
+const CARDS=[
+  { id:"find",   say:"Suche das Klassenbuch.",       code:"api = findAPI(window)",   run:()=>LMS.find() },
+  { id:"init",   say:"Melde dich an.",                code:'api.LMSInitialize("")',    run:()=>LMS.init() },
+  { id:"set",    say:"Trag ein: 80 Punkte.",          code:'api.LMSSetValue("cmi.core.score.raw", "80")', run:()=>LMS.set("cmi.core.score.raw","80") },
+  { id:"commit", say:"Speichere.",                    code:'api.LMSCommit("")',        run:()=>LMS.commit() },
+  { id:"finish", say:"Melde dich ab.",                code:'api.LMSFinish("")',        run:()=>LMS.finish() }
+];
+let seq=[], order=[];
+function round1(){
+  seq=[]; order=CARDS.map((_,i)=>i).sort(()=>Math.random()-.5);
+  if(order.join()==="0,1,2,3,4") order=[2,0,4,1,3];
+  $("#stage").innerHTML=`
+    <h2>Runde 1 · Die Reihenfolge</h2>
+    <div class="task">Die Lerneinheit ist fertig. Die Person hat 80 Punkte. Das soll ins Klassenbuch.<br>
+      <b>Lege die fünf Karten in die richtige Reihenfolge.</b> Tippe dazu eine Karte an. Dann drück auf „Abspielen“ und schau, was das Klassenbuch macht.</div>
+    <div class="zone-title">Deine Reihenfolge</div>
+    <div class="cards" id="seq"></div>
+    <div class="zone-title">Die Karten</div>
+    <div class="pool" id="pool"></div>
+    <div class="row"><button type="button" class="main" id="play" disabled>▶ Abspielen</button>
+      <button type="button" class="ghost" id="clear">Alle Karten zurück</button></div>
+    <div id="out"></div>`;
+  $("#clear").onclick=()=>{ seq=[]; drawR1(); $("#out").innerHTML=""; };
+  $("#play").onclick=playR1;
+  drawR1();
+}
+function cardHtml(c,extra=""){ return `<span class="say">${c.say}</span><code>${esc(c.code)}</code>${extra}`; }
+function drawR1(){
+  const pool=$("#pool"), s=$("#seq");
+  pool.innerHTML=""; s.innerHTML="";
+  order.forEach(i=>{ const c=CARDS[i], used=seq.includes(i);
+    const b=document.createElement("button"); b.type="button"; b.className="card"+(used?" used":""); b.disabled=used;
+    b.innerHTML=cardHtml(c); b.setAttribute("aria-label",`Karte: ${c.say} Hinzufügen`);
+    b.onclick=()=>{ seq.push(i); drawR1(); }; pool.appendChild(b); });
+  if(!seq.length) s.innerHTML='<div class="empty">Noch leer. Tippe unten eine Karte an.</div>';
+  seq.forEach((i,k)=>{ const c=CARDS[i];
+    const b=document.createElement("button"); b.type="button"; b.className="card"; b.dataset.k=k;
+    b.innerHTML=cardHtml(c,`<span class="num">${k+1} · zurücklegen ✕</span>`); b.setAttribute("aria-label",`Schritt ${k+1}: ${c.say} Zurücklegen`);
+    b.onclick=()=>{ seq.splice(k,1); drawR1(); }; s.appendChild(b); });
+  $("#play").disabled=seq.length!==CARDS.length;
+}
+async function playR1(){
+  LMS.reset(); $("#log").innerHTML=""; $("#out").innerHTML="";
+  $("#play").disabled=true; $("#clear").disabled=true;
+  const els=[...document.querySelectorAll("#seq .card")]; let failed=null, emptySave=false;
+  for(let k=0;k<seq.length;k++){
+    els[k].classList.add("run"); await wait(650);
+    const r=CARDS[seq[k]].run(); log(r); render(); flash(r.ok?"#saved":"#pad");
+    if(r.empty) emptySave=true;
+    if(!r.ok){ els[k].classList.remove("run"); els[k].classList.add("bad"); failed={k,r}; break; }
+  }
+  $("#clear").disabled=false;
+  if(failed){
+    $("#out").innerHTML=`<div class="msg bad"><b>Schritt ${failed.k+1} hat nicht geklappt.</b>${failed.r.say}</div>
+      ${noteField("r1_df","Was war der Denkfehler?","Was hast du angenommen? Warum hat es nicht gestimmt? „Weiß ich nicht“ ist auch eine Erkenntnis.")}
+      <div class="row"><button type="button" class="main" id="again">Neu legen und nochmal abspielen</button></div>`;
+    bindNotes(); $("#again").onclick=()=>{ document.querySelectorAll("#seq .card").forEach(e=>e.classList.remove("run","bad")); drawR1(); $("#out").innerHTML=""; };
+    return;
+  }
+  $("#out").innerHTML=`<div class="msg ok"><b>Es hat geklappt. Die 80 Punkte stehen im Klassenbuch.</b>
+      ${emptySave ? "Aber schau genau hin: Beim Speichern war der Notizzettel noch leer. Erst das Abmelden hat die Punkte ins Buch gebracht. Das klappt hier, aber ist es klug? Was wäre, wenn das Internet vorher abbricht?" : "Erst suchen, dann anmelden, dann eintragen und speichern, am Ende abmelden."}</div>
+    ${noteField("r1_aha","Was war dein Aha?","")}
+    <div class="row"><button type="button" class="main" id="next">Weiter zu Runde 2 →</button></div>`;
+  bindNotes(); $("#next").onclick=()=>go(1);
+}
+
+/* ---------- Runde 2: Die richtige Spalte ---------- */
+function round2(){
+  LMS.find(); LMS.init(); render(); log({ok:true,tech:"api = findAPI(window)  → API gefunden"}); log({ok:true,tech:'api.LMSInitialize("")  → "true"'});
+  const keyOpts=Object.entries(NAMES).map(([k,v])=>`<option value="${k}">${v}  (${k})</option>`).join("");
+  const valOpts=["75","75 %","bestanden","passed","completed","fertig"].map(v=>`<option>${v}</option>`).join("");
+  $("#stage").innerHTML=`
+    <h2>Runde 2 · Die richtige Spalte</h2>
+    <div class="task">Die Lerneinheit ist schon angemeldet. Der Test ist vorbei: <b>75 von 100 Punkten. Bestanden.</b><br>
+      Mach zwei Einträge: einen für die Punkte und einen für „bestanden“. Wähle jeweils die Spalte und den Wert.</div>
+    ${[1,2].map(n=>`
+      <div class="entry">
+        <label for="k${n}">Eintrag ${n}: Spalte</label><select id="k${n}">${keyOpts}</select>
+        <label for="v${n}">Wert</label><select id="v${n}">${valOpts}</select>
+      </div>`).join("")}
+    <p style="font-size:15px;color:var(--muted);margin:8px 0 0">So sieht ein Eintrag im Code aus: <code style="font-family:var(--mono)">api.LMSSetValue("Spalte", "Wert")</code></p>
+    <div class="row"><button type="button" class="main" id="play2">▶ Eintragen und speichern</button></div>
+    <div id="out"></div>`;
+  $("#k2").value="cmi.core.lesson_status"; $("#v2").value="bestanden";
+  $("#play2").onclick=playR2;
+}
+async function playR2(){
+  $("#out").innerHTML=""; LMS.pad={}; LMS.saved={}; render();
+  const res=[];
+  for(const n of [1,2]){ const k=$("#k"+n).value, v=$("#v"+n).value; await wait(500);
+    const r=LMS.set(k,v); log(r); render(); flash("#pad"); res.push({n,k,v,r}); }
+  await wait(500); const c=LMS.commit(); log(c); render(); flash("#saved");
+  const errs=res.filter(x=>!x.r.ok);
+  const s=LMS.saved, score=s["cmi.core.score.raw"], status=s["cmi.core.lesson_status"];
+  let html;
+  if(errs.length){
+    html=`<div class="msg bad"><b>${errs.length===1?"Ein Eintrag wurde abgelehnt.":"Zwei Einträge wurden abgelehnt."}</b>${errs.map(e=>`Eintrag ${e.n}: ${e.r.say}`).join("<br>")}</div>
+      ${noteField("r2_df","Was war der Denkfehler?","Warum hast du gedacht, dass es so geht? „Weiß ich nicht“ ist auch eine Erkenntnis.")}`;
+  } else if(score==="75" && status==="passed"){
+    html=`<div class="msg ok"><b>Genau so. Im Buch steht: 75 Punkte, passed.</b>Die Lernplattform versteht nur feste Wörter auf Englisch. Für Menschen zeigt sie später „bestanden“ an.</div>
+      ${noteField("r2_aha","Was war dein Aha?","")}
+      <div class="row"><button type="button" class="main" id="next">Weiter zu Runde 3 →</button></div>`;
+  } else if(score==="75" && status==="completed"){
+    html=`<div class="msg info"><b>Angenommen, aber nur halb richtig.</b>„completed“ heißt: fertig durchgearbeitet. Ob die Person bestanden hat, steht damit nicht im Buch. Für „bestanden“ gibt es ein eigenes Wort.</div>
+      ${noteField("r2_df","Was war der Denkfehler?","")}`;
+  } else {
+    html=`<div class="msg info"><b>Das Klassenbuch hat alles angenommen, aber stimmt es auch?</b>Im Buch steht jetzt: Punkte = ${esc(score||"–")}, Status = ${esc(status||"–")}. Gesucht waren 75 Punkte und bestanden.</div>
+      ${noteField("r2_df","Was war der Denkfehler?","Ein Eintrag ohne Fehlermeldung ist nicht automatisch richtig. Warum nicht?")}`;
+  }
+  $("#out").innerHTML=html; bindNotes();
+  const nx=$("#next"); if(nx) nx.onclick=()=>go(2);
+  LMS.on=true; // zum erneuten Versuchen angemeldet bleiben
+}
+
+/* ---------- Runde 3: Fehlersuche im echten Code ---------- */
+const LINES=[
+  { say:"Suche das Klassenbuch.",                 code:"api = findAPI(window)",                                  run:()=>LMS.find() },
+  { say:"Trag ein: angefangen.",                  code:'api.LMSSetValue("cmi.core.lesson_status", "incomplete")', run:()=>LMS.set("cmi.core.lesson_status","incomplete") },
+  { say:"Melde dich an.",                         code:'api.LMSInitialize("")',                                   run:()=>LMS.init() },
+  { say:"Trag ein: 90 Punkte.",                   code:'api.LMSSetValue("cmi.core.score.raw", "90")',             run:()=>LMS.set("cmi.core.score.raw","90") },
+  { say:"Trag ein: bestanden.",                   code:'api.LMSSetValue("cmi.core.lesson_status", "passed")',     run:()=>LMS.set("cmi.core.lesson_status","passed") },
+  { say:"Speichere.",                             code:'api.LMSCommit("")',                                       run:()=>LMS.commit() },
+  { say:"Melde dich ab.",                         code:'api.LMSFinish("")',                                       run:()=>LMS.finish() }
+];
+let lines=[];
+function round3(){
+  lines=LINES.map((_,i)=>i);
+  $("#stage").innerHTML=`
+    <h2>Runde 3 · Fehlersuche im echten Code</h2>
+    <div class="task">Jemand hat diesen Code geschrieben. <b>Irgendwo steckt ein Fehler.</b><br>
+      Spiel den Code zuerst ab und schau, wo es hakt. Dann schieb die Zeilen mit ▲ und ▼ an die richtige Stelle und spiel noch einmal.</div>
+    <div class="cards" id="code"></div>
+    <div class="row"><button type="button" class="main" id="play3">▶ Code abspielen</button></div>
+    <div id="out"></div>`;
+  $("#play3").onclick=playR3; drawR3();
+}
+function drawR3(){
+  const box=$("#code"); box.innerHTML="";
+  lines.forEach((li,k)=>{ const L=LINES[li];
+    const d=document.createElement("div"); d.className="codeline";
+    d.innerHTML=`<span class="no">${k+1}</span><div><span class="say">${L.say}</span><code>${esc(L.code)}</code></div>
+      <div class="mv"><button type="button" aria-label="Zeile ${k+1} nach oben" ${k===0?"disabled":""}>▲</button>
+      <button type="button" aria-label="Zeile ${k+1} nach unten" ${k===lines.length-1?"disabled":""}>▼</button></div>`;
+    const [up,dn]=d.querySelectorAll("button");
+    up.onclick=()=>{ [lines[k-1],lines[k]]=[lines[k],lines[k-1]]; drawR3(); $("#out").innerHTML=""; };
+    dn.onclick=()=>{ [lines[k+1],lines[k]]=[lines[k],lines[k+1]]; drawR3(); $("#out").innerHTML=""; };
+    box.appendChild(d); });
+}
+let r3tries=0;
+async function playR3(){
+  LMS.reset(); $("#log").innerHTML=""; $("#out").innerHTML=""; drawR3(); r3tries++;
+  const els=[...document.querySelectorAll("#code .codeline")]; let failed=null;
+  $("#play3").disabled=true;
+  for(let k=0;k<lines.length;k++){ els[k].classList.add("run"); await wait(550);
+    const r=LINES[lines[k]].run(); log(r); render();
+    if(!r.ok){ els[k].classList.remove("run"); els[k].classList.add("bad"); failed={k,r}; break; } }
+  $("#play3").disabled=false;
+  const s=LMS.saved;
+  if(failed){
+    $("#out").innerHTML=`<div class="msg bad"><b>Zeile ${failed.k+1} hat nicht geklappt.</b>${failed.r.say}</div>
+      ${noteField("r3_df","Was war der Denkfehler der Person, die den Code geschrieben hat?","Was hat sie angenommen? Warum stimmt das nicht?")}`;
+  } else if(s["cmi.core.lesson_status"]==="passed" && s["cmi.core.score.raw"]==="90"){
+    $("#out").innerHTML=`<div class="msg ok"><b>Repariert. Im Buch steht: 90 Punkte, passed.</b>
+      Der Fehler war: Es wurde etwas eingetragen, bevor die Anmeldung da war. Der Computer macht genau das, was dasteht, in genau dieser Reihenfolge. Er denkt nicht mit.</div>
+      ${noteField("r3_df","Was war der Denkfehler der Person, die den Code geschrieben hat?","Benenne ihn in deinen eigenen Worten.")}
+      <div class="row"><button type="button" class="main" id="next">Zum Abschluss →</button></div>`;
+    $("#next").onclick=()=>go(3);
+  } else {
+    $("#out").innerHTML=`<div class="msg info"><b>Keine Fehlermeldung, aber im Buch steht nicht das Richtige.</b>
+      Status = ${esc(s["cmi.core.lesson_status"]||"–")}, Punkte = ${esc(s["cmi.core.score.raw"]||"–")}. Gesucht war: passed und 90.
+      Tipp: Wenn zweimal in dieselbe Spalte geschrieben wird, gilt der letzte Eintrag.</div>
+      ${noteField("r3_df","Was war der Denkfehler?","")}`;
+  }
+  bindNotes();
+}
+
+/* ---------- Abschluss ---------- */
+function finale(){
+  const labels={r1_df:"Runde 1 · Denkfehler",r1_aha:"Runde 1 · Aha",r2_df:"Runde 2 · Denkfehler",r2_aha:"Runde 2 · Aha",r3_df:"Runde 3 · Denkfehler",rule:"Meine Regel"};
+  const mine=Object.keys(labels).filter(k=>(notes[k]||"").trim()).map(k=>`${labels[k]}:\n${notes[k].trim()}`).join("\n\n");
+  $("#stage").innerHTML=`
+    <h2>Geschafft. Das war SCORM.</h2>
+    <p>Was du gerade gespielt hast, heißt in der Fachsprache <b>SCORM</b>. Das ist eine Verabredung, wie Lerneinheiten und Lernplattformen miteinander sprechen. Jede Lernplattform kennt diese Verabredung. Deshalb läuft eine Einheit in Moodle genauso wie in ILIAS.</p>
+    <div class="task"><b>Merksatz:</b> Suchen. Anmelden. Eintragen. Speichern. Abmelden.<br>Und: Das Klassenbuch versteht nur feste Wörter.</div>
+    <h3>Die Wörter aus dem Spiel</h3>
+    <dl class="glossary">
+      <dt>Lernplattform</dt><dd>Ein Programm im Internet für Kurse, zum Beispiel Moodle oder ILIAS. Fachwort: LMS.</dd>
+      <dt>Lerneinheit</dt><dd>Ein einzelnes Lernangebot, das in der Plattform läuft. Fachwort: SCO.</dd>
+      <dt>Klassenbuch</dt><dd>Die Stelle, an der die Plattform zuhört. Fachwort: API (Schnittstelle).</dd>
+      <dt>Spalte</dt><dd>Ein fester Name für eine Angabe, zum Beispiel <code style="font-family:var(--mono)">cmi.core.score.raw</code> für die Punkte.</dd>
+      <dt>Speichern</dt><dd>Vom Notizzettel fest ins Buch. Fachwort: commit.</dd>
+    </dl>
+    ${noteField("rule","Meine Regel","Schreib eine Regel auf, die du dir merken willst, mit Begründung: „Regel: …, weil …“")}
+    <h3>Dein Weg durch das Spiel</h3>
+    <div class="mynotes" id="mynotes">${esc(mine||"Du hast noch nichts aufgeschrieben. Das ist in Ordnung. Du kannst jederzeit zurückgehen.")}</div>
+    <div class="row">
+      <a class="ghost" style="text-decoration:none;display:inline-block" href="https://github.com/barbara-magdalena-mayer/bauphysik-u-wert/blob/main/unit/scorm.js">So sieht der echte Code aus →</a>
+      <a class="ghost" style="text-decoration:none;display:inline-block" href="../../bauphysik-u-wert/">Eine Lerneinheit, die das nutzt →</a>
+    </div>`;
+  bindNotes();
+  $("#n_rule").addEventListener("input",()=>{ const m=Object.keys(labels).filter(k=>(notes[k]||"").trim()).map(k=>`${labels[k]}:\n${notes[k].trim()}`).join("\n\n"); $("#mynotes").textContent=m; });
+}
+
+/* Neu beginnen: zweimal tippen, ohne Browser-Dialog */
+let armed=null; const rs=$("#restart");
+rs.onclick=()=>{ if(!armed){ rs.textContent="Wirklich? Alles löschen"; armed=setTimeout(()=>{armed=null;rs.textContent="↺ Neu beginnen";},4000); return; }
+  clearTimeout(armed); armed=null; rs.textContent="↺ Neu beginnen"; notes={}; saveNotes(); go(0); };
+
+go(0);
+})();
+</script>
+<style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Werkstatt"><img src="../../bilder/barbara-figur.webp" alt=""></a>
+</body>
+</html>
