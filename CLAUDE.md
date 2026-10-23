@@ -3,8 +3,9 @@
 Beim Einbinden oder Ändern eines Spiels immer `CHECKLISTE.md` vollständig abarbeiten.
 
 Aufbau der Website:
-- `index.html` = **Startseite = Werkstatt**: die eine Linkliste mit allem (volle Adressen!). Bio-Links auf Instagram und Bluesky landen hier.
-- `ueber-mich.html` = Über mich, ausführliche Arbeitsproben, Impressum und Datenschutz.
+- `index.html` = **Startseite = Werkstatt**: kurze Linkliste (neueste Arbeit, je ein Spiel pro Bereich, dann „Über mich & alle Arbeitsproben“; volle Adressen!). Bio-Links auf Instagram und Bluesky landen hier.
+- Reihe „Wie Technik denkt“ (informatische Bildung): Teil 1 = `spiele/klassenbuch/`.
+- `ueber-mich.html` = Über mich, **alle** Arbeitsproben ausführlich, Impressum und Datenschutz.
 - `grundbegriffe.html` = Begriffe und „Die Arbeitsproben erklärt“.
 - `werkstatt.html` = nur Weiterleitung auf die Startseite (alte Links). Nicht mehr bearbeiten.
 

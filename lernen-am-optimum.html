@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>[hidden]{display:none!important}img{max-width:100%}</style>
-<title>Lernen am Optimum – Pflegefall Person X</title>
+<title>Drei Entscheidungen, eine KI, die irren kann</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
@@ -76,10 +76,10 @@ button:not(:disabled):hover{animation:wackeln .45s ease-in-out}}
 </head>
 <body>
 
-<header><div class="wrap"><h1>Lernen am Optimum</h1><p>Ein Pflegefall mit drei Entscheidungen. Kraft, Wille und Wissen nach Henderson gelten für Person X und für dich als Pflegeperson. Das Optimum hast du erreicht, wenn du den komplexen Fall ohne Hilfen löst und Fehler der KI erkennst.</p></div></header>
+<header><div class="wrap"><h1>Drei Entscheidungen, eine KI, die irren kann</h1><p>Ein Pflegefall mit drei Entscheidungen. Kraft, Wille und Wissen nach Henderson gelten für Person X und für dich als Pflegeperson. Das Optimum hast du erreicht, wenn du den komplexen Fall ohne Hilfen löst und Fehler der KI erkennst.</p></div></header>
 <main><div class="wrap">
 <section class="card blog-card" aria-labelledby="blog-before-title">
- <p class="eyebrow">Vor dem Spiel · Denkfolie</p><h2 id="blog-before-title">Das Optimum hat zwei Seiten</h2>
+ <p class="eyebrow">Vor dem Spiel · Denkfolie</p><h2 id="blog-before-title">Die Idee hinter meinen Lernfällen</h2>
  <p>In diesem Lernspiel suchst du nicht nur nach einer guten Handlung. Du beobachtest auch, welche Unterstützung dir beim Weiterlernen hilft.</p>
  <ul><li><strong>Handlungsoptimum:</strong> Was ist jetzt sicher, angemessen und realistisch?</li><li><strong>Lernoptimum:</strong> Welche Hilfe ermöglicht meinen nächsten Lernschritt?</li></ul>
  <p class="muted">Lies die <a href="artikel/optimum-zwei-seiten/">kurze Vertiefung zum Blogbeitrag</a> oder starte direkt mit dem Fall.</p>
@@ -237,7 +237,7 @@ function summary(){
  document.getElementById('restart').onclick=setup;
  const a=document.getElementById('again');if(a)a.onclick=setup;
  const c=document.getElementById('copy');if(c)c.onclick=()=>{
-  const txt=['Lernen am Optimum – Pflegefall Person X',`Stufe ${S.level} · ${HELP[S.help]} · ${ATT[S.att].name} · Person X fehlte: ${DEF[S.deficit]}`,'',...S.log.map(l=>`${l.title}: ${l.opt} (${l.q})${l.ki?` · KI ${l.ki.ok?'erkannt':'nicht erkannt'}`:''}${l.why?`\nBegründung: ${l.why}`:''}`),'',optimum?'Optimum erreicht.':'Optimum noch nicht erreicht.'].join('\n');
+  const txt=['Drei Entscheidungen, eine KI, die irren kann',`Stufe ${S.level} · ${HELP[S.help]} · ${ATT[S.att].name} · Person X fehlte: ${DEF[S.deficit]}`,'',...S.log.map(l=>`${l.title}: ${l.opt} (${l.q})${l.ki?` · KI ${l.ki.ok?'erkannt':'nicht erkannt'}`:''}${l.why?`\nBegründung: ${l.why}`:''}`),'',optimum?'Optimum erreicht.':'Optimum noch nicht erreicht.'].join('\n');
   const m=document.getElementById('msg');
   try{navigator.clipboard.writeText(txt).then(()=>m.textContent='Ergebnis kopiert.').catch(()=>m.textContent='Kopieren wurde blockiert.')}catch(e){m.textContent='Kopieren wurde blockiert.'}
  };

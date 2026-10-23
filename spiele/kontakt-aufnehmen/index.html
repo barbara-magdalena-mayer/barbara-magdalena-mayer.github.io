@@ -1,4 +1,4 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Grundlage · Kontakt aufnehmen</title><style>
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Drei Begegnungen, die nicht laufen wie erhofft</title><style>
 :root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#faf8f3;background:#111a20}
 *{box-sizing:border-box}html,body{height:100%}body{margin:0;background:#111a20}
 button{font:inherit;cursor:pointer;color:inherit}
@@ -58,7 +58,7 @@ dialog::backdrop{background:#000a}dialog h2{margin:0 0 8px;font-size:19px}
 </head><body>
 <div class="app">
 <header>
- <div><h1>Grundlage · Kontakt aufnehmen</h1><small>Lernen am Optimum · Ein Zimmer, drei Begegnungen</small></div>
+ <div><h1>Drei Begegnungen, die nicht laufen wie erhofft</h1><small>Lernen am Optimum · Ein Zimmer, drei Begegnungen</small></div>
  <div class="hbtns"><span class="count" id="count" aria-live="polite">0 / 12 entdeckt</span><button class="hbtn" id="openweg">Mein Weg</button><button class="hbtn" id="restart">↺ Neu</button><a class="back" href="../../">← Werkstatt</a></div>
 </header>
 <div class="main">
@@ -430,7 +430,7 @@ const SUPPORT='Wenn dich diese Begegnung beschäftigt – weil du so etwas selbs
 function openWeg(){const d=$('weg');try{d.showModal()}catch(e){d.setAttribute('open','')}}
 function save(){
  const L={tuer:'An der Tür – was bringe ich mit?',vorher:'Vor der Begegnung',schau:'Innere Schau',nachher:'Was nehme ich mit?'};
- let txt='Lernen am Optimum – Grundlage: Kontakt aufnehmen\n\n';
+ let txt='Drei Begegnungen, die nicht laufen wie erhofft\n\n';
  if(S){txt+='Mein Weg ('+T().label+')\n'+S.log.map((t,i)=>(i+1)+'. '+t).join('\n')+'\n\n'}
  if(S&&S.sit==='laut')txt+=SUPPORT+'\n\n';
  Object.keys(SIT).forEach(s=>{const n=Object.keys(L).filter(k=>(notes[s+'-'+k]||'').trim());if(n.length){txt+='Notizen – '+SIT[s].label+'\n'+n.map(k=>L[k]+': '+notes[s+'-'+k].trim()).join('\n')+'\n\n'}});

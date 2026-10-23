@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Gleiche Frage, andere Antwort</title>
+<title>Wann behandelt die KI Menschen unfair?</title>
 <style>
 /* Layout: Kopfband, dann eine Karte pro Schritt; im Spiel zwei Antwortspalten (A | B), auf dem Handy gestapelt. Hell wie die übrige Werkstatt-Seite. */
 @font-face{font-family:"Literata";font-weight:400;font-display:swap;src:url("fonts/literata-latin-400-normal.woff2") format("woff2")}
@@ -75,7 +75,7 @@ footer a,main a{color:var(--pink-dark)}
 <body>
 <header><div class="wrap">
   <p class="eyebrow">Werkstatt · Lernspiel · KI-Kompetenz</p>
-  <h1>Gleiche Frage, andere Antwort</h1>
+  <h1>Wann behandelt die KI Menschen unfair?</h1>
   <p>Fünf Fälle, zwei nachgebaute KI-Antworten: Markiere, was dir auffällt, und entscheide, ob der Unterschied eine Verzerrung oder fachlich begründet ist.</p>
 </div></header>
 
@@ -254,7 +254,7 @@ function reflect(){
   </ul></section>`;
  document.getElementById("again").onclick=start;
  document.getElementById("copy").onclick=()=>{
-  const lines=["Gleiche Frage, andere Antwort – mein Ergebnis",`KI-Zweitmeinung: ${S.ki?"an":"aus"}`,""];
+  const lines=["Wann behandelt die KI Menschen unfair? – mein Ergebnis",`KI-Zweitmeinung: ${S.ki?"an":"aus"}`,""];
   ROUNDS.forEach((r,k)=>{const x=S.res[r.id];lines.push(`Runde ${k+1} (${r.field}): ${VERD[x.verdict]} · eingebaut: ${r.verdict==="bias"?"Verzerrung":"begründet"}${S.ki?` · KI ${x.ki==="folge"?"zugestimmt":"widersprochen"}`:""}`,`Begründung: ${x.why}`,"");});
   lines.push("Vorsatz: "+document.getElementById("final").value.trim());
   const t=lines.join("\n"),m=document.getElementById("cmsg");

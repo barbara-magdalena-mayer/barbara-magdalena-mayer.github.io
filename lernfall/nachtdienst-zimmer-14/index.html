@@ -1,4 +1,4 @@
-<!doctype html><html lang="de"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>Nachtdienst, Zimmer 14 · Interaktiver Lernfall</title></head><body>
+<!doctype html><html lang="de"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>Was siehst du wirklich, und was vermutest du nur?</title></head><body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
@@ -136,7 +136,7 @@ details summary{cursor:pointer}
   <div class="card">
     <p class="small"><a href="../../" style="color:var(--accent);text-decoration:none">← Zurück zu Barbara Mayer</a></p>
     <p class="eyebrow">Interaktives Entscheidungstraining · Lernen am Optimum</p>
-    <h1>Nachtdienst, Zimmer 14</h1>
+    <h1>Was siehst du wirklich, und was vermutest du nur?</h1>
     <p class="lead">Es ist halb drei. Du bist Pflegekraft im Nachtdienst einer psychiatrischen Akutstation. X wurde gestern aufgenommen, nachdem sie einen Suizidwunsch angedeutet hatte. Du gehst zu ihr ins Zimmer.</p>
     <p><strong>Deine Aufgabe:</strong> Du entscheidest selbst, wie du vorgehst: erst zu X setzen und sprechen oder erst die Hinweise im Zimmer ansehen. Es gibt keine Punkte und kein Richtig oder Falsch. Jede Entscheidung begründest du – am Ende siehst du deinen Weg mit allen Begründungen.</p>
     <ul class="how" id="howDesk">
@@ -610,7 +610,7 @@ $("#bPlace").onclick=placeChooser;
 
 /* ---------- Reflexion ---------- */
 function logText(){
-  const L=["Nachtdienst, Zimmer 14 – meine Notizen",""];
+  const L=["Was siehst du wirklich, und was vermutest du nur? – meine Notizen",""];
   S.log.forEach((e,i)=>{
     if(e.type==="plan")L.push(`${i+1}. Vorgehen: ${PLANS[e.plan]}`,`   Begründung: ${e.reason}`);
     if(e.type==="find")L.push(`${i+1}. Hinweis „${BY[e.id].name}“: ${CAT[e.cat]}, ${ART[e.art]}`,`   Begründung: ${e.reason}`);

@@ -11,9 +11,10 @@ Damit kein Spiel irgendwo fehlt. Jeder Punkt muss erledigt sein, bevor ein Spiel
 - [ ] `<meta name="robots" content="noindex">` im Kopf (Seite soll vorerst nicht auffindbar sein)
 - [ ] Link „← Zurück zur Werkstatt“ auf `../../`
 - [ ] Titel ohne Nummern aus fremden Curricula
+- [ ] Titel als Frage oder Situation, in der sich eine Person angesprochen fühlt (kein Fantasiename); gleicher Titel in `<title>`, `<h1>` und allen drei Listen
 
 ## 3. Überall verlinken – alle drei Listen
-- [ ] **`index.html`** (Startseite = Werkstatt) – Eintrag ganz oben in der Linkliste (volle Adresse `https://barbara-magdalena-mayer.github.io/spiele/<name>/`), „Neu ·“ vom bisherigen Eintrag entfernen, Farben abwechseln lassen
+- [ ] **`index.html`** (Startseite = Werkstatt) – kurz halten! Aufbau: 1. neueste Arbeit mit „Neu ·“, 2. je ein Spiel pro Bereich (Du arbeitest digital · Du arbeitest mit Menschen · Du lernst Technik und Bau), 3. „Über mich & alle Arbeitsproben“, 4. Bluesky, Instagram, E-Mail. Die neue Arbeit ersetzt oben die bisherige neueste; alles andere steht nur in `ueber-mich.html`. Volle Adressen, Farben abwechseln.
 - [ ] **`ueber-mich.html`** – eigener `<article class="work">`-Eintrag mit Form, Interaktion, Lernabsicht, KI
 - [ ] **`grundbegriffe.html`** – Abschnitt „Die Arbeitsproben erklärt“
 - [ ] Gegenprobe: Suche nach dem Namen eines bestehenden Spiels (z. B. `schulrechner`) – überall, wo es auftaucht, muss auch das neue Spiel stehen
