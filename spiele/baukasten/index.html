@@ -37,7 +37,7 @@ h3{font-size:17px;margin:16px 0 6px}
 .steps span{flex:1;height:6px;border-radius:3px;background:var(--line)}
 .steps span.done{background:var(--pink)}
 .grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
-@media(max-width:860px){.grid{grid-template-columns:1fr}}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.side{order:-1}iframe{height:340px}}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px}
 .task{background:var(--pink-soft);border-left:5px solid var(--pink);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
@@ -47,7 +47,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .msg{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:17px}
 .msg.ok{background:var(--green-soft)} .msg.bad{background:var(--red-soft)} .msg.info{background:var(--info)}
-.msg b{display:block}
+.msg > b{display:block}
 textarea{font:inherit;font-size:16px;width:100%;min-height:70px;margin-top:6px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
 label.note{display:block;margin-top:12px;font-weight:600;font-size:16px}
 /* Schichten */
@@ -81,7 +81,7 @@ label.note{display:block;margin-top:12px;font-weight:600;font-size:16px}
 .side{position:sticky;top:12px;display:grid;gap:12px;min-width:0}
 .side>*,.panel,.pick,.pick .opts button{min-width:0}
 .pick .opts button code{overflow-wrap:anywhere;white-space:normal}
-@media(max-width:860px){.side{position:static}}
+@media(max-width:700px){.side{position:static}}
 .frame{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .frame .bar{display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg);border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
 .frame .dot{width:10px;height:10px;border-radius:50%;background:var(--line)}
@@ -337,6 +337,13 @@ function round2() {
   $("#stage").innerHTML = `
     <h2>Runde 2 · Die Rechnung im Code</h2>
     <div class="task">Im JavaScript fehlen drei Bausteine der Rechnung. <b>Setz sie ein.</b> Dann mach die Probe: Das Spiel setzt eine echte Wand ein und schaut, was herauskommt.</div>
+    <div class="msg info" style="margin:0 0 12px"><b>Was bedeuten die Zeichen?</b>
+      <dl class="glossary" style="margin:6px 0 0">
+        <dt>d</dt><dd>Die Dicke einer Schicht. In der Formel immer in <b>Metern</b>.</dd>
+        <dt>λ (Lambda)</dt><dd>Wie gut ein Stoff Wärme durchlässt. Ziegel 0,68 (lässt viel durch), Dämmung 0,035 (lässt wenig durch).</dd>
+        <dt>R</dt><dd>Der <b>Widerstand</b>: Wie stark bremst die Wand die Wärme? Großes R = starke Bremse. Für eine Schicht gilt R = d / λ. Alle R werden zusammengezählt, dazu kommen 0,13 innen und 0,04 außen.</dd>
+        <dt>U</dt><dd>Der <b>U-Wert</b>: Wie viel Wärme geht durch die Wand verloren? Kleines U = gute Dämmung. U ist das <b>Umgekehrte</b> von R: viel Bremse, wenig Verlust.</dd>
+      </dl></div>
     <div class="formula" id="formula" aria-label="Die Rechnung mit drei Lücken"></div>
     ${PICKS.map(p => `<div class="pick" data-k="${p.k}"><div class="lbl">${p.lbl}</div><div class="say">${p.say}</div>
       <div class="opts" role="group" aria-label="${p.lbl}">${p.opts.map(([v, t]) => `<button type="button" data-v="${esc(v)}">${esc(v || "( nichts )")} <span style="font-family:var(--body);color:var(--muted)">· ${t}</span></button>`).join("")}</div></div>`).join("")}
@@ -375,7 +382,10 @@ async function playR2() {
   if (!ok) {
     if (parts.conv !== "/ 100") hint = "Schau auf die Einheit: Rechnet der Code mit Zentimetern oder mit Metern?";
     else if (parts.op !== "/") hint = "Schau auf die Formel R = d / λ: Wird hier wirklich geteilt?";
-    else hint = "Schau auf den letzten Schritt: Wie wird aus dem Widerstand R der U-Wert?";
+    else if (u1 < 0 || u2 < 0) hint = "Ein negativer U-Wert hieße: Die Wand verliert keine Wärme, sie heizt. Kann das sein? Schau auf Baustein C: Wie wird aus der Bremse R der Verlust U? „Umgekehrt“ heißt in der Mathematik: 1 geteilt durch.";
+    else if (u2 > u1) hint = "Mit Dämmung kommt ein größerer Wert heraus als ohne. Dann würde Dämmung die Wand schlechter machen. Schau auf Baustein C: U ist das Umgekehrte von R.";
+    else hint = "Schau auf den letzten Schritt: Wie wird aus dem Widerstand R der U-Wert? U ist das Umgekehrte von R.";
+    if (parts.conv !== "/ 100" && isFinite(u1) && u1 < 0.1) hint += " Ein U-Wert von fast null wäre eine Wand, die so gut wie keine Wärme verliert. So eine Wand gibt es nicht.";
   }
   $("#out").innerHTML = `
     <div class="probe"><span>Probe 1: 24 cm Ziegel, ohne Dämmung</span><b>${fmt(u1)}</b>
