@@ -85,7 +85,7 @@ label.note{display:block;margin-top:12px;font-weight:600;font-size:16px}
 .frame{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .frame .bar{display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg);border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
 .frame .dot{width:10px;height:10px;border-radius:50%;background:var(--line)}
-iframe{display:block;width:100%;height:300px;border:0;background:#fff}
+iframe{display:block;width:100%;height:400px;border:0;background:#fff}
 .frame .empty-note{padding:14px;font-size:15px;color:var(--muted)}
 .tabs{display:flex;gap:4px}
 .tabs button{font:inherit;font-size:14px;border:1px solid var(--line);border-bottom:none;background:var(--bg);color:var(--ink);border-radius:8px 8px 0 0;padding:5px 12px;cursor:pointer}
@@ -154,6 +154,11 @@ const HTML_CODE =
   <input id="daemm" type="number" value="14">
 </label>
 <button id="rechne">Berechnen</button>
+<div id="wand">
+  <div id="w-ziegel"></div>
+  <div id="w-daemm"></div>
+</div>
+<p class="seiten">innen ← → außen</p>
 <p id="ergebnis">U-Wert: –</p>
 <p id="dicke">Wanddicke: –</p>`;
 
@@ -165,7 +170,13 @@ input  { width: 70px; font-size: 16px; }
 button { background: #b5532a; color: white;
          border: none; border-radius: 8px;
          padding: 8px 16px; font-size: 16px; }
-#ergebnis { font-size: 22px; font-weight: bold; }`;
+#ergebnis { font-size: 22px; font-weight: bold; }
+#wand     { display: flex; height: 80px; margin-top: 14px;
+            border-left: 6px solid #e4ddcc; }
+#w-ziegel { width: 96px; background: #b5532a; }
+#w-daemm  { width: 56px; background: repeating-linear-gradient(
+              135deg, #f2d36b 0 8px, #e9c24a 8px 16px); }
+.seiten   { font-size: 13px; color: #777; margin: 4px 0; }`;
 
 /* Bausteine der Rechnung (Runde 2) und des Einlesens (Runde 3) */
 let parts = { conv: "/ 100", op: "/", kehr: "1 / R", read: "parseFloat" };
@@ -183,6 +194,8 @@ function jsCode(p = parts) {
     "U-Wert: " + U.toFixed(2).replace(".", ",") + " W/(m²K)";
   document.getElementById("dicke").textContent =
     "Wanddicke: " + (ziegel + daemm) + " cm";
+  document.getElementById("w-ziegel").style.width = ziegel * 4 + "px";
+  document.getElementById("w-daemm").style.width  = daemm * 4 + "px";
 };`;
 }
 /* Unsichtbarer Helfer: Damit das Spiel die Probe automatisch machen kann. Gehört nicht zur Einheit. */
@@ -261,8 +274,8 @@ function go(n) {
 /* ---------- Runde 1: Die drei Schichten ---------- */
 const LAYERS = [
   { k: "html", name: "HTML", color: "var(--brick)",   wall: "Mauerwerk", say: "Das Gerüst: Was ist überhaupt da? Überschrift, Eingabefelder, Knopf." },
-  { k: "css",  name: "CSS",  color: "var(--plaster)", wall: "Putz und Farbe", say: "Das Aussehen: Farben, Schrift, Abstände." },
-  { k: "js",   name: "JavaScript", color: "var(--tech)", wall: "Haustechnik", say: "Das Verhalten: Was passiert, wenn du etwas tust? Zum Beispiel rechnen." }
+  { k: "css",  name: "CSS",  color: "var(--plaster)", wall: "Putz und Farbe", say: "Das Aussehen: Farben, Schrift, Abstände. Auch die Farbe der Wand im Bild." },
+  { k: "js",   name: "JavaScript", color: "var(--tech)", wall: "Haustechnik", say: "Das Verhalten: Was passiert, wenn du etwas tust? Zum Beispiel rechnen und die Wand dicker machen." }
 ];
 const Q1 = [
   { q: "Ohne welche Schicht siehst du gar nichts?", a: "html", why: "Ohne HTML gibt es keine Überschrift, kein Feld und keinen Knopf. CSS und JavaScript haben dann nichts, woran sie sich festhalten können. Wie Putz ohne Wand." },
