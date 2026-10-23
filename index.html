@@ -3,297 +3,100 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Werkstatt · Barbara Magdalena Mayer</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Barbara Magdalena Mayer · Lernen am Optimum: digitale, interaktive Lernwelten für die berufliche Bildung. Persönliches Portfolio.">
-<title>Lernen am Optimum · Barbara Magdalena Mayer</title>
+<script>/* Alte Links auf Abschnitte der früheren Startseite (z. B. #impressum) führen zu „Über mich“. */(function(){var h=location.hash.slice(1),ids=["plus-title", "plus-game", "h-arbeiten", "h-uwert", "h-kontakt-spiel", "h-bias", "h-schulrechner", "h-zwischentoene", "h-handout", "h-kompass", "h-lernfall", "h-ki", "h-idee", "h-ueber", "h-kontakt", "impressum", "datenschutz"];if(h&&ids.indexOf(h)>-1)location.replace("ueber-mich.html#"+h)})();</script>
 <link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Schriften lokal eingebunden (keine Verbindung zu Google) · SIL Open Font License 1.1 */
+/* Schmale, mobilfreundliche Linkseite mit den lokalen Schriften und Farben der Hauptseite. */
 @font-face{font-family:"Literata";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/literata-latin-400-normal.woff2") format("woff2")}
 @font-face{font-family:"Literata";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/literata-latin-600-normal.woff2") format("woff2")}
 @font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
 @font-face{font-family:"Source Sans 3";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
 @font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
 @font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
-
-:root{--bg:#faeef1;--surface:#fff;--ink:#24382c;--muted:#5e5459;--line:#ead5db;--green:#2f5240;--green-soft:#d5e2d6;--pink:#b04e6b;--pink-dark:#8a3a52;--black:#0b1214;--teal:#7cc7bc;--display:"Literata",Georgia,serif;--body:"Source Sans 3",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;padding:0 20px;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
-.wrap{width:min(720px,100%);margin:0 auto;padding:48px 0 64px;display:flex;flex-direction:column;gap:42px}
-h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.18;margin:0}
-h1{font-size:clamp(2.35rem,7vw,3.35rem)}h2{font-size:1.55rem}h3{font-family:var(--body);font-size:1.05rem;font-weight:600}
-p{margin:0;max-width:66ch}
-.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
-.muted{color:var(--muted)}.small-note{font-size:.86rem;color:var(--muted)}
-
-.hero{display:flex;flex-direction:column;gap:15px;border-bottom:1px solid var(--line);padding-bottom:34px}
-.hero .name{font-family:var(--body);font-size:1.15rem;font-weight:600;color:var(--ink)}
-.hero .role{font-size:1.04rem;color:var(--green);margin-top:-4px}
-.hero .lead{font-size:1.08rem}
-.tags{display:flex;flex-wrap:wrap;gap:8px}.tag{font-size:.86rem;background:var(--green-soft);color:var(--green);border-radius:999px;padding:3px 11px}
-.section{display:flex;flex-direction:column;gap:14px}
-
-.media-note{border:2px solid var(--pink);background:#fff9f5;border-radius:14px;padding:16px;display:grid;gap:10px;box-shadow:0 4px 14px rgba(176,78,107,.1)}
-.media-note-head{display:flex;align-items:center;gap:10px}
-.media-note-icon{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--pink);color:#fff;font-size:1.25rem;line-height:1}
-.media-note h3{color:var(--pink-dark);font-size:1.02rem}
-.media-note p{font-size:.92rem}
+:root{
+  --bg:#faeef1; --ink:#24382c; --muted:#5e5459; --line:#ead5db;
+  --green:#2f5240; --pink:#b04e6b; --pink-dark:#8a3a52; --night:#0b1214; --teal:#7cc7bc; --surface:#ffffff;
+  --display:"Literata",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --plus:#ff0a69;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{width:min(440px,100%);margin:0 auto;padding-block:40px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.plus-mark{display:block;color:var(--plus);font-family:var(--display);font-size:2rem;font-weight:600;line-height:1}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
+h1{font-family:var(--display);font-weight:600;font-size:1.6rem;line-height:1.15;margin:0;text-wrap:balance}
+.lead{margin:0;color:var(--muted);max-width:32ch}
+.links{list-style:none;margin:10px 0 0;padding:0;width:100%;display:flex;flex-direction:column;gap:12px}
+.links a,.links button{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;text-decoration:none;font:inherit;font-weight:600;border:0;border-radius:14px;padding:14px 18px;cursor:pointer;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 3px 0 var(--line)}
+.links small{font-weight:400;font-size:.85rem;color:var(--muted)}
+.links .night{background:var(--night);color:#fff;border-color:var(--night);box-shadow:0 3px 0 #2c3e43}
+.links .night small{color:var(--teal)}
+.links .pink{background:var(--pink);color:#fff;border-color:var(--pink);box-shadow:0 3px 0 var(--pink-dark)}
+.links .pink small{color:#fde4ec}
+a:focus-visible,button:focus-visible{outline:3px solid #d4a373;outline-offset:2px}
+.mail{font-family:var(--mono);font-size:.85rem;color:var(--muted);user-select:all;word-break:break-all}
+.media-note{width:100%;align-self:stretch;text-align:left;border:2px solid var(--pink);background:#fff9f5;border-radius:14px;padding:14px;display:grid;gap:9px;box-shadow:0 4px 14px rgba(176,78,107,.1)}
+.media-note-head{display:flex;align-items:center;gap:9px}
+.media-note-icon{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;font-size:1.2rem;line-height:1}
+.media-note h2{font-family:var(--body);font-size:1rem;line-height:1.25;margin:0;color:var(--pink-dark)}
+.media-note p{margin:0;font-size:.9rem}
 .media-note details{border-top:1px solid var(--line);padding-top:8px}
 .media-note summary{cursor:pointer;color:var(--green);font-weight:600}
 .browser-steps{display:grid;gap:8px;margin-top:8px}
-.browser-steps p{font-size:.88rem}
+.browser-steps p{font-size:.85rem}
 .media-note a{color:var(--green);font-weight:600;text-decoration:underline}
 @media(prefers-reduced-motion:no-preference){.media-note-icon{animation:media-note-pulse .75s ease-out 1s 2}@keyframes media-note-pulse{50%{transform:scale(1.12);box-shadow:0 0 0 5px rgba(176,78,107,.17)}}}
 @media(prefers-reduced-motion:reduce){.media-note-icon{animation:none}}
-
-/* Mini-Erlebnis */
-.plus-experience{background:#fff9f5;border:1px solid var(--line);border-radius:18px;padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:16px;box-shadow:0 12px 35px rgba(36,56,44,.055)}
-.plus-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.plus-symbol{display:inline-block;font-family:var(--display);font-size:4.2rem;font-weight:600;line-height:.75;color:var(--pink);transform-origin:center}
-.plus-experience h2{font-size:clamp(1.5rem,4vw,2.15rem)}
-.plus-options{display:grid;gap:10px;margin-top:18px}
-.plus-choice{width:100%;text-align:left;border:1px solid #d8bfc7;border-radius:10px;background:#fff;color:var(--ink);padding:14px 16px;line-height:1.45;font-size:1rem;transition:background .2s,transform .2s}
-.plus-choice:hover{background:#f9e9ee;transform:translateX(3px)}
-.plus-choice.seen{border-style:dashed;color:var(--muted)}
-.plus-foot{font-size:.87rem;color:var(--muted)}
-.plus-result{background:#f1e9e2;padding:18px;border-radius:12px;display:grid;gap:12px}
-.plus-result strong{font-family:var(--display);font-size:1.2rem}
-.plus-result .plus-gain{border-left:4px solid var(--pink);padding-left:12px}
-.plus-again{justify-self:start;width:auto}
-.plus-all{font-size:.92rem;color:var(--green);font-weight:600}
-
-/* Arbeiten */
-.work{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:25px;display:flex;flex-direction:column;gap:14px}
-.work.feature{background:var(--black);color:#e6eeec;border-color:#2c3e43}
-.work.feature .eyebrow{color:var(--teal)}.work.feature h2{color:#fff}.work.feature p{color:#c7d5d2}
-.work.feature .work-meta{border-top-color:#2c3e43;color:#a9bab6}.work.feature .work-meta strong{color:#e6eeec}
-.work-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;padding-top:12px;border-top:1px solid var(--line);font-size:.86rem;color:var(--muted)}
-.work-meta strong{display:block;color:var(--ink);font-size:.76rem;font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;font-weight:500;margin-bottom:2px}
-.cta-row{display:flex;flex-wrap:wrap;gap:10px}
-.cta{display:inline-flex;align-items:center;gap:8px;max-width:100%;font-weight:600;text-decoration:none;border-radius:999px;padding:10px 16px;background:var(--pink);color:#fff;box-shadow:0 3px 0 var(--pink-dark)}
-.cta:hover{background:var(--pink-dark)}
-.cta.teal{background:var(--teal);color:var(--black);box-shadow:0 3px 0 #4c8f87}.cta.teal:hover{background:#9adbd2}
-.cta.ghost{background:transparent;color:var(--teal);box-shadow:none;padding-left:0}
-.cta.ghost:hover{text-decoration:underline;background:transparent}
-.ki-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.ki-steps span{background:#f5e7e9;border-radius:9px;padding:12px;display:flex;flex-direction:column;gap:5px}.ki-steps small{color:var(--muted)}
-
-/* Prinzip */
-.principles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.principle{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--green);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
-.principle:last-child{border-top-color:var(--pink)}
-
-/* Über mich */
-.about{border-left:3px solid var(--pink);padding-left:16px}
-.facts{display:grid;gap:6px;margin:0;padding:0;list-style:none;font-size:.95rem}
-.facts li{display:grid;grid-template-columns:9.5rem 1fr;gap:12px}
-.facts b{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;font-weight:500;color:var(--green);padding-top:3px}
-
-/* Kontakt */
-.contact{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px}
-.mailrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
-.mail{font-family:var(--mono);font-size:.92rem;word-break:break-all;user-select:all}
-.social{display:flex;flex-wrap:wrap;gap:16px}.social a{color:var(--green);font-weight:600}
-button{font:inherit;font-size:.9rem;background:var(--green);color:#fff;border:0;border-radius:6px;padding:7px 12px;cursor:pointer}
-button:focus-visible,a:focus-visible,.plus-choice:focus-visible{outline:3px solid #d4a373;outline-offset:2px}
-.copied{font-size:.86rem;color:var(--green)}
-footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.84rem;display:flex;flex-direction:column;gap:10px}
-footer details summary{cursor:pointer;color:var(--ink);font-weight:600}footer a{color:var(--green)}
-
-@media(max-width:560px){body{font-size:16px}.wrap{padding-top:34px;gap:36px}.work{padding:21px}.work-meta,.principles,.ki-steps{grid-template-columns:1fr}.facts li{grid-template-columns:1fr;gap:0}.mailrow{align-items:flex-start;flex-direction:column}}
-.cta.alt{background:var(--green);box-shadow:0 3px 0 #1e3729}.cta.alt:hover{background:#1e3729}
-/* Bewegung: Plus atmet, Buttons wackeln */
-@media(prefers-reduced-motion:no-preference){.plus-symbol{animation:plus-breathe 5s ease-in-out infinite}@keyframes plus-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-.cta:not(.ghost){animation:wackeln 5.8s ease-in-out 2s infinite}@keyframes wackeln{0%,7%,100%{transform:rotate(0)}1.5%{transform:rotate(-2deg)}3.5%{transform:rotate(2deg)}5%{transform:rotate(-1deg)}}}
-@media(prefers-reduced-motion:reduce){.plus-choice{transition:none}html{scroll-behavior:auto}}
+.copied{font-size:.85rem;color:var(--green)}
+footer{font-size:.8rem;color:var(--muted);margin-top:8px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px}
+footer a{color:var(--green)}
 </style>
 </head>
 <body>
-<div class="wrap">
+<main class="wrap">
+  <div class="plus-mark" aria-label="Plus-Marke von Barbara Magdalena Mayer">Plus</div>
+  <span class="eyebrow">Werkstatt · digitale Lernwelten</span>
+  <h1>Barbara Magdalena Mayer</h1>
+  <p class="lead">Lernspiele und Prototypen zu Lernen, Arbeit und KI.</p>
+  <aside class="media-note" role="note" aria-labelledby="media-note-title">
+    <div class="media-note-head"><span class="media-note-icon" aria-hidden="true">♪</span><h2 id="media-note-title">Fehlt Ton oder wirkt ein Spiel unvollständig?</h2></div>
+    <p>Nicht jedes Lernspiel hat Ton. Im 3D-Lernfall „Nachtdienst, Zimmer 14“ gibt es Geräusche und gesprochene Passagen. Fehlt dort Ton oder lädt ein Teil der Szene nicht, kann ein Inhaltsblocker oder eine Browser- bzw. Geräteeinstellung mitwirken. Du musst nichts ändern. Wenn du testen möchtest, lockere den Schutz nur für diese Website, lade die Seite neu und schalte ihn danach wieder ein.</p>
+    <details><summary>Wo prüfe ich das in meinem Browser?</summary><div class="browser-steps">
+      <p><strong>Safari auf iPad/iPhone:</strong> Öffne das Seitenmenü links neben der Adresszeile und wähle „Erweiterungen verwalten“. Prüfe den Inhaltsblocker nur für diese Website. <a href="https://support.apple.com/guide/iphone/get-extensions-iphab0432bf6/ios">Apple-Anleitung</a>.</p>
+      <p><strong>Firefox auf iPad/iPhone:</strong> Tippe auf das Schild neben der Adresse und prüfe den „Schutz vor Aktivitätenverfolgung“ für diese Website. <a href="https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-ios">Mozilla-Anleitung</a>.</p>
+      <p><strong>Chrome:</strong> Der eingebaute Filter betrifft aufdringliche Werbung, nicht allgemein den Ton. Bei einer zusätzlichen Blocker-Erweiterung öffne deren Symbol oder Menü und erlaube die Website dort. <a href="https://support.google.com/chrome/answer/7632919?hl=de&amp;co=GENIE.Platform%3DDesktop">Google-Anleitung zum Chrome-Werbeblocker</a>.</p>
+    </div></details>
+  </aside>
 
-  <header class="hero">
-    <span class="eyebrow">Plus · Portfolio · Digitale Bildung &amp; Gestaltung</span>
-    <h1>Lernen am Optimum</h1>
-    <p class="name">Barbara Magdalena Mayer</p>
-    <p class="role">Erleben. Entdecken. Ein Plus mitnehmen.</p>
-    <p class="lead">Ich baue digitale dritte Lernorte für die berufliche Bildung: begehbare Räume, Lernspiele und Fälle, in denen man berufliches Handeln ausprobiert. Meine Besonderheit: Man kann eine simulierte KI dazuschalten, die neue Perspektiven eröffnet – und auch falsch liegen kann.</p>
-    <p class="muted">Meine Frage: Wie werden Menschen unter Unsicherheit handlungsfähig – und was nehmen sie aus einem Erlebnis mit, das sie vorher noch nicht hatten?</p>
-    <p class="muted">Einfache Sprache ist ein zentrales Entwicklungsziel: Ich mache sichtbar, wo sie bereits umschaltbar ist, und baue sie Schritt für Schritt in weitere Lernspiele ein.</p>
-    <div class="cta-row"><a class="cta alt" href="grundbegriffe.html">Neu hier? Grundbegriffe lesen →</a><a class="cta" href="schulrechner.html">▶ Eine Woche am Schulrechner</a></div>
-    <div class="tags"><span class="tag">Digitale Lernwelten</span><span class="tag">Einfache Sprache als Entwicklungsziel</span><span class="tag">KI kritisch prüfen</span><span class="tag">Berufliche Bildung</span><span class="tag">Bildungswissenschaft</span></div>
-  </header>
-
-  <section class="plus-experience" aria-labelledby="plus-title">
-    <div class="plus-top"><span class="eyebrow">60 Sekunden · ein kleines Erlebnis</span><span class="plus-symbol" aria-hidden="true">+</span></div>
-    <h2 id="plus-title">Du willst helfen. Aber was braucht der andere?</h2>
-    <div id="plus-game" aria-live="polite"></div>
-    <p class="plus-foot">Keine Prüfung. Keine Punkte. Probier alle drei Wege aus – jeder zeigt dir etwas anderes.</p>
-  </section>
-
-  <section class="section" aria-labelledby="h-arbeiten">
-    <span class="eyebrow">Arbeitsproben</span>
-    <h2 id="h-arbeiten">Zum Ausprobieren</h2>
-    <p class="muted">Alles hier habe ich selbst konzipiert und gebaut. Die Pflege ist dabei nur das Beispiel – die Bauweise lässt sich auf andere Berufe übertragen. Am besten in dieser Reihenfolge ansehen. Viele Arbeiten sind Prototypen, die ich weiterentwickle.</p>
-    <aside class="media-note" role="note" aria-labelledby="media-note-title">
-      <div class="media-note-head"><span class="media-note-icon" aria-hidden="true">♪</span><h3 id="media-note-title">Fehlt Ton oder wirkt ein Spiel unvollständig?</h3></div>
-      <p>Nicht jedes Lernspiel hat Ton. Im 3D-Lernfall „Nachtdienst, Zimmer 14“ gibt es Geräusche und gesprochene Passagen. Fehlt dort Ton oder lädt ein Teil der Szene nicht, kann ein Inhaltsblocker oder eine Browser- bzw. Geräteeinstellung mitwirken. Du musst nichts ändern. Wenn du testen möchtest, lockere den Schutz nur für diese Website, lade die Seite neu und schalte ihn danach wieder ein.</p>
-      <details><summary>Wo prüfe ich das in meinem Browser?</summary><div class="browser-steps">
-        <p><strong>Safari auf iPad/iPhone:</strong> Öffne das Seitenmenü links neben der Adresszeile und wähle „Erweiterungen verwalten“. Prüfe den Inhaltsblocker nur für diese Website. <a href="https://support.apple.com/guide/iphone/get-extensions-iphab0432bf6/ios">Apple-Anleitung</a>.</p>
-        <p><strong>Firefox auf iPad/iPhone:</strong> Tippe auf das Schild neben der Adresse und prüfe den „Schutz vor Aktivitätenverfolgung“ für diese Website. <a href="https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-ios">Mozilla-Anleitung</a>.</p>
-        <p><strong>Chrome:</strong> Der eingebaute Filter betrifft aufdringliche Werbung, nicht allgemein den Ton. Bei einer zusätzlichen Blocker-Erweiterung öffne deren Symbol oder Menü und erlaube die Website dort. <a href="https://support.google.com/chrome/answer/7632919?hl=de&amp;co=GENIE.Platform%3DDesktop">Google-Anleitung zum Chrome-Werbeblocker</a>.</p>
-      </div></details>
-    </aside>
-  </section>
-
-  <article class="work" aria-labelledby="h-kontakt-spiel">
-    <span class="eyebrow">Neues Lernspiel · Grundlage Kommunikation</span>
-    <h2 id="h-kontakt-spiel">Kontakt aufnehmen</h2>
-    <p class="muted">Ein Zimmer, drei Begegnungen: Eine Person will ihre Ruhe, eine andere schweigt, eine dritte wird laut und beleidigend. Bevor du antwortest, schaust du auf dich – was spüre ich, was will ich am liebsten tun? Dann entscheidest du, wie du hinhörst und was du sagst. Was du im Raum entdeckt hast, eröffnet weitere Wege. Am Ende stehst du auf dem Flur und sagst einer Kollegin, wie es war.</p>
-    <div class="work-meta"><span><strong>Form</strong>Ein Raum, drei Begegnungen, zwölf Dinge zum Entdecken</span><span><strong>Interaktion</strong>Erkunden, nachspüren, hinhören, antworten, übergeben</span><span><strong>Lernabsicht</strong>Wahrnehmen, Bewerten und Handeln unterscheiden</span><span><strong>KI</strong>Ohne KI</span></div>
-    <div class="cta-row"><a class="cta teal" href="spiele/kontakt-aufnehmen/">▶&nbsp; Lernspiel starten</a></div>
-    <p class="small-note">Ein Patientenzimmer als Beispiel – Kontaktaufnahme ist in jedem Beruf mit Menschen die Grundlage. Keine Bewertung, keine Musterlösung. Notizen bleiben auf dem eigenen Gerät. Eine Begegnung mit Inhaltshinweis: verbale Beleidigung.</p>
-  </article>
-
-  <article class="work" aria-labelledby="h-bias">
-    <span class="eyebrow">Neues Lernspiel · KI-Kompetenz</span>
-    <h2 id="h-bias">Gleiche Frage, andere Antwort</h2>
-    <p class="muted">Fünf Fälle mit nachgebauten KI-Antworten. Vergleiche, wo Antworten verzerrt sind – und wann ein Unterschied fachlich begründet ist.</p>
-    <div class="work-meta"><span><strong>Form</strong>Fünf interaktive Fälle</span><span><strong>Interaktion</strong>Merkmale finden, Sätze markieren, Urteile begründen</span><span><strong>Lernabsicht</strong>KI-Bias erkennen und von begründeten Unterschieden unterscheiden</span><span><strong>KI-Zweitmeinung</strong>Optional – und nicht immer richtig</span></div>
-    <div class="cta-row"><a class="cta alt" href="gleiche-frage.html">▶&nbsp; Lernspiel starten</a></div>
-    <p class="small-note">Die Antworten sind Simulationen, keine Live-Ausgaben einer KI.</p>
-  </article>
-
-  <article class="work feature" aria-labelledby="h-schulrechner">
-    <span class="eyebrow">Neues Lernspiel · KI-Kompetenz</span>
-    <h2 id="h-schulrechner">Eine Woche am Schulrechner</h2>
-    <p>Du bist Lehrkraft an einer berufsbildenden Schule und entwickelst Regeln für den Umgang mit KI. Vergleiche die Perspektiven von Lernenden, Kollegium und Ausbildungsbetrieb, erkenne Risiken und stelle deinen eigenen Regelentwurf zusammen.</p>
-    <div class="work-meta"><span><strong>Form</strong>Interaktive Woche mit fünf Tagen</span><span><strong>Interaktion</strong>Entscheiden, Risiken markieren, Regeln bauen</span><span><strong>Lernabsicht</strong>KI-Kompetenz und Datenschutz im Schulalltag</span><span><strong>Perspektiven</strong>Lernende, Kollegium, Praxisbetrieb</span></div>
-    <div class="cta-row"><a class="cta teal" href="schulrechner.html">▶&nbsp; Lernspiel starten</a></div>
-    <p class="small-note">Alle Personen, Nachrichten und Antworten sind erfunden. Keine Rechts- oder Datenschutzberatung.</p>
-  </article>
-
-  <article class="work" aria-labelledby="h-zwischentoene">
-    <span class="eyebrow">Neues Lernspiel · Kommunikation &amp; KI-Kompetenz</span>
-    <h2 id="h-zwischentoene">Ein Satz, vier Seiten</h2>
-    <p class="muted">Zwölf berufliche Gesprächssituationen: erst Zwischentöne und Missverständnisse selbst deuten, dann in fünf ausgewählten Fällen eine simulierte KI-Aussage prüfen, nachfragen und mit einer belegteren, respektvollen Alternative vergleichen.</p>
-    <div class="work-meta"><span><strong>Form</strong>Zwölf interaktive Gesprächsfälle</span><span><strong>Interaktion</strong>Deuten, begründen, KI-Ausgabe hinterfragen</span><span><strong>Lernabsicht</strong>Zwischentöne erkennen und Aussagen prüfen</span><span><strong>Transfer</strong>Fragen auf andere Berufe übertragen</span></div>
-    <div class="cta-row"><a class="cta" href="ein-satz-vier-seiten.html">▶&nbsp; Lernspiel starten</a></div>
-    <p class="small-note">Pflegeheim-Situationen als Beispiel für berufliche Bildung allgemein. KI-Aussagen sind simuliert, nicht live.</p>
-  </article>
-
-  <article class="work" aria-labelledby="h-handout">
-    <span class="eyebrow">Handreichung</span>
-    <h2 id="h-handout">Psychische Gesundheit im Pflegeberuf stärken</h2>
-    <p class="muted">Acht Schritte für Selbstfürsorge, professionelle Grenzen und passende Unterstützung im Berufsalltag – am Beispiel der Pflege.</p>
-    <div class="work-meta"><span><strong>Form</strong>Acht Schritte, online und als PDF</span><span><strong>Gestaltung</strong>Verständliche Sprache, klare Struktur</span><span><strong>Interaktion</strong>Lesen, prüfen, eigene Grenzen reflektieren</span><span><strong>Lernabsicht</strong>Ressourcen und Unterstützung erkennen</span></div>
-    <div class="cta-row"><a class="cta alt" href="artikel/psychische-gesundheit-im-pflegeberuf/">Online lesen →</a><a class="cta" href="artikel/psychische-gesundheit-im-pflegeberuf/psychische-gesundheit-im-pflegeberuf.pdf" download>↓ PDF</a></div>
-  </article>
-
-  <article class="work" aria-labelledby="h-kompass">
-    <span class="eyebrow">Interaktiver Kompass</span>
-    <h2 id="h-kompass">Fürsorge-Kompass</h2>
-    <p class="muted">Du schätzt deine Lage ein, eine Kompassnadel zeigt, wo Unterstützung fehlen könnte. Dann wechselst du die Brille – Theorie, Arbeitsbedingungen, KI – und siehst, wie derselbe Kompass anders gelesen wird. Am Ende steht ein kleiner Schritt für die nächsten sieben Tage.</p>
-    <div class="work-meta"><span><strong>Form</strong>Skalen, Kompass, Perspektivwechsel</span><span><strong>Gestaltung</strong>Vier Brillen, eine Vergleichsansicht</span><span><strong>Interaktion</strong>Einschätzen, umdeuten, planen</span><span><strong>Lernabsicht</strong>Ressourcen und nächste Schritte finden</span></div>
-    <div class="cta-row"><a class="cta" href="fuersorge-kompass.html">▶&nbsp; Kompass ausprobieren</a></div>
-    <p class="small-note">Baut auf der Handreichung „Psychische Gesundheit im Pflegeberuf stärken“ auf.</p>
-  </article>
-
-  <article class="work feature" aria-labelledby="h-lernfall">
-    <span class="eyebrow">Begehbarer 3D-Lernraum</span>
-    <h2 id="h-lernfall">Nachtdienst, Zimmer 14</h2>
-    <p>Ein Spiel, in dem man beruflich handeln muss – am Beispiel einer Pflegekraft im Nachtdienst. Du betrittst nachts ein Zimmer, schaust dich im Raum um und musst entscheiden, was jetzt Vorrang hat. Danach untersuchst du Hinweise und trennst Beobachtung, Vermutung und offene Rückfrage.</p>
-    <div class="work-meta"><span><strong>Form</strong>Navigierbare 3D-Szene mit Klick-Ebene</span><span><strong>Gestaltung</strong>Raum, Licht, Objekte als Hinweise</span><span><strong>Interaktion</strong>Erkunden, entscheiden, begründen</span><span><strong>Lernabsicht</strong>Wahrnehmen und Prioritäten setzen</span></div>
-    <div class="cta-row">
-      <a class="cta teal" href="lernfall/nachtdienst-zimmer-14/">▶&nbsp; Lernfall starten</a>
-      <a class="cta ghost" href="artikel/optimum-zwei-seiten/">Die Idee dahinter lesen →</a>
-    </div>
-    <p class="small-note">Beispielinhalt: Akutsituation in der Psychiatrie · mit Inhaltshinweis</p>
-  </article>
-
-  <article class="work" aria-labelledby="h-ki">
-    <span class="eyebrow">Lernspiel mit simulierter KI</span>
-    <h2 id="h-ki">Was, wenn die KI überzeugend klingt – aber irrt?</h2>
-    <p class="muted">Ein Fall, drei Entscheidungen. Eine simulierte KI gibt Hinweise, die plausibel, unvollständig oder bewusst falsch sein können. Das Optimum ist erreicht, wenn du den Fall ohne Hilfe löst und die Fehler der KI erkennst.</p>
-    <div class="ki-steps"><span><b>Ohne Hilfe</b><small>Was weiß ich selbst?</small></span><span><b>Mit Hinweis</b><small>Was ist daran belastbar?</small></span><span><b>Mit Widerspruch</b><small>Was entscheide ich trotzdem?</small></span></div>
-    <div class="work-meta"><span><strong>Form</strong>Fallspiel mit gestuften Hilfen</span><span><strong>Gestaltung</strong>Theorie als „Brille“ auf den Fall</span><span><strong>Interaktion</strong>Prüfen, entscheiden, begründen</span><span><strong>Lernabsicht</strong>KI-Ergebnisse kritisch bewerten</span></div>
-    <div class="cta-row"><a class="cta" href="lernen-am-optimum.html">▶&nbsp; Lernspiel ansehen</a></div>
-    <p class="small-note">Eigene didaktische Entwicklung · technische Umsetzung mit KI-Unterstützung · Beispielfall mit erfundenen Daten. Die KI-Fehler sind didaktisch gestaltet, keine Aussage über reale KI-Systeme.</p>
-  </article>
-
-  <section class="section" aria-labelledby="h-idee">
-    <span class="eyebrow">Das Prinzip hinter den Erlebnissen</span>
-    <h2 id="h-idee">Das Plus: eine Möglichkeit mehr</h2>
-    <p>Vorher scheint eine Situation eindeutig oder unlösbar. Dann kommt eine Entscheidung, ein Perspektivwechsel oder ein überraschender Widerspruch. Nachher ist etwas hinzugekommen: eine Einsicht, eine Frage oder eine neue Handlungsmöglichkeit. Dieses Plus ist mein gestalterisches Ziel. Zwei Fragen leiten mich dabei:</p>
-    <div class="principles">
-      <div class="principle"><h3>Handlungsoptimum</h3><p>Welche Handlung ist in dieser Situation fachlich begründet, verantwortbar und unter den gegebenen Bedingungen möglich?</p></div>
-      <div class="principle"><h3>Lernoptimum</h3><p>Welche Aufgabe, welcher Hinweis oder welche Hilfe bringt eine lernende Person jetzt einen Schritt weiter – so, dass sie die Hilfe bald nicht mehr braucht?</p></div>
-    </div>
-  </section>
-
-  <section class="section about" aria-labelledby="h-ueber">
-    <span class="eyebrow">Über mich</span>
-    <h2 id="h-ueber">Ich baue, um zu verstehen</h2>
-    <p class="muted">Ich komme aus der Praxis des Gesundheitswesens und habe Bildungswissenschaft studiert. Heute verbinde ich beides mit Gestaltung und Technik: Ich entwickle Lernwelten, in denen man handelt, statt nur zu lesen – und in denen digitale Werkzeuge, auch KI, kritisch geprüft werden.</p>
-  </section>
-
-  <section class="contact" aria-labelledby="h-kontakt">
-    <span class="eyebrow" id="h-kontakt">Kontakt</span>
-    <p class="mail" id="mail">barbara.magdalena.mayer@web.de</p>
-    <div class="mailrow"><button type="button" id="copy">E-Mail kopieren</button><span class="copied" id="copied" hidden>Kopiert</span></div>
-    <div class="social">
-      <a href="https://bsky.app/profile/3armagmay.bsky.social" rel="me">Bluesky</a>
-      <a href="https://www.instagram.com/3armagmay/" rel="me">Instagram</a>
-    </div>
-    <p class="small-note">Neue Prototypen zeige ich zuerst auf Bluesky.</p>
-  </section>
-
-  <footer>
-    <details id="impressum"><summary>Impressum</summary><p>Barbara Magdalena Mayer<br>E-Mail: <a href="mailto:barbara.magdalena.mayer@web.de">barbara.magdalena.mayer@web.de</a></p></details>
-    <details id="datenschutz"><summary>Datenschutz</summary><p>Diese statische GitHub-Pages-Seite verwendet keine Analyse- oder Trackingdienste und lädt Schriften von diesem Server, nicht von Drittanbietern. Beim Aufruf verarbeitet der Hoster (GitHub) technisch notwendige Verbindungsdaten.</p></details>
-    <span>Stand: Oktober 2026</span>
-  </footer>
-</div>
+  <ul class="links">
+    <li><a class="night" href="https://barbara-magdalena-mayer.github.io/bauphysik-u-wert/">▶ Der U-Wert einer Außenwand<small>Neu · Bauphysik · Wand sanieren, KI-Aussagen prüfen · SCORM-Lerneinheit</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/spiele/kontakt-aufnehmen/">▶ Kontakt aufnehmen<small>Ein Zimmer, drei Begegnungen · Innere Schau</small></a></li>
+    <li><a class="pink" href="https://barbara-magdalena-mayer.github.io/ein-satz-vier-seiten.html">▶ Ein Satz, vier Seiten<small>Zwischentöne erkennen · KI-Aussagen prüfen</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/gleiche-frage.html">▶ Gleiche Frage, andere Antwort<small>KI-Bias erkennen · fünf nachgebaute Fälle</small></a></li>
+    <li><a class="night" href="https://barbara-magdalena-mayer.github.io/lernfall/nachtdienst-zimmer-14/">▶ Nachtdienst, Zimmer 14<small>Interaktiver Lernfall</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/lernen-am-optimum.html">▶ Lernen am Optimum<small>KI-Fallspiel · Entscheiden und begründen</small></a></li>
+    <li><a class="pink" href="https://barbara-magdalena-mayer.github.io/schulrechner.html">▶ Eine Woche am Schulrechner<small>KI-Kompetenz · Entscheiden und begründen</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/fuersorge-kompass.html">Fürsorge-Kompass<small>Perspektiven wechseln und nächste Schritte finden</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/artikel/optimum-zwei-seiten/">Das Optimum hat zwei Seiten<small>Die Idee hinter dem Lernfall</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/artikel/psychische-gesundheit-im-pflegeberuf/">Psychische Gesundheit im Pflegeberuf stärken<small>Handreichung in acht Schritten · Beispiel Pflege</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html">Über mich &amp; alle Arbeitsproben<small>Hintergründe und ausführliche Beschreibungen</small></a></li>
+    <li><a href="https://bsky.app/profile/3armagmay.bsky.social" rel="me">Bluesky<small>Neue Prototypen zuerst dort</small></a></li>
+    <li><a href="https://www.instagram.com/3armagmay/" rel="me">Instagram<small>Einblicke und Werkstatt-Updates</small></a></li>
+    <li><button type="button" id="copy">E-Mail kopieren<small class="mail" id="mail">barbara.magdalena.mayer@web.de</small></button></li>
+  </ul>
+  <span class="copied" id="copied" hidden>Kopiert</span>
+  <footer><span>Stand: Oktober 2026</span><a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html#impressum">Impressum</a><a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html#datenschutz">Datenschutz</a></footer>
+</main>
 
 <script>
 document.getElementById('copy').addEventListener('click',function(){
- var el=document.getElementById('mail'),t=el.textContent.trim(),c=document.getElementById('copied');
- function fallback(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);c.textContent='Markiert – bitte kopieren';c.hidden=false}
- try{navigator.clipboard.writeText(t).then(function(){c.textContent='Kopiert';c.hidden=false;setTimeout(function(){c.hidden=true},2000)},fallback)}catch(e){fallback()}
+  var el=document.getElementById('mail'),c=document.getElementById('copied'),t=el.textContent.trim();
+  function fallback(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);c.textContent='Markiert, bitte kopieren';c.hidden=false}
+  try{navigator.clipboard.writeText(t).then(function(){c.textContent='Kopiert';c.hidden=false;setTimeout(function(){c.hidden=true},2000)},fallback)}catch(e){fallback()}
 });
-</script>
-
-<script>
-(function(){
- var root=document.getElementById('plus-game');if(!root)return;
- var seen={};
- var options=[
-  ['rat','„Ich sage dir, was du jetzt machen solltest.“'],
-  ['take','„Gib her, ich mache das für dich.“'],
-  ['ask','„Was ist gerade das Schwierigste daran?“']
- ];
- var responses={
-  rat:['Du gibst einen Rat.','Vielleicht ist dein Vorschlag gut. Aber du weißt noch nicht, ob die Person Rat, Entlastung oder einfach Gehör braucht.','Dein Plus: Ein guter Rat zur falschen Zeit ist keine Hilfe. Vor dem Rat steht die Frage, was gebraucht wird.'],
-  take:['Du übernimmst die Aufgabe.','Das kann sofort entlasten. Es kann der Person aber auch die Erfahrung nehmen, es selbst zu schaffen.','Dein Plus: Helfen hat ein Ziel – dass die Hilfe irgendwann nicht mehr nötig ist. Abnehmen ist manchmal richtig, aber nie der einzige Weg.'],
-  ask:['Du fragst nach.','Du erfährst vielleicht etwas, das du vorher nicht sehen konntest. Aber eine Frage allein löst noch nichts – irgendwann braucht es auch eine Handlung.','Dein Plus: Eine Frage öffnet den Blick. Jetzt kannst du Rat oder Entlastung gezielt anbieten, statt zu raten.']
- };
- function start(){
-  var html='<p>Eine Person sagt zu dir: „Ich schaffe das gerade nicht.“ Du möchtest etwas Gutes tun. Was sagst du?</p><div class="plus-options">';
-  options.forEach(function(o){html+='<button type="button" class="plus-choice'+(seen[o[0]]?' seen':'')+'" data-choice="'+o[0]+'">'+o[1]+(seen[o[0]]?' <small>· schon erlebt</small>':'')+'</button>'});
-  root.innerHTML=html+'</div>';
- }
- function show(key){
-  seen[key]=true;var r=responses[key],n=Object.keys(seen).length;
-  root.innerHTML='<div class="plus-result"><strong></strong><p></p><p class="plus-gain"></p>'+(n===3?'<p class="plus-all">Alle drei Wege erlebt: Keiner ist immer richtig. Das Optimum hängt davon ab, was der andere gerade braucht – und genau das kann man üben.</p>':'')+'<button type="button" class="plus-choice plus-again" data-again>'+(n===3?'Noch einmal von vorn ↺':'Andere Möglichkeit erleben ↺')+'</button></div>';
-  var box=root.querySelector('.plus-result');
-  box.querySelector('strong').textContent=r[0];box.querySelectorAll('p')[0].textContent=r[1];box.querySelector('.plus-gain').textContent=r[2];
-  box.querySelector('[data-again]').focus();
- }
- root.addEventListener('click',function(ev){
-  var c=ev.target.closest('[data-choice]');if(c){show(c.dataset.choice);return}
-  if(ev.target.closest('[data-again]')){if(Object.keys(seen).length===3)seen={};start();var b=root.querySelector('.plus-choice');if(b)b.focus()}
- });
- start();
-})();
 </script>
 <style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="./" aria-label="Barbara – zur Startseite"><img src="bilder/barbara-figur.webp" alt=""></a>
 </body>

@@ -3,7 +3,7 @@
 Damit kein Spiel irgendwo fehlt. Jeder Punkt muss erledigt sein, bevor ein Spiel als „fertig online“ gilt.
 
 ## 1. Ablage
-- [ ] Eigener Ordner: `spiele/<kurzer-name>/index.html`
+- [ ] Eigener Ordner: `spiele/<kurzer-name>/index.html` – oder ein eigenes Repo (dann erreichbar unter `https://barbara-magdalena-mayer.github.io/<repo>/`; Rückweg und Figur mit voller Adresse)
 - [ ] Bilder als eigene Dateien daneben (WebP), **nicht** in die HTML-Datei eingebettet
 - [ ] Figur aus `bilder/barbara-figur.webp` einbauen (Pfad im Spiel: `../../bilder/barbara-figur.webp`): auf normalen Seiten den `bmm-figur`-Block vor `</body>` kopieren (z. B. aus `index.html`) – oben rechts, auf dem Handy am Seitenende; in Spielen ohne Seitenscrollen unten rechts im Spielbereich
 
@@ -13,8 +13,8 @@ Damit kein Spiel irgendwo fehlt. Jeder Punkt muss erledigt sein, bevor ein Spiel
 - [ ] Titel ohne Nummern aus fremden Curricula
 
 ## 3. Überall verlinken – alle drei Listen
-- [ ] **`werkstatt.html`** – Eintrag in der Linkliste (volle Adresse `https://barbara-magdalena-mayer.github.io/spiele/<name>/`), Farben abwechseln lassen
-- [ ] **`index.html`** (Startseite) – eigener `<article class="work">`-Eintrag mit Form, Interaktion, Lernabsicht, KI
+- [ ] **`index.html`** (Startseite = Werkstatt) – Eintrag ganz oben in der Linkliste (volle Adresse `https://barbara-magdalena-mayer.github.io/spiele/<name>/`), „Neu ·“ vom bisherigen Eintrag entfernen, Farben abwechseln lassen
+- [ ] **`ueber-mich.html`** – eigener `<article class="work">`-Eintrag mit Form, Interaktion, Lernabsicht, KI
 - [ ] **`grundbegriffe.html`** – Abschnitt „Die Arbeitsproben erklärt“
 - [ ] Gegenprobe: Suche nach dem Namen eines bestehenden Spiels (z. B. `schulrechner`) – überall, wo es auftaucht, muss auch das neue Spiel stehen
 
