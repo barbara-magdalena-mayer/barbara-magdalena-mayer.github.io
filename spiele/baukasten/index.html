@@ -37,7 +37,9 @@ h3{font-size:17px;margin:16px 0 6px}
 .steps span{flex:1;height:6px;border-radius:3px;background:var(--line)}
 .steps span.done{background:var(--pink)}
 .grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.side{order:-1}iframe{height:340px}}
+.blocker{font-size:15px;color:var(--muted);background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:8px 12px;margin:0 0 14px;max-width:64ch}
+.blocker a{color:inherit;font-weight:600}
+
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px}
 .task{background:var(--pink-soft);border-left:5px solid var(--pink);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
@@ -81,7 +83,7 @@ label.note{display:block;margin-top:12px;font-weight:600;font-size:16px}
 .side{position:sticky;top:12px;display:grid;gap:12px;min-width:0}
 .side>*,.panel,.pick,.pick .opts button{min-width:0}
 .pick .opts button code{overflow-wrap:anywhere;white-space:normal}
-@media(max-width:700px){.side{position:static}}
+
 .frame{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .frame .bar{display:flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg);border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
 .frame .dot{width:10px;height:10px;border-radius:50%;background:var(--line)}
@@ -99,6 +101,7 @@ pre.code .off{opacity:.35}
 .mynotes{white-space:pre-wrap;background:var(--bg);border-radius:10px;padding:12px;font-size:16px}
 footer{margin-top:22px;font-size:14px;color:var(--muted)}
 footer a{color:inherit}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.side{display:contents}.frame{order:-1;position:sticky;top:0;z-index:20;box-shadow:0 8px 20px #0003}iframe{height:250px}.side>div:last-child{order:2}}
 </style>
 </head>
 <body>
@@ -111,6 +114,7 @@ footer a{color:inherit}
   <span class="eyebrow">Wie Technik denkt · Teil 2 · Einfache Sprache</span>
   <h1>Wie baut man eine Lerneinheit?</h1>
   <p class="lead">In Teil 1 hast du gesehen, wie eine Lerneinheit mit der Lernplattform spricht. Aber wie entsteht so eine Einheit überhaupt? Hier baust du eine kleine Lerneinheit selbst zusammen: einen Rechner für den U-Wert einer Wand.</p>
+  <p class="blocker" role="note">Bevor du loslegst: Fehlt etwas, zum Beispiel ein Bild oder ein Kasten? Dann kann ein Inhaltsblocker in deinem Browser die Ursache sein. Schalte ihn für diese Seite aus und lade neu. <a href="../../ueber-mich.html#media-note-title">So geht das in Safari, Firefox und Chrome</a>. Im schmalen Fenster stehen manche Teile weiter unten: einfach scrollen.</p>
   <div class="steps" aria-hidden="true" id="steps"><span></span><span></span><span></span><span></span></div>
 
   <div class="grid">
