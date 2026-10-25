@@ -111,9 +111,9 @@ footer a{color:inherit}
     <a href="../baukasten/">Teil 2</a>
     <button type="button" id="restart">↺ Neu beginnen</button>
   </nav>
-  <span class="eyebrow">Informatische Bildung · Teil 1 · Einfache Sprache</span>
+  <span class="eyebrow">Informatische Bildung · Wem gehört dein Lernweg? · Teil 1</span>
   <h1>Wie Lernplattform und Lerneinheit miteinander sprechen</h1>
-  <p class="lead">Eine Lerneinheit läuft in einer Lernplattform (etwa Moodle, ILIAS, Blackboard …). Am Ende soll die Plattform wissen: Hat die Person bestanden? Dafür sprechen die beiden miteinander. Hier findest du heraus, wie.</p>
+  <p class="lead">Eine Lerneinheit läuft in einer Lernplattform (etwa Moodle, ILIAS, Blackboard …). Am Ende soll die Plattform wissen: Hat die Person bestanden? Dafür sprechen die beiden miteinander. Hier findest du heraus, wie.<br>Das ist der erste Schritt zur Frage dieser Reihe: <b>Wem gehört dein Lernweg?</b> Dafür musst du zuerst wissen, was die Lernplattform überhaupt über dich erfährt.</p>
   <p class="blocker" role="note">Bevor du loslegst: Fehlt etwas, zum Beispiel ein Bild oder ein Kasten? Dann kann ein Inhaltsblocker in deinem Browser die Ursache sein. Schalte ihn für diese Seite aus und lade neu. <a href="../../ueber-mich.html#media-note-title">So geht das in Safari, Firefox und Chrome</a>. Im schmalen Fenster stehen manche Teile weiter unten: einfach scrollen.</p>
   <div class="steps" aria-hidden="true" id="steps"><span></span><span></span><span></span><span></span></div>
 
@@ -400,7 +400,7 @@ async function playR3(){
 
 /* ---------- Abschluss ---------- */
 function finale(){
-  const labels={r1_df:"Runde 1 · Denkfehler",r1_aha:"Runde 1 · Aha",r2_df:"Runde 2 · Denkfehler",r2_aha:"Runde 2 · Aha",r3_df:"Runde 3 · Denkfehler",rule:"Meine Regel"};
+  const labels={r1_df:"Runde 1 · Denkfehler",r1_aha:"Runde 1 · Aha",r2_df:"Runde 2 · Denkfehler",r2_aha:"Runde 2 · Aha",r3_df:"Runde 3 · Denkfehler",lernweg:"Wem gehört dein Lernweg?",rule:"Meine Regel"};
   const mine=Object.keys(labels).filter(k=>(notes[k]||"").trim()).map(k=>`${labels[k]}:\n${notes[k].trim()}`).join("\n\n");
   $("#stage").innerHTML=`
     <h2>Geschafft. Das war SCORM.</h2>
@@ -414,6 +414,7 @@ function finale(){
       <dt>Spalte</dt><dd>Ein fester Name für eine Angabe, zum Beispiel <code style="font-family:var(--mono)">cmi.core.score.raw</code> für die Punkte.</dd>
       <dt>Speichern</dt><dd>Vom Notizzettel fest ins Buch. Fachwort: commit.</dd>
     </dl>
+    ${noteField("lernweg","Wem gehört dein Lernweg?","Es gibt keine richtige Antwort. Was denkst du, und warum? Darfst du beim Lernen Fehler machen, ohne dass sie gegen dich verwendet werden?")}
     ${noteField("rule","Meine Regel","Schreib eine Regel auf, die du dir merken willst, mit Begründung: „Regel: …, weil …“")}
     <h3>Dein Weg durch das Spiel</h3>
     <div class="mynotes" id="mynotes">${esc(mine||"Du hast noch nichts aufgeschrieben. Das ist in Ordnung. Du kannst jederzeit zurückgehen.")}</div>

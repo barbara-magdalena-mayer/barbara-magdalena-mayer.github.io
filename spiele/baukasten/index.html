@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Wie baut man eine Lerneinheit?</title>
-<meta name="description" content="Lernspiel in einfacher Sprache, Informatische Bildung Teil 2: Eine Webseite hat Schichten wie eine Wand. Bausteine einsetzen, Probe machen, Fehler finden. Zum Schluss: Wie kommt das Ergebnis zur Lehrkraft? (SCORM und xAPI)">
+<meta name="description" content="Lernspiel in einfacher Sprache, Informatische Bildung, Reihe „Wem gehört dein Lernweg?“, Teil 2: Eine Webseite hat Schichten wie eine Wand. Bausteine einsetzen, Probe machen, Fehler finden. Zum Schluss: Wie kommt das Ergebnis zur Lehrkraft? (SCORM und xAPI)">
 <style>
 @font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
 @font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
@@ -117,9 +117,9 @@ footer a{color:inherit}
     <a href="../klassenbuch/">Teil 1</a>
     <button type="button" id="restart">↺ Neu beginnen</button>
   </nav>
-  <span class="eyebrow">Informatische Bildung · Teil 2 · Einfache Sprache</span>
+  <span class="eyebrow">Informatische Bildung · Wem gehört dein Lernweg? · Teil 2</span>
   <h1>Wie baut man eine Lerneinheit?</h1>
-  <p class="lead">In Teil 1 hast du gesehen, wie eine Lerneinheit mit der Lernplattform spricht. Aber wie entsteht so eine Einheit überhaupt? Hier baust du eine kleine Lerneinheit selbst zusammen: einen Rechner für den U-Wert einer Wand. Zum Schluss schaltest du die Verbindung zur Lernplattform dazu.</p>
+  <p class="lead">In Teil 1 hast du gesehen, wie eine Lerneinheit mit der Lernplattform spricht. Aber wie entsteht so eine Einheit überhaupt? Hier baust du eine kleine Lerneinheit selbst zusammen: einen Rechner für den U-Wert einer Wand. Zum Schluss schaltest du die Verbindung zur Lernplattform dazu.<br>Damit gehst du der Frage dieser Reihe weiter nach: <b>Wem gehört dein Lernweg?</b> Was schreibt so eine Einheit mit, und wer bekommt es zu sehen?</p>
   <p class="blocker" role="note">Bevor du loslegst: Fehlt etwas, zum Beispiel ein Bild oder ein Kasten? Dann kann ein Inhaltsblocker in deinem Browser die Ursache sein. Schalte ihn für diese Seite aus und lade neu. <a href="../../ueber-mich.html#media-note-title">So geht das in Safari, Firefox und Chrome</a>. Im schmalen Fenster stehen manche Teile weiter unten: einfach scrollen.</p>
   <div class="steps" aria-hidden="true" id="steps"><span></span><span></span><span></span><span></span><span></span></div>
 
@@ -482,7 +482,7 @@ const Q4 = [
   { q: "Welches Teil schreibt auf, dass Ali sich bei der KI erst geirrt und dann korrigiert hat?", a: "schreiber",
     why: "Das Abnahmeprotokoll kennt nur das Ende: bestanden, 100. Den Weg mit Irrtum und Korrektur kennt nur das Bautagebuch." },
   { q: "Die Lehrkraft soll wissen, dass Ali bestanden hat. Sein Lernweg soll aber bei ihm bleiben. Welches Teil schaltest du aus?", a: "speicher",
-    why: "Ohne Speicher bleibt das Bautagebuch auf Alis Gerät. Er sieht seinen Weg, die Schule nicht. Das Abnahmeprotokoll kommt trotzdem an. Der Lernweg gehört dem Lernenden." }
+    why: "Ohne Speicher bleibt das Bautagebuch auf Alis Gerät. Er sieht seinen Weg, die Schule nicht. Das Abnahmeprotokoll kommt trotzdem an. Ob der Weg bei Ali bleiben soll oder bei der Schule, das ist die Frage dieser Reihe." }
 ];
 let net = { bote: true, moodle: true, schreiber: true, speicher: true };
 function round4() {
@@ -497,7 +497,7 @@ function round4() {
         <span class="say">${n.say}<code class="netcode">${esc(n.code)}</code></span>
       </label>`).join("")}</div>`;
   $("#stage").innerHTML = `
-    <span class="eyebrow" style="color:var(--green)">Informatische Bildung am Beispiel</span>
+    <span class="eyebrow" style="color:var(--green)">Wem gehört dein Lernweg?</span>
     <h2>Runde 4 · Wie kommt das Ergebnis zur Lehrkraft?</h2>
     <div class="task">Deine kleine Einheit rechnet. Aber in der Berufsschule läuft sie in einer Lernplattform, und die Lehrkraft will wissen, wie es gelaufen ist.<br>
       <b>Ali ist 16 und im ersten Lehrjahr.</b> Er macht die große Wand-Einheit: rechnet drei Wände, glaubt erst der KI, rechnet nach und korrigiert sich. Im Test hat er 100 Punkte.<br>
@@ -563,7 +563,7 @@ function drawNet(changed) {
 function finale() {
   parts = { conv: "/ 100", op: "/", kehr: "1 / R", read: "parseFloat" };
   layers = { html: true, css: true, js: true }; render(); openTab("js");
-  const labels = { r1_aha: "Runde 1 · Aha", r2_df: "Runde 2 · Denkfehler", r2_aha: "Runde 2 · Aha", r3_df: "Runde 3 · Denkfehler", r4_aha: "Runde 4 · Aha", rule: "Meine Regel" };
+  const labels = { r1_aha: "Runde 1 · Aha", r2_df: "Runde 2 · Denkfehler", r2_aha: "Runde 2 · Aha", r3_df: "Runde 3 · Denkfehler", r4_aha: "Runde 4 · Aha", lernweg: "Wem gehört dein Lernweg?", rule: "Meine Regel" };
   const mine = () => Object.keys(labels).filter(k => (notes[k] || "").trim()).map(k => `${labels[k]}:\n${notes[k].trim()}`).join("\n\n");
   $("#stage").innerHTML = `
     <h2>Geschafft. Du hast eine Lerneinheit gebaut.</h2>
@@ -583,6 +583,7 @@ function finale() {
     </dl>
     <h3>Und wie geht es weiter?</h3>
     <p>Die große Lerneinheit zur Wand ist genauso gebaut, nur größer. Und sie hat beide Wege aus Runde 4: das Abnahmeprotokoll und das Bautagebuch. Am Ende der Einheit siehst du dein eigenes Bautagebuch.</p>
+    ${noteField("lernweg", "Wem gehört dein Lernweg?", "Du hast gesehen, wer welches Buch bekommt. Es gibt keine richtige Antwort. Was denkst du, und warum? Darfst du beim Lernen Fehler machen, ohne dass sie gegen dich verwendet werden?")}
     ${noteField("rule", "Meine Regel", "Schreib eine Regel auf, die du dir merken willst, mit Begründung: „Regel: …, weil …“")}
     <h3>Dein Weg durch das Spiel</h3>
     <div class="mynotes" id="mynotes"></div>
