@@ -471,18 +471,18 @@ const NET = [
     code: "Status: passed · Punkte: 100" },
   { k: "schreiber", way: "tagebuch", name: "Schreiber", tech: "xapi.js · Standard xAPI", color: "var(--tech)",
     say: "Schreibt jeden Schritt auf, wie ein Bautagebuch auf der Baustelle: auch was schiefging und wie es behoben wurde.",
-    code: "Ali · hat sich korrigiert · KI-Vorschlag 1" },
+    code: "Lerner · hat sich korrigiert · KI-Vorschlag 1" },
   { k: "speicher", way: "tagebuch", name: "Speicher", tech: "Fachwort LRS", color: "var(--teal)",
     say: "Sammelt die Bautagebücher an einem Ort, zum Beispiel bei der Schule.",
     code: "POST /xapi/statements → 200 OK" }
 ];
 const Q4 = [
-  { q: "Ali hat alles richtig gemacht. Trotzdem steht in Moodle „nicht begonnen“. Welches Teil fehlt?", a: "bote",
-    why: "Ohne Bote erfährt Moodle nichts. Ali rechnet und lernt ganz normal, aber das Ergebnis kommt nie an. Für die Lehrkraft hat er nie angefangen." },
-  { q: "Welches Teil schreibt auf, dass Ali sich bei der KI erst geirrt und dann korrigiert hat?", a: "schreiber",
+  { q: "Der Lerner hat alles richtig gemacht. Trotzdem steht in Moodle „nicht begonnen“. Welches Teil fehlt?", a: "bote",
+    why: "Ohne Bote erfährt Moodle nichts. Der Lerner rechnet und lernt ganz normal, aber das Ergebnis kommt nie an. Für die Lehrkraft hat der Lerner nie angefangen." },
+  { q: "Welches Teil schreibt auf, dass sich der Lerner bei der KI erst geirrt und dann korrigiert hat?", a: "schreiber",
     why: "Das Abnahmeprotokoll kennt nur das Ende: bestanden, 100. Den Weg mit Irrtum und Korrektur kennt nur das Bautagebuch." },
-  { q: "Die Lehrkraft soll wissen, dass Ali bestanden hat. Sein Lernweg soll aber bei ihm bleiben. Welches Teil schaltest du aus?", a: "speicher",
-    why: "Ohne Speicher bleibt das Bautagebuch auf Alis Gerät. Er sieht seinen Weg, die Schule nicht. Das Abnahmeprotokoll kommt trotzdem an. Ob der Weg bei Ali bleiben soll oder bei der Schule, das ist die Frage dieser Reihe." }
+  { q: "Die Lehrkraft soll wissen, dass der Lerner bestanden hat. Der Lernweg soll aber beim Lerner bleiben. Welches Teil schaltest du aus?", a: "speicher",
+    why: "Ohne Speicher bleibt das Bautagebuch auf dem Gerät des Lerners. Der Lerner sieht den eigenen Weg, die Schule nicht. Das Abnahmeprotokoll kommt trotzdem an. Ob der Weg beim Lerner bleiben soll oder bei der Schule, das ist die Frage dieser Reihe." }
 ];
 let net = { bote: true, moodle: true, schreiber: true, speicher: true };
 function round4() {
@@ -500,13 +500,13 @@ function round4() {
     <span class="eyebrow" style="color:var(--green)">Wem gehört dein Lernweg?</span>
     <h2>Runde 4 · Wie kommt das Ergebnis zur Lehrkraft?</h2>
     <div class="task">Deine kleine Einheit rechnet. Aber in der Berufsschule läuft sie in einer Lernplattform, und die Lehrkraft will wissen, wie es gelaufen ist.<br>
-      <b>Ali ist 16 und im ersten Lehrjahr.</b> Er macht die große Wand-Einheit: rechnet drei Wände, glaubt erst der KI, rechnet nach und korrigiert sich. Im Test hat er 100 Punkte.<br>
-      <b>Schalte die Teile aus und wieder an.</b> Was erfährt die Lehrkraft? Was behält Ali?</div>
+      <b>Der Lerner ist 16 und im ersten Lehrjahr.</b> In der großen Wand-Einheit heißt das: drei Wände rechnen, erst der KI glauben, nachrechnen, sich korrigieren. Im Test: 100 Punkte.<br>
+      <b>Schalte die Teile aus und wieder an.</b> Was erfährt die Lehrkraft? Was behält der Lerner?</div>
     ${way("abnahme", "Weg 1 · Das Abnahmeprotokoll: Ist es geschafft?")}
     ${way("tagebuch", "Weg 2 · Das Bautagebuch: Wie ist es gelaufen?")}
     <div class="duo">
       <div><b>👷 Das sieht die Lehrkraft</b><div id="seeTeacher"></div></div>
-      <div><b>📱 Das sieht Ali</b><div id="seeAli"></div></div>
+      <div><b>📱 Das sieht der Lerner</b><div id="seeLerner"></div></div>
     </div>
     <div class="msg info" id="netSay" aria-live="polite"></div>
     <h3>Was hast du entdeckt?</h3>
@@ -524,7 +524,7 @@ function round4() {
     const i = +b.dataset.i, x = Q4[i], q = $("#q4_" + i), right = b.dataset.a === x.a;
     q.classList.toggle("right", right); q.classList.toggle("wrong", !right);
     const fb = q.querySelector(".fb"); fb.hidden = false;
-    fb.innerHTML = right ? `<b>Ja.</b> ${x.why}` : `<b>Noch nicht.</b> Probier es aus: Schalte dieses Teil oben aus und schau, was sich bei der Lehrkraft und bei Ali ändert.`;
+    fb.innerHTML = right ? `<b>Ja.</b> ${x.why}` : `<b>Noch nicht.</b> Probier es aus: Schalte dieses Teil oben aus und schau, was sich bei der Lehrkraft und beim Lerner ändert.`;
     if (right) done.add(i);
     if (done.size === Q4.length && !$("#next")) {
       $("#out").innerHTML = `<div class="msg ok"><b>Das ist der ganze Weg.</b>Die Lernplattform bekommt nur das Ergebnis: das Abnahmeprotokoll. Fachwort: <strong>SCORM</strong>.
@@ -540,21 +540,21 @@ function drawNet(changed) {
   const n = net, abnahme = n.bote && n.moodle, tagebuch = n.schreiber && n.speicher;
   const t = [];
   if (!n.moodle) t.push("Nichts im Abnahmeprotokoll. Es gibt keine Lernplattform, die es aufheben könnte.");
-  else if (!n.bote) t.push("Abnahmeprotokoll: Ali · <b>nicht begonnen</b>");
-  else t.push("Abnahmeprotokoll: Ali · <b>bestanden · 100 Punkte</b>");
-  if (tagebuch) t.push("Bautagebuch: 9 Einträge, darunter „Ali hat sich bei KI-Vorschlag 1 korrigiert“");
-  else t.push("Kein Bautagebuch. Wie Ali gelernt hat, weiß die Lehrkraft nicht.");
-  const a = ["Seine Rechnungen und sein Ergebnis auf dem Bildschirm"];
-  if (n.schreiber) a.push(`Sein Bautagebuch am Ende: 3 Wände gerechnet, 1-mal selbst korrigiert${n.speicher ? "" : " (nur auf seinem Gerät)"}`);
-  else a.push("Kein Bautagebuch. Wenn er die Einheit schließt, ist sein Weg vergessen.");
+  else if (!n.bote) t.push("Abnahmeprotokoll: Lerner · <b>nicht begonnen</b>");
+  else t.push("Abnahmeprotokoll: Lerner · <b>bestanden · 100 Punkte</b>");
+  if (tagebuch) t.push("Bautagebuch: 9 Einträge, darunter „Lerner hat sich bei KI-Vorschlag 1 korrigiert“");
+  else t.push("Kein Bautagebuch. Wie der Lerner gelernt hat, weiß die Lehrkraft nicht.");
+  const a = ["Die eigenen Rechnungen und das Ergebnis auf dem Bildschirm"];
+  if (n.schreiber) a.push(`Das eigene Bautagebuch am Ende: 3 Wände gerechnet, 1-mal selbst korrigiert${n.speicher ? "" : " (nur auf dem eigenen Gerät)"}`);
+  else a.push("Kein Bautagebuch. Nach dem Schließen der Einheit ist der Weg vergessen.");
   $("#seeTeacher").innerHTML = "<ul>" + t.map(x => `<li>${x}</li>`).join("") + "</ul>";
-  $("#seeAli").innerHTML = "<ul>" + a.map(x => `<li>${esc(x)}</li>`).join("") + "</ul>";
+  $("#seeLerner").innerHTML = "<ul>" + a.map(x => `<li>${esc(x)}</li>`).join("") + "</ul>";
   const say = {
     null: "Alles ist eingeschaltet: Beide Wege funktionieren. Schalte jetzt ein Teil aus.",
-    bote: n.bote ? "Der Bote ist wieder da. Das Ergebnis kommt in der Lernplattform an." : "Ohne Bote rechnet Ali ganz normal, aber niemand bringt das Ergebnis zur Lernplattform. Dort steht: nicht begonnen.",
+    bote: n.bote ? "Der Bote ist wieder da. Das Ergebnis kommt in der Lernplattform an." : "Ohne Bote rechnet der Lerner ganz normal, aber niemand bringt das Ergebnis zur Lernplattform. Dort steht: nicht begonnen.",
     moodle: n.moodle ? "Die Lernplattform ist wieder da." : "Ohne Lernplattform läuft die Einheit trotzdem, zum Beispiel auf einer Website. Aber ein Abnahmeprotokoll gibt es nicht.",
     schreiber: n.schreiber ? "Der Schreiber ist wieder da. Jeder Schritt wird aufgeschrieben." : "Ohne Schreiber gibt es kein Bautagebuch. Das Abnahmeprotokoll kommt trotzdem an: bestanden, 100. Der Weg dahin ist weg.",
-    speicher: n.speicher ? "Der Speicher ist wieder da. Die Schule sammelt die Bautagebücher." : "Ohne Speicher bleibt das Bautagebuch auf Alis Gerät. Er sieht seinen Weg, die Lehrkraft nicht. Bestanden hat er trotzdem, das steht im Abnahmeprotokoll."
+    speicher: n.speicher ? "Der Speicher ist wieder da. Die Schule sammelt die Bautagebücher." : "Ohne Speicher bleibt das Bautagebuch auf dem Gerät des Lerners. Der Lerner sieht den eigenen Weg, die Lehrkraft nicht. Bestanden ist trotzdem bestanden, das steht im Abnahmeprotokoll."
   }[changed];
   $("#netSay").innerHTML = `<b>Was passiert?</b>${say}`;
 }
