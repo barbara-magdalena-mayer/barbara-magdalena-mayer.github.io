@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Wie lernt eine Maschine?</title>
-<meta name="description" content="Lernspiel in einfacher Sprache, Grundlagen für alle, die anfangen: Eine Maschine lernt aus deinen Beispielen, Äpfel und Birnen zu sortieren. Sie irrt sich. Du findest heraus, warum.">
+<meta name="description" content="Lernspiel in einfacher Sprache, Grundlagen für alle, die anfangen: In sechs Stufen vom Obstkorb zur Wand. Trainingsdaten, Modell, Bias, Entscheidungsbaum, if/else, regelbasiert oder datenbasiert.">
 <style>
 @font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
 @font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
@@ -98,6 +98,29 @@ label.note{display:block;margin-top:14px;font-weight:600}
 .source{background:var(--info);border-radius:12px;padding:12px 16px;margin:14px 0;max-width:56ch;font-size:18px}
 .source a{color:inherit;font-weight:600}
 .mynotes{white-space:pre-wrap;background:var(--bg);border-radius:12px;padding:12px 14px;font-size:18px}
+/* Stufe 4–6 und Fachwörter */
+.fws{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.fw{background:#e6eefb;color:#1f3a66;border:1px solid #b9cbee;border-radius:99px;padding:4px 12px;font-size:16px}
+@media (prefers-color-scheme: dark){.fw{background:#1c2740;color:#cfe0ff;border-color:#33466e}}
+.tree{background:var(--bg);border-radius:14px;padding:12px;margin:14px 0;max-width:560px}
+.tree select{font:inherit;font-size:19px;padding:6px 8px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);max-width:100%}
+.tq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
+.tlabel{font-weight:600;color:var(--pink)}
+.tb{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 6px 18px;padding-left:10px;border-left:3px solid var(--line)}
+.tval{font-weight:600;min-width:90px}
+.tsub{flex-basis:100%;margin-left:10px}
+pre.code{background:var(--machine);color:var(--machine-ink);border-radius:14px;padding:12px 14px;font:17px/1.6 var(--mono);overflow-x:auto;max-width:100%}
+pre.code span.run{background:#a8f0c855;color:#fff;border-radius:4px}
+.walls{display:grid;gap:6px;margin:12px 0;max-width:460px}
+.wallrow{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;font-size:18px}
+.wbar{display:block;height:18px;width:calc(var(--d) * 6px);background:repeating-linear-gradient(135deg,#f2d36b 0 6px,#e9c24a 6px 12px);border-left:16px solid #b5532a;border-radius:3px}
+.okc{color:var(--green)}.badc{color:var(--red)}
+.probe-box{font:20px/1.6 var(--mono);background:var(--bg);border-radius:12px;padding:12px 14px;margin:12px 0;max-width:46ch}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0;max-width:640px}
+.pair>div{background:var(--bg);border-radius:12px;padding:10px 12px;font-size:18px}
+.pair b{display:block;font-size:20px}
+@media(max-width:520px){.pair{grid-template-columns:1fr}}
+a.main-link{font-weight:600;font-size:21px;background:var(--green);color:#fff;border-radius:12px;padding:12px 22px;text-decoration:none;display:inline-block}
 footer{margin-top:24px;font-size:16px;color:var(--muted)}
 footer a{color:inherit}
 </style>
@@ -110,53 +133,57 @@ footer a{color:inherit}
   </nav>
   <span class="eyebrow">KI · Grundlagen für alle, die anfangen · Einfache Sprache</span>
   <h1>Wie lernt eine Maschine?</h1>
-  <p class="lead">Eine Maschine soll Äpfel und Birnen auseinanderhalten. Niemand schreibt ihr eine Regel. Sie bekommt nur Beispiele, und zwar von dir. Was lernt sie daraus?</p>
+  <p class="lead">Eine Maschine bekommt keine Regel, nur Beispiele von dir. Was lernt sie daraus? In sechs Stufen vom Obstkorb bis zur Wand, mit den wichtigsten Fachwörtern.</p>
   <div class="reihe" role="note">Du brauchst kein Vorwissen. Du kannst nichts kaputt machen. Fehler gehören dazu, bei dir und bei der Maschine.</div>
   <p class="blocker" role="note">Fehlt etwas, zum Beispiel ein Bild oder ein Kasten? Dann kann ein Inhaltsblocker in deinem Browser die Ursache sein. <a href="../../ueber-mich.html#media-note-title">So schaltest du ihn für diese Seite aus</a>.</p>
-  <div class="steps" aria-hidden="true" id="steps"><span></span><span></span><span></span><span></span></div>
+  <div class="steps" aria-hidden="true" id="steps"></div>
   <main class="panel" id="stage" aria-live="polite"></main>
   <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung ·
-    Die Maschine ist echt gebaut: Sie sucht das eine Merkmal, mit dem sie deine Beispiele am besten sortieren kann. So arbeitet ein Entscheidungsbaum mit nur einer Frage.</footer>
+    Die Maschine ist echt gebaut: In Stufe 1 bis 3 sucht sie selbst das Merkmal, mit dem sie deine Beispiele am besten sortiert. Die Wandwerte sind mit dem Rechenweg der Lerneinheit zur Wand berechnet.</footer>
 </div>
 
 <script>
 (function(){
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const STUFEN = 6;
 
 /* ============================================================
-   Obst: zwei Merkmale (Farbe, Form) und ein Name (Apfel, Birne)
+   Obst: Merkmale Farbe, Form, Schale – und ein Name (Apfel, Birne)
    ============================================================ */
 function fruitSvg(f) {
   const col = f.farbe === "rot" ? "#c8372d" : "#7ab648";
   const body = f.form === "rund"
     ? `<circle cx="40" cy="47" r="25" fill="${col}"/>`
     : `<path d="M40 19 C31 19 29 31 31 39 C19 48 20 72 40 72 C60 72 61 48 49 39 C51 31 49 19 40 19Z" fill="${col}"/>`;
-  return `<svg viewBox="0 0 80 80" aria-hidden="true">${body}
+  const dots = f.schale === "gepunktet"
+    ? [[30,40],[46,36],[38,52],[52,50],[28,58],[44,64],[56,60],[34,46]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="2.6" fill="#8a6a2a"/>`).join("") : "";
+  return `<svg viewBox="0 0 80 80" aria-hidden="true">${body}${dots}
     <path d="M40 ${f.form === "rund" ? 24 : 20} L44 9" stroke="#5b3a1e" stroke-width="3.5" stroke-linecap="round"/>
     <ellipse cx="50" cy="13" rx="7" ry="3.5" fill="#3f7a35" transform="rotate(-25 50 13)"/></svg>`;
 }
-const F = (id, name, art, farbe, form) => ({ id, name, art, farbe, form });
+const F = (id, name, art, farbe, form, schale = "glatt") => ({ id, name, art, farbe, form, schale });
 const START = [
   F("a1", "Apfel", "Apfel", "rot", "rund"),
   F("b1", "Birne", "Birne", "grün", "länglich"),
   F("a2", "Apfel", "Apfel", "rot", "rund"),
-  F("b2", "Nashi-Birne", "Birne", "grün", "rund"),
+  F("b2", "Nashi-Birne", "Birne", "grün", "rund", "gepunktet"),
   F("a3", "Apfel", "Apfel", "rot", "rund"),
   F("b3", "Birne", "Birne", "grün", "länglich")
 ];
 const TEST = F("t1", "?", "Apfel", "grün", "rund");
 const ADD = [
-  { key: "ga", label: "grüner Apfel, rund", f: () => F("x", "Apfel", "Apfel", "grün", "rund") },
-  { key: "ra", label: "roter Apfel, rund",  f: () => F("x", "Apfel", "Apfel", "rot", "rund") },
-  { key: "gb", label: "grüne Birne, länglich", f: () => F("x", "Birne", "Birne", "grün", "länglich") }
+  { key: "ga", label: "grüner Apfel", f: () => F("x", "Apfel", "Apfel", "grün", "rund") },
+  { key: "ra", label: "roter Apfel",  f: () => F("x", "Apfel", "Apfel", "rot", "rund") },
+  { key: "gb", label: "grüne Birne", f: () => F("x", "Birne", "Birne", "grün", "länglich") }
 ];
-const cardHtml = (f, cls = "", showName = true) =>
-  `${fruitSvg(f)}${showName ? `<span class="name">${esc(f.name)}</span>` : ""}<span class="feat">${f.farbe} · ${f.form}</span>`;
+let showSchale = false;
+const cardHtml = (f, showName = true) =>
+  `${fruitSvg(f)}${showName ? `<span class="name">${esc(f.name)}</span>` : ""}<span class="feat">${f.farbe} · ${f.form}${showSchale ? " · " + f.schale : ""}</span>`;
 
 /* ============================================================
-   Die Maschine: prüft jedes Merkmal und nimmt das, das am besten sortiert.
-   Bei Gleichstand bleibt sie beim ersten Merkmal (Farbe).
+   Die Maschine (Stufe 1–3): prüft jedes Merkmal, nimmt das beste.
+   Bei Gleichstand bleibt sie beim ersten (Farbe).
    ============================================================ */
 const MERKMALE = [["farbe", "Farbe"], ["form", "Form"]];
 function learn(examples) {
@@ -167,18 +194,14 @@ function learn(examples) {
     Object.entries(groups).forEach(([v, c]) => { rule[v] = c.Apfel >= c.Birne ? "Apfel" : "Birne"; right += Math.max(c.Apfel, c.Birne); });
     return { k, label, rule, right, total: examples.length };
   });
-  const best = res.reduce((a, b) => b.right > a.right ? b : a);
-  return { res, best };
+  return { res, best: res.reduce((a, b) => b.right > a.right ? b : a) };
 }
 const guess = (model, f) => model.best.rule[f[model.best.k]] || "weiß nicht";
 function machineHtml(model, title) {
-  const pl = a => a === "Apfel" ? "Apfel" : "Birne";
   return `<div class="machine" role="group" aria-label="Was die Maschine gelernt hat">
     <div class="title">⚙ ${title}</div>
-    <div>Die Maschine prüft: Mit welchem Merkmal kann ich deine Beispiele am besten sortieren?</div>
     <table>${model.res.map(r => `<tr class="${r === model.best ? "win" : ""}"><td>${r === model.best ? "→ " : ""}${r.label}</td><td class="n">${r.right} von ${r.total} richtig</td></tr>`).join("")}</table>
-    <div>Sie nimmt: <b>${model.best.label}</b>${model.res[0].right === model.res[1].right ? " (beide gleich gut, sie bleibt beim ersten Merkmal)" : ""}. Ihre Regel:</div>
-    <div class="rule">${Object.entries(model.best.rule).map(([v, a]) => `${esc(v)} → ${pl(a)}`).join("<br>")}</div>
+    <div class="rule">${Object.entries(model.best.rule).map(([v, a]) => `${esc(v)} → ${a}`).join("<br>")}</div>
   </div>`;
 }
 
@@ -195,12 +218,19 @@ function noteField(id, label, hint) {
 function bindNotes() { document.querySelectorAll("textarea[data-note]").forEach(t => t.oninput = () => { notes[t.dataset.note] = t.value; saveNotes(); }); }
 
 let level = 0, examples = [];
+const head = (n, title) => `<div class="stepno">Stufe ${n} von ${STUFEN}</div><h2>${title}</h2>`;
 function go(n) {
   level = n;
-  [...$("#steps").children].forEach((s, i) => s.classList.toggle("done", i <= level));
-  [step1, step2, step3, finale][n]();
+  const bar = $("#steps");
+  if (bar.children.length !== STUFEN + 1) bar.innerHTML = "<span></span>".repeat(STUFEN + 1);
+  [...bar.children].forEach((s, i) => s.classList.toggle("done", i <= level));
+  showSchale = n >= 3;
+  [step1, step2, step3, step4, step5, step6, finale][n]();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+const fw = (...t) => `<div class="fws" aria-label="Fachwörter">${t.map(x => `<span class="fw">📘 ${x}</span>`).join("")}</div>`;
+const nextBtn = (n, label) => `<div class="row"><button type="button" class="main" id="next">${label} →</button></div>`;
+function bindNext(n) { const b = $("#next"); if (b) { b.onclick = () => go(n); } }
 
 /* ============================================================
    Ziehen (Maus, Finger, Stift) oder antippen: erst Karte, dann Korb
@@ -237,15 +267,13 @@ function makeDraggable(btn, onDrop) {
   });
 }
 
-/* ---------- Schritt 1: Beispiele zeigen ---------- */
+/* ---------- Stufe 1: Beispiele zeigen ---------- */
 let sorted = [];
 function step1() {
   sorted = []; picked = null;
-  $("#stage").innerHTML = `
-    <div class="stepno">Schritt 1 von 3</div>
-    <h2>Zeig der Maschine Beispiele</h2>
-    <div class="task">Die Maschine weiß noch nichts. Sortiere jedes Obst in den richtigen Korb. So sagst du der Maschine: <b>Das ist ein Apfel. Das ist eine Birne.</b></div>
-    <p class="hint">Zieh eine Karte in einen Korb. Oder tippe zuerst die Karte an und dann den Korb.</p>
+  $("#stage").innerHTML = `${head(1, "Zeig der Maschine Beispiele")}
+    <div class="task">Sortiere jedes Obst in den richtigen Korb. So lernt die Maschine, was ein Apfel ist und was eine Birne.</div>
+    <p class="hint">Zieh eine Karte in einen Korb. Oder tippe erst die Karte an, dann den Korb.</p>
     <div class="pool" id="pool"></div>
     <div class="bins">
       <button type="button" class="bin" data-art="Apfel" aria-label="Korb Äpfel"><span class="lbl">🧺 Äpfel</span><span class="in" id="inApfel"></span></button>
@@ -265,12 +293,11 @@ function drawPool() {
     makeDraggable(b, art => place(f, art));
     pool.appendChild(b);
   });
-  if (!pool.childElementCount) pool.innerHTML = `<span class="hint">Alle Beispiele sind sortiert.</span>`;
 }
 function place(f, art) {
   picked = null; document.querySelectorAll(".bin").forEach(b => b.classList.remove("ready"));
   if (art !== f.art) {
-    $("#out").innerHTML = `<div class="msg bad"><b>Das ist ${f.art === "Birne" ? "eine Birne" : "ein Apfel"}.</b>${f.name === "Nashi-Birne" ? "Eine Nashi-Birne ist rund wie ein Apfel, aber sie ist eine Birne. " : ""}Wenn du der Maschine einen falschen Namen gibst, lernt sie etwas Falsches.</div>`;
+    $("#out").innerHTML = `<div class="msg bad"><b>Das ist ${f.art === "Birne" ? "eine Birne" : "ein Apfel"}.</b>${f.name === "Nashi-Birne" ? "Die Nashi-Birne ist rund, aber eine Birne. " : ""}Ein falscher Name bringt der Maschine Falsches bei.</div>`;
     drawPool(); return;
   }
   sorted.push(f);
@@ -279,27 +306,21 @@ function place(f, art) {
   drawPool();
   if (sorted.length === START.length) {
     examples = START.slice();
-    $("#out").innerHTML = `<div class="msg ok"><b>Alle sechs Beispiele haben einen Namen.</b>Jetzt lernt die Maschine daraus.</div>
-      <div class="row"><button type="button" class="main" id="learn">⚙ Maschine lernen lassen</button></div>`;
+    $("#out").innerHTML = `<div class="row"><button type="button" class="main" id="learn">⚙ Maschine lernen lassen</button></div>`;
     $("#learn").onclick = () => {
-      const model = learn(examples);
-      $("#out").innerHTML = machineHtml(model, "Was die Maschine gelernt hat") +
-        `<div class="msg info"><b>Schau genau hin.</b>Bei der Farbe passen alle sechs. Bei der Form passt die Nashi-Birne nicht, denn sie ist rund. Darum nimmt die Maschine die Farbe.</div>
-        <div class="row"><button type="button" class="main" id="next">Weiter zu Schritt 2 →</button></div>`;
-      $("#next").onclick = () => go(1); $("#next").focus();
+      $("#out").innerHTML = machineHtml(learn(examples), "Das hat die Maschine gelernt") +
+        `<p class="hint">Die Farbe passt bei allen sechs, die Form nur bei fünf. Also nimmt die Maschine die Farbe.</p>` + fw("Trainingsdaten = deine Beispiele", "Label = der Name, den du vergibst", "Merkmal = Farbe, Form", "Modell = die gelernte Regel", "Trefferquote = 6 von 6", "Überwachtes Lernen = Lernen aus beschrifteten Beispielen") + nextBtn(1, "Weiter");
+      bindNext(1); $("#next").focus();
     };
   }
 }
 
-/* ---------- Schritt 2: Die Maschine testen ---------- */
+/* ---------- Stufe 2: Die Maschine testen ---------- */
 function step2() {
   const model = learn(examples);
-  $("#stage").innerHTML = `
-    <div class="stepno">Schritt 2 von 3</div>
-    <h2>Teste die Maschine</h2>
-    <div class="task">Jetzt kommt ein Obst, das die Maschine noch nie gesehen hat. Sie kennt nur ihre Regel: <b>${Object.entries(model.best.rule).map(([v, a]) => `${v} → ${a}`).join(", ")}</b>.</div>
-    <div class="guess"><span class="fcard static">${cardHtml(TEST, "", false)}</span></div>
-    <h3>Was sagt die Maschine?</h3>
+  $("#stage").innerHTML = `${head(2, "Teste die Maschine")}
+    <div class="task">Ein neues Obst. Was sagt die Maschine mit ihrer Regel <b>rot → Apfel, grün → Birne</b>?</div>
+    <div class="guess"><span class="fcard static">${cardHtml(TEST, false)}</span></div>
     <div class="choices" id="predict">
       <button type="button" data-v="Apfel">Die Maschine sagt: Apfel</button>
       <button type="button" data-v="Birne">Die Maschine sagt: Birne</button>
@@ -309,102 +330,242 @@ function step2() {
     const m = guess(model, TEST), right = b.dataset.v === m;
     document.querySelectorAll("#predict button").forEach(x => { x.disabled = true; x.classList.toggle(right ? "right" : "wrong", x === b); });
     $("#out").innerHTML = `
-      <div class="msg ${right ? "ok" : "info"}"><b>${right ? "Genau." : "Schau auf die Regel."} Die Maschine sagt: ${m}.</b>Sie sieht „grün“, und grün heißt bei ihr Birne.</div>
-      <div class="msg bad"><b>Aber es ist ein Apfel. Ein grüner Apfel.</b>Die Maschine hat sich geirrt.</div>
-      <h3>Warum hat sich die Maschine geirrt?</h3>
+      <div class="msg bad"><b>Die Maschine sagt: ${m}. Aber es ist ein grüner Apfel.</b>Sie hat sich geirrt.</div>
+      <h3>Warum?</h3>
       <div class="choices" id="why">
         <button type="button" data-r="kaputt">Die Maschine ist kaputt.</button>
-        <button type="button" data-r="beispiele">In den Beispielen gab es nur rote Äpfel.</button>
+        <button type="button" data-r="beispiele">Sie hat nur rote Äpfel gesehen.</button>
         <button type="button" data-r="selten">Grüne Äpfel sind selten.</button>
       </div>
       <div id="out2"></div>`;
     const WHY = {
-      kaputt: "Nein. Die Maschine hat genau das getan, was sie gelernt hat. Sie ist nicht kaputt. Sie weiß es nicht besser.",
-      selten: "Ob selten oder nicht: Die Maschine kennt nur deine Beispiele. Grüne Äpfel kamen darin nicht vor.",
-      beispiele: "Ja. Die Maschine hat nur rote Äpfel gesehen. Darum denkt sie: Äpfel sind rot. Sie lernt nur aus dem, was du ihr zeigst."
+      kaputt: "Nein. Sie tut genau, was sie gelernt hat.",
+      selten: "Darum geht es nicht. Die Maschine kennt nur deine Beispiele.",
+      beispiele: "Ja. Sie lernt nur aus dem, was du ihr zeigst."
     };
     document.querySelectorAll("#why button").forEach(w => w.onclick = () => {
       const ok = w.dataset.r === "beispiele";
       w.classList.add(ok ? "right" : "wrong");
       $("#out2").innerHTML = `<div class="msg ${ok ? "ok" : "bad"}"><b>${ok ? "Richtig." : "Noch nicht."}</b>${WHY[w.dataset.r]}</div>
-        ${ok ? `${noteField("s2_df", "Was hat die Maschine angenommen, und warum stimmt das nicht?", "Benenne den Denkfehler der Maschine in deinen eigenen Worten.")}
-        <div class="row"><button type="button" class="main" id="next">Weiter zu Schritt 3 →</button></div>` : ""}`;
-      bindNotes();
-      const nx = $("#next"); if (nx) nx.onclick = () => go(2);
+        ${ok ? fw("Testdaten = Neues, das die Maschine nicht kennt", "Fehlklassifikation = falsch einsortiert", "Bias = Verzerrung durch einseitige Beispiele") + noteField("s2_df", "Der Denkfehler der Maschine", "Was hat sie angenommen? Warum stimmt es nicht?") + nextBtn(2, "Weiter") : ""}`;
+      bindNotes(); bindNext(2);
     });
   });
 }
 
-/* ---------- Schritt 3: Bessere Beispiele ---------- */
+/* ---------- Stufe 3: Bessere Beispiele ---------- */
 let added = {};
 function step3() {
   examples = START.slice(); added = { ga: 0, ra: 0, gb: 0 };
-  $("#stage").innerHTML = `
-    <div class="stepno">Schritt 3 von 3</div>
-    <h2>Gib der Maschine bessere Beispiele</h2>
-    <div class="task">Du kannst der Maschine weitere Beispiele zeigen. Welche helfen ihr, den grünen Apfel richtig zu erkennen?</div>
-    <p class="hint">Tippe an, was du dazugeben willst. Du kannst auch mehrmals tippen.</p>
+  $("#stage").innerHTML = `${head(3, "Gib bessere Beispiele")}
+    <div class="task">Welche Beispiele helfen der Maschine, den grünen Apfel zu erkennen? Tippe an, was du dazugibst. Mehrmals geht auch.</div>
     <div class="adds">${ADD.map(a => `<button type="button" data-k="${a.key}">${fruitSvg(a.f())}<span>+ ${a.label}</span></button>`).join("")}</div>
     <p class="count" id="count" aria-live="polite"></p>
     <div class="row"><button type="button" class="main" id="relearn">⚙ Neu lernen lassen</button></div>
     <div id="out"></div>`;
-  const upd = () => { $("#count").textContent = `Die Maschine hat jetzt ${examples.length} Beispiele: ` + ADD.filter(a => added[a.key]).map(a => `${added[a.key]} × ${a.label}`).join(", ") + (Object.values(added).some(Boolean) ? " dazu." : "die sechs vom Anfang."); };
+  const upd = () => { $("#count").textContent = `${examples.length} Beispiele` + (Object.values(added).some(Boolean) ? ": " + ADD.filter(a => added[a.key]).map(a => `+${added[a.key]} ${a.label}`).join(", ") : ""); };
   document.querySelectorAll(".adds button").forEach(b => b.onclick = () => {
     const a = ADD.find(x => x.key === b.dataset.k); examples.push(a.f()); added[a.key]++; upd(); $("#out").innerHTML = "";
   });
   upd();
   $("#relearn").onclick = () => {
     const model = learn(examples), m = guess(model, TEST), ok = m === "Apfel";
-    let why;
-    if (ok) why = `<div class="msg ok"><b>Geschafft. Die Maschine sagt jetzt: Apfel.</b>Mit den grünen Äpfeln passt die Farbe nicht mehr so gut. Darum schaut die Maschine jetzt auf die Form: rund heißt Apfel.</div>`;
-    else if (!added.ga) why = `<div class="msg bad"><b>Die Maschine sagt immer noch: Birne.</b>Sie hat keinen einzigen grünen Apfel gesehen. Für sie sind Äpfel weiter rot.</div>`;
-    else why = `<div class="msg bad"><b>Die Maschine sagt immer noch: Birne.</b>Ein grüner Apfel reicht noch nicht. Jetzt passen Farbe und Form gleich gut, und die Maschine bleibt bei der Farbe. Ein einzelnes Beispiel überzeugt sie nicht.</div>`;
-    $("#out").innerHTML = machineHtml(model, "Was die Maschine jetzt gelernt hat") + `<div class="guess"><span class="fcard static small">${cardHtml(TEST, "", false)}</span><span class="say-machine">→ ${m} ${ok ? "✓" : "✗"}</span></div>` + why +
-      (ok ? `<h3>Probier alle Karten aus</h3><p class="hint">Tippe eine Karte an. Was sagt die Maschine?</p>
-        <div class="tryall">${START.concat([F("t2", "grüner Apfel", "Apfel", "grün", "rund")]).map((f, i) => `<button type="button" class="fcard small" data-i="${i}">${cardHtml(f)}<span class="res"></span></button>`).join("")}</div>
-        <div id="out3"></div>
-        ${noteField("s3_aha", "Was war dein Aha?", "")}
-        <div class="row"><button type="button" class="main" id="next">Zum Abschluss →</button></div>` : "");
-    if (ok) {
-      const all = START.concat([F("t2", "grüner Apfel", "Apfel", "grün", "rund")]);
-      document.querySelectorAll(".tryall .fcard").forEach(b => b.onclick = () => {
-        const f = all[+b.dataset.i], g = guess(model, f), r = g === f.art;
-        b.querySelector(".res").textContent = `sagt: ${g} ${r ? "✓" : "✗"}`;
-        b.style.borderColor = r ? "var(--green)" : "var(--red)";
-        if (!r) $("#out3").innerHTML = `<div class="msg info"><b>Gefunden: Hier irrt sie wieder.</b>Die runde Nashi-Birne hält sie jetzt für einen Apfel. Eine Maschine, die nur eine einzige Frage stellt, ist nie perfekt. Echte KI stellt viele Fragen hintereinander. Das nennt man einen <b style="display:inline">Entscheidungsbaum</b>.</div>`;
-      });
-      bindNotes(); $("#next").onclick = () => go(3);
-    }
+    const why = ok ? `<div class="msg ok"><b>Jetzt stimmt es: Apfel.</b>Die Farbe passt nicht mehr so gut. Also schaut die Maschine auf die Form.</div>`
+      : !added.ga ? `<div class="msg bad"><b>Immer noch: Birne.</b>Die Maschine hat noch keinen grünen Apfel gesehen.</div>`
+      : `<div class="msg bad"><b>Immer noch: Birne.</b>Ein grüner Apfel reicht nicht. Ein Beispiel allein überzeugt die Maschine nicht.</div>`;
+    $("#out").innerHTML = machineHtml(model, "Das hat die Maschine jetzt gelernt") +
+      `<div class="guess"><span class="fcard static small">${cardHtml(TEST, false)}</span><span class="say-machine">→ ${m} ${ok ? "✓" : "✗"}</span></div>` + why +
+      (ok ? `<div class="msg info"><b>Aber:</b>Die runde Nashi-Birne hält die Maschine jetzt für einen Apfel. Mit nur einer Frage geht es nicht für alle.</div>` + fw("Datenqualität = die richtigen Beispiele, nicht nur viele", "Neu trainieren = mit neuen Daten noch einmal lernen") + nextBtn(3, "Weiter zu Stufe 4") : "");
+    bindNext(3);
   };
+}
+
+/* ---------- Stufe 4: Zwei Fragen – ein Entscheidungsbaum ---------- */
+const ALL = () => [
+  F("a1", "Apfel", "Apfel", "rot", "rund"), F("a2", "Apfel", "Apfel", "rot", "rund"),
+  F("g1", "grüner Apfel", "Apfel", "grün", "rund"), F("g2", "grüner Apfel", "Apfel", "grün", "rund"),
+  F("b1", "Birne", "Birne", "grün", "länglich"), F("b3", "Birne", "Birne", "grün", "länglich"),
+  F("n1", "Nashi-Birne", "Birne", "grün", "rund", "gepunktet")
+];
+const Q = { farbe: { label: "Welche Farbe?", vals: ["rot", "grün"] }, form: { label: "Welche Form?", vals: ["rund", "länglich"] }, schale: { label: "Wie ist die Schale?", vals: ["glatt", "gepunktet"] } };
+let tree = null;
+function classify(t, f) { if (typeof t === "string") return t; return classify(t.br[f[t.q]], f); }
+function step4() {
+  tree = { q: "form", br: { rund: "Apfel", länglich: "Birne" } };
+  $("#stage").innerHTML = `${head(4, "Stell zwei Fragen")}
+    <div class="task">Grüner Apfel und Nashi-Birne: gleiche Farbe, gleiche Form. Schau genau hin. Was ist anders? Dann bau der Maschine einen <b>Entscheidungsbaum</b>: eine Frage, und je nach Antwort noch eine.</div>
+    <div class="pool">${[ALL()[2], ALL()[6]].map(f => `<span class="fcard static">${cardHtml(f)}</span>`).join("")}</div>
+    <div class="tree" id="tree"></div>
+    <div class="row"><button type="button" class="main" id="testTree">▶ Baum testen</button></div>
+    <div id="out"></div>`;
+  drawTree(); $("#testTree").onclick = testTree;
+}
+function drawTree() {
+  const opt = (sel, list) => list.map(([v, t]) => `<option value="${v}" ${v === sel ? "selected" : ""}>${t}</option>`).join("");
+  const qSel = (id, q) => `<select id="${id}" aria-label="Frage">${opt(q, Object.entries(Q).map(([k, v]) => [k, v.label]))}</select>`;
+  const leafSel = (id, v, allowQ) => `<select id="${id}" aria-label="Antwort">${opt(typeof v === "string" ? v : "q2", [["Apfel", "→ Apfel"], ["Birne", "→ Birne"]].concat(allowQ ? [["q2", "→ noch eine Frage"]] : []))}</select>`;
+  const t = tree;
+  $("#tree").innerHTML = `<div class="tq"><span class="tlabel">Frage 1</span>${qSel("q1", t.q)}</div>
+    ${Q[t.q].vals.map(v => `<div class="tb"><span class="tval">${v}</span>${leafSel("l_" + v, t.br[v], true)}
+      ${typeof t.br[v] === "object" ? `<div class="tsub"><div class="tq"><span class="tlabel">Frage 2</span>${qSel("q2_" + v, t.br[v].q)}</div>
+        ${Q[t.br[v].q].vals.map(w => `<div class="tb"><span class="tval">${w}</span>${leafSel("l_" + v + "_" + w, t.br[v].br[w], false)}</div>`).join("")}</div>` : ""}</div>`).join("")}`;
+  $("#q1").onchange = e => { tree = { q: e.target.value, br: Object.fromEntries(Q[e.target.value].vals.map(v => [v, "Apfel"])) }; drawTree(); $("#out").innerHTML = ""; };
+  Q[t.q].vals.forEach(v => {
+    $("#l_" + v).onchange = e => { t.br[v] = e.target.value === "q2" ? { q: "farbe", br: { rot: "Apfel", grün: "Apfel" } } : e.target.value; drawTree(); $("#out").innerHTML = ""; };
+    if (typeof t.br[v] === "object") {
+      const sub = t.br[v];
+      $("#q2_" + v).onchange = e => { t.br[v] = { q: e.target.value, br: Object.fromEntries(Q[e.target.value].vals.map(w => [w, "Apfel"])) }; drawTree(); $("#out").innerHTML = ""; };
+      Q[sub.q].vals.forEach(w => $("#l_" + v + "_" + w).onchange = e => { sub.br[w] = e.target.value; $("#out").innerHTML = ""; });
+    }
+  });
+}
+function testTree() {
+  const all = ALL(), res = all.map(f => ({ f, g: classify(tree, f) })), right = res.filter(r => r.g === r.f.art).length;
+  const ok = right === all.length;
+  $("#out").innerHTML = `<div class="tryall">${res.map(r => `<span class="fcard static small" style="border-color:${r.g === r.f.art ? "var(--green)" : "var(--red)"}">${cardHtml(r.f)}<span class="res">${r.g} ${r.g === r.f.art ? "✓" : "✗"}</span></span>`).join("")}</div>
+    <div class="msg ${ok ? "ok" : "bad"}"><b>${right} von ${all.length} richtig.</b>${ok
+      ? "Dein Baum erkennt alle. Mit der Schale als neuem Merkmal klappt es."
+      : res.some(r => r.f.name === "Nashi-Birne" && r.g !== "Birne") ? "Die Nashi-Birne wird noch falsch erkannt. Welches Merkmal hat nur sie?" : "Schau auf die roten Karten. Welche Antwort muss sich ändern?"}</div>
+    ${ok ? fw("Entscheidungsbaum = Fragen hintereinander", "Knoten = eine Frage im Baum", "Blatt = die Antwort am Ende", "Merkmalsauswahl = das passende Merkmal finden") + noteField("s4_aha", "Was war dein Aha?", "") + nextBtn(4, "Weiter zu Stufe 5") : ""}`;
+  bindNotes(); bindNext(4);
+}
+
+/* ---------- Stufe 5: Vom Baum zum Code ---------- */
+function codeLines(t, ind = "  ") {
+  if (typeof t === "string") return [{ s: `${ind}return "${t}";`, leaf: t }];
+  const [a, b] = Q[t.q].vals;
+  return [{ s: `${ind}if (obst.${t.q} === "${a}") {`, q: t.q, v: a }, ...codeLines(t.br[a], ind + "  "),
+          { s: `${ind}} else {`, els: true }, ...codeLines(t.br[b], ind + "  "), { s: `${ind}}` }];
+}
+function step5() {
+  const lines = [{ s: "function sortiere(obst) {" }, ...codeLines(tree), { s: "}" }];
+  $("#stage").innerHTML = `${head(5, "Dein Baum als Code")}
+    <div class="task">So sieht dein Entscheidungsbaum in <b>JavaScript</b> aus. <code>if</code> heißt „wenn“, <code>else</code> heißt „sonst“. Spiel den Code mit der Nashi-Birne ab.</div>
+    <pre class="code" id="code">${lines.map((l, i) => `<span data-i="${i}">${esc(l.s)}</span>`).join("\n")}</pre>
+    <div class="guess"><span class="fcard static small">${cardHtml(ALL()[6])}</span>
+      <button type="button" class="main" id="play">▶ Abspielen</button></div>
+    <div id="out"></div>`;
+  $("#play").onclick = async () => {
+    const f = ALL()[6]; $("#play").disabled = true;
+    const spans = [...document.querySelectorAll("#code span")];
+    spans.forEach(s => s.classList.remove("run", "skip"));
+    // Weg durch den Code nachgehen
+    const path = []; let i = 1, depth = 0;
+    const walk = (t, start) => {
+      if (typeof t === "string") { path.push(start); return start + 1; }
+      path.push(start);
+      const yes = f[t.q] === Q[t.q].vals[0];
+      const thenEnd = start + 1 + codeLines(t.br[Q[t.q].vals[0]]).length;
+      if (yes) { walk(t.br[Q[t.q].vals[0]], start + 1); }
+      else { path.push(thenEnd); walk(t.br[Q[t.q].vals[1]], thenEnd + 1); }
+      return 0;
+    };
+    walk(tree, 1);
+    for (const p of path) { spans[p].classList.add("run"); await new Promise(r => setTimeout(r, 600)); }
+    $("#play").disabled = false;
+    $("#out").innerHTML = `<div class="msg ok"><b>Ergebnis: ${classify(tree, f)}.</b>Der Computer geht Zeile für Zeile. Bei jedem <code>if</code> prüft er eine Frage und nimmt dann einen Weg. Genau so ist auch die Lerneinheit zur Wand gebaut.</div>
+      <h3>Wer hat diesen Code geschrieben?</h3>
+      <div class="choices" id="who">
+        <button type="button" data-r="m">Die Maschine, ganz allein.</button>
+        <button type="button" data-r="d">Du, mit deinem Baum.</button>
+      </div><div id="out2"></div>`;
+    document.querySelectorAll("#who button").forEach(b => b.onclick = () => {
+      const ok = b.dataset.r === "d"; b.classList.add(ok ? "right" : "wrong");
+      $("#out2").innerHTML = `<div class="msg ${ok ? "ok" : "bad"}"><b>${ok ? "Ja." : "Diesmal nicht."}</b>In Stufe 1 bis 3 hat die Maschine ihre Regel selbst aus Beispielen gefunden. Hier hast du die Regel gebaut. Das ist der Unterschied zwischen <b style="display:inline">lernen</b> und <b style="display:inline">programmieren</b>.</div>
+        ${ok ? fw("Algorithmus = genaue Schritt-für-Schritt-Anweisung", "Bedingung = if … else", "Verzweigung = je nach Antwort ein anderer Weg", "regelbasiert = ein Mensch schreibt die Regel", "datenbasiert = die Maschine findet die Regel") + nextBtn(5, "Weiter zu Stufe 6") : ""}`;
+      bindNext(5);
+    });
+  };
+}
+
+/* ---------- Stufe 6: Rechnen oder lernen? (die Wand) ---------- */
+const uWand = (cm, lambda) => 1 / (0.13 + 0.015 / 0.7 + 0.24 / 0.68 + (cm / 100) / lambda + 0.01 + 0.04);
+const fmt = n => n.toFixed(2).replace(".", ",");
+function step6() {
+  const ex = [8, 10, 12, 14, 16].map(cm => ({ cm, u: uWand(cm, 0.035) }));
+  $("#stage").innerHTML = `${head(6, "Rechnen oder lernen?")}
+    <div class="task">Jetzt die Wand von 1958. Reicht die Dämmung? Erlaubt ist ein U-Wert bis <b>0,24</b>. Eine Maschine lernt das aus fünf Beispielwänden mit EPS-Dämmung.</div>
+    <div class="walls">${ex.map(e => `<div class="wallrow"><span class="wbar" style="--d:${e.cm}"></span><span>${e.cm} cm EPS</span><b class="${e.u <= 0.24 ? "okc" : "badc"}">${e.u <= 0.24 ? "reicht" : "reicht nicht"}</b></div>`).join("")}</div>
+    <div class="machine"><div class="title">⚙ Das hat die Maschine gelernt</div><div class="rule">Dämmung ab 14 cm → reicht</div></div>
+    <h3>Neue Wand: 14 cm Holzfaser</h3>
+    <p class="hint">Holzfaser ist ein anderer Dämmstoff. Was sagt die Maschine?</p>
+    <div class="choices" id="predict">
+      <button type="button" data-v="ja">Die Maschine sagt: reicht</button>
+      <button type="button" data-v="nein">Die Maschine sagt: reicht nicht</button>
+    </div>
+    <div id="out"></div>`;
+  document.querySelectorAll("#predict button").forEach(b => b.onclick = () => {
+    const ok = b.dataset.v === "ja";
+    document.querySelectorAll("#predict button").forEach(x => { x.disabled = true; x.classList.toggle(ok ? "right" : "wrong", x === b); });
+    $("#out").innerHTML = `<div class="msg info"><b>Die Maschine sagt: reicht.</b>14 cm, also nach ihrer Regel genug.</div>
+      <div class="row"><button type="button" class="main" id="probe">🧮 Probe mit der Formel</button></div><div id="out2"></div>`;
+    $("#probe").onclick = () => {
+      $("#out2").innerHTML = `<div class="probe-box">U = 1 ÷ (Summe aller Widerstände)<br>Holzfaser: λ = 0,040 statt 0,035<br><b>U = ${fmt(uWand(14, 0.040))}</b> → <b class="badc">reicht nicht</b></div>
+        <h3>Warum lag die Maschine falsch?</h3>
+        <div class="choices" id="why">
+          <button type="button" data-r="dicke">Sie hat nur auf die Dicke geschaut, nicht auf den Dämmstoff.</button>
+          <button type="button" data-r="formel">Die Formel ist falsch.</button>
+          <button type="button" data-r="holz">Holzfaser dämmt gar nicht.</button>
+        </div><div id="out3"></div>`;
+      const WHY = { dicke: "In ihren Beispielen war immer EPS. Den Dämmstoff kannte sie gar nicht als Merkmal. Die Formel rechnet mit λ und merkt es sofort.",
+        formel: "Nein. Die Formel ist die Physik der Wand. Die Maschine hat nur eine Abkürzung gelernt.",
+        holz: "Doch, Holzfaser dämmt gut. Nur etwas weniger als EPS. Darum reichen 14 cm hier knapp nicht." };
+      document.querySelectorAll("#why button").forEach(w => w.onclick = () => {
+        const ok2 = w.dataset.r === "dicke"; w.classList.add(ok2 ? "right" : "wrong");
+        $("#out3").innerHTML = `<div class="msg ${ok2 ? "ok" : "bad"}"><b>${ok2 ? "Genau." : "Noch nicht."}</b>${WHY[w.dataset.r]}</div>
+          ${ok2 ? `<div class="pair"><div><b>🧮 Rechnen</b>Ein Mensch schreibt die Formel in den Code. Stimmt die Formel, stimmt das Ergebnis.</div><div><b>⚙ Lernen</b>Die Maschine sucht selbst eine Regel in Beispielen. Fehlt etwas in den Beispielen, irrt sie.</div></div>
+          <div class="msg info"><b>Darum kann auch eine KI bei der Wand falsch liegen.</b>In der Lerneinheit zur Wand prüfst du ihre Vorschläge deshalb mit der Formel: Probe durch Einsetzen.</div>
+          ${fw("Schwellenwert = die Grenze, hier 14 cm", "Generalisierung = Gelerntes auf Neues übertragen", "Validierung = Probe mit einer sicheren Methode")}${noteField("s6_aha", "Was war dein Aha?", "")}` + nextBtn(6, "Zum Abschluss") : ""}`;
+        bindNotes(); bindNext(6);
+      });
+    };
+  });
 }
 
 /* ---------- Abschluss ---------- */
 function finale() {
-  const labels = { s2_df: "Denkfehler der Maschine", s3_aha: "Mein Aha", frage: "Wer sucht die Beispiele aus?", rule: "Meine Regel" };
+  const labels = { s2_df: "Denkfehler der Maschine", s4_aha: "Aha beim Baum", s6_aha: "Aha bei der Wand", frage: "Wer sucht die Beispiele aus?", rule: "Meine Regel" };
   const mine = () => Object.keys(labels).filter(k => (notes[k] || "").trim()).map(k => `${labels[k]}:\n${notes[k].trim()}`).join("\n\n");
   $("#stage").innerHTML = `
     <h2>Geschafft. So lernt eine Maschine.</h2>
-    <div class="task"><b>Merksatz:</b> Eine Maschine lernt aus Beispielen. Sie ist so gut wie die Beispiele, die sie bekommt. Und sie kann sich irren.</div>
-    <h3>Die Wörter aus dem Spiel</h3>
+    <div class="task"><b>Merksatz:</b> Eine Maschine lernt aus Beispielen und ist so gut wie ihre Beispiele. Ein Programm folgt einer Regel, die ein Mensch geschrieben hat. Beide können irren. Darum: Probe machen.</div>
+    <div class="row"><a class="main-link" href="../../bauphysik-u-wert/">Weiter zur Wand: Deine Wand verliert Wärme. Wie viel? →</a></div>
+    <p class="hint">Dort triffst du eine KI, die sich irren kann. Du weißt jetzt, warum: Sie hat aus Beispielen gelernt. Prüf sie mit der Formel.</p>
+    <h3>Deine Fachwörter</h3>
     <dl class="glossary">
-      <dt>Beispiele</dt><dd>Das, woraus die Maschine lernt. Fachwort: <b>Trainingsdaten</b>.</dd>
-      <dt>Namen geben</dt><dd>Du sagst bei jedem Beispiel, was es ist. Fachwort: <b>beschriften</b> (auf Englisch: labeln).</dd>
-      <dt>Merkmal</dt><dd>Etwas, das man an einem Ding erkennen kann, zum Beispiel Farbe oder Form.</dd>
-      <dt>Regel</dt><dd>Was die Maschine gelernt hat. Fachwort: <b>Modell</b>.</dd>
-      <dt>Sortieren</dt><dd>Etwas einer Gruppe zuordnen. Fachwort: <b>klassifizieren</b>.</dd>
-      <dt>Testen</dt><dd>Die Maschine mit etwas Neuem prüfen, das sie noch nicht kennt.</dd>
-      <dt>Entscheidungsbaum</dt><dd>Eine Maschine, die Fragen hintereinander stellt. Deine hat nur eine Frage gestellt.</dd>
+      <dt>Trainingsdaten</dt><dd>Die Beispiele, aus denen eine Maschine lernt.</dd>
+      <dt>Label</dt><dd>Der Name an einem Beispiel. Beschriften heißt: Labels vergeben.</dd>
+      <dt>Überwachtes Lernen</dt><dd>Lernen aus beschrifteten Beispielen.</dd>
+      <dt>Merkmal</dt><dd>Etwas Erkennbares: Farbe, Form, Schale, Dicke, Dämmstoff.</dd>
+      <dt>Modell</dt><dd>Die Regel, die die Maschine gelernt hat.</dd>
+      <dt>Trefferquote</dt><dd>Wie viele Beispiele das Modell richtig einsortiert.</dd>
+      <dt>Testdaten</dt><dd>Neue Beispiele, die die Maschine beim Lernen nicht gesehen hat.</dd>
+      <dt>Fehlklassifikation</dt><dd>Etwas wird falsch einsortiert.</dd>
+      <dt>Bias</dt><dd>Verzerrung durch einseitige Beispiele, zum Beispiel nur rote Äpfel.</dd>
+      <dt>Datenqualität</dt><dd>Die richtigen Beispiele zählen, nicht nur viele.</dd>
+      <dt>Entscheidungsbaum</dt><dd>Fragen hintereinander. Eine Frage heißt Knoten, eine Antwort am Ende heißt Blatt.</dd>
+      <dt>Algorithmus</dt><dd>Eine genaue Schritt-für-Schritt-Anweisung.</dd>
+      <dt>Bedingung</dt><dd>„Wenn … sonst …“, im Code <code>if … else</code>.</dd>
+      <dt>regelbasiert / datenbasiert</dt><dd>Ein Mensch schreibt die Regel / die Maschine findet sie in Daten.</dd>
+      <dt>Schwellenwert</dt><dd>Eine Grenze, ab der die Antwort wechselt.</dd>
+      <dt>Generalisierung</dt><dd>Gelerntes auf Neues übertragen. Gelingt nur, wenn die Beispiele passen.</dd>
+      <dt>Validierung</dt><dd>Das Ergebnis mit einer sicheren Methode prüfen, hier mit der Formel.</dd>
     </dl>
-    ${noteField("frage", "Wer sucht die Beispiele aus?", "Es gibt keine richtige Antwort. Was denkst du, und warum? Was passiert, wenn bei den Beispielen etwas fehlt?")}
-    ${noteField("rule", "Meine Regel", "Schreib eine Regel auf, die du dir merken willst, mit Begründung: „Regel: …, weil …“")}
+    ${noteField("frage", "Wer sucht die Beispiele aus?", "Es gibt keine richtige Antwort. Was passiert, wenn etwas fehlt?")}
+    ${noteField("rule", "Meine Regel", "„Regel: …, weil …“")}
     <h3>Dein Weg durch das Spiel</h3>
     <div class="mynotes" id="mynotes"></div>
+    <h3>Wie es weitergeht</h3>
+    <div class="row">
+      <a class="main-link" href="../../bauphysik-u-wert/">Zur Wand →</a>
+      <a class="ghost" href="../baukasten/">Wie baut man eine Lerneinheit? →</a>
+    </div>
     <h3>Woher kommt das Wissen?</h3>
     <div class="source">
-      Die Idee, KI ohne Computer mit Sortierspielen zu erklären, gibt es schon. Ein Vorbild ist <a href="https://computingeducation.de/aiunplugged.pdf">„AI Unplugged“ von Annabel Lindner und Stefan Seegerer</a>, dort die Übung „Klassifikation mit Entscheidungsbäumen“.<br><br>
-      Die Gesellschaft für Informatik beschreibt in ihren <a href="https://dl.gi.de/bitstream/handle/20.500.12116/20121/61-GI-Empfehlung_Kompetenzen_informatische_Bildung_Primarbereich.pdf?sequence=1">Empfehlungen für die Grundschule (2019)</a>, was Kinder über Informatik lernen sollen. Dieses Spiel gehört dort zu „Information und Daten“ und zu „Informatik, Mensch und Gesellschaft“. Und es übt „Begründen und Bewerten“. KI kommt in diesen Empfehlungen noch nicht vor.
-    </div>
-    <div class="row"><a class="ghost" href="../../">← Zurück zur Werkstatt</a></div>`;
+      Vorbild: <a href="https://computingeducation.de/aiunplugged.pdf">„AI Unplugged“ von Annabel Lindner und Stefan Seegerer</a>, Übung „Klassifikation mit Entscheidungsbäumen“.<br>
+      Einordnung: <a href="https://dl.gi.de/bitstream/handle/20.500.12116/20121/61-GI-Empfehlung_Kompetenzen_informatische_Bildung_Primarbereich.pdf?sequence=1">Empfehlungen der Gesellschaft für Informatik für die Grundschule (2019)</a>, Bereiche „Information und Daten“, „Algorithmen“ und „Informatik, Mensch und Gesellschaft“, Tätigkeit „Begründen und Bewerten“. KI selbst kommt dort noch nicht vor.<br>
+      Die Wandwerte sind mit dem Rechenweg aus der Lerneinheit zur Wand berechnet (DIN EN ISO 6946, vereinfacht).
+    </div>`;
   const upd = () => { $("#mynotes").textContent = mine() || "Du hast noch nichts aufgeschrieben. Das ist in Ordnung."; };
   bindNotes(); upd(); document.querySelectorAll("#n_frage,#n_rule").forEach(t => t.addEventListener("input", upd));
 }
@@ -414,7 +575,7 @@ let armed = null; const rs = $("#restart");
 rs.onclick = () => { if (!armed) { rs.textContent = "Wirklich? Alles löschen"; armed = setTimeout(() => { armed = null; rs.textContent = "↺ Neu beginnen"; }, 4000); return; }
   clearTimeout(armed); armed = null; rs.textContent = "↺ Neu beginnen"; notes = {}; saveNotes(); go(0); };
 
-window.__ml = { learn, START };
+window.__ml = { learn, classify, go, setTree: t => { tree = t; }, getTree: () => tree };
 go(0);
 })();
 </script>
