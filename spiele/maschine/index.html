@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Wie lernt eine Maschine?</title>
-<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Informatik, Teil 1 von 4: In sechs Stufen vom Obstkorb zur Wand. Trainingsdaten, Modell, Bias, Entscheidungsbaum, if/else, regelbasiert oder datenbasiert.">
+<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Informatik, Teil 1 von 4: In sechs Stufen vom Obstkorb bis zum eigenen Code. Trainingsdaten, Modell, Bias, Entscheidungsbaum, if/else, regelbasiert oder datenbasiert.">
 <style>
 @font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
 @font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
@@ -114,7 +114,8 @@ label.note{display:block;margin-top:14px;font-weight:600}
 pre.code{background:var(--machine);color:var(--machine-ink);border-radius:14px;padding:12px 14px;font:17px/1.6 var(--mono);overflow-x:auto;max-width:100%}
 pre.code span.run{background:#a8f0c855;color:#fff;border-radius:4px}
 .walls{display:grid;gap:6px;margin:12px 0;max-width:460px}
-.wallrow{display:grid;grid-template-columns:110px 1fr auto;gap:10px;align-items:center;font-size:18px}
+.wallrow{display:grid;grid-template-columns:minmax(0,1fr) 90px auto;gap:10px;align-items:center;font-size:18px}
+.crate{display:flex;flex-wrap:wrap;gap:1px;align-items:center;min-height:30px}
 .wbar{display:block;height:18px;width:calc(var(--d) * 6px);background:repeating-linear-gradient(135deg,#f2d36b 0 6px,#e9c24a 6px 12px);border-left:16px solid #b5532a;border-radius:3px}
 .okc{color:var(--green)}.badc{color:var(--red)}
 .probe-box{font:20px/1.6 var(--mono);background:var(--bg);border-radius:12px;padding:12px 14px;margin:12px 0;max-width:46ch}
@@ -143,7 +144,7 @@ footer a{color:inherit}
   <div class="steps" aria-hidden="true" id="steps"></div>
   <main class="panel" id="stage" aria-live="polite"></main>
   <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung ·
-    Die Maschine ist echt gebaut: In Stufe 1 bis 3 sucht sie selbst das Merkmal, mit dem sie deine Beispiele am besten sortiert. Die Wandwerte sind mit dem Rechenweg der Lerneinheit zur Wand berechnet.</footer>
+    Die Maschine ist echt gebaut: In Stufe 1 bis 3 sucht sie selbst das Merkmal, mit dem sie deine Beispiele am besten sortiert.</footer>
 </div>
 
 <script>
@@ -499,7 +500,7 @@ function step5() {
     walk(tree, 1);
     for (const p of path) { spans[p].classList.add("run"); await new Promise(r => setTimeout(r, 600)); }
     $("#play").disabled = false;
-    $("#out").innerHTML = `<div class="msg ok"><b>Ergebnis: ${classify(tree, f)}.</b>Der Computer geht Zeile für Zeile. Bei jedem <code>if</code> prüft er eine Frage und nimmt dann einen Weg. Genau so ist auch die Lerneinheit zur Wand gebaut.</div>
+    $("#out").innerHTML = `<div class="msg ok"><b>Ergebnis: ${classify(tree, f)}.</b>Der Computer geht Zeile für Zeile. Bei jedem <code>if</code> prüft er eine Frage und nimmt dann einen Weg. Genau so sind auch Lerneinheiten gebaut.</div>
       <h3>Wer hat diesen Code geschrieben?</h3>
       <div class="choices" id="who">
         <button type="button" data-r="m">Die Maschine, ganz allein.</button>
@@ -514,44 +515,46 @@ function step5() {
   };
 }
 
-/* ---------- Stufe 6: Rechnen oder lernen? (die Wand) ---------- */
-const uWand = (cm, lambda) => 1 / (0.13 + 0.015 / 0.7 + 0.24 / 0.68 + (cm / 100) / lambda + 0.01 + 0.04);
-const fmt = n => n.toFixed(2).replace(".", ",");
+/* ---------- Stufe 6: Rechnen oder lernen? (die Obstkiste) ---------- */
+const kg = g => (g / 1000).toFixed(1).replace(".", ",") + " kg";
+const fruitSmall = f => `<svg viewBox="0 0 80 80" aria-hidden="true" style="width:30px;height:30px">${fruitSvg(f).replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "")}</svg>`;
 function step6() {
-  const ex = [8, 10, 12, 14, 16].map(cm => ({ cm, u: uWand(cm, 0.035) }));
+  const apfel = F("x", "Apfel", "Apfel", "rot", "rund"), birne = F("x", "Birne", "Birne", "grün", "länglich");
+  const ex = [6, 8, 10, 12, 14].map(n => ({ n, g: n * 200 }));
   $("#stage").innerHTML = `${head(6, "Rechnen oder lernen?")}
-    <div class="task">Jetzt die Wand von 1958. Reicht die Dämmung? Erlaubt ist ein U-Wert bis <b>0,24</b>. Eine Maschine lernt das aus fünf Beispielwänden mit EPS-Dämmung.</div>
-    <div class="walls">${ex.map(e => `<div class="wallrow"><span class="wbar" style="--d:${e.cm}"></span><span>${e.cm} cm EPS</span><b class="${e.u <= 0.24 ? "okc" : "badc"}">${e.u <= 0.24 ? "reicht" : "reicht nicht"}</b></div>`).join("")}</div>
-    <div class="machine"><div class="title">⚙ Das hat die Maschine gelernt</div><div class="rule">Dämmung ab 14 cm → reicht</div></div>
-    <h3>Neue Wand: 14 cm Holzfaser</h3>
-    <p class="hint">Holzfaser ist ein anderer Dämmstoff. Was sagt die Maschine?</p>
+    <div class="task">Eine Obstkiste darf höchstens <b>2 kg</b> wiegen, sonst reißt sie. Eine Maschine lernt aus fünf Beispielkisten, wann eine Kiste zu schwer ist. In allen Beispielkisten sind Äpfel.</div>
+    <div class="walls">${ex.map(e => `<div class="wallrow"><span class="crate">${fruitSmall(apfel).repeat(Math.min(e.n, 7))}${e.n > 7 ? "…" : ""}</span><span>${e.n} Äpfel</span><b class="${e.g <= 2000 ? "okc" : "badc"}">${e.g <= 2000 ? "passt" : "zu schwer"}</b></div>`).join("")}</div>
+    <div class="machine"><div class="title">⚙ Das hat die Maschine gelernt</div><div class="rule">ab 12 Stück → zu schwer</div></div>
+    <h3>Neue Kiste: 8 Birnen</h3>
+    <div class="guess"><span class="crate">${fruitSmall(birne).repeat(8)}</span></div>
+    <p class="hint">Was sagt die Maschine?</p>
     <div class="choices" id="predict">
-      <button type="button" data-v="ja">Die Maschine sagt: reicht</button>
-      <button type="button" data-v="nein">Die Maschine sagt: reicht nicht</button>
+      <button type="button" data-v="ja">Die Maschine sagt: passt</button>
+      <button type="button" data-v="nein">Die Maschine sagt: zu schwer</button>
     </div>
     <div id="out"></div>`;
   document.querySelectorAll("#predict button").forEach(b => b.onclick = () => {
     const ok = b.dataset.v === "ja";
     document.querySelectorAll("#predict button").forEach(x => { x.disabled = true; x.classList.toggle(ok ? "right" : "wrong", x === b); });
-    $("#out").innerHTML = `<div class="msg info"><b>Die Maschine sagt: reicht.</b>14 cm, also nach ihrer Regel genug.</div>
-      <div class="row"><button type="button" class="main" id="probe">🧮 Probe mit der Formel</button></div><div id="out2"></div>`;
+    $("#out").innerHTML = `<div class="msg info"><b>Die Maschine sagt: passt.</b>8 Stück sind weniger als 12. Nach ihrer Regel ist das in Ordnung.</div>
+      <div class="row"><button type="button" class="main" id="probe">⚖ Nachrechnen</button></div><div id="out2"></div>`;
     $("#probe").onclick = () => {
-      $("#out2").innerHTML = `<div class="probe-box">U = 1 ÷ (Summe aller Widerstände)<br>Holzfaser: λ = 0,040 statt 0,035<br><b>U = ${fmt(uWand(14, 0.040))}</b> → <b class="badc">reicht nicht</b></div>
+      $("#out2").innerHTML = `<div class="probe-box">Ein Apfel wiegt 200 g.<br>Eine Birne wiegt 300 g.<br>8 Birnen × 300 g = <b>${kg(2400)}</b> → <b class="badc">zu schwer</b></div>
         <h3>Warum lag die Maschine falsch?</h3>
         <div class="choices" id="why">
-          <button type="button" data-r="dicke">Sie hat nur auf die Dicke geschaut, nicht auf den Dämmstoff.</button>
-          <button type="button" data-r="formel">Die Formel ist falsch.</button>
-          <button type="button" data-r="holz">Holzfaser dämmt gar nicht.</button>
+          <button type="button" data-r="stueck">Sie hat nur Stück gezählt. Dass Birnen schwerer sind, wusste sie nicht.</button>
+          <button type="button" data-r="rechnung">Die Rechnung ist falsch.</button>
+          <button type="button" data-r="kiste">Die Kiste ist kaputt.</button>
         </div><div id="out3"></div>`;
-      const WHY = { dicke: "In ihren Beispielen war immer EPS. Den Dämmstoff kannte sie gar nicht als Merkmal. Die Formel rechnet mit λ und merkt es sofort.",
-        formel: "Nein. Die Formel ist die Physik der Wand. Die Maschine hat nur eine Abkürzung gelernt.",
-        holz: "Doch, Holzfaser dämmt gut. Nur etwas weniger als EPS. Darum reichen 14 cm hier knapp nicht." };
+      const WHY = { stueck: "In ihren Beispielen waren nur Äpfel. Das Gewicht pro Stück kannte sie gar nicht als Merkmal. Die Rechnung „Anzahl mal Gewicht“ merkt den Fehler sofort.",
+        rechnung: "Nein. 8 mal 300 g sind 2400 g, also 2,4 kg. Die Rechnung stimmt. Die Maschine hat nur eine Abkürzung gelernt.",
+        kiste: "Nein. Die Kiste hält 2 kg, wie bei allen Beispielen. Es liegt an der Maschine." };
       document.querySelectorAll("#why button").forEach(w => w.onclick = () => {
-        const ok2 = w.dataset.r === "dicke"; w.classList.add(ok2 ? "right" : "wrong");
+        const ok2 = w.dataset.r === "stueck"; w.classList.add(ok2 ? "right" : "wrong");
         $("#out3").innerHTML = `<div class="msg ${ok2 ? "ok" : "bad"}"><b>${ok2 ? "Genau." : "Noch nicht."}</b>${WHY[w.dataset.r]}</div>
-          ${ok2 ? `<div class="pair"><div><b>🧮 Rechnen</b>Ein Mensch schreibt die Formel in den Code. Stimmt die Formel, stimmt das Ergebnis.</div><div><b>⚙ Lernen</b>Die Maschine sucht selbst eine Regel in Beispielen. Fehlt etwas in den Beispielen, irrt sie.</div></div>
-          <div class="msg info"><b>Darum kann auch eine KI bei der Wand falsch liegen.</b>In der Lerneinheit zur Wand prüfst du ihre Vorschläge deshalb mit der Formel: Probe durch Einsetzen.</div>
-          ${fw("Schwellenwert = die Grenze, hier 14 cm", "Generalisierung = Gelerntes auf Neues übertragen", "Validierung = Probe mit einer sicheren Methode")}${noteField("s6_aha", "Was war dein Aha?", "")}` + nextBtn(6, "Zum Abschluss") : ""}`;
+          ${ok2 ? `<div class="pair"><div><b>🧮 Rechnen</b>Ein Mensch schreibt die Regel auf: Anzahl mal Gewicht. Stimmt die Regel, stimmt das Ergebnis.</div><div><b>⚙ Lernen</b>Die Maschine sucht selbst eine Regel in Beispielen. Fehlt etwas in den Beispielen, irrt sie.</div></div>
+          <div class="msg info"><b>Darum kann eine KI falsch liegen.</b>Sie hat aus Beispielen gelernt und kennt nur, was darin vorkam. Wenn dir eine KI etwas vorschlägt: Prüf es nach.</div>
+          ${fw("Schwellenwert = die Grenze, hier 12 Stück", "Generalisierung = Gelerntes auf Neues übertragen", "Validierung = Probe mit einer sicheren Methode, hier nachrechnen")}${noteField("s6_aha", "Was war dein Aha?", "")}` + nextBtn(6, "Zum Abschluss") : ""}`;
         bindNotes(); bindNext(6);
       });
     };
@@ -560,7 +563,7 @@ function step6() {
 
 /* ---------- Abschluss ---------- */
 function finale() {
-  const labels = { s2_df: "Denkfehler der Maschine", s4_aha: "Aha beim Baum", s6_aha: "Aha bei der Wand", frage: "Wer sucht die Beispiele aus?", lernweg: "Wem gehört dein Lernweg?", rule: "Meine Regel" };
+  const labels = { s2_df: "Denkfehler der Maschine", s4_aha: "Aha beim Baum", s6_aha: "Aha bei der Obstkiste", frage: "Wer sucht die Beispiele aus?", lernweg: "Wem gehört dein Lernweg?", rule: "Meine Regel" };
   const mine = () => Object.keys(labels).filter(k => (notes[k] || "").trim()).map(k => `${labels[k]}:\n${notes[k].trim()}`).join("\n\n");
   $("#stage").innerHTML = `
     <h2>Geschafft. So lernt eine Maschine.</h2>
@@ -572,7 +575,7 @@ function finale() {
       <dt>Trainingsdaten</dt><dd>Die Beispiele, aus denen eine Maschine lernt.</dd>
       <dt>Label</dt><dd>Der Name an einem Beispiel. Beschriften heißt: Labels vergeben.</dd>
       <dt>Überwachtes Lernen</dt><dd>Lernen aus beschrifteten Beispielen.</dd>
-      <dt>Merkmal</dt><dd>Etwas Erkennbares: Farbe, Form, Schale, Dicke, Dämmstoff.</dd>
+      <dt>Merkmal</dt><dd>Etwas Erkennbares: Farbe, Form, Schale, Gewicht.</dd>
       <dt>Modell</dt><dd>Die Regel, die die Maschine gelernt hat.</dd>
       <dt>Trefferquote</dt><dd>Wie viele Beispiele das Modell richtig einsortiert.</dd>
       <dt>Testdaten</dt><dd>Neue Beispiele, die die Maschine beim Lernen nicht gesehen hat.</dd>
@@ -600,8 +603,7 @@ function finale() {
     <h3>Woher kommt das Wissen?</h3>
     <div class="source">
       Vorbild: <a href="https://computingeducation.de/aiunplugged.pdf">„AI Unplugged“ von Annabel Lindner und Stefan Seegerer</a>, Übung „Klassifikation mit Entscheidungsbäumen“.<br>
-      Einordnung: <a href="https://dl.gi.de/bitstream/handle/20.500.12116/20121/61-GI-Empfehlung_Kompetenzen_informatische_Bildung_Primarbereich.pdf?sequence=1">Empfehlungen der Gesellschaft für Informatik für die Grundschule (2019)</a>, Bereiche „Information und Daten“, „Algorithmen“ und „Informatik, Mensch und Gesellschaft“, Tätigkeit „Begründen und Bewerten“. KI selbst kommt dort noch nicht vor.<br>
-      Die Wandwerte sind mit dem Rechenweg aus der Lerneinheit zur Wand berechnet (DIN EN ISO 6946, vereinfacht).
+      Einordnung: <a href="https://dl.gi.de/bitstream/handle/20.500.12116/20121/61-GI-Empfehlung_Kompetenzen_informatische_Bildung_Primarbereich.pdf?sequence=1">Empfehlungen der Gesellschaft für Informatik für die Grundschule (2019)</a>, Bereiche „Information und Daten“, „Algorithmen“ und „Informatik, Mensch und Gesellschaft“, Tätigkeit „Begründen und Bewerten“. KI selbst kommt dort noch nicht vor.
     </div>`;
   const upd = () => { $("#mynotes").textContent = mine() || "Du hast noch nichts aufgeschrieben. Das ist in Ordnung."; };
   bindNotes(); upd(); document.querySelectorAll("#n_frage,#n_rule").forEach(t => t.addEventListener("input", upd));
