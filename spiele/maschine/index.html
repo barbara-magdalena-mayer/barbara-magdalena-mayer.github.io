@@ -32,6 +32,7 @@ h1{font-family:var(--display);font-size:34px;line-height:1.2;margin:4px 0 8px}
 h2{font-family:var(--display);font-size:28px;line-height:1.25;margin:0 0 10px}
 h3{font-size:21px;margin:20px 0 8px}
 .lead{max-width:42ch;margin:0 0 14px}
+.reihe b{display:block;margin-bottom:2px}
 .reihe{max-width:52ch;background:var(--green-soft);border-left:5px solid var(--green);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px;font-size:18px}
 .blocker{font-size:16px;color:var(--muted);background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:8px 12px;margin:0 0 14px;max-width:60ch}
 .blocker a{color:inherit;font-weight:600}
@@ -102,6 +103,7 @@ label.note{display:block;margin-top:14px;font-weight:600}
 .fws{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
 .fw{background:#e6eefb;color:#1f3a66;border:1px solid #b9cbee;border-radius:99px;padding:4px 12px;font-size:16px}
 @media (prefers-color-scheme: dark){.fw{background:#1c2740;color:#cfe0ff;border-color:#33466e}}
+.say-tree{background:var(--bg);border-radius:12px;padding:12px 14px;margin:10px 0;max-width:560px;font-size:19px}.say-tree ul{margin:4px 0;padding-left:22px}.say-tree .small-title{font-size:15px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .tree{background:var(--bg);border-radius:14px;padding:12px;margin:14px 0;max-width:560px}
 .tree select{font:inherit;font-size:19px;padding:6px 8px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);max-width:100%}
 .tq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
@@ -392,42 +394,74 @@ const ALL = () => [
 const Q = { farbe: { label: "Welche Farbe?", vals: ["rot", "grün"] }, form: { label: "Welche Form?", vals: ["rund", "länglich"] }, schale: { label: "Wie ist die Schale?", vals: ["glatt", "gepunktet"] } };
 let tree = null;
 function classify(t, f) { if (typeof t === "string") return t; return classify(t.br[f[t.q]], f); }
+let tries4 = 0;
 function step4() {
-  tree = { q: "form", br: { rund: "Apfel", länglich: "Birne" } };
+  tree = { q: "form", br: { rund: "Apfel", länglich: "Birne" } }; tries4 = 0;
   $("#stage").innerHTML = `${head(4, "Stell zwei Fragen")}
-    <div class="task">Grüner Apfel und Nashi-Birne: gleiche Farbe, gleiche Form. Schau genau hin. Was ist anders? Dann bau der Maschine einen <b>Entscheidungsbaum</b>: eine Frage, und je nach Antwort noch eine.</div>
+    <div class="task">Die Maschine hält die Nashi-Birne für einen Apfel. Schau dir die beiden an: <b>Was ist anders?</b></div>
     <div class="pool">${[ALL()[2], ALL()[6]].map(f => `<span class="fcard static">${cardHtml(f)}</span>`).join("")}</div>
-    <div class="tree" id="tree"></div>
-    <div class="row"><button type="button" class="main" id="testTree">▶ Baum testen</button></div>
-    <div id="out"></div>`;
-  drawTree(); $("#testTree").onclick = testTree;
+    <div class="choices" id="diff">
+      <button type="button" data-r="farbe">Die Farbe</button>
+      <button type="button" data-r="form">Die Form</button>
+      <button type="button" data-r="schale">Die Schale</button>
+    </div>
+    <div id="out0"></div>`;
+  document.querySelectorAll("#diff button").forEach(b => b.onclick = () => {
+    const ok = b.dataset.r === "schale"; b.classList.add(ok ? "right" : "wrong");
+    if (!ok) { $("#out0").innerHTML = `<div class="msg bad"><b>Schau noch einmal.</b>Beide sind ${b.dataset.r === "farbe" ? "grün" : "rund"}. Das ist gleich.</div>`; return; }
+    document.querySelectorAll("#diff button").forEach(x => x.disabled = true);
+    $("#out0").innerHTML = `<div class="msg ok"><b>Genau: Die Nashi-Birne hat Punkte auf der Schale.</b>Die Schale ist ein neues Merkmal. Jetzt baust du der Maschine einen <b style="display:inline">Entscheidungsbaum</b>: Sie stellt eine Frage. Je nach Antwort weiß sie es, oder sie stellt noch eine Frage.</div>
+      <h3>So liest du den Baum</h3>
+      <p class="hint" style="margin-top:0">Die Maschine fängt oben bei Frage 1 an. Jede Antwort hat eine eigene Zeile. Dort wählst du: Apfel, Birne oder „noch eine Frage“.</p>
+      <div class="tree" id="tree"></div>
+      <div class="say-tree" id="sayTree" aria-live="polite"></div>
+      <div class="row"><button type="button" class="main" id="testTree">▶ Baum testen</button></div>
+      <div id="out"></div>`;
+    drawTree(); $("#testTree").onclick = testTree;
+    $("#tree").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+function treeSentence(t, first = true) {
+  if (typeof t === "string") return `<b>${t}</b>`;
+  return `${first ? "Die Maschine fragt" : "sie fragt weiter"}: <b>${Q[t.q].label}</b><ul>${Q[t.q].vals.map(v => `<li>Wenn ${v} → ${treeSentence(t.br[v], false)}</li>`).join("")}</ul>`;
 }
 function drawTree() {
   const opt = (sel, list) => list.map(([v, t]) => `<option value="${v}" ${v === sel ? "selected" : ""}>${t}</option>`).join("");
-  const qSel = (id, q) => `<select id="${id}" aria-label="Frage">${opt(q, Object.entries(Q).map(([k, v]) => [k, v.label]))}</select>`;
+  const qSel = (id, q, not) => `<select id="${id}" aria-label="Frage">${opt(q, Object.entries(Q).filter(([k]) => k !== not).map(([k, v]) => [k, v.label]))}</select>`;
   const leafSel = (id, v, allowQ) => `<select id="${id}" aria-label="Antwort">${opt(typeof v === "string" ? v : "q2", [["Apfel", "→ Apfel"], ["Birne", "→ Birne"]].concat(allowQ ? [["q2", "→ noch eine Frage"]] : []))}</select>`;
   const t = tree;
+  const other = q => Object.keys(Q).find(k => k !== q && k !== "schale") || Object.keys(Q).find(k => k !== q);
   $("#tree").innerHTML = `<div class="tq"><span class="tlabel">Frage 1</span>${qSel("q1", t.q)}</div>
-    ${Q[t.q].vals.map(v => `<div class="tb"><span class="tval">${v}</span>${leafSel("l_" + v, t.br[v], true)}
-      ${typeof t.br[v] === "object" ? `<div class="tsub"><div class="tq"><span class="tlabel">Frage 2</span>${qSel("q2_" + v, t.br[v].q)}</div>
-        ${Q[t.br[v].q].vals.map(w => `<div class="tb"><span class="tval">${w}</span>${leafSel("l_" + v + "_" + w, t.br[v].br[w], false)}</div>`).join("")}</div>` : ""}</div>`).join("")}`;
-  $("#q1").onchange = e => { tree = { q: e.target.value, br: Object.fromEntries(Q[e.target.value].vals.map(v => [v, "Apfel"])) }; drawTree(); $("#out").innerHTML = ""; };
+    ${Q[t.q].vals.map(v => `<div class="tb"><span class="tval">Wenn ${v}</span>${leafSel("l_" + v, t.br[v], true)}
+      ${typeof t.br[v] === "object" ? `<div class="tsub"><div class="tq"><span class="tlabel">Frage 2</span>${qSel("q2_" + v, t.br[v].q, t.q)}</div>
+        ${Q[t.br[v].q].vals.map(w => `<div class="tb"><span class="tval">Wenn ${w}</span>${leafSel("l_" + v + "_" + w, t.br[v].br[w], false)}</div>`).join("")}</div>` : ""}</div>`).join("")}`;
+  $("#sayTree").innerHTML = `<div class="small-title">Dein Baum in Worten</div>${treeSentence(t)}`;
+  const changed = () => { $("#out").innerHTML = ""; $("#sayTree").innerHTML = `<div class="small-title">Dein Baum in Worten</div>${treeSentence(tree)}`; };
+  $("#q1").onchange = e => { tree = { q: e.target.value, br: Object.fromEntries(Q[e.target.value].vals.map(v => [v, "Apfel"])) }; drawTree(); changed(); };
   Q[t.q].vals.forEach(v => {
-    $("#l_" + v).onchange = e => { t.br[v] = e.target.value === "q2" ? { q: "farbe", br: { rot: "Apfel", grün: "Apfel" } } : e.target.value; drawTree(); $("#out").innerHTML = ""; };
+    $("#l_" + v).onchange = e => { const q2 = other(t.q); t.br[v] = e.target.value === "q2" ? { q: q2, br: Object.fromEntries(Q[q2].vals.map(w => [w, "Apfel"])) } : e.target.value; drawTree(); changed(); };
     if (typeof t.br[v] === "object") {
       const sub = t.br[v];
-      $("#q2_" + v).onchange = e => { t.br[v] = { q: e.target.value, br: Object.fromEntries(Q[e.target.value].vals.map(w => [w, "Apfel"])) }; drawTree(); $("#out").innerHTML = ""; };
-      Q[sub.q].vals.forEach(w => $("#l_" + v + "_" + w).onchange = e => { sub.br[w] = e.target.value; $("#out").innerHTML = ""; });
+      $("#q2_" + v).onchange = e => { t.br[v] = { q: e.target.value, br: Object.fromEntries(Q[e.target.value].vals.map(w => [w, "Apfel"])) }; drawTree(); changed(); };
+      Q[sub.q].vals.forEach(w => $("#l_" + v + "_" + w).onchange = e => { sub.br[w] = e.target.value; changed(); });
     }
   });
 }
+const HINTS4 = [
+  "Tipp 1: Länglich ist immer eine Birne. Schwierig sind nur die runden Früchte. Stell zuerst die Frage nach der Form.",
+  "Tipp 2: Bei „Wenn rund“ wählst du „noch eine Frage“. Frag dort nach der Schale. Was gilt für die Punkte?",
+  "Tipp 3, die Lösung: Frage 1: Welche Form? Wenn länglich → Birne. Wenn rund → noch eine Frage: Wie ist die Schale? Wenn glatt → Apfel. Wenn gepunktet → Birne."
+];
 function testTree() {
   const all = ALL(), res = all.map(f => ({ f, g: classify(tree, f) })), right = res.filter(r => r.g === r.f.art).length;
   const ok = right === all.length;
+  const wrong = [...new Set(res.filter(r => r.g !== r.f.art).map(r => `${r.f.name}: Dein Baum sagt ${r.g}, richtig ist ${r.f.art}.`))];
+  if (!ok) tries4++;
   $("#out").innerHTML = `<div class="tryall">${res.map(r => `<span class="fcard static small" style="border-color:${r.g === r.f.art ? "var(--green)" : "var(--red)"}">${cardHtml(r.f)}<span class="res">${r.g} ${r.g === r.f.art ? "✓" : "✗"}</span></span>`).join("")}</div>
     <div class="msg ${ok ? "ok" : "bad"}"><b>${right} von ${all.length} richtig.</b>${ok
-      ? "Dein Baum erkennt alle. Mit der Schale als neuem Merkmal klappt es."
-      : res.some(r => r.f.name === "Nashi-Birne" && r.g !== "Birne") ? "Die Nashi-Birne wird noch falsch erkannt. Welches Merkmal hat nur sie?" : "Schau auf die roten Karten. Welche Antwort muss sich ändern?"}</div>
+      ? "Dein Baum erkennt alle. Mit der Schale als zweiter Frage klappt es."
+      : `<ul style="margin:4px 0 0;padding-left:20px">${wrong.map(w => `<li>${w}</li>`).join("")}</ul>`}</div>
+    ${!ok ? `<div class="msg info"><b>Hilfe</b>${HINTS4[Math.min(tries4, HINTS4.length) - 1]}</div>` : ""}
     ${ok ? fw("Entscheidungsbaum = Fragen hintereinander", "Knoten = eine Frage im Baum", "Blatt = die Antwort am Ende", "Merkmalsauswahl = das passende Merkmal finden") + noteField("s4_aha", "Was war dein Aha?", "") + nextBtn(4, "Weiter zu Stufe 5") : ""}`;
   bindNotes(); bindNext(4);
 }
