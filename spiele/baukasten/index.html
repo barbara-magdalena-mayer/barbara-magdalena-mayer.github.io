@@ -77,6 +77,29 @@ label.note{display:block;margin-top:12px;font-weight:600;font-size:16px}
 .pick .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
 .pick .opts button{font:15px var(--mono);border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer}
 .pick .opts button.sel{border-color:var(--green);background:var(--green-soft)}
+/* Einfache Sprache, einfache Optik: alles etwas größer */
+.wrap{zoom:1.1}
+.reihe{max-width:64ch;background:var(--green-soft);border-left:5px solid var(--green);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px;font-size:17px}
+.reihe b{display:block;margin-bottom:2px}
+/* Runde 2: drei Schritte, Karten ziehen */
+.dots{display:flex;gap:8px;margin:4px 0 6px}.dots span{width:14px;height:14px;border-radius:50%;background:var(--line)}.dots .done{background:var(--green)}.dots .now{background:var(--pink)}
+.stepno{font-size:15px;font-weight:600;color:var(--pink);text-transform:uppercase;letter-spacing:.06em}
+h3.big{font-family:var(--display);font-size:26px;margin:4px 0 8px}
+.easy{font-size:20px;line-height:1.6;max-width:40ch;margin:0 0 14px}
+.eq{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font:600 28px/1.3 var(--mono);background:var(--code-bg);color:var(--code);border-radius:14px;padding:18px 16px;margin:6px 0 10px}
+.drop{display:inline-flex;align-items:center;justify-content:center;min-width:150px;min-height:66px;padding:6px 14px;border:4px dashed #a8f0c8;border-radius:12px;font:500 18px var(--body);color:#a8f0c8;background:#ffffff10;transition:transform .15s}
+.drop.over{background:#a8f0c833;transform:scale(1.05)}
+.drop.filled{border-style:solid;font:600 28px var(--mono);color:#fff}
+.drop.ok{border-color:#7fe0a8;background:#2f524099}.drop.bad{border-color:#ff9b9b;background:#a8323266}
+.hint{font-size:17px;color:var(--muted);margin:6px 0}
+.dcards{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 4px}
+.dcard{font:600 26px var(--mono);min-width:120px;min-height:66px;padding:8px 18px;border:3px solid var(--ink);border-radius:12px;background:var(--paper);color:var(--ink);cursor:grab;touch-action:none;box-shadow:0 4px 0 var(--line)}
+.dcard:hover{border-color:var(--pink)}.dcard.used{border-color:var(--green);background:var(--green-soft)}.dcard.lifted{opacity:.3}
+.dcard.ghost{position:fixed;z-index:100;pointer-events:none;transform:translate(-50%,-50%) rotate(-3deg);box-shadow:0 10px 24px #0004;cursor:grabbing;zoom:1.1}
+.result{font:24px var(--mono);margin:12px 0 0}
+button.big-btn{font-size:20px;padding:12px 22px}
+.code-mini{font:20px/1.5 var(--mono);background:var(--code-bg);color:var(--code);border-radius:12px;padding:12px 14px;margin:8px 0;overflow-wrap:anywhere}
+.big-probe{font-size:20px}.big-probe b{font-size:24px}
 .probe{display:grid;grid-template-columns:1fr auto;gap:4px 10px;background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:16px}
 .probe b{font-variant-numeric:tabular-nums}
 /* Vorschau und Code */
@@ -120,6 +143,8 @@ footer a{color:inherit}
   <span class="eyebrow">Informatische Bildung · Wem gehört dein Lernweg? · Teil 2</span>
   <h1>Wie baut man eine Lerneinheit?</h1>
   <p class="lead">In Teil 1 hast du gesehen, wie eine Lerneinheit mit der Lernplattform spricht. Aber wie entsteht so eine Einheit überhaupt? Hier baust du eine kleine Lerneinheit selbst zusammen: einen Rechner für den U-Wert einer Wand. Zum Schluss schaltest du die Verbindung zur Lernplattform dazu.<br>Damit gehst du der Frage dieser Reihe weiter nach: <b>Wem gehört dein Lernweg?</b> Was schreibt so eine Einheit mit, und wer bekommt es zu sehen?</p>
+  <div class="reihe" role="note"><b>Worum es in dieser Reihe geht</b>Lernen ist nicht Prüfen. Wer lernt, ist noch unterwegs: Fehler, Umwege und mehr Zeit gehören dazu. Wer geprüft wird, zeigt ein Ergebnis.<br>
+    Dein Lernweg ist etwas Persönliches. Trotzdem schauen andere darauf: Lehrkräfte, Betriebe, Prüfungen. Das ist ein Spannungsfeld, und diese Reihe löst es nicht auf. Sie fragt: <b style="display:inline">Wem gehört dein Lernweg?</b></div>
   <p class="blocker" role="note">Bevor du loslegst: Fehlt etwas, zum Beispiel ein Bild oder ein Kasten? Dann kann ein Inhaltsblocker in deinem Browser die Ursache sein. Schalte ihn für diese Seite aus und lade neu. <a href="../../ueber-mich.html#media-note-title">So geht das in Safari, Firefox und Chrome</a>. Im schmalen Fenster stehen manche Teile weiter unten: einfach scrollen.</p>
   <div class="steps" aria-hidden="true" id="steps"><span></span><span></span><span></span><span></span><span></span></div>
 
@@ -194,12 +219,12 @@ function jsCode(p = parts) {
   const rd = id => p.read === "parseFloat"
     ? `parseFloat(document.getElementById("${id}").value)`
     : `document.getElementById("${id}").value`;
-  const c = p.conv ? ` ${p.conv}` : "";
+  const c = p.conv === null ? " ▢" : p.conv ? ` ${p.conv}` : "";
   return `document.getElementById("rechne").onclick = function () {
   const ziegel = ${rd("ziegel")};
   const daemm  = ${rd("daemm")};
-  const R = 0.13 + (ziegel${c}) ${p.op} 0.68 + (daemm${c}) ${p.op} 0.035 + 0.04;
-  const U = ${p.kehr};
+  const R = 0.13 + (ziegel${c}) ${p.op ?? "▢"} 0.68 + (daemm${c}) ${p.op ?? "▢"} 0.035 + 0.04;
+  const U = ${p.kehr ?? "▢"};
   document.getElementById("ergebnis").textContent =
     "U-Wert: " + U.toFixed(2).replace(".", ",") + " W/(m²K)";
   document.getElementById("dicke").textContent =
@@ -333,82 +358,133 @@ function round1() {
   render();
 }
 
-/* ---------- Runde 2: Die Rechnung im Code ---------- */
-const PICKS = [
-  { k: "conv", lbl: "Baustein A: Aus Zentimetern werden …", say: "Die Formel R = d / λ braucht die Dicke in Metern.",
-    opts: [["/ 100", "durch 100"], ["", "nichts ändern"], ["* 100", "mal 100"]] },
-  { k: "op", lbl: "Baustein B: Dicke und λ verbinden", say: "Wie bremst eine Schicht die Wärme? Erinnere dich an R = d / λ.",
-    opts: [["/", "geteilt durch"], ["*", "mal"]] },
-  { k: "kehr", lbl: "Baustein C: Aus dem Widerstand R wird der U-Wert", say: "Viel Widerstand heißt: wenig Wärme geht durch.",
-    opts: [["1 / R", "eins geteilt durch R"], ["R", "einfach R"], ["1 - R", "eins minus R"]] }
+/* ---------- Runde 2: Die Rechnung in drei Schritten ---------- */
+const STEPS2 = [
+  { k: "conv", title: "Zentimeter oder Meter?",
+    say: "Im Feld steht die Dicke in <b>Zentimetern</b>: 24&nbsp;cm.<br>Die Formel rechnet aber mit <b>Metern</b>.<br>Merke: <b>100&nbsp;cm sind 1&nbsp;m</b>.",
+    before: "24 cm", after: "= ? m",
+    cards: [["/ 100", "÷ 100"], ["* 100", "× 100"], ["", "nichts tun"]], right: "/ 100",
+    show: v => v === "/ 100" ? "24 ÷ 100 = <b>0,24 m</b>" : v === "* 100" ? "24 × 100 = <b>2400 m</b>" : "Es bleibt <b>24 m</b>",
+    ok: "Richtig. 24 Zentimeter sind 0,24 Meter.",
+    bad: { "* 100": "Eine Wand von 2400 Metern? Das sind 2,4 Kilometer. Die Zahl muss kleiner werden, nicht größer.",
+           "": "24 Meter wären so hoch wie ein Haus mit acht Stockwerken. Die Zahl muss kleiner werden." } },
+  { k: "op", title: "Wie stark bremst der Ziegel?",
+    say: "Jede Schicht der Wand bremst die Wärme. Die Bremse heißt <b>R</b>.<br>Du rechnest: <b>Dicke geteilt durch λ</b>.<br>λ (sprich: Lambda) sagt, wie leicht Wärme durch einen Stoff geht. Beim Ziegel ist λ&nbsp;=&nbsp;0,68.",
+    before: "R = 0,24", after: "0,68",
+    cards: [["/", "÷"], ["*", "×"]], right: "/",
+    show: v => v === "/" ? "0,24 ÷ 0,68 = <b>0,35</b>" : "0,24 × 0,68 = <b>0,16</b>",
+    ok: "Richtig. Der Ziegel bremst mit R = 0,35.",
+    bad: { "*": "Probier es mit der Dämmung aus: 0,14 × 0,035 = 0,005. Dann würde die Dämmung fast gar nicht bremsen. Aber Dämmung soll stark bremsen. Also stimmt „mal“ nicht." } },
+  { k: "kehr", title: "Wie viel Wärme geht verloren?",
+    say: "Alle Bremsen zusammen ergeben <b>R = 0,52</b>. Das ist der Ziegel plus die Luft innen und außen.<br>Jetzt willst du wissen: Wie viel Wärme <b>geht verloren</b>? Das ist der <b>U-Wert</b>.<br>Viel Bremse heißt: wenig Verlust. U ist das <b>Umgekehrte</b> von R.",
+    before: "U =", after: "",
+    cards: [["1 / R", "1 ÷ R"], ["R", "R"], ["1 - R", "1 − R"]], right: "1 / R",
+    show: v => v === "1 / R" ? "1 ÷ 0,52 = <b>1,91</b>" : v === "R" ? "U = <b>0,52</b>" : "1 − 0,52 = <b>0,48</b>",
+    ok: "Richtig. U = 1,91. Die alte Wand verliert viel Wärme.",
+    bad: { "R": "Dann wären Verlust und Bremse gleich groß. Mehr Bremse hieße mehr Verlust. Das passt nicht zusammen.",
+           "1 - R": "Mit dicker Dämmung wird R größer als 1. Dann käme eine Zahl unter null heraus: Die Wand würde heizen. Das geht nicht." } }
 ];
+let step2 = 0;
 function round2() {
   parts = { conv: null, op: null, kehr: null, read: "parseFloat" };
   layers = { html: true, css: true, js: true };
-  $("#stage").innerHTML = `
-    <h2>Runde 2 · Die Rechnung im Code</h2>
-    <div class="task">Im JavaScript fehlen drei Bausteine der Rechnung. <b>Setz sie ein.</b> Dann mach die Probe: Das Spiel setzt eine echte Wand ein und schaut, was herauskommt.</div>
-    <div class="msg info" style="margin:0 0 12px"><b>Was bedeuten die Zeichen?</b>
-      <dl class="glossary" style="margin:6px 0 0">
-        <dt>d</dt><dd>Die Dicke einer Schicht. In der Formel immer in <b>Metern</b>.</dd>
-        <dt>λ (Lambda)</dt><dd>Wie gut ein Stoff Wärme durchlässt. Ziegel 0,68 (lässt viel durch), Dämmung 0,035 (lässt wenig durch).</dd>
-        <dt>R</dt><dd>Der <b>Widerstand</b>: Wie stark bremst die Wand die Wärme? Großes R = starke Bremse. Für eine Schicht gilt R = d / λ. Alle R werden zusammengezählt, dazu kommen 0,13 innen und 0,04 außen.</dd>
-        <dt>U</dt><dd>Der <b>U-Wert</b>: Wie viel Wärme geht durch die Wand verloren? Kleines U = gute Dämmung. U ist das <b>Umgekehrte</b> von R: viel Bremse, wenig Verlust.</dd>
-      </dl></div>
-    <div class="formula" id="formula" aria-label="Die Rechnung mit drei Lücken"></div>
-    ${PICKS.map(p => `<div class="pick" data-k="${p.k}"><div class="lbl">${p.lbl}</div><div class="say">${p.say}</div>
-      <div class="opts" role="group" aria-label="${p.lbl}">${p.opts.map(([v, t]) => `<button type="button" data-v="${esc(v)}">${esc(v || "( nichts )")} <span style="font-family:var(--body);color:var(--muted)">· ${t}</span></button>`).join("")}</div></div>`).join("")}
-    <div class="probe">
-      <span>Zur Kontrolle von Hand: 24 cm Ziegel, keine Dämmung<br><span style="font-size:14px;color:var(--muted)">R = 0,13 + 0,24 / 0,68 + 0,04 ≈ 0,52 · U = 1 / 0,52</span></span><b>≈ 1,91</b>
-    </div>
-    <div class="row"><button type="button" class="main" id="play2" disabled>▶ Probe machen</button></div>
-    <div id="out"></div>`;
-  document.querySelectorAll(".pick .opts button").forEach(b => b.onclick = () => {
-    const k = b.closest(".pick").dataset.k;
-    parts[k] = b.dataset.v;
-    b.parentNode.querySelectorAll("button").forEach(x => x.classList.toggle("sel", x === b));
-    drawFormula(); $("#out").innerHTML = "";
-    $("#play2").disabled = PICKS.some(p => parts[p.k] === null);
-  });
-  $("#play2").onclick = playR2;
-  drawFormula(); openTab("js");
+  step2 = 0;
+  openTab("js");
   layers.js = false; render(); layers.js = true;   // Vorschau zeigt erst nach der Probe ein Ergebnis
+  drawStep2();
 }
-function drawFormula() {
-  const s = (k, show) => parts[k] === null ? `<span class="slot empty">${k === "conv" ? "A" : k === "op" ? "B" : "C"}</span>` : `<span class="slot">${esc(show)}</span>`;
-  $("#formula").innerHTML =
-    `const R = 0.13 + (ziegel ${s("conv", parts.conv || "·")}) ${s("op", parts.op)} 0.68<br>` +
-    `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ (daemm ${s("conv", parts.conv || "·")}) ${s("op", parts.op)} 0.035 + 0.04;<br>` +
-    `const U = ${s("kehr", parts.kehr)};`;
+function drawStep2() {
+  document.body.classList.add("noside");   // während der Schritte keine Vorschau, sie würde die Erklärung verdecken
+  const S = STEPS2[step2];
+  $("#stage").innerHTML = `
+    <h2>Runde 2 · Die Rechnung</h2>
+    <div class="task">Dem Rechner fehlen drei Teile der Rechnung. Du setzt sie nacheinander ein: <b>ein Teil pro Schritt</b>.</div>
+    <div class="dots" aria-hidden="true">${STEPS2.map((_, i) => `<span class="${i < step2 ? "done" : i === step2 ? "now" : ""}"></span>`).join("")}</div>
+    <div class="stepno">Schritt ${step2 + 1} von ${STEPS2.length}</div>
+    <h3 class="big">${S.title}</h3>
+    <p class="easy">${S.say}</p>
+    <div class="eq" aria-label="Rechnung mit einer Lücke">
+      <span>${S.before}</span>
+      <span class="drop" id="drop" aria-live="polite">hier hinein</span>
+      ${S.after ? `<span>${S.after}</span>` : ""}
+    </div>
+    <p class="hint">Zieh die passende Karte in das Kästchen. Oder tippe die Karte an.</p>
+    <div class="dcards" role="group" aria-label="Karten">${S.cards.map(([v, t]) =>
+      `<button type="button" class="dcard" data-v="${esc(v)}" aria-label="Karte ${esc(t)} einsetzen">${esc(t)}</button>`).join("")}</div>
+    <div id="out"></div>`;
+  document.querySelectorAll(".dcard").forEach(b => makeDraggable(b, () => placeCard(b.dataset.v, b.textContent)));
 }
-async function playR2() {
-  render(); $("#play2").disabled = true;
-  const r1 = await probe(24, 0), r2 = await probe(24, 14);
-  $("#play2").disabled = false;
-  const num = t => t && t.u ? parseFloat(t.u.replace("U-Wert: ", "").replace(",", ".")) : NaN;
-  const u1 = num(r1), u2 = num(r2);
-  const ok = Math.abs(u1 - 1.91) < 0.015 && Math.abs(u2 - 0.22) < 0.015;
-  const fmt = n => isFinite(n) ? n.toFixed(2).replace(".", ",") : "kein Ergebnis";
-  let hint = "";
-  if (!ok) {
-    if (parts.conv !== "/ 100") hint = "Schau auf die Einheit: Rechnet der Code mit Zentimetern oder mit Metern?";
-    else if (parts.op !== "/") hint = "Schau auf die Formel R = d / λ: Wird hier wirklich geteilt?";
-    else if (u1 < 0 || u2 < 0) hint = "Ein negativer U-Wert hieße: Die Wand verliert keine Wärme, sie heizt. Kann das sein? Schau auf Baustein C: Wie wird aus der Bremse R der Verlust U? „Umgekehrt“ heißt in der Mathematik: 1 geteilt durch.";
-    else if (u2 > u1) hint = "Mit Dämmung kommt ein größerer Wert heraus als ohne. Dann würde Dämmung die Wand schlechter machen. Schau auf Baustein C: U ist das Umgekehrte von R.";
-    else hint = "Schau auf den letzten Schritt: Wie wird aus dem Widerstand R der U-Wert? U ist das Umgekehrte von R.";
-    if (parts.conv !== "/ 100" && isFinite(u1) && u1 < 0.1) hint += " Ein U-Wert von fast null wäre eine Wand, die so gut wie keine Wärme verliert. So eine Wand gibt es nicht.";
+function placeCard(v, label) {
+  const S = STEPS2[step2], drop = $("#drop");
+  drop.textContent = label; drop.classList.add("filled");
+  const right = v === S.right;
+  drop.classList.toggle("ok", right); drop.classList.toggle("bad", !right);
+  document.querySelectorAll(".dcard").forEach(c => c.classList.toggle("used", c.dataset.v === v));
+  const last = step2 === STEPS2.length - 1;
+  $("#out").innerHTML = right
+    ? `<div class="result">${S.show(v)}</div>
+       <div class="msg ok"><b>${S.ok}</b></div>
+       <div class="row"><button type="button" class="main big-btn" id="nextStep">${last ? "Jetzt die Probe machen →" : `Weiter zu Schritt ${step2 + 2} →`}</button></div>`
+    : `<div class="result">${S.show(v)}</div>
+       <div class="msg bad"><b>Das kann nicht stimmen.</b>${S.bad[v]}</div>
+       ${noteField("r2_df", "Was hast du gedacht?", "Schreib kurz auf, warum du diese Karte genommen hast. „Weiß ich nicht“ ist auch eine Antwort.")}
+       <p class="hint">Versuch es mit einer anderen Karte.</p>`;
+  bindNotes();
+  if (right) {
+    parts[S.k] = v; showCode();
+    $("#nextStep").onclick = () => { if (last) probeR2(); else { step2++; drawStep2(); window.scrollTo({ top: 0, behavior: "smooth" }); } };
+    $("#nextStep").focus();
   }
+}
+/* Karten ziehen (Maus, Finger, Stift) oder antippen (auch mit der Tastatur) */
+function makeDraggable(btn, onDrop) {
+  let skipClick = false;
+  btn.addEventListener("pointerdown", e => {
+    if (e.button !== 0) return;
+    const start = { x: e.clientX, y: e.clientY }; let ghost = null;
+    const over = ev => { const r = $("#drop").getBoundingClientRect(); return ev.clientX >= r.left - 12 && ev.clientX <= r.right + 12 && ev.clientY >= r.top - 12 && ev.clientY <= r.bottom + 12; };
+    const move = ev => {
+      if (!ghost && Math.hypot(ev.clientX - start.x, ev.clientY - start.y) < 8) return;
+      if (!ghost) { ghost = btn.cloneNode(true); ghost.className = "dcard ghost"; ghost.removeAttribute("id"); document.body.appendChild(ghost); btn.classList.add("lifted"); }
+      ghost.style.left = ev.clientX + "px"; ghost.style.top = ev.clientY + "px";
+      $("#drop").classList.toggle("over", over(ev));
+      ev.preventDefault();
+    };
+    const up = ev => {
+      removeEventListener("pointermove", move); removeEventListener("pointerup", up); removeEventListener("pointercancel", up);
+      if (!ghost) return;
+      ghost.remove(); btn.classList.remove("lifted"); $("#drop").classList.remove("over");
+      skipClick = true; if (over(ev)) onDrop();
+    };
+    addEventListener("pointermove", move, { passive: false }); addEventListener("pointerup", up); addEventListener("pointercancel", up);
+  });
+  btn.addEventListener("click", () => { if (skipClick) { skipClick = false; return; } onDrop(); });
+}
+async function probeR2() {
+  document.body.classList.remove("noside");
+  $("#stage").innerHTML = `
+    <h2>Runde 2 · Die Probe</h2>
+    <div class="task">Alle drei Teile sind eingesetzt. Jetzt rechnet der Rechner rechts zwei echte Wände. Stimmt das mit deiner Rechnung überein?</div>
+    <div class="code-mini">ziegel <b>${esc(parts.conv)}</b> ${esc(parts.op === "/" ? "÷" : parts.op)} 0,68 … &nbsp; U = <b>${esc(parts.kehr === "1 / R" ? "1 ÷ R" : parts.kehr)}</b></div>
+    <div id="out"><p class="easy">Der Rechner rechnet …</p></div>`;
+  render();
+  const r1 = await probe(24, 0), r2 = await probe(24, 14);
+  const num = t => t && t.u ? parseFloat(t.u.replace("U-Wert: ", "").replace(",", ".")) : NaN;
+  const fmt = n => isFinite(n) ? n.toFixed(2).replace(".", ",") : "kein Ergebnis";
+  const u1 = num(r1), u2 = num(r2), ok = Math.abs(u1 - 1.91) < 0.015 && Math.abs(u2 - 0.22) < 0.015;
   $("#out").innerHTML = `
-    <div class="probe"><span>Probe 1: 24 cm Ziegel, ohne Dämmung</span><b>${fmt(u1)}</b>
-      <span>Probe 2: 24 cm Ziegel, 14 cm Dämmung</span><b>${fmt(u2)}</b></div>
+    <div class="probe big-probe"><span>Alte Wand: 24 cm Ziegel</span><b>${fmt(u1)}</b>
+      <span>Mit 14 cm Dämmung</span><b>${fmt(u2)}</b></div>
     ${ok
-      ? `<div class="msg ok"><b>Die Probe stimmt: 1,91 und 0,22.</b>Der Computer rechnet jetzt genau so wie du von Hand. Fällt dir etwas auf? In der großen Lerneinheit stand 1,77, nicht 1,91. Der Unterschied ist der Putz, den diese kleine Einheit weglässt.</div>
+      ? `<div class="msg ok"><b>Die Probe stimmt.</b>Der Rechner kommt auf 1,91, genau wie du in Schritt 3. Mit Dämmung sind es nur noch 0,22. Die Wand verliert also viel weniger Wärme.<br>
+          Fällt dir etwas auf? In der großen Lerneinheit stand 1,77, nicht 1,91. Der Unterschied ist der Putz. Den lässt diese kleine Einheit weg.</div>
          ${noteField("r2_aha", "Was war dein Aha?", "")}
-         <div class="row"><button type="button" class="main" id="next">Weiter zu Runde 3 →</button></div>`
-      : `<div class="msg bad"><b>Die Probe passt nicht.</b>Von Hand kommt etwa 1,91 heraus, der Code sagt ${fmt(u1)}. Der Computer macht keinen Rechenfehler: Er rechnet genau das, was dasteht. ${hint}</div>
-         ${noteField("r2_df", "Was war der Denkfehler?", "Was hast du angenommen? „Weiß ich nicht“ ist auch eine Erkenntnis.")}`}`;
+         <div class="row"><button type="button" class="main big-btn" id="next">Weiter zu Runde 3 →</button></div>`
+      : `<div class="msg bad"><b>Die Probe passt nicht.</b>Bitte fang Runde 2 noch einmal an.</div>
+         <div class="row"><button type="button" class="main big-btn" id="again">Runde 2 neu starten</button></div>`}`;
   bindNotes();
   const nx = $("#next"); if (nx) nx.onclick = () => go(2);
+  const ag = $("#again"); if (ag) ag.onclick = () => go(1);
 }
 
 /* ---------- Runde 3: Fehlersuche – Text ist keine Zahl ---------- */
@@ -471,18 +547,18 @@ const NET = [
     code: "Status: passed · Punkte: 100" },
   { k: "schreiber", way: "tagebuch", name: "Schreiber", tech: "xapi.js · Standard xAPI", color: "var(--tech)",
     say: "Schreibt jeden Schritt auf, wie ein Bautagebuch auf der Baustelle: auch was schiefging und wie es behoben wurde.",
-    code: "Lerner · hat sich korrigiert · KI-Vorschlag 1" },
+    code: "Du · hast dich korrigiert · KI-Vorschlag 1" },
   { k: "speicher", way: "tagebuch", name: "Speicher", tech: "Fachwort LRS", color: "var(--teal)",
     say: "Sammelt die Bautagebücher an einem Ort, zum Beispiel bei der Schule.",
     code: "POST /xapi/statements → 200 OK" }
 ];
 const Q4 = [
-  { q: "Der Lerner hat alles richtig gemacht. Trotzdem steht in Moodle „nicht begonnen“. Welches Teil fehlt?", a: "bote",
-    why: "Ohne Bote erfährt Moodle nichts. Der Lerner rechnet und lernt ganz normal, aber das Ergebnis kommt nie an. Für die Lehrkraft hat der Lerner nie angefangen." },
-  { q: "Welches Teil schreibt auf, dass sich der Lerner bei der KI erst geirrt und dann korrigiert hat?", a: "schreiber",
+  { q: "Du hast alles richtig gemacht. Trotzdem steht in Moodle „nicht begonnen“. Welches Teil fehlt?", a: "bote",
+    why: "Ohne Bote erfährt Moodle nichts. Du rechnest und lernst ganz normal, aber dein Ergebnis kommt nie an. Für die Lehrkraft hast du nie angefangen." },
+  { q: "Welches Teil schreibt auf, dass du dich bei der KI erst geirrt und dann korrigiert hast?", a: "schreiber",
     why: "Das Abnahmeprotokoll kennt nur das Ende: bestanden, 100. Den Weg mit Irrtum und Korrektur kennt nur das Bautagebuch." },
-  { q: "Die Lehrkraft soll wissen, dass der Lerner bestanden hat. Der Lernweg soll aber beim Lerner bleiben. Welches Teil schaltest du aus?", a: "speicher",
-    why: "Ohne Speicher bleibt das Bautagebuch auf dem Gerät des Lerners. Der Lerner sieht den eigenen Weg, die Schule nicht. Das Abnahmeprotokoll kommt trotzdem an. Ob der Weg beim Lerner bleiben soll oder bei der Schule, das ist die Frage dieser Reihe." }
+  { q: "Die Lehrkraft soll wissen, dass du bestanden hast. Dein Lernweg soll aber bei dir bleiben. Welches Teil schaltest du aus?", a: "speicher",
+    why: "Ohne Speicher bleibt das Bautagebuch auf deinem Gerät. Du siehst deinen Weg, die Schule nicht. Das Abnahmeprotokoll kommt trotzdem an. Ob der Weg bei dir bleiben soll oder bei der Schule, das ist die Frage dieser Reihe." }
 ];
 let net = { bote: true, moodle: true, schreiber: true, speicher: true };
 function round4() {
@@ -500,13 +576,13 @@ function round4() {
     <span class="eyebrow" style="color:var(--green)">Wem gehört dein Lernweg?</span>
     <h2>Runde 4 · Wie kommt das Ergebnis zur Lehrkraft?</h2>
     <div class="task">Deine kleine Einheit rechnet. Aber in der Berufsschule läuft sie in einer Lernplattform, und die Lehrkraft will wissen, wie es gelaufen ist.<br>
-      <b>Der Lerner ist 16 und im ersten Lehrjahr.</b> In der großen Wand-Einheit heißt das: drei Wände rechnen, erst der KI glauben, nachrechnen, sich korrigieren. Im Test: 100 Punkte.<br>
-      <b>Schalte die Teile aus und wieder an.</b> Was erfährt die Lehrkraft? Was behält der Lerner?</div>
+      <b>Stell dir vor: Du bist 16 und im ersten Lehrjahr.</b> Du machst die große Wand-Einheit. Du rechnest drei Wände, glaubst erst der KI, rechnest nach und korrigierst dich. Im Test hast du 100 Punkte.<br>
+      <b>Schalte die Teile aus und wieder an.</b> Was erfährt die Lehrkraft? Was behältst du?</div>
     ${way("abnahme", "Weg 1 · Das Abnahmeprotokoll: Ist es geschafft?")}
     ${way("tagebuch", "Weg 2 · Das Bautagebuch: Wie ist es gelaufen?")}
     <div class="duo">
       <div><b>👷 Das sieht die Lehrkraft</b><div id="seeTeacher"></div></div>
-      <div><b>📱 Das sieht der Lerner</b><div id="seeLerner"></div></div>
+      <div><b>📱 Das siehst du</b><div id="seeDu"></div></div>
     </div>
     <div class="msg info" id="netSay" aria-live="polite"></div>
     <h3>Was hast du entdeckt?</h3>
@@ -524,11 +600,11 @@ function round4() {
     const i = +b.dataset.i, x = Q4[i], q = $("#q4_" + i), right = b.dataset.a === x.a;
     q.classList.toggle("right", right); q.classList.toggle("wrong", !right);
     const fb = q.querySelector(".fb"); fb.hidden = false;
-    fb.innerHTML = right ? `<b>Ja.</b> ${x.why}` : `<b>Noch nicht.</b> Probier es aus: Schalte dieses Teil oben aus und schau, was sich bei der Lehrkraft und beim Lerner ändert.`;
+    fb.innerHTML = right ? `<b>Ja.</b> ${x.why}` : `<b>Noch nicht.</b> Probier es aus: Schalte dieses Teil oben aus und schau, was sich bei der Lehrkraft und bei dir ändert.`;
     if (right) done.add(i);
     if (done.size === Q4.length && !$("#next")) {
       $("#out").innerHTML = `<div class="msg ok"><b>Das ist der ganze Weg.</b>Die Lernplattform bekommt nur das Ergebnis: das Abnahmeprotokoll. Fachwort: <strong>SCORM</strong>.
-          Das Bautagebuch kennt den Weg, mit Fehlern und Korrekturen. Fachwort: <strong>xAPI</strong>. Und ohne Bote erfährt die Lernplattform gar nichts.</div>
+          Das Bautagebuch kennt den Weg, mit Fehlern und Korrekturen. Fachwort: <strong>xAPI</strong>. Und ohne Bote erfährt die Lernplattform gar nichts.<br>Kurz gesagt: Das Abnahmeprotokoll gehört zum Prüfen, das Bautagebuch zum Lernen.</div>
         ${noteField("r4_aha", "Was war dein Aha?", "Oder: Wo hast du dich vertan, und warum? „Weiß ich nicht“ ist auch eine Erkenntnis.")}
         <div class="row"><button type="button" class="main" id="next">Zum Abschluss →</button></div>`;
       bindNotes(); $("#next").onclick = () => go(4);
@@ -540,21 +616,21 @@ function drawNet(changed) {
   const n = net, abnahme = n.bote && n.moodle, tagebuch = n.schreiber && n.speicher;
   const t = [];
   if (!n.moodle) t.push("Nichts im Abnahmeprotokoll. Es gibt keine Lernplattform, die es aufheben könnte.");
-  else if (!n.bote) t.push("Abnahmeprotokoll: Lerner · <b>nicht begonnen</b>");
-  else t.push("Abnahmeprotokoll: Lerner · <b>bestanden · 100 Punkte</b>");
-  if (tagebuch) t.push("Bautagebuch: 9 Einträge, darunter „Lerner hat sich bei KI-Vorschlag 1 korrigiert“");
-  else t.push("Kein Bautagebuch. Wie der Lerner gelernt hat, weiß die Lehrkraft nicht.");
-  const a = ["Die eigenen Rechnungen und das Ergebnis auf dem Bildschirm"];
-  if (n.schreiber) a.push(`Das eigene Bautagebuch am Ende: 3 Wände gerechnet, 1-mal selbst korrigiert${n.speicher ? "" : " (nur auf dem eigenen Gerät)"}`);
-  else a.push("Kein Bautagebuch. Nach dem Schließen der Einheit ist der Weg vergessen.");
+  else if (!n.bote) t.push("Abnahmeprotokoll: <b>nicht begonnen</b>");
+  else t.push("Abnahmeprotokoll: <b>bestanden · 100 Punkte</b>");
+  if (tagebuch) t.push("Bautagebuch: 9 Einträge, darunter „hat sich bei KI-Vorschlag 1 korrigiert“");
+  else t.push("Kein Bautagebuch. Wie du gelernt hast, weiß die Lehrkraft nicht.");
+  const a = ["Deine Rechnungen und dein Ergebnis auf dem Bildschirm"];
+  if (n.schreiber) a.push(`Dein Bautagebuch am Ende: 3 Wände gerechnet, 1-mal selbst korrigiert${n.speicher ? "" : " (nur auf deinem Gerät)"}`);
+  else a.push("Kein Bautagebuch. Wenn du die Einheit schließt, ist dein Weg vergessen.");
   $("#seeTeacher").innerHTML = "<ul>" + t.map(x => `<li>${x}</li>`).join("") + "</ul>";
-  $("#seeLerner").innerHTML = "<ul>" + a.map(x => `<li>${esc(x)}</li>`).join("") + "</ul>";
+  $("#seeDu").innerHTML = "<ul>" + a.map(x => `<li>${esc(x)}</li>`).join("") + "</ul>";
   const say = {
     null: "Alles ist eingeschaltet: Beide Wege funktionieren. Schalte jetzt ein Teil aus.",
-    bote: n.bote ? "Der Bote ist wieder da. Das Ergebnis kommt in der Lernplattform an." : "Ohne Bote rechnet der Lerner ganz normal, aber niemand bringt das Ergebnis zur Lernplattform. Dort steht: nicht begonnen.",
+    bote: n.bote ? "Der Bote ist wieder da. Das Ergebnis kommt in der Lernplattform an." : "Ohne Bote rechnest du ganz normal, aber niemand bringt dein Ergebnis zur Lernplattform. Dort steht: nicht begonnen.",
     moodle: n.moodle ? "Die Lernplattform ist wieder da." : "Ohne Lernplattform läuft die Einheit trotzdem, zum Beispiel auf einer Website. Aber ein Abnahmeprotokoll gibt es nicht.",
     schreiber: n.schreiber ? "Der Schreiber ist wieder da. Jeder Schritt wird aufgeschrieben." : "Ohne Schreiber gibt es kein Bautagebuch. Das Abnahmeprotokoll kommt trotzdem an: bestanden, 100. Der Weg dahin ist weg.",
-    speicher: n.speicher ? "Der Speicher ist wieder da. Die Schule sammelt die Bautagebücher." : "Ohne Speicher bleibt das Bautagebuch auf dem Gerät des Lerners. Der Lerner sieht den eigenen Weg, die Lehrkraft nicht. Bestanden ist trotzdem bestanden, das steht im Abnahmeprotokoll."
+    speicher: n.speicher ? "Der Speicher ist wieder da. Die Schule sammelt die Bautagebücher." : "Ohne Speicher bleibt das Bautagebuch auf deinem Gerät. Du siehst deinen Weg, die Lehrkraft nicht. Bestanden hast du trotzdem, das steht im Abnahmeprotokoll."
   }[changed];
   $("#netSay").innerHTML = `<b>Was passiert?</b>${say}`;
 }
