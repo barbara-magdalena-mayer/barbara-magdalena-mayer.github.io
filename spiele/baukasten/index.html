@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Wie baut man eine Lerneinheit?</title>
-<meta name="description" content="Lernspiel in einfacher Sprache, Teil 2 der Reihe „Wie Technik denkt“: Eine Webseite hat Schichten wie eine Wand. Bausteine einsetzen, Probe machen, Fehler finden.">
+<meta name="description" content="Lernspiel in einfacher Sprache, Informatische Bildung Teil 2: Eine Webseite hat Schichten wie eine Wand. Bausteine einsetzen, Probe machen, Fehler finden. Zum Schluss: Wie kommt das Ergebnis zur Lehrkraft? (SCORM und xAPI)">
 <style>
 @font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
 @font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
@@ -98,6 +98,12 @@ pre.code .off{opacity:.35}
 .glossary{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:16px;margin:8px 0}
 .glossary dt{font-weight:600}
 .glossary dd{margin:0}
+.noside .side{display:none}.noside .grid{grid-template-columns:1fr}
+.netcode{display:block;font:13px var(--mono);color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.duo>div{background:var(--bg);border-radius:10px;padding:10px 12px;font-size:16px}
+.duo ul{margin:6px 0 0;padding-left:18px}.duo li{margin:3px 0}
+@media(max-width:520px){.duo{grid-template-columns:1fr}}
 .mynotes{white-space:pre-wrap;background:var(--bg);border-radius:10px;padding:12px;font-size:16px}
 footer{margin-top:22px;font-size:14px;color:var(--muted)}
 footer a{color:inherit}
@@ -109,14 +115,13 @@ footer a{color:inherit}
   <nav class="top" aria-label="Navigation">
     <a href="../../">← Zurück zur Werkstatt</a>
     <a href="../klassenbuch/">Teil 1</a>
-    <a href="../tagebuch/">Teil 3</a>
     <button type="button" id="restart">↺ Neu beginnen</button>
   </nav>
-  <span class="eyebrow">Wie Technik denkt · Teil 2 · Einfache Sprache</span>
+  <span class="eyebrow">Informatische Bildung · Teil 2 · Einfache Sprache</span>
   <h1>Wie baut man eine Lerneinheit?</h1>
-  <p class="lead">In Teil 1 hast du gesehen, wie eine Lerneinheit mit der Lernplattform spricht. Aber wie entsteht so eine Einheit überhaupt? Hier baust du eine kleine Lerneinheit selbst zusammen: einen Rechner für den U-Wert einer Wand.</p>
+  <p class="lead">In Teil 1 hast du gesehen, wie eine Lerneinheit mit der Lernplattform spricht. Aber wie entsteht so eine Einheit überhaupt? Hier baust du eine kleine Lerneinheit selbst zusammen: einen Rechner für den U-Wert einer Wand. Zum Schluss schaltest du die Verbindung zur Lernplattform dazu.</p>
   <p class="blocker" role="note">Bevor du loslegst: Fehlt etwas, zum Beispiel ein Bild oder ein Kasten? Dann kann ein Inhaltsblocker in deinem Browser die Ursache sein. Schalte ihn für diese Seite aus und lade neu. <a href="../../ueber-mich.html#media-note-title">So geht das in Safari, Firefox und Chrome</a>. Im schmalen Fenster stehen manche Teile weiter unten: einfach scrollen.</p>
-  <div class="steps" aria-hidden="true" id="steps"><span></span><span></span><span></span><span></span></div>
+  <div class="steps" aria-hidden="true" id="steps"><span></span><span></span><span></span><span></span><span></span></div>
 
   <div class="grid">
     <main class="panel" id="stage" aria-live="polite"></main>
@@ -272,7 +277,8 @@ let level = 0;
 function go(n) {
   level = n;
   [...$("#steps").children].forEach((s, i) => s.classList.toggle("done", i <= level));
-  [round1, round2, round3, finale][n]();
+  document.body.classList.toggle("noside", n === 3);   // Runde 4 braucht die Rechner-Vorschau nicht
+  [round1, round2, round3, round4, finale][n]();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -448,23 +454,121 @@ async function playR3b(v, btn) {
     html = `<div class="probe"><span>U-Wert</span><b>${esc((r.u || "–").replace("U-Wert: ", ""))}</b><span>Wanddicke</span><b>${esc((r.dicke || "–").replace("Wanddicke: ", ""))}</b></div>
       <div class="msg ok"><b>Repariert: 38 cm.</b>Was in einem Eingabefeld steht, ist für den Computer zuerst <b>Text</b>, keine Zahl. Bei Text bedeutet Plus: aneinanderhängen. „24“ und „14“ werden zu „2414“. Erst <code>parseFloat</code> macht aus dem Text eine Zahl.<br>
       Warum stimmte der U-Wert trotzdem? Beim Teilen wandelt JavaScript Text heimlich in Zahlen um, beim Plus nicht. Genau solche Fehler fallen nur auf, wenn man die Probe macht.</div>
-      <div class="row"><button type="button" class="main" id="next">Zum Abschluss →</button></div>`;
+      <div class="row"><button type="button" class="main" id="next">Weiter zu Runde 4 →</button></div>`;
   }
   $("#out2").innerHTML = html + noteField("r3_df", "Was war der Denkfehler der Person, die den Code geschrieben hat?", "Was hat sie angenommen? Warum stimmt das nicht?");
   bindNotes();
   const nx = $("#next"); if (nx) nx.onclick = () => go(3);
 }
 
+/* ---------- Runde 4: Informatische Bildung – Wie kommt das Ergebnis zur Lehrkraft? ---------- */
+const NET = [
+  { k: "bote", way: "abnahme", name: "Bote", tech: "scorm.js · Standard SCORM", color: "var(--brick)",
+    say: "Bringt das Ergebnis zur Lernplattform. Wie jemand, der das Abnahmeprotokoll zum Bauherrn bringt.",
+    code: 'api.LMSSetValue("cmi.core.score.raw", "100")' },
+  { k: "moodle", way: "abnahme", name: "Lernplattform", tech: "zum Beispiel Moodle · Fachwort LMS", color: "var(--plaster)",
+    say: "Hier liegt das Abnahmeprotokoll: Wer hat bestanden, mit wie vielen Punkten?",
+    code: "Status: passed · Punkte: 100" },
+  { k: "schreiber", way: "tagebuch", name: "Schreiber", tech: "xapi.js · Standard xAPI", color: "var(--tech)",
+    say: "Schreibt jeden Schritt auf, wie ein Bautagebuch auf der Baustelle: auch was schiefging und wie es behoben wurde.",
+    code: "Ali · hat sich korrigiert · KI-Vorschlag 1" },
+  { k: "speicher", way: "tagebuch", name: "Speicher", tech: "Fachwort LRS", color: "var(--teal)",
+    say: "Sammelt die Bautagebücher an einem Ort, zum Beispiel bei der Schule.",
+    code: "POST /xapi/statements → 200 OK" }
+];
+const Q4 = [
+  { q: "Ali hat alles richtig gemacht. Trotzdem steht in Moodle „nicht begonnen“. Welches Teil fehlt?", a: "bote",
+    why: "Ohne Bote erfährt Moodle nichts. Ali rechnet und lernt ganz normal, aber das Ergebnis kommt nie an. Für die Lehrkraft hat er nie angefangen." },
+  { q: "Welches Teil schreibt auf, dass Ali sich bei der KI erst geirrt und dann korrigiert hat?", a: "schreiber",
+    why: "Das Abnahmeprotokoll kennt nur das Ende: bestanden, 100. Den Weg mit Irrtum und Korrektur kennt nur das Bautagebuch." },
+  { q: "Die Lehrkraft soll wissen, dass Ali bestanden hat. Sein Lernweg soll aber bei ihm bleiben. Welches Teil schaltest du aus?", a: "speicher",
+    why: "Ohne Speicher bleibt das Bautagebuch auf Alis Gerät. Er sieht seinen Weg, die Schule nicht. Das Abnahmeprotokoll kommt trotzdem an. Der Lernweg gehört dem Lernenden." }
+];
+let net = { bote: true, moodle: true, schreiber: true, speicher: true };
+function round4() {
+  parts = { conv: "/ 100", op: "/", kehr: "1 / R", read: "parseFloat" };
+  layers = { html: true, css: true, js: true }; render(); openTab("js");
+  net = { bote: true, moodle: true, schreiber: true, speicher: true };
+  const way = (w, title) => `<div class="zone-title" style="font-weight:600;color:var(--muted);margin:12px 0 6px">${title}</div>
+    <div class="layers">${NET.filter(n => n.way === w).map(n => `
+      <label class="layer on" data-k="${n.k}">
+        <input type="checkbox" checked data-k="${n.k}">
+        <span class="name"><span class="sw" style="background:${n.color}"></span>${n.name} <span style="font-weight:400;font-size:14px;color:var(--muted)">· ${n.tech}</span></span>
+        <span class="say">${n.say}<code class="netcode">${esc(n.code)}</code></span>
+      </label>`).join("")}</div>`;
+  $("#stage").innerHTML = `
+    <span class="eyebrow" style="color:var(--green)">Informatische Bildung am Beispiel</span>
+    <h2>Runde 4 · Wie kommt das Ergebnis zur Lehrkraft?</h2>
+    <div class="task">Deine kleine Einheit rechnet. Aber in der Berufsschule läuft sie in einer Lernplattform, und die Lehrkraft will wissen, wie es gelaufen ist.<br>
+      <b>Ali ist 16 und im ersten Lehrjahr.</b> Er macht die große Wand-Einheit: rechnet drei Wände, glaubt erst der KI, rechnet nach und korrigiert sich. Im Test hat er 100 Punkte.<br>
+      <b>Schalte die Teile aus und wieder an.</b> Was erfährt die Lehrkraft? Was behält Ali?</div>
+    ${way("abnahme", "Weg 1 · Das Abnahmeprotokoll: Ist es geschafft?")}
+    ${way("tagebuch", "Weg 2 · Das Bautagebuch: Wie ist es gelaufen?")}
+    <div class="duo">
+      <div><b>👷 Das sieht die Lehrkraft</b><div id="seeTeacher"></div></div>
+      <div><b>📱 Das sieht Ali</b><div id="seeAli"></div></div>
+    </div>
+    <div class="msg info" id="netSay" aria-live="polite"></div>
+    <h3>Was hast du entdeckt?</h3>
+    <div class="quiz">${Q4.map((x, i) => `
+      <div class="q" id="q4_${i}"><div>${x.q}</div>
+        <div class="opts">${NET.map(n => `<button type="button" data-i="${i}" data-a="${n.k}">${n.name}</button>`).join("")}</div>
+        <div class="fb" hidden></div></div>`).join("")}</div>
+    <div id="out"></div>`;
+  document.querySelectorAll(".layer input").forEach(cb => cb.onchange = () => {
+    net[cb.dataset.k] = cb.checked; cb.closest(".layer").classList.toggle("on", cb.checked);
+    drawNet(cb.dataset.k);
+  });
+  const done = new Set();
+  document.querySelectorAll(".q .opts button").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, x = Q4[i], q = $("#q4_" + i), right = b.dataset.a === x.a;
+    q.classList.toggle("right", right); q.classList.toggle("wrong", !right);
+    const fb = q.querySelector(".fb"); fb.hidden = false;
+    fb.innerHTML = right ? `<b>Ja.</b> ${x.why}` : `<b>Noch nicht.</b> Probier es aus: Schalte dieses Teil oben aus und schau, was sich bei der Lehrkraft und bei Ali ändert.`;
+    if (right) done.add(i);
+    if (done.size === Q4.length && !$("#next")) {
+      $("#out").innerHTML = `<div class="msg ok"><b>Das ist der ganze Weg.</b>Die Lernplattform bekommt nur das Ergebnis: das Abnahmeprotokoll. Fachwort: <strong>SCORM</strong>.
+          Das Bautagebuch kennt den Weg, mit Fehlern und Korrekturen. Fachwort: <strong>xAPI</strong>. Und ohne Bote erfährt die Lernplattform gar nichts.</div>
+        ${noteField("r4_aha", "Was war dein Aha?", "Oder: Wo hast du dich vertan, und warum? „Weiß ich nicht“ ist auch eine Erkenntnis.")}
+        <div class="row"><button type="button" class="main" id="next">Zum Abschluss →</button></div>`;
+      bindNotes(); $("#next").onclick = () => go(4);
+    }
+  });
+  drawNet(null);
+}
+function drawNet(changed) {
+  const n = net, abnahme = n.bote && n.moodle, tagebuch = n.schreiber && n.speicher;
+  const t = [];
+  if (!n.moodle) t.push("Nichts im Abnahmeprotokoll. Es gibt keine Lernplattform, die es aufheben könnte.");
+  else if (!n.bote) t.push("Abnahmeprotokoll: Ali · <b>nicht begonnen</b>");
+  else t.push("Abnahmeprotokoll: Ali · <b>bestanden · 100 Punkte</b>");
+  if (tagebuch) t.push("Bautagebuch: 9 Einträge, darunter „Ali hat sich bei KI-Vorschlag 1 korrigiert“");
+  else t.push("Kein Bautagebuch. Wie Ali gelernt hat, weiß die Lehrkraft nicht.");
+  const a = ["Seine Rechnungen und sein Ergebnis auf dem Bildschirm"];
+  if (n.schreiber) a.push(`Sein Bautagebuch am Ende: 3 Wände gerechnet, 1-mal selbst korrigiert${n.speicher ? "" : " (nur auf seinem Gerät)"}`);
+  else a.push("Kein Bautagebuch. Wenn er die Einheit schließt, ist sein Weg vergessen.");
+  $("#seeTeacher").innerHTML = "<ul>" + t.map(x => `<li>${x}</li>`).join("") + "</ul>";
+  $("#seeAli").innerHTML = "<ul>" + a.map(x => `<li>${esc(x)}</li>`).join("") + "</ul>";
+  const say = {
+    null: "Alles ist eingeschaltet: Beide Wege funktionieren. Schalte jetzt ein Teil aus.",
+    bote: n.bote ? "Der Bote ist wieder da. Das Ergebnis kommt in der Lernplattform an." : "Ohne Bote rechnet Ali ganz normal, aber niemand bringt das Ergebnis zur Lernplattform. Dort steht: nicht begonnen.",
+    moodle: n.moodle ? "Die Lernplattform ist wieder da." : "Ohne Lernplattform läuft die Einheit trotzdem, zum Beispiel auf einer Website. Aber ein Abnahmeprotokoll gibt es nicht.",
+    schreiber: n.schreiber ? "Der Schreiber ist wieder da. Jeder Schritt wird aufgeschrieben." : "Ohne Schreiber gibt es kein Bautagebuch. Das Abnahmeprotokoll kommt trotzdem an: bestanden, 100. Der Weg dahin ist weg.",
+    speicher: n.speicher ? "Der Speicher ist wieder da. Die Schule sammelt die Bautagebücher." : "Ohne Speicher bleibt das Bautagebuch auf Alis Gerät. Er sieht seinen Weg, die Lehrkraft nicht. Bestanden hat er trotzdem, das steht im Abnahmeprotokoll."
+  }[changed];
+  $("#netSay").innerHTML = `<b>Was passiert?</b>${say}`;
+}
+
 /* ---------- Abschluss ---------- */
 function finale() {
   parts = { conv: "/ 100", op: "/", kehr: "1 / R", read: "parseFloat" };
   layers = { html: true, css: true, js: true }; render(); openTab("js");
-  const labels = { r1_aha: "Runde 1 · Aha", r2_df: "Runde 2 · Denkfehler", r2_aha: "Runde 2 · Aha", r3_df: "Runde 3 · Denkfehler", rule: "Meine Regel" };
+  const labels = { r1_aha: "Runde 1 · Aha", r2_df: "Runde 2 · Denkfehler", r2_aha: "Runde 2 · Aha", r3_df: "Runde 3 · Denkfehler", r4_aha: "Runde 4 · Aha", rule: "Meine Regel" };
   const mine = () => Object.keys(labels).filter(k => (notes[k] || "").trim()).map(k => `${labels[k]}:\n${notes[k].trim()}`).join("\n\n");
   $("#stage").innerHTML = `
     <h2>Geschafft. Du hast eine Lerneinheit gebaut.</h2>
     <p>Rechts läuft jetzt deine kleine Lerneinheit, fertig und repariert. Probier sie aus: Gib andere Dicken ein und drück auf „Berechnen“.</p>
-    <div class="task"><b>Merksatz:</b> Gerüst, Aussehen, Verhalten: HTML, CSS, JavaScript.<br>Und: Der Computer rechnet genau das, was dasteht. Darum immer die Probe machen.</div>
+    <div class="task"><b>Merksatz:</b> Gerüst, Aussehen, Verhalten: HTML, CSS, JavaScript.<br>Und: Der Computer rechnet genau das, was dasteht. Darum immer die Probe machen.<br>Und: Die Lernplattform bekommt das Abnahmeprotokoll (SCORM), das Bautagebuch kennt den Weg (xAPI).</div>
     <h3>Die Wörter aus dem Spiel</h3>
     <dl class="glossary">
       <dt>HTML</dt><dd>Das Gerüst einer Webseite. Wie das Mauerwerk einer Wand.</dd>
@@ -472,14 +576,17 @@ function finale() {
       <dt>JavaScript</dt><dd>Das Verhalten: Was passiert, wenn man etwas tut. Wie die Haustechnik.</dd>
       <dt>Text und Zahl</dt><dd>Für den Computer zwei verschiedene Dinge. „24“ ist Text, 24 ist eine Zahl.</dd>
       <dt>parseFloat</dt><dd>Ein Befehl, der aus Text eine Zahl macht, auch mit Komma-Stellen.</dd>
+      <dt>Lernplattform</dt><dd>Ein Programm für Kurse, zum Beispiel Moodle. Fachwort: LMS.</dd>
+      <dt>SCORM</dt><dd>Die Verabredung für das Abnahmeprotokoll: Wie bringt die Einheit das Ergebnis zur Lernplattform?</dd>
+      <dt>xAPI</dt><dd>Die Verabredung für das Bautagebuch: Jeder Schritt wird als Satz aufgeschrieben. Wer – tut was – womit – mit welchem Ergebnis.</dd>
+      <dt>LRS</dt><dd>Der Speicher, der die Bautagebücher sammelt.</dd>
     </dl>
     <h3>Und wie geht es weiter?</h3>
-    <p>Die große Lerneinheit zur Wand ist genauso gebaut, nur größer. Dazu kommt das, was du in Teil 1 gelernt hast: Sie spricht mit der Lernplattform.</p>
+    <p>Die große Lerneinheit zur Wand ist genauso gebaut, nur größer. Und sie hat beide Wege aus Runde 4: das Abnahmeprotokoll und das Bautagebuch. Am Ende der Einheit siehst du dein eigenes Bautagebuch.</p>
     ${noteField("rule", "Meine Regel", "Schreib eine Regel auf, die du dir merken willst, mit Begründung: „Regel: …, weil …“")}
     <h3>Dein Weg durch das Spiel</h3>
     <div class="mynotes" id="mynotes"></div>
     <div class="row">
-      <a class="ghost" href="../tagebuch/">Weiter mit Teil 3: Wie merkt sich die Technik deinen Lernweg? →</a>
       <a class="ghost" href="../../bauphysik-u-wert/">Die große Lerneinheit ansehen →</a>
       <a class="ghost" href="https://github.com/barbara-magdalena-mayer/bauphysik-u-wert/blob/main/unit/index.html">Ihren echten Code ansehen →</a>
       <a class="ghost" href="../klassenbuch/">Teil 1 noch einmal →</a>

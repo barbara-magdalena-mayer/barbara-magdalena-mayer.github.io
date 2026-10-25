@@ -95,6 +95,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #d4a373;outline-offset:2p
 @media(prefers-reduced-motion:no-preference){.cta{animation:wackeln 5.8s ease-in-out 2s infinite}@keyframes wackeln{0%,7%,100%{transform:rotate(0)}1.5%{transform:rotate(-2deg)}3.5%{transform:rotate(2deg)}5%{transform:rotate(-1deg)}}
 .bridge{animation:plus-breathe 5s ease-in-out infinite}@keyframes plus-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.kww-card .ex{transition:none}}
+.area-title{font-family:var(--display);font-size:1.25rem;margin:22px 0 4px;padding-top:14px;border-top:2px solid var(--line)}
 </style>
 </head>
 <body>
@@ -229,18 +230,38 @@ button:focus-visible,a:focus-visible{outline:3px solid #d4a373;outline-offset:2p
 
   <section class="term" id="arbeiten" aria-labelledby="t9">
     <div class="term-head"><span class="num">10</span><h2 id="t9">Die Arbeitsproben erklärt</h2></div>
-    <p>Fast alle Arbeiten nutzen die Pflege als Beispiel. In dieser Reihenfolge ergeben sie am meisten Sinn:</p>
+    <p>Die Arbeiten gehören zu zwei Bereichen: handwerkliche Berufe (am Beispiel Bau) und helfende Berufe (am Beispiel Pflege). Bei jeder steht der Blick, aus dem sie gebaut ist: Fachlernen, Didaktik, KI oder informatische Bildung.</p>
+
+    <h3 class="area-title">Handwerkliche Berufe</h3>
 
     <div class="work-explain">
-      <span class="eyebrow">A · Lernspiel mit simulierter KI</span>
-      <h3>Welche KI-Regeln braucht deine Schule?</h3>
-      <p>Eine interaktive Woche über KI im Schulalltag: Perspektiven von Lernenden, Kollegium und Ausbildungsbetrieb vergleichen, Risiken erkennen und eigene Regelbausteine zusammenstellen.</p>
-      <p class="small-note">Der neueste Lernspiel-Prototyp. Mit KI, Perspektivwechseln und persönlichem Regelentwurf.</p>
-      <a href="schulrechner.html">Schulrechner spielen →</a>
+      <span class="eyebrow">A · Informatische Bildung, Teil 1</span>
+      <h3>Wie Lernplattform und Lerneinheit miteinander sprechen</h3>
+      <p>Hier geht es nicht um ein Berufsfeld, sondern um die Technik hinter digitalen Lernangeboten: Wie meldet eine Lerneinheit der Lernplattform, dass jemand bestanden hat? Man legt Karten, spielt sie ab und sieht im Klassenbuch, was ankommt und was nicht.</p>
+      <p class="small-note">Teil 1 einer Reihe zur informatischen Bildung, in einfacher Sprache. · Ohne KI.</p>
+      <a href="spiele/klassenbuch/">Lernspiel starten →</a>
     </div>
 
     <div class="work-explain">
-      <span class="eyebrow">B · Handreichung</span>
+      <span class="eyebrow">B · Informatische Bildung, Teil 2</span>
+      <h3>Wie baut man eine Lerneinheit?</h3>
+      <p>Die Fortsetzung: Wie entsteht eine Lerneinheit? Eine Webseite hat Schichten wie eine Wand. Man baut einen kleinen U-Wert-Rechner, setzt die Bausteine der Formel ein, macht die Probe und findet einen typischen Programmierfehler. Zum Schluss schaltet man die Verbindung zur Lernplattform an und aus: Was erfährt die Lehrkraft (Abnahmeprotokoll, SCORM), und was steht im Bautagebuch (xAPI)?</p>
+      <p class="small-note">Verbindet Teil 1 mit der Lerneinheit zur Wand. · Ohne KI.</p>
+      <a href="spiele/baukasten/">Lernspiel starten →</a>
+    </div>
+
+    <div class="work-explain">
+      <span class="eyebrow">C · Fachlernen</span>
+      <h3>Deine Wand verliert Wärme. Wie viel?</h3>
+      <p>Dieselbe Bauweise, diesmal aus der Bauphysik: Man saniert eine Altbauwand rechnerisch, prüft das Ergebnis gegen einen Höchstwert und beurteilt die Vorschläge einer KI, die auch falsch liegen kann. Die Einheit läuft als SCORM-Paket auch in Lernplattformen. Und sie schreibt den Lernweg mit (xAPI): Am Ende sieht man, wo man sich geirrt und wo man sich selbst korrigiert hat.</p>
+      <p class="small-note">Zeigt, dass sich die Arbeitsweise auf andere Berufe übertragen lässt. · Mit zuschaltbarer, fehlbarer KI.</p>
+      <a href="bauphysik-u-wert/">Lerneinheit öffnen →</a>
+    </div>
+
+    <h3 class="area-title">Helfende Berufe</h3>
+
+    <div class="work-explain">
+      <span class="eyebrow">D · Fachlernen</span>
       <h3>Acht Schritte für schwere Tage im Beruf</h3>
       <p>Ein Text in acht Schritten: Wie bleibe ich in einem fordernden Beruf psychisch gesund, wo liegen meine Grenzen, wo finde ich Unterstützung? Das Beispiel ist die Pflege, die Fragen stellen sich in vielen Berufen.</p>
       <p class="small-note">Hier fängt es an: Die Handreichung ist die inhaltliche Grundlage für den Kompass. · Ohne KI.</p>
@@ -248,7 +269,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #d4a373;outline-offset:2p
     </div>
 
     <div class="work-explain">
-      <span class="eyebrow">C · Interaktiver Kompass</span>
+      <span class="eyebrow">E · Fachlernen</span>
       <h3>Du kümmerst dich um andere. Wer kümmert sich um dich?</h3>
       <p>Aus der Handreichung wird etwas, das man tun kann: Man schätzt die eigene Lage ein und sieht sie dann durch verschiedene Brillen – Henderson, Peplau, Arbeitsbedingungen und eine KI-Brille. Am Ende plant man einen kleinen nächsten Schritt.</p>
       <p class="small-note">Hier wird „Beide Seiten zählen“ greifbar: Die helfende Person schaut auf sich selbst. · Mit KI-Brille.</p>
@@ -256,7 +277,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #d4a373;outline-offset:2p
     </div>
 
     <div class="work-explain">
-      <span class="eyebrow">D · Begehbarer 3D-Lernraum</span>
+      <span class="eyebrow">F · Fachlernen</span>
       <h3>Was siehst du wirklich, und was vermutest du nur?</h3>
       <p>Ein Spiel, in dem man <strong>beruflich handeln</strong> muss. Man ist eine Pflegekraft im Nachtdienst, betritt ein Zimmer und muss entscheiden, was jetzt Vorrang hat. Danach kann man den Raum untersuchen und lernt zu trennen: Was sehe ich wirklich, was vermute ich nur, und was muss ich nachfragen?</p>
       <p>Es gibt keine Punkte und keine richtige Reihenfolge. Man wählt sein Vorgehen selbst – und muss es begründen. Darum geht es.</p>
@@ -265,7 +286,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #d4a373;outline-offset:2p
     </div>
 
     <div class="work-explain">
-      <span class="eyebrow">E · Lernspiel mit simulierter KI</span>
+      <span class="eyebrow">G · Didaktik</span>
       <h3>Drei Entscheidungen, eine KI, die irren kann</h3>
       <p>Ein Fall, drei Entscheidungen, Henderson als Brille. Hier ist alles zusammen: das zweigeteilte Optimum, gestufte Hilfen und eine simulierte KI, die überzeugend klingt, aber auch irrt.</p>
       <p class="small-note">Mit KI.</p>
@@ -273,43 +294,21 @@ button:focus-visible,a:focus-visible{outline:3px solid #d4a373;outline-offset:2p
     </div>
 
     <div class="work-explain">
-      <span class="eyebrow">F · Lernspiel zur Grundlage</span>
+      <span class="eyebrow">H · Fachlernen</span>
       <h3>Drei Begegnungen, die nicht laufen wie erhofft</h3>
       <p>Drei Begegnungen im selben Zimmer, die nicht so laufen wie erhofft: Eine Person will ihre Ruhe, eine andere schweigt, eine dritte wird laut und beleidigend. Hier geht es nicht darum, jemanden umzustimmen, sondern um die <strong>innere Schau</strong> – wahrnehmen, was die Begegnung in mir auslöst, hinhören, was gemeint sein könnte, und dann bewusst entscheiden, wie ich handle. Es gibt keine Punkte und keinen richtigen Weg.</p>
       <p class="small-note">Das Beispiel ist ein Patientenzimmer. Kontakt aufnehmen ist in jedem Beruf mit Menschen die Grundlage. · Ohne KI.</p>
       <a href="spiele/kontakt-aufnehmen/">Lernspiel starten →</a>
     </div>
 
-    <div class="work-explain">
-      <span class="eyebrow">G · Ein anderes Berufsfeld</span>
-      <h3>Deine Wand verliert Wärme. Wie viel?</h3>
-      <p>Dieselbe Bauweise, diesmal aus der Bauphysik: Man saniert eine Altbauwand rechnerisch, prüft das Ergebnis gegen einen Höchstwert und beurteilt die Vorschläge einer KI, die auch falsch liegen kann. Die Einheit läuft als SCORM-Paket auch in Lernplattformen. Und sie schreibt den Lernweg mit (xAPI): Am Ende sieht man, wo man sich geirrt und wo man sich selbst korrigiert hat.</p>
-      <p class="small-note">Zeigt, dass sich die Arbeitsweise auf andere Berufe übertragen lässt. · Mit zuschaltbarer, fehlbarer KI.</p>
-      <a href="bauphysik-u-wert/">Lerneinheit öffnen →</a>
-    </div>
+    <h3 class="area-title">Für alle Berufe: KI</h3>
 
     <div class="work-explain">
-      <span class="eyebrow">H · Wie Technik denkt</span>
-      <h3>Wie Lernplattform und Lerneinheit miteinander sprechen</h3>
-      <p>Hier geht es nicht um ein Berufsfeld, sondern um die Technik hinter digitalen Lernangeboten: Wie meldet eine Lerneinheit der Lernplattform, dass jemand bestanden hat? Man legt Karten, spielt sie ab und sieht im Klassenbuch, was ankommt und was nicht.</p>
-      <p class="small-note">Teil 1 einer Reihe zur informatischen Bildung, in einfacher Sprache. · Ohne KI.</p>
-      <a href="spiele/klassenbuch/">Lernspiel starten →</a>
-    </div>
-
-    <div class="work-explain">
-      <span class="eyebrow">I · Wie Technik denkt, Teil 2</span>
-      <h3>Wie baut man eine Lerneinheit?</h3>
-      <p>Die Fortsetzung: Wie entsteht eine Lerneinheit? Eine Webseite hat Schichten wie eine Wand. Man baut einen kleinen U-Wert-Rechner, setzt die Bausteine der Formel ein, macht die Probe und findet einen typischen Programmierfehler.</p>
-      <p class="small-note">Verbindet Teil 1 mit der Lerneinheit zur Wand. · Ohne KI.</p>
-      <a href="spiele/baukasten/">Lernspiel starten →</a>
-    </div>
-
-    <div class="work-explain">
-      <span class="eyebrow">J · Wie Technik denkt, Teil 3</span>
-      <h3>Wie merkt sich die Technik deinen Lernweg?</h3>
-      <p>Das Klassenbuch aus Teil 1 ist wie ein Zeugnis: Es weiß nur, <em>ob</em> jemand bestanden hat. Hier kommt das Tagebuch dazu. Es schreibt jeden Schritt als Satz auf: Wer – tut was – womit – mit welchem Ergebnis. Man baut selbst einen solchen Satz und findet einen Fehler, durch den das Tagebuch eine Korrektur erfindet.</p>
-      <p class="small-note">Erklärt, wie die Lerneinheit zur Wand den Lernweg aufschreibt (xAPI). · Ohne KI.</p>
-      <a href="spiele/tagebuch/">Lernspiel starten →</a>
+      <span class="eyebrow">I · KI</span>
+      <h3>Welche KI-Regeln braucht deine Schule?</h3>
+      <p>Eine interaktive Woche über KI im Schulalltag: Perspektiven von Lernenden, Kollegium und Ausbildungsbetrieb vergleichen, Risiken erkennen und eigene Regelbausteine zusammenstellen.</p>
+      <p class="small-note">Der neueste Lernspiel-Prototyp. Mit KI, Perspektivwechseln und persönlichem Regelentwurf.</p>
+      <a href="schulrechner.html">Schulrechner spielen →</a>
     </div>
 
     <div class="cta-row"><a class="cta alt" href="./">Zur Werkstatt →</a></div>

@@ -14,9 +14,10 @@ Damit kein Spiel irgendwo fehlt. Jeder Punkt muss erledigt sein, bevor ein Spiel
 - [ ] Titel als Frage oder Situation, in der sich eine Person angesprochen fühlt (kein Fantasiename); gleicher Titel in `<title>`, `<h1>` und allen drei Listen
 
 ## 3. Überall verlinken – alle drei Listen
-- [ ] **`index.html`** (Startseite = Werkstatt) – kurz halten! Aufbau: 1. neueste Arbeit mit „Neu ·“, 2. je ein Spiel pro Bereich (Du arbeitest digital · Du arbeitest mit Menschen · Du lernst Technik und Bau), 3. „Über mich & alle Arbeitsproben“, 4. Bluesky, Instagram, E-Mail. Die neue Arbeit ersetzt oben die bisherige neueste; alles andere steht nur in `ueber-mich.html`. Volle Adressen, Farben abwechseln.
-- [ ] **`ueber-mich.html`** – eigener `<article class="work">`-Eintrag mit Form, Interaktion, Lernabsicht, KI
-- [ ] **`grundbegriffe.html`** – Abschnitt „Die Arbeitsproben erklärt“
+- [ ] Bereich festlegen: **Handwerkliche Berufe** oder **Helfende Berufe** (oder „Für alle Berufe: KI“, dann nur in `ueber-mich.html`). Blick festlegen: Fachlernen, Didaktik, KI oder Informatische Bildung – steht vorne im Etikett.
+- [ ] **`index.html`** (Startseite = Werkstatt) – kurz halten! Aufbau: Zwischenüberschrift „Handwerkliche Berufe“ mit 2–3 Arbeiten, „Helfende Berufe“ mit 2–3 Arbeiten, dann „Alles auf einen Blick“ mit „Über mich & alle Arbeitsproben“, Bluesky, Instagram, E-Mail. Die neue Arbeit kommt mit „Neu ·“ und dunkler Karte an den Anfang ihres Bereichs; was dafür rausfällt, steht weiter in `ueber-mich.html`. Volle Adressen, Farben abwechseln.
+- [ ] **`ueber-mich.html`** – eigener `<article class="work">`-Eintrag im richtigen Bereich, Etikett beginnt mit dem Blick, mit Form, Interaktion, Lernabsicht, KI
+- [ ] **`grundbegriffe.html`** – Abschnitt „Die Arbeitsproben erklärt“, im richtigen Bereich, Buchstaben neu durchzählen
 - [ ] Gegenprobe: Suche nach dem Namen eines bestehenden Spiels (z. B. `schulrechner`) – überall, wo es auftaucht, muss auch das neue Spiel stehen
 
 ## 4. Testen vor dem Hochladen
