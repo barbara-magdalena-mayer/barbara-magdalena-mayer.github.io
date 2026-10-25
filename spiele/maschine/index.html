@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Wie lernt eine Maschine?</title>
-<meta name="description" content="Lernspiel in einfacher Sprache, Grundlagen für alle, die anfangen: In sechs Stufen vom Obstkorb zur Wand. Trainingsdaten, Modell, Bias, Entscheidungsbaum, if/else, regelbasiert oder datenbasiert.">
+<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Informatik, Teil 1 von 4: In sechs Stufen vom Obstkorb zur Wand. Trainingsdaten, Modell, Bias, Entscheidungsbaum, if/else, regelbasiert oder datenbasiert.">
 <style>
 @font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
 @font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
@@ -129,12 +129,14 @@ footer a{color:inherit}
 <div class="wrap">
   <nav class="top" aria-label="Navigation">
     <a href="../../">← Zurück zur Werkstatt</a>
+    <a href="../klassenbuch/">Teil 2 →</a>
     <button type="button" id="restart">↺ Neu beginnen</button>
   </nav>
-  <span class="eyebrow">KI · Grundlagen für alle, die anfangen · Einfache Sprache</span>
+  <span class="eyebrow">Lernen am Optimum: Informatik · Teil 1 von 4</span>
   <h1>Wie lernt eine Maschine?</h1>
-  <p class="lead">Eine Maschine bekommt keine Regel, nur Beispiele von dir. Was lernt sie daraus? In sechs Stufen vom Obstkorb bis zur Wand, mit den wichtigsten Fachwörtern.</p>
-  <div class="reihe" role="note">Du brauchst kein Vorwissen. Du kannst nichts kaputt machen. Fehler gehören dazu, bei dir und bei der Maschine.</div>
+  <p class="lead">Eine Maschine bekommt keine Regel, nur Beispiele von dir. Was lernt sie daraus? In sechs Stufen, mit den wichtigsten Fachwörtern. Das ist der erste Schritt zur Frage dieses Lernpfads: <b>Wem gehört dein Lernweg?</b> Denn auch eine Maschine lernt nur aus dem, was man ihr zeigt.</p>
+  <div class="reihe" role="note"><b>Lernen am Optimum: Informatik</b>Du brauchst kein Vorwissen. Du fängst dort an, wo du gerade stehst. Vier Teile führen dich bis zu einer echten Lerneinheit. In Teil 1 lernst du, warum eine KI sich irren kann. In Teil 4 redet sie mit, und du setzt dich mit deiner Begründung gegen sie durch.<br>
+    Lernen ist nicht Prüfen: Fehler, Umwege und mehr Zeit gehören dazu. Dein Lernweg ist etwas Persönliches, trotzdem schauen andere darauf. Dieser Lernpfad löst das nicht auf. Er fragt: <b style="display:inline">Wem gehört dein Lernweg?</b></div>
   <p class="blocker" role="note">Fehlt etwas, zum Beispiel ein Bild oder ein Kasten? Dann kann ein Inhaltsblocker in deinem Browser die Ursache sein. <a href="../../ueber-mich.html#media-note-title">So schaltest du ihn für diese Seite aus</a>.</p>
   <div class="steps" aria-hidden="true" id="steps"></div>
   <main class="panel" id="stage" aria-live="polite"></main>
@@ -524,13 +526,13 @@ function step6() {
 
 /* ---------- Abschluss ---------- */
 function finale() {
-  const labels = { s2_df: "Denkfehler der Maschine", s4_aha: "Aha beim Baum", s6_aha: "Aha bei der Wand", frage: "Wer sucht die Beispiele aus?", rule: "Meine Regel" };
+  const labels = { s2_df: "Denkfehler der Maschine", s4_aha: "Aha beim Baum", s6_aha: "Aha bei der Wand", frage: "Wer sucht die Beispiele aus?", lernweg: "Wem gehört dein Lernweg?", rule: "Meine Regel" };
   const mine = () => Object.keys(labels).filter(k => (notes[k] || "").trim()).map(k => `${labels[k]}:\n${notes[k].trim()}`).join("\n\n");
   $("#stage").innerHTML = `
     <h2>Geschafft. So lernt eine Maschine.</h2>
     <div class="task"><b>Merksatz:</b> Eine Maschine lernt aus Beispielen und ist so gut wie ihre Beispiele. Ein Programm folgt einer Regel, die ein Mensch geschrieben hat. Beide können irren. Darum: Probe machen.</div>
-    <div class="row"><a class="main-link" href="../../bauphysik-u-wert/">Weiter zur Wand: Deine Wand verliert Wärme. Wie viel? →</a></div>
-    <p class="hint">Dort triffst du eine KI, die sich irren kann. Du weißt jetzt, warum: Sie hat aus Beispielen gelernt. Prüf sie mit der Formel.</p>
+    <div class="row"><a class="main-link" href="../klassenbuch/">Weiter mit Teil 2: Wie Lernplattform und Lerneinheit miteinander sprechen →</a></div>
+    <p class="hint">Am Ende des Lernpfads, in Teil 4, triffst du eine KI, die sich irren kann. Du weißt jetzt, warum: Sie hat aus Beispielen gelernt.</p>
     <h3>Deine Fachwörter</h3>
     <dl class="glossary">
       <dt>Trainingsdaten</dt><dd>Die Beispiele, aus denen eine Maschine lernt.</dd>
@@ -552,13 +554,14 @@ function finale() {
       <dt>Validierung</dt><dd>Das Ergebnis mit einer sicheren Methode prüfen, hier mit der Formel.</dd>
     </dl>
     ${noteField("frage", "Wer sucht die Beispiele aus?", "Es gibt keine richtige Antwort. Was passiert, wenn etwas fehlt?")}
+    ${noteField("lernweg", "Wem gehört dein Lernweg?", "Es gibt keine richtige Antwort. Was denkst du, und warum? Darfst du beim Lernen Fehler machen, ohne dass sie gegen dich verwendet werden?")}
     ${noteField("rule", "Meine Regel", "„Regel: …, weil …“")}
     <h3>Dein Weg durch das Spiel</h3>
     <div class="mynotes" id="mynotes"></div>
     <h3>Wie es weitergeht</h3>
     <div class="row">
-      <a class="main-link" href="../../bauphysik-u-wert/">Zur Wand →</a>
-      <a class="ghost" href="../baukasten/">Wie baut man eine Lerneinheit? →</a>
+      <a class="main-link" href="../klassenbuch/">Teil 2 →</a>
+      <a class="ghost" href="../../lernen-am-optimum-informatik.html">Über den Lernpfad</a>
     </div>
     <h3>Woher kommt das Wissen?</h3>
     <div class="source">
