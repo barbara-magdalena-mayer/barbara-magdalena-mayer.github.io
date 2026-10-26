@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Lernen am Optimum: Digitale Bildung</title>
+<meta name="description" content="Arbeitsprobe: ein Lernpfad in vier Teilen, von den Grundbegriffen der KI bis zu einer Lerneinheit mit SCORM und xAPI. Mit einer KI als Zweitstimme, die sich irren kann.">
+<style>
+@font-face{font-family:"Literata";font-weight:400;font-display:swap;src:url("fonts/literata-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+:root{
+  --bg:#ffffff; --soft:#f6f4f1; --ink:#22302a; --muted:#5b5f5c; --line:#e3ded6;
+  --head:#24507a; --green:#2f5240; --green-soft:#e3efe7; --pink:#b04e6b; --info:#f4ead2;
+  --display:"Literata",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#16191b; --soft:#1f2326; --ink:#e9ece9; --muted:#a9b0ab; --line:#33393c; --head:#8fb8e6; --green:#7cc7a0; --green-soft:#1d3127; --pink:#e58aa6; --info:#2e2a20; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:19px/1.65 var(--body)}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 56px}
+.top{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;padding-right:110px}
+.top a{font-size:16px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:99px;padding:6px 14px}
+.eyebrow{font:600 13px var(--body);letter-spacing:.09em;text-transform:uppercase;color:var(--pink)}
+h1{font:600 clamp(32px,6vw,44px)/1.15 var(--display);color:var(--head);margin:6px 0 10px}
+.sub{font:400 21px/1.45 var(--display);color:var(--muted);margin:0 0 22px;max-width:44ch}
+h2{font:600 26px/1.25 var(--display);color:var(--head);margin:40px 0 12px}
+h3{font:600 20px/1.3 var(--body);margin:18px 0 6px}
+p{max-width:68ch;margin:0 0 12px}
+.lead{font-size:21px;max-width:60ch}
+.status{border-left:5px solid var(--pink);background:var(--soft);border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0;max-width:64ch}
+.status b{display:block}
+.plus{background:var(--green-soft);border-radius:14px;padding:16px 18px;margin:12px 0;max-width:68ch}
+.triad{font:600 24px var(--display);color:var(--green);margin:6px 0 12px}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}
+.cols>div{background:var(--soft);border-radius:12px;padding:14px 16px}
+.cols h3{margin:0 0 6px;color:var(--head)}
+.cols p{font-size:17px;margin:0}
+@media(max-width:680px){.cols{grid-template-columns:1fr}}
+ol.parts{list-style:none;margin:12px 0;padding:0;display:grid;gap:12px;counter-reset:p}
+ol.parts li{border:1px solid var(--line);border-radius:14px;padding:14px 16px 14px 66px;position:relative;counter-increment:p}
+ol.parts li::before{content:counter(p);position:absolute;left:16px;top:14px;width:36px;height:36px;border-radius:50%;background:var(--head);color:#fff;font:600 19px/36px var(--display);text-align:center}
+ol.parts h3{margin:0 0 4px}
+ol.parts h3 a{color:var(--ink)}
+ol.parts p{font-size:17px;margin:0 0 6px}
+.terms{font:14px var(--mono);color:var(--muted)}
+.tag{display:inline-block;font:600 13px var(--body);border-radius:99px;padding:1px 10px;margin-left:6px;vertical-align:2px;background:var(--green-soft);color:var(--green)}
+.tag.no{background:var(--soft);color:var(--muted)}
+.levels{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0;font-weight:600}
+.levels span{background:var(--soft);border-radius:10px;padding:6px 12px}
+.levels i{font-style:normal;color:var(--muted)}
+ul{max-width:66ch;padding-left:22px}
+li{margin:4px 0}
+table.phases{border-collapse:collapse;width:100%;max-width:680px;margin:10px 0;font-size:17px}
+.phases th,.phases td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.phases th{font-weight:600;color:var(--muted);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+.done{color:var(--green);font-weight:600}.open{color:var(--muted);font-weight:600}
+.sources{font-size:17px}
+.sources a,p a,li a{color:var(--head)}
+.cta{display:inline-block;font-weight:600;font-size:20px;background:var(--green);color:#fff;border-radius:12px;padding:12px 22px;text-decoration:none;margin:10px 0}
+footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-size:15px;color:var(--muted)}
+footer a{color:inherit}
+a:focus-visible{outline:3px solid #d4a373;outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top" aria-label="Navigation">
+    <a href="./">← Zurück zur Werkstatt</a>
+    <a href="ueber-mich.html#h-handwerk">Alle Arbeitsproben</a>
+  </nav>
+
+  <span class="eyebrow">Arbeitsprobe · Handwerkliche Berufe · Digitale Bildung</span>
+  <h1>Lernen am Optimum: Digitale Bildung</h1>
+  <p class="sub">Ein Lernpfad in vier Teilen: von den Grundbegriffen der KI bis zu einer Lerneinheit mit SCORM und xAPI</p>
+
+  <p class="lead">Jeder Lernort beginnt bei dem, was du jetzt kannst, und führt zu dem, was das Fach verlangt. Das Plus ist eine KI: eine zweite Stimme, die Ideen einbringt und sich irren kann. Lernende setzen sich mit ihr auseinander und, wenn nötig, mit einer eigenen Begründung gegen sie durch.</p>
+
+  <div class="status" role="note"><b>Status: Arbeitsprobe</b>Die vier Teile zeigen, wie ich Lernorte baue und denke. Sie sind nicht erprobt und nicht für den Einsatz bestimmt.</div>
+
+  <a class="cta" href="spiele/maschine/">▶ Mit Teil 1 beginnen</a>
+
+  <h2>Hintergrund</h2>
+  <p>Künstliche Intelligenz ist in Schule, Ausbildung und Beruf angekommen. Grundbegriffe dazu, die man ohne Vorwissen erreicht, gibt es wenige. Die Empfehlungen der Gesellschaft für Informatik für die Grundschule (2019) beschreiben solche Grundbegriffe. Künstliche Intelligenz kommt darin noch nicht vor.</p>
+  <p>Gleichzeitig begegnen Lernende einer KI längst im Alltag und in der Ausbildung. Sie müssen ihre Vorschläge prüfen können: Was stimmt, was nicht, und woran erkenne ich das? Dafür braucht es Grundbegriffe, die man ohne Vorwissen erreicht, und Anlässe, eine KI zu überprüfen.</p>
+
+  <h2>Das Plus: die KI als Zweitstimme</h2>
+  <div class="plus">
+    <p>Neben dem eigenen Ausprobieren und Entdecken gibt es eine zweite Stimme. Sie bringt Perspektiven ein, auf die man selbst nicht gekommen wäre. Und sie kann falsch liegen. Ihre Aussagen sind bewusst gemischt: richtig, falsch oder „kommt drauf an“.</p>
+    <p style="margin:0">Lernende glauben ihr nicht einfach. Sie prüfen sie mit dem, was sie selbst gerechnet haben, benennen ihren Denkfehler und begründen das eigene Urteil.</p>
+  </div>
+  <p>Im Lernpfad: In <b>Teil 1</b> lernt man, <i>warum</i> eine KI sich irren kann. Sie lernt aus Beispielen und kennt nur, was man ihr zeigt. In <b>Teil 4</b> redet sie als zuschaltbare Zweitstimme mit. Teil 2 und 3 kommen ohne KI aus. Sie erklären, wie eine Lerneinheit gebaut ist und was sie über die Lernenden weitergibt.</p>
+
+  <h2>Einordnung: das ISAR-Modell</h2>
+  <p>Das ISAR-Modell beschreibt vier Wirkungsweisen von KI auf Lernen: <b>Inversion</b> (die KI denkt, man selbst lernt weniger), <b>Substitution</b> (die KI ersetzt etwas Gleichwertiges), <b>Augmentation</b> (die KI ergänzt Hinweise) und <b>Redefinition</b> (die KI verändert die Aufgabe so, dass man tiefer denkt und begründet).</p>
+  <p>Die Lernorte zielen auf <b>Redefinition</b>: Aus „rechne den U-Wert“ wird „prüfe, ob die KI recht hat, und begründe es“. Und sie beugen <b>Inversion</b> vor. Vor jedem Urteil über eine Aussage der KI stehen eine eigene Probe und der benannte Denkfehler, vorher lässt sich nicht urteilen. Das entspricht dem, was die Autorinnen und Autoren „cognitive forcing“ nennen: zuerst das eigene Urteil, dann die KI.</p>
+  <p>Offen bleibt die Leitfrage des Modells: Was können Lernende anschließend ohne KI? Sie lässt sich erst in einer Erprobung beantworten.</p>
+
+  <h2>Ziel</h2>
+  <p>Lernende bauen in kleinen Schritten Grundbegriffe der KI und digitaler Lerneinheiten auf und wenden sie an einem echten Fall aus der Bauphysik an. Der Leitsatz:</p>
+  <p class="triad">ausprobieren · begründen · prüfen</p>
+
+  <h2>Zielgruppen</h2>
+  <p>Auszubildende in Bau und Handwerk und alle, die ohne Vorwissen einsteigen. Wer in helfenden Berufen lernt oder lehrt, kann hineinschauen: Die Grundbegriffe sind dieselben.</p>
+  <p>Nicht gedacht als Ersatz für Unterricht. Es gibt keine Prüfung: Die Lernorte sind Übe-Räume.</p>
+
+  <h2>Lernziele: Wissen, Haltung, Handeln</h2>
+  <div class="cols">
+    <div><h3>Wissen</h3><p>Fachwörter von Trainingsdaten bis Validierung. Wie eine Lerneinheit aus HTML, CSS und JavaScript entsteht. Was SCORM und xAPI weitergeben. Der U-Wert einer Wand.</p></div>
+    <div><h3>Haltung</h3><p>Fehler gehören zum Lernen und werden offen benannt. Lernen ist nicht Prüfen. Die offene Frage, die alle Teile begleitet: Wem gehört dein Lernweg?</p></div>
+    <div><h3>Handeln</h3><p>Probe durch Einsetzen. Die Aussagen einer KI prüfen und den eigenen Standpunkt begründen. Den Denkfehler benennen, den eigenen und den der Maschine.</p></div>
+  </div>
+
+  <h2>Die vier Teile</h2>
+  <ol class="parts">
+    <li><h3><a href="spiele/maschine/">Wie lernt eine Maschine?</a><span class="tag">mit KI</span></h3>
+      <p>Sechs Stufen: Beispiele beschriften, die Maschine irrt sich, bessere Beispiele, ein Entscheidungsbaum, der Baum als Code, Rechnen oder Lernen an einer Obstkiste.</p>
+      <div class="terms">Trainingsdaten · Label · Modell · Bias · Entscheidungsbaum · if/else · Validierung</div></li>
+    <li><h3><a href="spiele/klassenbuch/">Wie Lernplattform und Lerneinheit miteinander sprechen</a><span class="tag no">ohne KI</span></h3>
+      <p>Karten in die richtige Reihenfolge legen, Ergebnisse eintragen, einen Fehler in echtem Code finden. Ein Klassenbuch zeigt, was die Plattform sieht.</p>
+      <div class="terms">Lernplattform (LMS) · Schnittstelle (API) · SCORM 1.2 · Fehlercodes</div></li>
+    <li><h3><a href="spiele/baukasten/">Wie baut man eine Lerneinheit?</a><span class="tag no">ohne KI</span></h3>
+      <p>Schichten an- und ausschalten, die Rechnung in drei Schritten einsetzen, einen typischen Programmierfehler finden. Zum Schluss: Abnahmeprotokoll und Bautagebuch.</p>
+      <div class="terms">HTML · CSS · JavaScript · Text und Zahl · SCORM · xAPI · LRS</div></li>
+    <li><h3><a href="bauphysik-u-wert/">Deine Wand verliert Wärme. Wie viel?</a><span class="tag">mit KI</span></h3>
+      <p>Ein Haus von 1958 soll gedämmt werden. Vier Wände nebeneinander, eine KI als Zweitstimme, Probe durch Einsetzen, Abschlusstest. Am Ende der eigene Lernweg.</p>
+      <div class="terms">U-Wert · R = d / λ · SCORM-Paket · xAPI-Lernweg</div></li>
+  </ol>
+
+  <h2>Didaktisches Konzept und Aufbau</h2>
+  <p>Lernen am Optimum heißt: Jeder Lernort beginnt bei dem Besten, was jemand im Moment kann, und bringt es mit dem zusammen, was das Fach verlangt. Lernende steuern selbst: Einstieg, Tempo und ob sie die KI dazuschalten.</p>
+  <div class="levels" aria-label="Aufbau in Ebenen"><span>Lernpfad</span><i>→</i><span>Teil</span><i>→</i><span>Stufe oder Runde</span><i>→</i><span>Baustein</span></div>
+  <p>Jeder Teil setzt sich aus wiederkehrenden Bausteinen zusammen:</p>
+  <ul>
+    <li><b>Auftrag:</b> eine konkrete Situation, eine offene Frage.</li>
+    <li><b>Werkstatt:</b> ausprobieren, ziehen, schalten, rechnen.</li>
+    <li><b>Zweitstimme:</b> eine KI, die sich irren kann (Teil 1 und 4).</li>
+    <li><b>Notiz:</b> Denkfehler, Aha, eigene Regel mit Begründung. Die Notizen bleiben auf dem eigenen Gerät.</li>
+    <li><b>Abschluss:</b> Merksatz, Fachwörter, die offene Frage und die Quellen.</li>
+  </ul>
+  <p>Gestaltung: einfache Sprache, große Schrift, Anrede mit „du“, keine Namen, bedienbar mit Maus, Finger und Tastatur.</p>
+
+  <h2>Technik</h2>
+  <ul>
+    <li>HTML, CSS und JavaScript, ohne Bibliotheken. Alles läuft im Browser, auch auf dem Handy.</li>
+    <li>Teil 4 ist als <b>SCORM-1.2-Paket</b> in Lernplattformen wie Moodle oder ILIAS einsetzbar.</li>
+    <li>Teil 4 schreibt den Lernweg im Standard <b>xAPI 1.0.3</b> mit: nur auf dem eigenen Gerät, unter einer Zufallsnummer.</li>
+    <li>Quellcode offen auf <a href="https://github.com/barbara-magdalena-mayer/bauphysik-u-wert">GitHub</a>. Teil 4 steht unter CC BY 4.0.</li>
+  </ul>
+
+  <h2>Projektphasen</h2>
+  <table class="phases">
+    <thead><tr><th>Phase</th><th>Inhalt</th><th>Stand</th></tr></thead>
+    <tbody>
+      <tr><td>Entwicklung</td><td>Konzept, vier Teile, Quellen, technische Prüfung (Handy, Tastatur, SCORM, xAPI)</td><td class="done">Oktober 2026</td></tr>
+      <tr><td>Erprobung</td><td>Rückmeldungen von Lernenden zu Verständlichkeit und Handhabbarkeit</td><td class="open">offen</td></tr>
+      <tr><td>Überarbeitung</td><td>Anpassung nach den Rückmeldungen</td><td class="open">offen</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Beteiligte</h2>
+  <p>Idee, Didaktik und fachliche Prüfung: Barbara Magdalena Mayer. Programmiert mit KI-Unterstützung.</p>
+
+  <h2>Woher kommt das Wissen?</h2>
+  <ul class="sources">
+    <li>Gesellschaft für Informatik: <a href="https://dl.gi.de/bitstream/handle/20.500.12116/20121/61-GI-Empfehlung_Kompetenzen_informatische_Bildung_Primarbereich.pdf?sequence=1">Kompetenzen für digitale Bildung im Primarbereich</a> (2019)</li>
+    <li>Annabel Lindner, Stefan Seegerer: <a href="https://computingeducation.de/aiunplugged.pdf">AI Unplugged</a>, Aktivität „Klassifikation mit Entscheidungsbäumen“</li>
+    <li>Bauer, Greiff, Graesser u. a.: <a href="https://link.springer.com/article/10.1007/s10648-025-10020-8">Looking Beyond the Hype: Understanding the Effects of AI on Learning</a>, Educational Psychology Review 37, 45 (2025), ISAR-Modell</li>
+    <li>ADL: SCORM 1.2 und xAPI 1.0.3 (Spezifikationen)</li>
+    <li>Rechenverfahren U-Wert nach DIN EN ISO 6946 (vereinfacht), λ-Werte nach DIN 4108-4, Höchstwert nach GEG Anlage 7</li>
+  </ul>
+
+  <footer>Barbara Magdalena Mayer · <a href="./">Werkstatt</a> · <a href="ueber-mich.html#impressum">Impressum</a> · <a href="ueber-mich.html#datenschutz">Datenschutz</a></footer>
+</div>
+<style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="./" aria-label="Barbara – zur Werkstatt"><img src="bilder/barbara-figur.webp" alt=""></a>
+</body>
+</html>
