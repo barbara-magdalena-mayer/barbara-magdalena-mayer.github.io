@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Du trägst einen Messwert ein. Was passiert dann?</title>
+<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Pflege. Ein Messwert auf seinem Weg: messen, Einheit, eintragen, Verlauf, Frühwarnwert (NEWS2), ein kleines Python-Programm und eine KI, die sich irren kann.">
+<style>
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("../../fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+:root{
+  --bg:#faeef1; --paper:#ffffff; --ink:#24382c; --muted:#5e5459; --line:#ead5db;
+  --green:#2f5240; --green-soft:#e3efe7; --pink:#b04e6b; --pink-soft:#f6e1e8; --teal:#7cc7bc;
+  --red:#a83232; --red-soft:#f8e0e0; --info:#f4ead2; --machine:#1f2a24; --machine-ink:#d8f0e4;
+  --band:#dcefe3; --curve:#b04e6b;
+  --display:"Literata",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#191416; --paper:#241d20; --ink:#efe6e9; --muted:#b3a5ab; --line:#3e3237;
+    --green:#7cc7a0; --green-soft:#1d3127; --pink:#e58aa6; --pink-soft:#3a2129; --red:#ef8b8b; --red-soft:#3c2222;
+    --info:#2e2a20; --machine:#101713; --band:#1d3127; --curve:#e58aa6; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:20px/1.6 var(--body)}
+.wrap{max-width:820px;margin:0 auto;padding:16px 16px 48px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;padding-right:110px}
+.top a,.top button{font:inherit;font-size:16px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--paper);border-radius:99px;padding:6px 14px;cursor:pointer}
+.eyebrow{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:600}
+h1{font-family:var(--display);font-size:34px;line-height:1.2;margin:4px 0 8px}
+h2{font-family:var(--display);font-size:28px;line-height:1.25;margin:0 0 10px}
+h3{font-size:21px;margin:20px 0 8px}
+.lead{max-width:44ch;margin:0 0 14px}
+.reihe{max-width:52ch;background:var(--green-soft);border-left:5px solid var(--green);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px;font-size:18px}
+.reihe b{display:block;margin-bottom:2px}
+.steps{display:flex;gap:6px;margin:10px 0 18px}
+.steps span{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.steps span.done{background:var(--pink)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}
+.stepno{font-size:16px;font-weight:600;color:var(--pink);text-transform:uppercase;letter-spacing:.06em}
+.task{background:var(--pink-soft);border-left:6px solid var(--pink);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 16px;max-width:46ch}
+.hint{font-size:18px;color:var(--muted);margin:6px 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+button.main{font:inherit;font-weight:600;font-size:21px;background:var(--green);color:#fff;border:none;border-radius:12px;padding:12px 22px;cursor:pointer}
+@media (prefers-color-scheme: dark){button.main{color:#10201a}}
+button.ghost,a.ghost{font:inherit;font-size:18px;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:10px 16px;cursor:pointer;text-decoration:none;display:inline-block}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,a:focus-visible,textarea:focus-visible,select:focus-visible,input:focus-visible{outline:4px solid var(--teal);outline-offset:2px}
+.msg{margin-top:14px;padding:12px 16px;border-radius:12px;max-width:52ch}
+.msg.ok{background:var(--green-soft)} .msg.bad{background:var(--red-soft)} .msg.info{background:var(--info)}
+.msg > b{display:block}
+textarea{font:inherit;font-size:18px;width:100%;min-height:80px;margin-top:6px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+select,input[type=number]{font:inherit;font-size:19px;padding:6px 8px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);max-width:100%}
+input[type=number]{width:72px}
+.fws{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.fw{background:#e6eefb;color:#1f3a66;border:1px solid #b9cbee;border-radius:99px;padding:4px 12px;font-size:16px}
+@media (prefers-color-scheme: dark){.fw{background:#1c2740;color:#cfe0ff;border-color:#33466e}}
+.glossary{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:8px 0;max-width:56ch}
+.glossary dt{font-weight:600;font-family:var(--mono);font-size:18px}
+.glossary dd{margin:0}
+.choices{display:grid;gap:10px;margin-top:10px;max-width:46ch}
+.choices button{font:inherit;text-align:left;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+.choices button.right{border-color:var(--green);background:var(--green-soft)}
+.choices button.wrong{border-color:var(--red);background:var(--red-soft)}
+.choices code,.msg code,p code,li code{font-family:var(--mono);font-size:.9em;background:var(--bg);border-radius:6px;padding:1px 5px}
+/* Messkarten */
+.meas{display:grid;gap:10px;margin:12px 0;max-width:620px}
+.mcard{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+.mcard .how{font-size:18px}
+.mcard .val{font:600 24px var(--mono);white-space:nowrap}
+.mcard.right{border-color:var(--green)} .mcard.wrong{border-color:var(--red)}
+@media(max-width:520px){.mcard{grid-template-columns:1fr auto}.mcard .how{grid-column:1/-1}}
+/* Kurve (Tabelle) */
+.sheet{width:100%;max-width:560px;border-collapse:collapse;margin:12px 0;font-size:19px}
+.sheet caption{text-align:left;font:600 15px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-bottom:6px}
+.sheet td,.sheet th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+.sheet td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+.sheet tr.pick{cursor:pointer}
+.sheet tr.pick:hover td,.sheet tr.pick:focus-visible td{background:var(--pink-soft)}
+.sheet tr.right td{background:var(--green-soft)} .sheet tr.wrong td{background:var(--red-soft)}
+.sheet tr.pick:focus-visible{outline:4px solid var(--teal)}
+/* Verlauf */
+.chart{width:100%;max-width:560px;height:auto;display:block;margin:12px 0;background:var(--bg);border-radius:12px}
+.chart text{font-family:var(--body);font-size:20px;fill:var(--muted)}
+.chart .pt text{font-family:var(--mono);font-size:22px;fill:var(--ink)}
+/* NEWS2-Tafel */
+.tablewrap{overflow-x:auto;max-width:100%;margin:12px 0}
+.news{border-collapse:collapse;font-size:16px;min-width:540px}
+.news th,.news td{border:1px solid var(--line);padding:5px 6px;text-align:center;white-space:nowrap}
+.news th{background:var(--bg);font-weight:600}
+.news td.p3{background:#f3c6c6}.news td.p2{background:#f8dcc0}.news td.p1{background:#fbefc6}.news td.p0{background:#ffffff}
+@media (prefers-color-scheme: dark){.news td.p3{background:#5a2626}.news td.p2{background:#5a3b22}.news td.p1{background:#4f4622}.news td.p0{background:#241d20}}
+.news td.lbl{text-align:left;background:var(--bg);font-weight:600}
+.score{display:grid;gap:8px;margin:12px 0;max-width:560px}
+.srow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--bg);border-radius:10px;padding:8px 12px;border:2px solid transparent}
+.srow.right{border-color:var(--green)} .srow.wrong{border-color:var(--red)}
+.srow .v{display:block;font-family:var(--mono);white-space:nowrap}
+.total{font:600 22px var(--mono);margin:8px 0}
+/* Code */
+pre.code{background:var(--machine);color:var(--machine-ink);border-radius:14px;padding:12px 14px;font:17px/1.6 var(--mono);overflow-x:auto;max-width:100%;margin:12px 0}
+pre.code .hl{background:#a8f0c855;color:#fff;border-radius:4px}
+pre.code .cm{color:#9fb8aa}
+.coder textarea{font:16px/1.55 var(--mono);min-height:260px;background:var(--machine);color:var(--machine-ink);border-color:var(--machine);white-space:pre;overflow-x:auto}
+.out{font:17px/1.5 var(--mono);background:var(--bg);border-radius:10px;padding:10px 12px;white-space:pre-wrap;min-height:44px;margin-top:8px}
+.small{font-size:16px;color:var(--muted)}
+/* KI */
+.ki{background:var(--machine);color:var(--machine-ink);border-radius:16px;padding:14px 16px;margin:14px 0;max-width:56ch}
+.ki .title{font:600 15px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#a8f0c8}
+.ki p{margin:6px 0;color:#fff}
+.claim{border:2px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0;max-width:620px}
+.claim.done{border-color:var(--green)}
+.judge{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.judge button{font:inherit;font-size:18px;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:8px 14px;cursor:pointer}
+.judge button.right{border-color:var(--green);background:var(--green-soft)}
+.judge button.wrong{border-color:var(--red);background:var(--red-soft)}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:600;margin:10px 0;cursor:pointer}
+.toggle input{width:26px;height:26px}
+.path{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:18px}
+.path span{background:var(--pink-soft);border-radius:99px;padding:4px 12px}
+.source{background:var(--info);border-radius:12px;padding:12px 16px;margin:14px 0;max-width:56ch;font-size:18px}
+.source a{color:inherit;font-weight:600}
+a.main-link{font-weight:600;font-size:21px;background:var(--green);color:#fff;border-radius:12px;padding:12px 22px;text-decoration:none;display:inline-block}
+footer{margin-top:24px;font-size:16px;color:var(--muted)}
+footer a{color:inherit}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top" aria-label="Navigation">
+    <a href="../../">← Zurück zur Werkstatt</a>
+    <button type="button" id="restart">↺ Neu beginnen</button>
+  </nav>
+  <span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflege</span>
+  <h1>Du trägst einen Messwert ein. Was passiert dann?</h1>
+  <p class="lead">Du misst, du trägst ein, und dann? Hier gehst du den Weg eines Messwerts mit: von deiner Hand bis in ein Programm, das Alarm schlägt. Unterwegs liest du dein erstes Stück Python.</p>
+  <div class="reihe" role="note"><b>So geht es</b>Sechs Stufen. Du brauchst kein Vorwissen. Du machst immer zuerst die Probe, dann entscheidest du. Fehler sind erlaubt: Sie zeigen, wo du gerade stehst.</div>
+  <div class="steps" aria-hidden="true" id="steps"></div>
+  <main class="panel" id="stage" aria-live="polite"></main>
+  <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Ein Übungsfall, keine echte Person, keine echte Klinik-Software. Es gelten immer die Vorgaben deiner Einrichtung.</footer>
+</div>
+
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const STUFEN = 6;
+
+/* ============================================================
+   Frühwarnwert nach NEWS2 (Royal College of Physicians 2017),
+   Sauerstoffsättigung nur Skala 1.
+   ============================================================ */
+const NEWS = {
+  af:   v => v<=8?3 : v<=11?1 : v<=20?0 : v<=24?2 : 3,
+  spo2: v => v<=91?3 : v<=93?2 : v<=95?1 : 0,
+  o2:   v => v ? 2 : 0,
+  rr:   v => v<=90?3 : v<=100?2 : v<=110?1 : v<=219?0 : 3,
+  puls: v => v<=40?3 : v<=50?1 : v<=90?0 : v<=110?1 : v<=130?2 : 3,
+  bew:  v => v==="wach" ? 0 : 3,
+  temp: v => v<=35.0?3 : v<=36.0?1 : v<=38.0?0 : v<=39.0?1 : 2
+};
+/* Der Übungsfall: Nachmittag, 16 Uhr */
+const FALL = [
+  {k:"af",   name:"Atemfrequenz",          v:22,     show:"22",   unit:"/min", how:"Du zählst eine Minute lang die Atemzüge."},
+  {k:"spo2", name:"Sauerstoffsättigung",   v:94,     show:"94",   unit:"%",    how:"Ein Clip am Finger leuchtet rot."},
+  {k:"o2",   name:"Sauerstoffgabe",        v:false,  show:"keine",unit:"",     how:""},
+  {k:"rr",   name:"Blutdruck (oberer Wert)",v:104,   show:"104",  unit:"mmHg", how:"Eine Manschette am Oberarm pumpt sich auf."},
+  {k:"puls", name:"Puls",                  v:104,    show:"104",  unit:"/min", how:"Du tastest eine Minute lang am Handgelenk."},
+  {k:"bew",  name:"Bewusstsein",           v:"wach", show:"wach", unit:"",     how:""},
+  {k:"temp", name:"Temperatur",            v:38.4,   show:"38,4", unit:"°C",   how:"Ein Thermometer im Ohr piept."}
+];
+const SOLL = Object.fromEntries(FALL.map(f => [f.k, NEWS[f.k](f.v)]));
+const SUMME = Object.values(SOLL).reduce((a,b)=>a+b,0); /* = 6 */
+
+/* Notizen bleiben nur in diesem Browser */
+let notes = {};
+try { notes = JSON.parse(localStorage.getItem("messwert-notes") || "{}"); } catch(e) { notes = {}; }
+const saveNotes = () => { try { localStorage.setItem("messwert-notes", JSON.stringify(notes)); } catch(e) {} };
+
+let stufe = 0;
+const stage = $("#stage");
+function bar(){ $("#steps").innerHTML = Array.from({length:STUFEN},(_,i)=>`<span class="${i<=stufe?"done":""}"></span>`).join(""); }
+function go(n, first){ stufe = n; bar(); [s1,s2,s3,s4,s5,s6,ende][n](); if (first) return; stage.querySelector("h2")?.focus?.({preventScroll:true}); window.scrollTo({top: stage.offsetTop - 12, behavior: "smooth"}); }
+function head(nr, titel){ return `<div class="stepno">Stufe ${nr} von ${STUFEN}</div><h2 tabindex="-1">${titel}</h2>`; }
+function nextBtn(label="Weiter"){ return `<div class="row"><button class="main" id="next" hidden>${label} →</button></div>`; }
+function showNext(n){ const b=$("#next"); b.hidden=false; b.onclick=()=>go(n); }
+function msg(kind, title, text){ return `<div class="msg ${kind}"><b>${title}</b>${text}</div>`; }
+
+/* ---------- Stufe 1: Messen. Ohne Einheit keine Aussage ---------- */
+function s1(){
+  const units = ["/min","%","mmHg","°C","mmol/l","kg"];
+  const cards = FALL.filter(f=>f.unit);
+  stage.innerHTML = head(1,"Du misst. Was ist die Zahl ohne Einheit?") + `
+    <p class="task">Nachmittag, 16 Uhr. Du misst bei einer Person auf deiner Station fünf Werte. Gib jeder Zahl ihre Einheit.</p>
+    <div class="meas">${cards.map((f,i)=>`
+      <div class="mcard" id="mc${i}">
+        <span class="how">${f.how}</span>
+        <span class="val">${f.show}</span>
+        <label><span class="vh">Einheit für ${esc(f.how)}</span>
+          <select data-i="${i}"><option value="">Einheit?</option>${units.map(u=>`<option>${u}</option>`).join("")}</select></label>
+      </div>`).join("")}</div>
+    <div class="row"><button class="ghost" id="check">Probe machen</button></div>
+    <div id="fb"></div>` + nextBtn();
+  $("#check").onclick = () => {
+    let ok = 0;
+    cards.forEach((f,i)=>{ const s=stage.querySelector(`select[data-i="${i}"]`); const r = s.value===f.unit;
+      $("#mc"+i).className = "mcard " + (r?"right":"wrong"); if(r) ok++; });
+    if (ok===cards.length){
+      $("#fb").innerHTML = msg("ok","Alles richtig.","Schau genau hin: Zweimal steht da 104. Einmal ist es der Puls, einmal der Blutdruck. Ohne Namen und Einheit ist eine Zahl nur eine Zahl. Deshalb speichert ein Programm nie nur „104“, sondern immer drei Dinge: was gemessen wurde, den Wert und die Einheit.")
+        + `<div class="fws"><span class="fw">Messwert</span><span class="fw">Einheit</span><span class="fw">/min = pro Minute</span><span class="fw">mmHg = Millimeter Quecksilbersäule</span></div>`;
+      showNext(1);
+    } else {
+      $("#fb").innerHTML = msg("bad",`${ok} von ${cards.length} stimmen.`,"Rot umrandet heißt: Schau noch einmal. Frag dich: Zählst du etwas pro Minute? Ist es ein Anteil? Ist es ein Druck? Ist es eine Temperatur?");
+    }
+  };
+}
+
+/* ---------- Stufe 2: Eintragen. Wer prüft, was eingetragen ist? ---------- */
+function s2(){
+  const rows = [
+    ["Atemfrequenz","22","/min",false],["Sauerstoffsättigung","94","%",false],["Blutdruck oben","104","mmHg",false],
+    ["Puls","1040","/min",true],["Temperatur","38,4","°C",false]];
+  stage.innerHTML = head(2,"Du trägst ein. Das Programm sagt: gespeichert.") + `
+    <p class="task">Du hast die Werte schnell eingetippt, das Telefon hat geklingelt. Das Programm hat alles gespeichert, ohne Meldung. Ein Eintrag kann trotzdem nicht stimmen. Tippe ihn an.</p>
+    <table class="sheet"><caption>Kurve · heute 16:00 · gespeichert</caption>
+      <tbody>${rows.map((r,i)=>`<tr class="pick" tabindex="0" data-i="${i}"><td>${r[0]}</td><td class="n">${r[1]}</td><td>${r[2]}</td></tr>`).join("")}</tbody></table>
+    <div id="fb"></div>` + nextBtn();
+  stage.querySelectorAll("tr.pick").forEach(tr=>{
+    const pick = () => {
+      const i=+tr.dataset.i;
+      stage.querySelectorAll("tr.pick").forEach(t=>t.classList.remove("wrong"));
+      if (rows[i][3]){
+        tr.classList.add("right"); tr.cells[1].textContent = "104";
+        $("#fb").innerHTML = msg("ok","Gefunden: 1040 statt 104.","Ein Puls von 1040 pro Minute ist bei einem Menschen nicht möglich. Das Programm hat trotzdem „gespeichert“ gesagt. Es hat nur geprüft, ob du eine Zahl eingegeben hast. Ob die Zahl zu einem Menschen passt, hat es nicht geprüft. Das nennt man <b>Plausibilitätsprüfung</b>: Manche Programme warnen bei unmöglichen Werten, viele nicht. Prüfen musst am Ende du.")
+          + `<div class="fws"><span class="fw">Eintrag</span><span class="fw">Tippfehler</span><span class="fw">Plausibilitätsprüfung</span></div>`;
+        showNext(2);
+      } else {
+        tr.classList.add("wrong");
+        $("#fb").innerHTML = msg("bad","Dieser Wert ist möglich.","Er kann bei einem kranken Menschen genau so vorkommen. Suche einen Wert, den es bei einem Menschen gar nicht geben kann.");
+      }
+    };
+    tr.onclick = pick; tr.onkeydown = e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } };
+  });
+}
+
+/* ---------- Stufe 3: Anzeigen. Was zeigt eine Kurve, was eine Zahl nicht zeigt? ---------- */
+function s3(){
+  const pts = [["8",78],["10",84],["12",92],["14",98],["16",104]];
+  const W=560,H=320,L=54,R=30,T=34,B=44, ymin=40,ymax=140;
+  const x = i => L + i*(W-L-R)/(pts.length-1);
+  const y = v => T + (ymax-v)*(H-T-B)/(ymax-ymin);
+  const line = pts.map((p,i)=>`${x(i)},${y(p[1])}`).join(" ");
+  const svg = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Verlauf des Pulses heute: 8 Uhr 78, 10 Uhr 84, 12 Uhr 92, 14 Uhr 98, 16 Uhr 104 pro Minute. Der grüne Bereich reicht von 51 bis 90.">
+    <rect x="${L}" y="${y(90)}" width="${W-L-R}" height="${y(51)-y(90)}" fill="var(--band)"/>
+    <text x="${L+6}" y="${y(51)-8}">ohne Punkte: 51 bis 90</text>
+    ${[40,60,80,100,120,140].map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-8}" y="${y(v)+5}" text-anchor="end">${v}</text>`).join("")}
+    <polyline points="${line}" fill="none" stroke="var(--curve)" stroke-width="3"/>
+    ${pts.map((p,i)=>`<g class="pt"><circle cx="${x(i)}" cy="${y(p[1])}" r="6" fill="var(--curve)"/><text x="${x(i)}" y="${y(p[1])-12}" text-anchor="middle">${p[1]}</text><text x="${x(i)}" y="${H-12}" text-anchor="${i===pts.length-1?"end":i===0?"start":"middle"}" style="font-family:var(--body);fill:var(--muted);font-size:20px">${p[0]} Uhr</text></g>`).join("")}
+  </svg>`;
+  const opts = [
+    ["Der Puls ist gefährlich hoch.", false, "Prüfe das an der Tafel in Stufe 4: 104 gibt einen Punkt. Das ist nicht „gefährlich hoch“. Wichtiger ist etwas anderes, das du nur an der Kurve siehst."],
+    ["Der Puls steigt seit dem Morgen, Messung für Messung.", true, ""],
+    ["Das Messgerät ist kaputt.", false, "Dafür gibt es keinen Hinweis. Die Werte steigen gleichmäßig, das passt zu einem Menschen, nicht zu einem Gerätefehler."]];
+  stage.innerHTML = head(3,"Der Bildschirm zeigt eine Kurve. Was siehst du?") + `
+    <p class="task">Dein Programm zeigt den Puls nicht als Zahl, sondern als Kurve über den Tag. Was zeigt dir die Kurve, was die Zahl 104 allein nicht zeigt?</p>
+    ${svg}
+    <div class="choices">${opts.map((o,i)=>`<button data-i="${i}">${o[0]}</button>`).join("")}</div>
+    <div id="fb"></div>` + nextBtn();
+  stage.querySelectorAll(".choices button").forEach(b=>b.onclick=()=>{
+    const o = opts[+b.dataset.i];
+    b.classList.add(o[1]?"right":"wrong");
+    if (o[1]){
+      $("#fb").innerHTML = msg("ok","Genau: der Verlauf.","Jede einzelne Zahl ist für sich nicht auffällig. Zusammen zeigen sie eine Richtung: Der Puls steigt seit acht Stunden. Das nennt man <b>Verlauf</b> oder <b>Trend</b>. Darum zeigen Programme Messwerte als Kurve. Der grüne Streifen ist der Bereich, für den es keine Punkte gibt. Was „Punkte“ heißt, kommt jetzt.")
+        + `<div class="fws"><span class="fw">Verlauf</span><span class="fw">Trend</span><span class="fw">Zielbereich</span></div>`;
+      showNext(3);
+    } else $("#fb").innerHTML = msg("bad","Noch nicht.", o[2]);
+  });
+}
+
+/* ---------- Stufe 4: Bewerten. Frühwarnwert selbst ausrechnen ---------- */
+function s4(){
+  const tafel = `<div class="tablewrap"><table class="news">
+    <caption class="small" style="text-align:left;padding-bottom:6px">Frühwarnwert NEWS2, vereinfacht (Sättigung nur Skala 1)</caption>
+    <thead><tr><th>Messwert</th><th>3</th><th>2</th><th>1</th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead><tbody>
+    <tr><td class="lbl">Atemfrequenz /min</td><td class="p3">≤ 8</td><td class="p2"></td><td class="p1">9–11</td><td class="p0">12–20</td><td class="p1"></td><td class="p2">21–24</td><td class="p3">≥ 25</td></tr>
+    <tr><td class="lbl">Sättigung %</td><td class="p3">≤ 91</td><td class="p2">92–93</td><td class="p1">94–95</td><td class="p0">≥ 96</td><td></td><td></td><td></td></tr>
+    <tr><td class="lbl">Sauerstoff</td><td></td><td class="p2">ja</td><td></td><td class="p0">nein, Raumluft</td><td></td><td></td><td></td></tr>
+    <tr><td class="lbl">Blutdruck oben mmHg</td><td class="p3">≤ 90</td><td class="p2">91–100</td><td class="p1">101–110</td><td class="p0">111–219</td><td></td><td></td><td class="p3">≥ 220</td></tr>
+    <tr><td class="lbl">Puls /min</td><td class="p3">≤ 40</td><td class="p2"></td><td class="p1">41–50</td><td class="p0">51–90</td><td class="p1">91–110</td><td class="p2">111–130</td><td class="p3">≥ 131</td></tr>
+    <tr><td class="lbl">Bewusstsein</td><td class="p3">nicht wach¹</td><td></td><td></td><td class="p0">wach</td><td></td><td></td><td></td></tr>
+    <tr><td class="lbl">Temperatur °C</td><td class="p3">≤ 35,0</td><td class="p2"></td><td class="p1">35,1–36,0</td><td class="p0">36,1–38,0</td><td class="p1">38,1–39,0</td><td class="p2">≥ 39,1</td><td></td></tr>
+    </tbody></table></div>`;
+  stage.innerHTML = head(4,"Wie viele Punkte? Du rechnest selbst.") + `
+    <p class="task">Viele Programme rechnen aus den Messwerten einen <b>Frühwarnwert</b>. Er soll zeigen, ob es einem Menschen schlechter geht, bevor man es sieht. Rechne ihn zuerst selbst aus. Suche jeden Wert in der Tafel und trage die Punkte ein.</p>
+    ${tafel}
+    <p class="hint">Die Zahlen oben in der Tafel sind die Punkte. Die Mitte, 0, ist der Bereich ohne Punkte. ¹ Nicht wach heißt hier: neu verwirrt, reagiert nur auf Ansprache, nur auf Schmerz oder gar nicht.</p>
+    <div class="score">${FALL.map(f=>`<div class="srow" id="r_${f.k}"><span>${f.name}<span class="v">${f.show} ${f.unit}</span></span>
+      <label><span class="vh">Punkte für ${f.name}</span><input type="number" min="0" max="3" inputmode="numeric" data-k="${f.k}"></label></div>`).join("")}</div>
+    <div class="row"><button class="ghost" id="check">Probe machen</button></div>
+    <div id="fb"></div>
+    <div id="react" hidden>
+      <div class="total">Gesamt: <span id="sum"></span> Punkte</div>
+      <p><b>Was heißt das?</b> Wähle die passende Reaktion.</p>
+      <div class="choices">
+        <button data-r="0">0 bis 4 Punkte: weiter wie geplant messen</button>
+        <button data-r="1">5 bis 6 Punkte: dringend einschätzen lassen und öfter messen</button>
+        <button data-r="2">7 und mehr: sofort ein Notfallteam rufen</button>
+      </div>
+      <div id="fb2"></div>
+    </div>` + nextBtn();
+  $("#check").onclick = () => {
+    let ok=0;
+    FALL.forEach(f=>{ const inp=stage.querySelector(`input[data-k="${f.k}"]`); const r = inp.value!=="" && +inp.value===SOLL[f.k];
+      $("#r_"+f.k).className = "srow " + (r?"right":"wrong"); if(r) ok++; });
+    if (ok===FALL.length){
+      $("#fb").innerHTML = msg("ok","Alle Punkte stimmen.","");
+      $("#react").hidden=false; $("#sum").textContent = SUMME;
+    } else {
+      $("#fb").innerHTML = msg("bad",`${ok} von ${FALL.length} stimmen.`,"Rot heißt: Such diesen Wert noch einmal in der Tafel. Achte auf die Grenzen: „bis“ heißt, die Zahl gehört noch dazu. Kein Punkt? Dann trage 0 ein.");
+    }
+  };
+  stage.querySelectorAll("#react .choices button").forEach(b=>b.onclick=()=>{
+    const r=+b.dataset.r;
+    b.classList.add(r===1?"right":"wrong");
+    if (r===1){
+      $("#fb2").innerHTML = msg("ok","Richtig: 6 Punkte, mittleres Risiko.","Ab 5 Punkten soll jemand mit Erfahrung in akuten Situationen die Person zeitnah ansehen, und es wird öfter gemessen. Ein einzelner Wert mit 3 Punkten verlangt das auch. Wie genau, regelt deine Einrichtung. Und: Wenn du dir Sorgen machst, zählt das, auch bei wenigen Punkten.")
+        + `<div class="fws"><span class="fw">Frühwarnwert</span><span class="fw">NEWS2</span><span class="fw">Schwelle</span></div>`;
+      showNext(4);
+    } else $("#fb2").innerHTML = msg("bad","Schau auf deine Summe.","Du hast "+SUMME+" Punkte ausgerechnet. In welchen Bereich fällt diese Zahl?");
+  });
+}
+
+/* ---------- Stufe 5: Programm. So rechnet der Computer ---------- */
+const CODE = `def punkte_puls(puls):
+    if puls <= 40:
+        return 3
+    elif puls <= 50:
+        return 1
+    elif puls <= 90:
+        return 0
+    elif puls <= 110:
+        return 1
+    elif puls <= 130:
+        return 2
+    else:
+        return 3
+
+print(punkte_puls(104))`;
+function s5(){
+  stage.innerHTML = head(5,"Das Programm rechnet. Liest du mit?") + `
+    <p class="task">Das, was du gerade mit der Tafel gemacht hast, macht im Programm ein kleines Stück Code. Hier ist es für den Puls, in der Sprache <b>Python</b>. Lies es von oben nach unten.</p>
+    <pre class="code" id="code">${esc(CODE)}</pre>
+    <dl class="glossary">
+      <dt>def</dt><dd>Hier beginnt eine <b>Funktion</b>: ein kleines Programm mit Namen, hier <code>punkte_puls</code>.</dd>
+      <dt>puls</dt><dd>Der <b>Parameter</b>: der Wert, den man der Funktion gibt.</dd>
+      <dt>if / elif / else</dt><dd>Wenn … / sonst wenn … / sonst. Python prüft von oben nach unten und nimmt die <b>erste</b> Bedingung, die stimmt.</dd>
+      <dt>return</dt><dd>Gib dieses Ergebnis zurück und hör auf.</dd>
+      <dt>print</dt><dd>Zeig das Ergebnis an.</dd>
+    </dl>
+    <p><b>Frage 1:</b> Was zeigt das Programm an?</p>
+    <div class="choices" id="q1">${[0,1,2,3].map(n=>`<button data-n="${n}">${n}</button>`).join("")}</div>
+    <div id="fb1"></div>
+    <div id="part2" hidden>
+      <p><b>Frage 2:</b> Jetzt kommt der Tippfehler aus Stufe 2 ins Programm: <code>print(punkte_puls(1040))</code>. Was zeigt es an?</p>
+      <div class="choices" id="q2">${[0,1,2,3].map(n=>`<button data-n="${n}">${n}</button>`).join("")}<button data-n="err">Eine Fehlermeldung</button></div>
+      <div id="fb2"></div>
+    </div>
+    <div id="part3" hidden>
+      <p><b>Frage 3:</b> Du darfst eine Zeile ganz oben in die Funktion einfügen. Welche hilft?</p>
+      <div class="choices" id="q3">
+        <button data-n="0"><code>if puls == 1040: return "Bitte prüfen"</code></button>
+        <button data-n="1"><code>if puls > 300: return "Bitte prüfen"</code></button>
+        <button data-n="2"><code>if puls > 90: return 3</code></button>
+      </div>
+      <div id="fb3"></div>
+    </div>
+    <div id="coder" class="coder" hidden>
+      <h3>Selbst ausprobieren</h3>
+      <p class="small">Du kannst den Code hier ändern und ausführen. Probiere andere Zahlen in der letzten Zeile. Python wird erst geladen, wenn du auf „Ausführen“ tippst. Dafür holt dein Browser einmal etwa 10 MB von cdn.jsdelivr.net.</p>
+      <label><span class="vh">Python-Code</span><textarea id="src" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></label>
+      <div class="row"><button class="ghost" id="run">▶ Ausführen</button><button class="ghost" id="reset">Code zurücksetzen</button></div>
+      <div class="out" id="out" aria-live="polite">Hier erscheint, was <code>print</code> anzeigt.</div>
+    </div>` + nextBtn();
+  const pick = (box, fn) => stage.querySelectorAll(box+" button").forEach(b=>b.onclick=()=>fn(b));
+  pick("#q1", b => { const n=b.dataset.n;
+    if (n==="1"){ b.classList.add("right");
+      $("#fb1").innerHTML = msg("ok","Richtig: 1.","104 ist nicht kleiner oder gleich 40, nicht bis 50, nicht bis 90. Aber 104 ist kleiner oder gleich 110. Das ist die erste Bedingung, die stimmt. Also <code>return 1</code>. Genau wie in deiner Tafel.");
+      $("#part2").hidden=false;
+    } else { b.classList.add("wrong"); $("#fb1").innerHTML = msg("bad","Noch nicht.","Geh Zeile für Zeile durch: Ist 104 kleiner oder gleich 40? Nein. Bis 50? Nein. Bis 90? Nein. Bis 110? …"); } });
+  pick("#q2", b => { const n=b.dataset.n;
+    if (n==="3"){ b.classList.add("right");
+      $("#fb2").innerHTML = msg("ok","Richtig: 3, also Alarm.","1040 ist größer als alle Grenzen. Keine Bedingung stimmt, also landet die Zahl bei <code>else</code>: 3 Punkte. Das Programm schlägt Alarm wegen eines Tippfehlers. Es weiß nicht, dass es so einen Puls nicht gibt. Das weißt nur du.");
+      $("#part3").hidden=false;
+    } else { b.classList.add("wrong"); $("#fb2").innerHTML = msg("bad","Noch nicht.", n==="err" ? "Für Python ist 1040 eine ganz normale Zahl. Es gibt keinen Fehler. Welche Zeile erreicht 1040?" : "Welche Bedingung stimmt für 1040? Ist 1040 kleiner oder gleich 130?"); } });
+  pick("#q3", b => { const n=b.dataset.n;
+    if (n==="1"){ b.classList.add("right");
+      const neu = CODE.replace("def punkte_puls(puls):\n", 'def punkte_puls(puls):\n    if puls > 300:\n        return "Bitte prüfen"\n');
+      $("#code").innerHTML = esc(neu).replace('    if puls &gt; 300:\n        return "Bitte prüfen"', '<span class="hl">    if puls &gt; 300:\n        return "Bitte prüfen"</span>').replace("print(punkte_puls(104))","print(punkte_puls(1040))");
+      $("#fb3").innerHTML = msg("ok","Richtig. Das ist eine Plausibilitätsprüfung.","Jetzt fängt die neue erste Zeile jeden unmöglich hohen Puls ab, nicht nur 1040. Die Grenze 300 ist hier ein Beispiel. Wo sie liegt, legen Fachleute fest. Achte auf die Einrückung: Die vier Leerzeichen zeigen Python, dass die Zeile zur Funktion gehört.")
+        + `<div class="fws"><span class="fw">Python</span><span class="fw">Funktion</span><span class="fw">Parameter</span><span class="fw">Bedingung</span><span class="fw">Einrückung</span></div>`;
+      $("#coder").hidden=false; $("#src").value = neu.replace("print(punkte_puls(104))","print(punkte_puls(1040))\nprint(punkte_puls(104))");
+      showNext(5);
+    } else { b.classList.add("wrong"); $("#fb3").innerHTML = msg("bad","Das hilft nicht.", n==="0" ? "Diese Zeile fängt nur genau 1040 ab. Was ist mit 1050 oder 9999?" : "Diese Zeile verändert die Bewertung: Dann bekäme schon ein Puls von 91 drei Punkte. Das steht so nicht in der Tafel."); } });
+  let py=null, loading=false;
+  const out = $("#out");
+  $("#reset").onclick = () => { $("#src").value = CODE; };
+  $("#run").onclick = async () => {
+    if (loading) return;
+    try {
+      if (!py){ loading=true; out.textContent = "Python wird geladen … das dauert beim ersten Mal einen Moment.";
+        await new Promise((res,rej)=>{ const s=document.createElement("script"); s.src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"; s.onload=res; s.onerror=()=>rej(new Error("laden")); document.head.appendChild(s); });
+        py = await loadPyodide(); loading=false; }
+      let text = "";
+      py.setStdout({batched: s => { text += s + "\n"; }});
+      await py.runPythonAsync($("#src").value);
+      out.textContent = text || "(Das Programm hat nichts angezeigt. Fehlt ein print?)";
+    } catch(e){
+      loading=false;
+      out.textContent = e && e.message === "laden" ? "Python konnte nicht geladen werden. Vielleicht blockiert dein Browser die Seite cdn.jsdelivr.net, oder du bist offline." :
+        "Python meldet einen Fehler. Das ist normal beim Programmieren. Die letzte Zeile sagt meist, was los ist:\n\n" + String(e.message||e).trim().split("\n").slice(-3).join("\n");
+    }
+  };
+}
+
+/* ---------- Stufe 6: Die KI redet mit ---------- */
+const CLAIMS = [
+  {t:"Gesamtwert 6. Das ist niedrig. Die nächste Messung reicht in 12 Stunden.", a:"falsch",
+   why:"Falsch. 5 bis 6 Punkte sind die Schwelle für eine dringende Einschätzung. Die KI hat die Summe richtig, aber die Bedeutung falsch."},
+  {t:"Die Atemfrequenz bringt in diesem Fall die meisten Punkte.", a:"richtig",
+   why:"Richtig. 22 pro Minute gibt 2 Punkte. Alle anderen Werte geben 1 oder 0."},
+  {t:"94 % Sauerstoffsättigung ist zu niedrig.", a:"kommt drauf an",
+   why:"Kommt drauf an. Auf der üblichen Skala 1 gibt 94 % einen Punkt. Bei manchen Menschen mit einer chronischen Lungenerkrankung gilt ein niedrigerer Zielbereich, die Skala 2. Das legt eine Ärztin oder ein Arzt fest. Die KI kennt diese Information nicht, du musst sie im Blick haben."}
+];
+function s6(){
+  stage.innerHTML = head(6,"Eine KI redet mit. Hat sie recht?") + `
+    <p class="task">Manche Programme haben inzwischen eine KI, die Messwerte kommentiert. Sie klingt sicher. Sie kann sich irren. Schalte sie dazu und prüfe jede Aussage mit deiner Tafel aus Stufe 4.</p>
+    <label class="toggle"><input type="checkbox" id="kion"> KI dazuschalten</label>
+    <div id="kibox" hidden>
+      <div class="ki"><div class="title">KI-Kommentar · 16:02</div><p>Ich habe die Werte von 16:00 ausgewertet. Hier sind drei Hinweise.</p></div>
+      ${CLAIMS.map((c,i)=>`<div class="claim" id="c${i}">
+        <p><b>KI:</b> „${esc(c.t)}“</p>
+        <label class="note" for="w${i}"><b>Deine Probe:</b> <span class="small">Was steht in der Tafel? Schreib es kurz auf, dann entscheide.</span></label>
+        <textarea id="w${i}" data-i="${i}" placeholder="Zum Beispiel: In der Tafel steht …"></textarea>
+        <div class="judge">${["richtig","falsch","kommt drauf an"].map(j=>`<button data-i="${i}" data-j="${j}" disabled>${j}</button>`).join("")}</div>
+        <div class="fbc"></div></div>`).join("")}
+    </div>
+    <div id="fb"></div>` + nextBtn("Zum Abschluss");
+  const done = new Set();
+  $("#kion").onchange = e => { $("#kibox").hidden = !e.target.checked; };
+  stage.querySelectorAll(".claim textarea").forEach(t=>{
+    t.value = notes["w"+t.dataset.i] || "";
+    const upd = () => { notes["w"+t.dataset.i]=t.value; saveNotes();
+      stage.querySelectorAll(`.judge button[data-i="${t.dataset.i}"]`).forEach(b=>b.disabled = t.value.trim().length < 10); };
+    t.oninput = upd; upd();
+  });
+  stage.querySelectorAll(".judge button").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i, c=CLAIMS[i], box=$("#c"+i);
+    box.querySelectorAll(".judge button").forEach(x=>x.classList.remove("right","wrong"));
+    if (b.dataset.j===c.a){ b.classList.add("right"); box.classList.add("done"); done.add(i);
+      box.querySelector(".fbc").innerHTML = msg("ok","Stimmt mit deiner Probe überein.", c.why);
+    } else { b.classList.add("wrong");
+      box.querySelector(".fbc").innerHTML = msg("bad","Schau noch einmal in die Tafel.","Lies deine eigene Probe. Passt sie zu deiner Entscheidung?"); }
+    if (done.size===CLAIMS.length){
+      $("#fb").innerHTML = msg("ok","Du hast dich gegen die KI durchgesetzt, wo sie falsch lag.","Die KI hatte einmal recht, einmal unrecht, und einmal fehlte ihr eine Information. Das ist typisch: Sie klingt immer gleich sicher. Deine Probe in der Tafel war jedes Mal der Maßstab.");
+      showNext(6);
+    }
+  });
+}
+
+/* ---------- Abschluss ---------- */
+function ende(){
+  stufe = STUFEN-1; bar();
+  stage.innerHTML = `<div class="stepno">Geschafft</div><h2 tabindex="-1">Der Weg deines Messwerts</h2>
+    <div class="path"><span>messen</span>→<span>Einheit</span>→<span>eintragen</span>→<span>Kurve</span>→<span>Punkte</span>→<span>Programm</span>→<span>KI</span></div>
+    <p>An jeder Stelle kann etwas schiefgehen: eine fehlende Einheit, ein Tippfehler, ein Programm, das Unmögliches nicht erkennt, eine KI, die falsch einordnet. An jeder Stelle bist du die Person, die es merken kann.</p>
+    <p>Das Wichtigste bleibt: Wenn du dir Sorgen um einen Menschen machst, zählt das, auch wenn die Punkte niedrig sind.</p>
+    <label class="note" for="mit"><b>Was nimmst du mit?</b> <span class="small">Nur für dich. Es bleibt in diesem Browser.</span></label>
+    <textarea id="mit" placeholder="Ich habe gemerkt, dass …"></textarea>
+    <h3>Woher kommt das Wissen?</h3>
+    <div class="source">
+      Frühwarnwert: <a href="https://www.rcp.ac.uk/media/a4ibkkbf/news2-final-report_0_0.pdf">Royal College of Physicians: National Early Warning Score (NEWS) 2, 2017</a>. In diesem Spiel vereinfacht und nur mit Skala 1 für die Sättigung.<br>
+      Sorge geht vor: <a href="https://rightdecisions.scot.nhs.uk/media/vhcccgq2/news2-guideline-no-fp.pdf">NHS Greater Glasgow and Clyde, Leitlinie NEWS2</a>.<br>
+      Warum Pflegende lernende Systeme kritisch prüfen müssen: <a href="https://www.bibb.de/dienst/publikationen/de/18095">Telieps, Peters, Falkenstern, Saul: Kompetenzen für die Digitalisierung in der pflegeberuflichen Bildung. BIBB 2022</a>, S. 63.<br>
+      Python: <a href="https://docs.python.org/3/tutorial/controlflow.html">Offizielles Python-Tutorial, Kapitel „More Control Flow Tools“</a>.
+    </div>
+    <div class="row"><button class="ghost" id="again">Noch einmal von vorn</button><a class="ghost" href="../../">Zur Werkstatt</a></div>`;
+  const t=$("#mit"); t.value = notes.mit || ""; t.oninput = () => { notes.mit=t.value; saveNotes(); };
+  $("#again").onclick = () => go(0);
+}
+
+/* Neu beginnen: zweimal tippen, ohne Browser-Dialog */
+let armed = null; const rs = $("#restart");
+rs.onclick = () => { if (!armed) { rs.textContent = "Wirklich? Alles löschen"; armed = setTimeout(() => { armed = null; rs.textContent = "↺ Neu beginnen"; }, 4000); return; }
+  clearTimeout(armed); armed = null; rs.textContent = "↺ Neu beginnen"; notes = {}; saveNotes(); go(0); };
+
+window.__mw = { go, NEWS, SOLL, SUMME };
+go(0, true);
+})();
+</script>
+<style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Werkstatt"><img src="../../bilder/barbara-figur.webp" alt=""></a>
+</body>
+</html>

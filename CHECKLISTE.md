@@ -15,7 +15,7 @@ Damit kein Spiel irgendwo fehlt. Jeder Punkt muss erledigt sein, bevor ein Spiel
 
 ## 3. Überall verlinken – alle drei Listen
 - [ ] Bereich festlegen: **Handwerkliche Berufe** oder **Helfende Berufe** (oder „Für alle Berufe: KI“, dann nur in `ueber-mich.html`). Blick festlegen: Fachlernen, Didaktik, KI oder Digitale Bildung – steht vorne im Etikett.
-- [ ] **`index.html`** (Startseite = Werkstatt) – kurz halten! Aufbau: Zwischenüberschrift „Handwerkliche Berufe“ mit 2–3 Arbeiten, „Helfende Berufe“ mit 2–3 Arbeiten, dann „Alles auf einen Blick“ mit „Über mich & alle Arbeitsproben“, Bluesky, Instagram, E-Mail. Die neue Arbeit kommt mit „Neu ·“ und dunkler Karte an den Anfang ihres Bereichs; was dafür rausfällt, steht weiter in `ueber-mich.html`. Volle Adressen, Farben abwechseln.
+- [ ] **`index.html`** (Startseite = Werkstatt) – kurz halten! Aufbau: Zwischenüberschrift „Helfende Berufe“ mit 2–3 Arbeiten, „Handwerkliche Berufe“ mit 2–3 Arbeiten, dann „Alles auf einen Blick“ mit „Über mich & alle Arbeitsproben“, Bluesky, Instagram, E-Mail. Die neue Arbeit kommt mit „Neu ·“ und dunkler Karte an den Anfang ihres Bereichs; was dafür rausfällt, steht weiter in `ueber-mich.html`. Volle Adressen, Farben abwechseln.
 - [ ] **`ueber-mich.html`** – eigener `<article class="work">`-Eintrag im richtigen Bereich, Etikett beginnt mit dem Blick, mit Form, Interaktion, Lernabsicht, KI
 - [ ] **`grundbegriffe.html`** – Abschnitt „Die Arbeitsproben erklärt“, im richtigen Bereich, Buchstaben neu durchzählen
 - [ ] Gegenprobe: Suche nach dem Namen eines bestehenden Spiels (z. B. `schulrechner`) – überall, wo es auftaucht, muss auch das neue Spiel stehen
