@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Wie lernt eine Maschine?</title>
-<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Informatik, Teil 1 von 4: In sechs Stufen vom Obstkorb bis zum eigenen Code. Trainingsdaten, Modell, Bias, Entscheidungsbaum, if/else, regelbasiert oder datenbasiert.">
+<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Informatik, Teil 1 von 4: In sechs Stufen vom Verbandwagen bis zum eigenen Code. Trainingsdaten, Modell, Bias, Entscheidungsbaum, if/else, regelbasiert oder datenbasiert.">
 <style>
 @font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
 @font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
@@ -54,7 +54,7 @@ button:focus-visible,a:focus-visible,textarea:focus-visible{outline:4px solid va
 textarea{font:inherit;font-size:18px;width:100%;min-height:80px;margin-top:6px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
 label.note{display:block;margin-top:14px;font-weight:600}
 .note-hint{font-size:17px;color:var(--muted)}
-/* Obst-Karten */
+/* Material-Karten */
 .pool{display:flex;flex-wrap:wrap;gap:12px;min-height:40px}
 .fcard{display:inline-flex;flex-direction:column;align-items:center;gap:0;width:132px;padding:8px 6px 10px;border:3px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);font:inherit;cursor:grab;touch-action:none;box-shadow:0 4px 0 var(--line)}
 .fcard svg{width:76px;height:76px}
@@ -115,7 +115,7 @@ pre.code{background:var(--machine);color:var(--machine-ink);border-radius:14px;p
 pre.code span.run{background:#a8f0c855;color:#fff;border-radius:4px}
 .walls{display:grid;gap:6px;margin:12px 0;max-width:460px}
 .wallrow{display:grid;grid-template-columns:minmax(0,1fr) 90px auto;gap:10px;align-items:center;font-size:18px}
-.crate{display:flex;flex-wrap:wrap;gap:1px;align-items:center;min-height:30px}
+.crate{display:flex;flex-wrap:nowrap;gap:1px;align-items:center;min-height:30px}
 .wbar{display:block;height:18px;width:calc(var(--d) * 6px);background:repeating-linear-gradient(135deg,#f2d36b 0 6px,#e9c24a 6px 12px);border-left:16px solid #b5532a;border-radius:3px}
 .okc{color:var(--green)}.badc{color:var(--red)}
 .probe-box{font:20px/1.6 var(--mono);background:var(--bg);border-radius:12px;padding:12px 14px;margin:12px 0;max-width:46ch}
@@ -154,49 +154,63 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
 const STUFEN = 6;
 
 /* ============================================================
-   Obst: Merkmale Farbe, Form, Schale – und ein Name (Apfel, Birne)
+   Verbandmaterial: Merkmale Farbe, Größe, Klebefläche – und ein Name
+   (Pflaster, Kompresse). Das Bild entsteht nur aus den Merkmalen.
+   Es geht nur um das Material, nicht um die Wunde.
    ============================================================ */
-function fruitSvg(f) {
-  const col = f.farbe === "rot" ? "#c8372d" : "#7ab648";
-  const body = f.form === "rund"
-    ? `<circle cx="40" cy="47" r="25" fill="${col}"/>`
-    : `<path d="M40 19 C31 19 29 31 31 39 C19 48 20 72 40 72 C60 72 61 48 49 39 C51 31 49 19 40 19Z" fill="${col}"/>`;
-  const dots = f.schale === "gepunktet"
-    ? [[30,40],[46,36],[38,52],[52,50],[28,58],[44,64],[56,60],[34,46]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="2.6" fill="#8a6a2a"/>`).join("") : "";
-  return `<svg viewBox="0 0 80 80" aria-hidden="true">${body}${dots}
-    <path d="M40 ${f.form === "rund" ? 24 : 20} L44 9" stroke="#5b3a1e" stroke-width="3.5" stroke-linecap="round"/>
-    <ellipse cx="50" cy="13" rx="7" ry="3.5" fill="#3f7a35" transform="rotate(-25 50 13)"/></svg>`;
+function matSvg(f) {
+  const weiss = f.farbe === "weiß", klein = f.groesse === "klein";
+  if (f.kleben === "ja") {
+    const w = klein ? 62 : 76, h = klein ? 24 : 34, x = (80 - w) / 2, y = (80 - h) / 2;
+    const fill = weiss ? "#fbfbfb" : "#e2b48e", edge = weiss ? "#b9b9b9" : "#b98a63";
+    const pw = w * 0.36, ph = h * 0.66;
+    const holes = [];
+    for (let i = 0; i < 3; i++) for (const side of [x + 7 + i * 6, x + w - 7 - i * 6])
+      for (const yy of [y + h * 0.33, y + h * 0.67]) holes.push(`<circle cx="${side}" cy="${yy}" r="1.3" fill="${edge}"/>`);
+    return `<svg viewBox="0 0 80 80" aria-hidden="true">
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${h / 2}" fill="${fill}" stroke="${edge}" stroke-width="2"/>
+      ${holes.join("")}
+      <rect x="${40 - pw / 2}" y="${40 - ph / 2}" width="${pw}" height="${ph}" rx="3" fill="#f4f1ec" stroke="#cfc7bd" stroke-width="1.5"/></svg>`;
+  }
+  const s = klein ? 36 : 62, x = (80 - s) / 2, lines = [];
+  for (let p = x + 6; p < x + s - 2; p += 6) {
+    lines.push(`<line x1="${p}" y1="${x + 2}" x2="${p}" y2="${x + s - 2}" stroke="#dcdcdc" stroke-width="1"/>`);
+    lines.push(`<line x1="${x + 2}" y1="${p}" x2="${x + s - 2}" y2="${p}" stroke="#dcdcdc" stroke-width="1"/>`);
+  }
+  return `<svg viewBox="0 0 80 80" aria-hidden="true">
+    <rect x="${x}" y="${x}" width="${s}" height="${s}" rx="3" fill="#ffffff" stroke="#b9b9b9" stroke-width="2"/>${lines.join("")}</svg>`;
 }
-const F = (id, name, art, farbe, form, schale = "glatt") => ({ id, name, art, farbe, form, schale });
+const F = (id, name, art, farbe, groesse, kleben) => ({ id, name, art, farbe, groesse, kleben });
 const START = [
-  F("a1", "Apfel", "Apfel", "rot", "rund"),
-  F("b1", "Birne", "Birne", "grün", "länglich"),
-  F("a2", "Apfel", "Apfel", "rot", "rund"),
-  F("b2", "Nashi-Birne", "Birne", "grün", "rund", "gepunktet"),
-  F("a3", "Apfel", "Apfel", "rot", "rund"),
-  F("b3", "Birne", "Birne", "grün", "länglich")
+  F("p1", "Pflaster", "Pflaster", "hautfarben", "klein", "ja"),
+  F("k1", "Kompresse", "Kompresse", "weiß", "groß", "nein"),
+  F("p2", "Pflaster", "Pflaster", "hautfarben", "klein", "ja"),
+  F("k2", "kleine Kompresse", "Kompresse", "weiß", "klein", "nein"),
+  F("p3", "Pflaster", "Pflaster", "hautfarben", "klein", "ja"),
+  F("k3", "Kompresse", "Kompresse", "weiß", "groß", "nein")
 ];
-const TEST = F("t1", "?", "Apfel", "grün", "rund");
+const TEST = F("t1", "?", "Pflaster", "weiß", "klein", "ja");
 const ADD = [
-  { key: "ga", label: "grüner Apfel", f: () => F("x", "Apfel", "Apfel", "grün", "rund") },
-  { key: "ra", label: "roter Apfel",  f: () => F("x", "Apfel", "Apfel", "rot", "rund") },
-  { key: "gb", label: "grüne Birne", f: () => F("x", "Birne", "Birne", "grün", "länglich") }
+  { key: "wp", label: "weißes Pflaster", f: () => F("x", "weißes Pflaster", "Pflaster", "weiß", "klein", "ja") },
+  { key: "hp", label: "hautfarbenes Pflaster", f: () => F("x", "Pflaster", "Pflaster", "hautfarben", "klein", "ja") },
+  { key: "gk", label: "große Kompresse", f: () => F("x", "Kompresse", "Kompresse", "weiß", "groß", "nein") }
 ];
-let showSchale = false;
+const KLEBEN = { ja: "mit Klebefläche", nein: "ohne Klebefläche" };
+let showKleben = false;
 const cardHtml = (f, showName = true) =>
-  `${fruitSvg(f)}${showName ? `<span class="name">${esc(f.name)}</span>` : ""}<span class="feat">${f.farbe} · ${f.form}${showSchale ? " · " + f.schale : ""}</span>`;
+  `${matSvg(f)}${showName ? `<span class="name">${esc(f.name)}</span>` : ""}<span class="feat">${f.farbe} · ${f.groesse}${showKleben ? " · " + KLEBEN[f.kleben] : ""}</span>`;
 
 /* ============================================================
    Die Maschine (Stufe 1–3): prüft jedes Merkmal, nimmt das beste.
    Bei Gleichstand bleibt sie beim ersten (Farbe).
    ============================================================ */
-const MERKMALE = [["farbe", "Farbe"], ["form", "Form"]];
+const MERKMALE = [["farbe", "Farbe"], ["groesse", "Größe"]];
 function learn(examples) {
   const res = MERKMALE.map(([k, label]) => {
     const groups = {};
-    examples.forEach(e => { (groups[e[k]] = groups[e[k]] || { Apfel: 0, Birne: 0 })[e.art]++; });
+    examples.forEach(e => { (groups[e[k]] = groups[e[k]] || { Pflaster: 0, Kompresse: 0 })[e.art]++; });
     const rule = {}; let right = 0;
-    Object.entries(groups).forEach(([v, c]) => { rule[v] = c.Apfel >= c.Birne ? "Apfel" : "Birne"; right += Math.max(c.Apfel, c.Birne); });
+    Object.entries(groups).forEach(([v, c]) => { rule[v] = c.Pflaster >= c.Kompresse ? "Pflaster" : "Kompresse"; right += Math.max(c.Pflaster, c.Kompresse); });
     return { k, label, rule, right, total: examples.length };
   });
   return { res, best: res.reduce((a, b) => b.right > a.right ? b : a) };
@@ -229,7 +243,7 @@ function go(n) {
   const bar = $("#steps");
   if (bar.children.length !== STUFEN + 1) bar.innerHTML = "<span></span>".repeat(STUFEN + 1);
   [...bar.children].forEach((s, i) => s.classList.toggle("done", i <= level));
-  showSchale = n >= 3;
+  showKleben = n >= 3;
   [step1, step2, step3, step4, step5, step6, finale][n]();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -238,7 +252,7 @@ const nextBtn = (n, label) => `<div class="row"><button type="button" class="mai
 function bindNext(n) { const b = $("#next"); if (b) { b.onclick = () => go(n); } }
 
 /* ============================================================
-   Ziehen (Maus, Finger, Stift) oder antippen: erst Karte, dann Korb
+   Ziehen (Maus, Finger, Stift) oder antippen: erst Karte, dann Schublade
    ============================================================ */
 let picked = null;
 function makeDraggable(btn, onDrop) {
@@ -277,12 +291,12 @@ let sorted = [];
 function step1() {
   sorted = []; picked = null;
   $("#stage").innerHTML = `${head(1, "Zeig der Maschine Beispiele")}
-    <div class="task">Sortiere jedes Obst in den richtigen Korb. So lernt die Maschine, was ein Apfel ist und was eine Birne.</div>
-    <p class="hint">Zieh eine Karte in einen Korb. Oder tippe erst die Karte an, dann den Korb.</p>
+    <div class="task">Räum den Verbandwagen ein: Jedes Teil kommt in die richtige Schublade. So lernt die Maschine, was ein Pflaster ist und was eine Kompresse.</div>
+    <p class="hint">Zieh eine Karte in eine Schublade. Oder tippe erst die Karte an, dann die Schublade.</p>
     <div class="pool" id="pool"></div>
     <div class="bins">
-      <button type="button" class="bin" data-art="Apfel" aria-label="Korb Äpfel"><span class="lbl">🧺 Äpfel</span><span class="in" id="inApfel"></span></button>
-      <button type="button" class="bin" data-art="Birne" aria-label="Korb Birnen"><span class="lbl">🧺 Birnen</span><span class="in" id="inBirne"></span></button>
+      <button type="button" class="bin" data-art="Pflaster" aria-label="Schublade Pflaster"><span class="lbl">🩹 Pflaster</span><span class="in" id="inPflaster"></span></button>
+      <button type="button" class="bin" data-art="Kompresse" aria-label="Schublade Kompressen"><span class="lbl">▢ Kompressen</span><span class="in" id="inKompresse"></span></button>
     </div>
     <div id="out"></div>`;
   drawPool();
@@ -293,7 +307,7 @@ function drawPool() {
   START.filter(f => !sorted.includes(f)).forEach(f => {
     const b = document.createElement("button");
     b.type = "button"; b.className = "fcard"; b.dataset.id = f.id; b.setAttribute("aria-pressed", "false");
-    b.setAttribute("aria-label", `${f.name}, ${f.farbe}, ${f.form}. Antippen, dann Korb wählen.`);
+    b.setAttribute("aria-label", `${f.name}, ${f.farbe}, ${f.groesse}. Antippen, dann Schublade wählen.`);
     b.innerHTML = cardHtml(f);
     makeDraggable(b, art => place(f, art));
     pool.appendChild(b);
@@ -302,11 +316,11 @@ function drawPool() {
 function place(f, art) {
   picked = null; document.querySelectorAll(".bin").forEach(b => b.classList.remove("ready"));
   if (art !== f.art) {
-    $("#out").innerHTML = `<div class="msg bad"><b>Das ist ${f.art === "Birne" ? "eine Birne" : "ein Apfel"}.</b>${f.name === "Nashi-Birne" ? "Die Nashi-Birne ist rund, aber eine Birne. " : ""}Ein falscher Name bringt der Maschine Falsches bei.</div>`;
+    $("#out").innerHTML = `<div class="msg bad"><b>Das ist ${f.art === "Kompresse" ? "eine Kompresse" : "ein Pflaster"}.</b>${f.name === "kleine Kompresse" ? "Die kleine Kompresse ist so klein wie ein Pflaster, aber sie klebt nicht. " : ""}Ein falscher Name bringt der Maschine Falsches bei.</div>`;
     drawPool(); return;
   }
   sorted.push(f);
-  $("#in" + art).insertAdjacentHTML("beforeend", fruitSvg(f));
+  $("#in" + art).insertAdjacentHTML("beforeend", matSvg(f));
   $("#out").innerHTML = "";
   drawPool();
   if (sorted.length === START.length) {
@@ -314,7 +328,7 @@ function place(f, art) {
     $("#out").innerHTML = `<div class="row"><button type="button" class="main" id="learn">⚙ Maschine lernen lassen</button></div>`;
     $("#learn").onclick = () => {
       $("#out").innerHTML = machineHtml(learn(examples), "Das hat die Maschine gelernt") +
-        `<p class="hint">Die Farbe passt bei allen sechs, die Form nur bei fünf. Also nimmt die Maschine die Farbe.</p>` + fw("Trainingsdaten = deine Beispiele", "Label = der Name, den du vergibst", "Merkmal = Farbe, Form", "Modell = die gelernte Regel", "Trefferquote = 6 von 6", "Überwachtes Lernen = Lernen aus beschrifteten Beispielen") + nextBtn(1, "Weiter");
+        `<p class="hint">Die Farbe passt bei allen sechs, die Größe nur bei fünf: Die kleine Kompresse ist auch klein. Also nimmt die Maschine die Farbe.</p>` + fw("Trainingsdaten = deine Beispiele", "Label = der Name, den du vergibst", "Merkmal = Farbe, Größe", "Modell = die gelernte Regel", "Trefferquote = 6 von 6", "Überwachtes Lernen = Lernen aus beschrifteten Beispielen") + nextBtn(1, "Weiter");
       bindNext(1); $("#next").focus();
     };
   }
@@ -324,23 +338,23 @@ function place(f, art) {
 function step2() {
   const model = learn(examples);
   $("#stage").innerHTML = `${head(2, "Teste die Maschine")}
-    <div class="task">Ein neues Obst. Was sagt die Maschine mit ihrer Regel <b>rot → Apfel, grün → Birne</b>?</div>
+    <div class="task">Eine neue Lieferung. Was sagt die Maschine mit ihrer Regel <b>hautfarben → Pflaster, weiß → Kompresse</b>?</div>
     <div class="guess"><span class="fcard static">${cardHtml(TEST, false)}</span></div>
     <div class="choices" id="predict">
-      <button type="button" data-v="Apfel">Die Maschine sagt: Apfel</button>
-      <button type="button" data-v="Birne">Die Maschine sagt: Birne</button>
+      <button type="button" data-v="Pflaster">Die Maschine sagt: Pflaster</button>
+      <button type="button" data-v="Kompresse">Die Maschine sagt: Kompresse</button>
     </div>
     <div id="out"></div>`;
   document.querySelectorAll("#predict button").forEach(b => b.onclick = () => {
     const m = guess(model, TEST), right = b.dataset.v === m;
     document.querySelectorAll("#predict button").forEach(x => { x.disabled = true; x.classList.toggle(right ? "right" : "wrong", x === b); });
     $("#out").innerHTML = `
-      <div class="msg bad"><b>Die Maschine sagt: ${m}. Aber es ist ein grüner Apfel.</b>Sie hat sich geirrt.</div>
+      <div class="msg bad"><b>Die Maschine sagt: ${m}. Aber es ist ein weißes Pflaster.</b>Sie hat sich geirrt.</div>
       <h3>Warum?</h3>
       <div class="choices" id="why">
         <button type="button" data-r="kaputt">Die Maschine ist kaputt.</button>
-        <button type="button" data-r="beispiele">Sie hat nur rote Äpfel gesehen.</button>
-        <button type="button" data-r="selten">Grüne Äpfel sind selten.</button>
+        <button type="button" data-r="beispiele">Sie hat nur hautfarbene Pflaster gesehen.</button>
+        <button type="button" data-r="selten">Weiße Pflaster sind selten.</button>
       </div>
       <div id="out2"></div>`;
     const WHY = {
@@ -361,10 +375,10 @@ function step2() {
 /* ---------- Stufe 3: Bessere Beispiele ---------- */
 let added = {};
 function step3() {
-  examples = START.slice(); added = { ga: 0, ra: 0, gb: 0 };
+  examples = START.slice(); added = { wp: 0, hp: 0, gk: 0 };
   $("#stage").innerHTML = `${head(3, "Gib bessere Beispiele")}
-    <div class="task">Welche Beispiele helfen der Maschine, den grünen Apfel zu erkennen? Tippe an, was du dazugibst. Mehrmals geht auch.</div>
-    <div class="adds">${ADD.map(a => `<button type="button" data-k="${a.key}">${fruitSvg(a.f())}<span>+ ${a.label}</span></button>`).join("")}</div>
+    <div class="task">Welche Beispiele helfen der Maschine, das weiße Pflaster zu erkennen? Tippe an, was du dazugibst. Mehrmals geht auch.</div>
+    <div class="adds">${ADD.map(a => `<button type="button" data-k="${a.key}">${matSvg(a.f())}<span>+ ${a.label}</span></button>`).join("")}</div>
     <p class="count" id="count" aria-live="polite"></p>
     <div class="row"><button type="button" class="main" id="relearn">⚙ Neu lernen lassen</button></div>
     <div id="out"></div>`;
@@ -374,46 +388,47 @@ function step3() {
   });
   upd();
   $("#relearn").onclick = () => {
-    const model = learn(examples), m = guess(model, TEST), ok = m === "Apfel";
-    const why = ok ? `<div class="msg ok"><b>Jetzt stimmt es: Apfel.</b>Die Farbe passt nicht mehr so gut. Also schaut die Maschine auf die Form.</div>`
-      : !added.ga ? `<div class="msg bad"><b>Immer noch: Birne.</b>Die Maschine hat noch keinen grünen Apfel gesehen.</div>`
-      : `<div class="msg bad"><b>Immer noch: Birne.</b>Ein grüner Apfel reicht nicht. Ein Beispiel allein überzeugt die Maschine nicht.</div>`;
+    const model = learn(examples), m = guess(model, TEST), ok = m === "Pflaster";
+    const why = ok ? `<div class="msg ok"><b>Jetzt stimmt es: Pflaster.</b>Die Farbe passt nicht mehr so gut. Also schaut die Maschine auf die Größe.</div>`
+      : !added.wp ? `<div class="msg bad"><b>Immer noch: Kompresse.</b>Die Maschine hat noch kein weißes Pflaster gesehen.</div>`
+      : `<div class="msg bad"><b>Immer noch: Kompresse.</b>Ein weißes Pflaster reicht nicht. Ein Beispiel allein überzeugt die Maschine nicht.</div>`;
     $("#out").innerHTML = machineHtml(model, "Das hat die Maschine jetzt gelernt") +
       `<div class="guess"><span class="fcard static small">${cardHtml(TEST, false)}</span><span class="say-machine">→ ${m} ${ok ? "✓" : "✗"}</span></div>` + why +
-      (ok ? `<div class="msg info"><b>Aber:</b>Die runde Nashi-Birne hält die Maschine jetzt für einen Apfel. Mit nur einer Frage geht es nicht für alle.</div>` + fw("Datenqualität = die richtigen Beispiele, nicht nur viele", "Neu trainieren = mit neuen Daten noch einmal lernen") + nextBtn(3, "Weiter zu Stufe 4") : "");
+      (ok ? `<div class="msg info"><b>Aber:</b>Die kleine Kompresse hält die Maschine jetzt für ein Pflaster. Farbe und Größe reichen nicht für alle.</div>` + fw("Datenqualität = die richtigen Beispiele, nicht nur viele", "Neu trainieren = mit neuen Daten noch einmal lernen") + nextBtn(3, "Weiter zu Stufe 4") : "");
     bindNext(3);
   };
 }
 
-/* ---------- Stufe 4: Zwei Fragen – ein Entscheidungsbaum ---------- */
+/* ---------- Stufe 4: Die richtige Frage – ein Entscheidungsbaum ---------- */
 const ALL = () => [
-  F("a1", "Apfel", "Apfel", "rot", "rund"), F("a2", "Apfel", "Apfel", "rot", "rund"),
-  F("g1", "grüner Apfel", "Apfel", "grün", "rund"), F("g2", "grüner Apfel", "Apfel", "grün", "rund"),
-  F("b1", "Birne", "Birne", "grün", "länglich"), F("b3", "Birne", "Birne", "grün", "länglich"),
-  F("n1", "Nashi-Birne", "Birne", "grün", "rund", "gepunktet")
+  F("p1", "Pflaster", "Pflaster", "hautfarben", "klein", "ja"), F("p2", "Pflaster", "Pflaster", "hautfarben", "klein", "ja"),
+  F("w1", "weißes Pflaster", "Pflaster", "weiß", "klein", "ja"), F("w2", "weißes Pflaster", "Pflaster", "weiß", "klein", "ja"),
+  F("k1", "Kompresse", "Kompresse", "weiß", "groß", "nein"), F("k3", "Kompresse", "Kompresse", "weiß", "groß", "nein"),
+  F("k2", "kleine Kompresse", "Kompresse", "weiß", "klein", "nein")
 ];
-const Q = { farbe: { label: "Welche Farbe?", vals: ["rot", "grün"] }, form: { label: "Welche Form?", vals: ["rund", "länglich"] }, schale: { label: "Wie ist die Schale?", vals: ["glatt", "gepunktet"] } };
+const Q = { farbe: { label: "Welche Farbe?", vals: ["hautfarben", "weiß"] }, groesse: { label: "Welche Größe?", vals: ["klein", "groß"] }, kleben: { label: "Hat es eine Klebefläche?", vals: ["ja", "nein"] } };
 let tree = null;
 function classify(t, f) { if (typeof t === "string") return t; return classify(t.br[f[t.q]], f); }
 let tries4 = 0;
+const depth = t => typeof t === "string" ? 0 : 1 + Math.max(...Object.values(t.br).map(depth));
 function step4() {
-  tree = { q: "form", br: { rund: "Apfel", länglich: "Birne" } }; tries4 = 0;
-  $("#stage").innerHTML = `${head(4, "Stell zwei Fragen")}
-    <div class="task">Die Maschine hält die Nashi-Birne für einen Apfel. Schau dir die beiden an: <b>Was ist anders?</b></div>
+  tree = { q: "groesse", br: { klein: "Pflaster", groß: "Kompresse" } }; tries4 = 0;
+  $("#stage").innerHTML = `${head(4, "Finde die richtige Frage")}
+    <div class="task">Die Maschine hält die kleine Kompresse für ein Pflaster. Schau dir die beiden an: <b>Was ist anders?</b></div>
     <div class="pool">${[ALL()[2], ALL()[6]].map(f => `<span class="fcard static">${cardHtml(f)}</span>`).join("")}</div>
     <div class="choices" id="diff">
       <button type="button" data-r="farbe">Die Farbe</button>
-      <button type="button" data-r="form">Die Form</button>
-      <button type="button" data-r="schale">Die Schale</button>
+      <button type="button" data-r="groesse">Die Größe</button>
+      <button type="button" data-r="kleben">Die Klebefläche</button>
     </div>
     <div id="out0"></div>`;
   document.querySelectorAll("#diff button").forEach(b => b.onclick = () => {
-    const ok = b.dataset.r === "schale"; b.classList.add(ok ? "right" : "wrong");
-    if (!ok) { $("#out0").innerHTML = `<div class="msg bad"><b>Schau noch einmal.</b>Beide sind ${b.dataset.r === "farbe" ? "grün" : "rund"}. Das ist gleich.</div>`; return; }
+    const ok = b.dataset.r === "kleben"; b.classList.add(ok ? "right" : "wrong");
+    if (!ok) { $("#out0").innerHTML = `<div class="msg bad"><b>Schau noch einmal.</b>Beide sind ${b.dataset.r === "farbe" ? "weiß" : "klein"}. Das ist gleich.</div>`; return; }
     document.querySelectorAll("#diff button").forEach(x => x.disabled = true);
-    $("#out0").innerHTML = `<div class="msg ok"><b>Genau: Die Nashi-Birne hat Punkte auf der Schale.</b>Die Schale ist ein neues Merkmal. Jetzt baust du der Maschine einen <b style="display:inline">Entscheidungsbaum</b>: Sie stellt eine Frage. Je nach Antwort weiß sie es, oder sie stellt noch eine Frage.</div>
+    $("#out0").innerHTML = `<div class="msg ok"><b>Genau: Das Pflaster hat eine Klebefläche, die Kompresse nicht.</b>Die Klebefläche ist ein neues Merkmal. Jetzt baust du der Maschine einen <b style="display:inline">Entscheidungsbaum</b>: Sie stellt eine Frage. Je nach Antwort weiß sie es, oder sie stellt noch eine Frage.</div>
       <h3>So liest du den Baum</h3>
-      <p class="hint" style="margin-top:0">Die Maschine fängt oben bei Frage 1 an. Jede Antwort hat eine eigene Zeile. Dort wählst du: Apfel, Birne oder „noch eine Frage“.</p>
+      <p class="hint" style="margin-top:0">Die Maschine fängt oben bei Frage 1 an. Jede Antwort hat eine eigene Zeile. Dort wählst du: Pflaster, Kompresse oder „noch eine Frage“.</p>
       <div class="tree" id="tree"></div>
       <div class="say-tree" id="sayTree" aria-live="polite"></div>
       <div class="row"><button type="button" class="main" id="testTree">▶ Baum testen</button></div>
@@ -429,38 +444,41 @@ function treeSentence(t, first = true) {
 function drawTree() {
   const opt = (sel, list) => list.map(([v, t]) => `<option value="${v}" ${v === sel ? "selected" : ""}>${t}</option>`).join("");
   const qSel = (id, q, not) => `<select id="${id}" aria-label="Frage">${opt(q, Object.entries(Q).filter(([k]) => k !== not).map(([k, v]) => [k, v.label]))}</select>`;
-  const leafSel = (id, v, allowQ) => `<select id="${id}" aria-label="Antwort">${opt(typeof v === "string" ? v : "q2", [["Apfel", "→ Apfel"], ["Birne", "→ Birne"]].concat(allowQ ? [["q2", "→ noch eine Frage"]] : []))}</select>`;
+  const leafSel = (id, v, allowQ) => `<select id="${id}" aria-label="Antwort">${opt(typeof v === "string" ? v : "q2", [["Pflaster", "→ Pflaster"], ["Kompresse", "→ Kompresse"]].concat(allowQ ? [["q2", "→ noch eine Frage"]] : []))}</select>`;
   const t = tree;
-  const other = q => Object.keys(Q).find(k => k !== q && k !== "schale") || Object.keys(Q).find(k => k !== q);
+  const other = q => Object.keys(Q).find(k => k !== q && k !== "kleben") || Object.keys(Q).find(k => k !== q);
   $("#tree").innerHTML = `<div class="tq"><span class="tlabel">Frage 1</span>${qSel("q1", t.q)}</div>
     ${Q[t.q].vals.map(v => `<div class="tb"><span class="tval">Wenn ${v}</span>${leafSel("l_" + v, t.br[v], true)}
       ${typeof t.br[v] === "object" ? `<div class="tsub"><div class="tq"><span class="tlabel">Frage 2</span>${qSel("q2_" + v, t.br[v].q, t.q)}</div>
         ${Q[t.br[v].q].vals.map(w => `<div class="tb"><span class="tval">Wenn ${w}</span>${leafSel("l_" + v + "_" + w, t.br[v].br[w], false)}</div>`).join("")}</div>` : ""}</div>`).join("")}`;
   $("#sayTree").innerHTML = `<div class="small-title">Dein Baum in Worten</div>${treeSentence(t)}`;
   const changed = () => { $("#out").innerHTML = ""; $("#sayTree").innerHTML = `<div class="small-title">Dein Baum in Worten</div>${treeSentence(tree)}`; };
-  $("#q1").onchange = e => { tree = { q: e.target.value, br: Object.fromEntries(Q[e.target.value].vals.map(v => [v, "Apfel"])) }; drawTree(); changed(); };
+  $("#q1").onchange = e => { tree = { q: e.target.value, br: Object.fromEntries(Q[e.target.value].vals.map(v => [v, "Pflaster"])) }; drawTree(); changed(); };
   Q[t.q].vals.forEach(v => {
-    $("#l_" + v).onchange = e => { const q2 = other(t.q); t.br[v] = e.target.value === "q2" ? { q: q2, br: Object.fromEntries(Q[q2].vals.map(w => [w, "Apfel"])) } : e.target.value; drawTree(); changed(); };
+    $("#l_" + v).onchange = e => { const q2 = other(t.q); t.br[v] = e.target.value === "q2" ? { q: q2, br: Object.fromEntries(Q[q2].vals.map(w => [w, "Pflaster"])) } : e.target.value; drawTree(); changed(); };
     if (typeof t.br[v] === "object") {
       const sub = t.br[v];
-      $("#q2_" + v).onchange = e => { t.br[v] = { q: e.target.value, br: Object.fromEntries(Q[e.target.value].vals.map(w => [w, "Apfel"])) }; drawTree(); changed(); };
+      $("#q2_" + v).onchange = e => { t.br[v] = { q: e.target.value, br: Object.fromEntries(Q[e.target.value].vals.map(w => [w, "Pflaster"])) }; drawTree(); changed(); };
       Q[sub.q].vals.forEach(w => $("#l_" + v + "_" + w).onchange = e => { sub.br[w] = e.target.value; changed(); });
     }
   });
 }
 const HINTS4 = [
-  "Tipp 1: Länglich ist immer eine Birne. Schwierig sind nur die runden Früchte. Stell zuerst die Frage nach der Form.",
-  "Tipp 2: Bei „Wenn rund“ wählst du „noch eine Frage“. Frag dort nach der Schale. Was gilt für die Punkte?",
-  "Tipp 3, die Lösung: Frage 1: Welche Form? Wenn länglich → Birne. Wenn rund → noch eine Frage: Wie ist die Schale? Wenn glatt → Apfel. Wenn gepunktet → Birne."
+  "Tipp 1: Die großen sind immer Kompressen. Schwierig sind nur die kleinen Teile. Was unterscheidet sie?",
+  "Tipp 2: Frag nach dem, was du eben gefunden hast: nach der Klebefläche. Was ist ein Teil mit Klebefläche?",
+  "Tipp 3, die Lösung: Frage 1: Hat es eine Klebefläche? Wenn ja → Pflaster. Wenn nein → Kompresse."
 ];
 function testTree() {
   const all = ALL(), res = all.map(f => ({ f, g: classify(tree, f) })), right = res.filter(r => r.g === r.f.art).length;
   const ok = right === all.length;
   const wrong = [...new Set(res.filter(r => r.g !== r.f.art).map(r => `${r.f.name}: Dein Baum sagt ${r.g}, richtig ist ${r.f.art}.`))];
   if (!ok) tries4++;
+  const praise = depth(tree) === 1
+    ? "Dein Baum erkennt alle, mit nur einer Frage. Das richtige Merkmal ist mehr wert als viele Fragen. Auch in der Pflege gilt: Ein Pflaster klebt, eine Kompresse nicht. Darum braucht eine Kompresse zum Beispiel eine Fixierung."
+    : "Dein Baum erkennt alle. Es geht sogar mit nur einer Frage: Hat es eine Klebefläche? Das richtige Merkmal ist mehr wert als viele Fragen.";
   $("#out").innerHTML = `<div class="tryall">${res.map(r => `<span class="fcard static small" style="border-color:${r.g === r.f.art ? "var(--green)" : "var(--red)"}">${cardHtml(r.f)}<span class="res">${r.g} ${r.g === r.f.art ? "✓" : "✗"}</span></span>`).join("")}</div>
     <div class="msg ${ok ? "ok" : "bad"}"><b>${right} von ${all.length} richtig.</b>${ok
-      ? "Dein Baum erkennt alle. Mit der Schale als zweiter Frage klappt es."
+      ? praise
       : `<ul style="margin:4px 0 0;padding-left:20px">${wrong.map(w => `<li>${w}</li>`).join("")}</ul>`}</div>
     ${!ok ? `<div class="msg info"><b>Hilfe</b>${HINTS4[Math.min(tries4, HINTS4.length) - 1]}</div>` : ""}
     ${ok ? fw("Entscheidungsbaum = Fragen hintereinander", "Knoten = eine Frage im Baum", "Blatt = die Antwort am Ende", "Merkmalsauswahl = das passende Merkmal finden") + noteField("s4_aha", "Was war dein Aha?", "") + nextBtn(4, "Weiter zu Stufe 5") : ""}`;
@@ -471,13 +489,13 @@ function testTree() {
 function codeLines(t, ind = "  ") {
   if (typeof t === "string") return [{ s: `${ind}return "${t}";`, leaf: t }];
   const [a, b] = Q[t.q].vals;
-  return [{ s: `${ind}if (obst.${t.q} === "${a}") {`, q: t.q, v: a }, ...codeLines(t.br[a], ind + "  "),
+  return [{ s: `${ind}if (material.${t.q} === "${a}") {`, q: t.q, v: a }, ...codeLines(t.br[a], ind + "  "),
           { s: `${ind}} else {`, els: true }, ...codeLines(t.br[b], ind + "  "), { s: `${ind}}` }];
 }
 function step5() {
-  const lines = [{ s: "function sortiere(obst) {" }, ...codeLines(tree), { s: "}" }];
+  const lines = [{ s: "function sortiere(material) {" }, ...codeLines(tree), { s: "}" }];
   $("#stage").innerHTML = `${head(5, "Dein Baum als Code")}
-    <div class="task">So sieht dein Entscheidungsbaum in <b>JavaScript</b> aus. <code>if</code> heißt „wenn“, <code>else</code> heißt „sonst“. Spiel den Code mit der Nashi-Birne ab.</div>
+    <div class="task">So sieht dein Entscheidungsbaum in <b>JavaScript</b> aus. <code>if</code> heißt „wenn“, <code>else</code> heißt „sonst“. Spiel den Code mit der kleinen Kompresse ab.</div>
     <pre class="code" id="code">${lines.map((l, i) => `<span data-i="${i}">${esc(l.s)}</span>`).join("\n")}</pre>
     <div class="guess"><span class="fcard static small">${cardHtml(ALL()[6])}</span>
       <button type="button" class="main" id="play">▶ Abspielen</button></div>
@@ -487,15 +505,14 @@ function step5() {
     const spans = [...document.querySelectorAll("#code span")];
     spans.forEach(s => s.classList.remove("run", "skip"));
     // Weg durch den Code nachgehen
-    const path = []; let i = 1, depth = 0;
+    const path = [];
     const walk = (t, start) => {
-      if (typeof t === "string") { path.push(start); return start + 1; }
+      if (typeof t === "string") { path.push(start); return; }
       path.push(start);
       const yes = f[t.q] === Q[t.q].vals[0];
       const thenEnd = start + 1 + codeLines(t.br[Q[t.q].vals[0]]).length;
-      if (yes) { walk(t.br[Q[t.q].vals[0]], start + 1); }
+      if (yes) walk(t.br[Q[t.q].vals[0]], start + 1);
       else { path.push(thenEnd); walk(t.br[Q[t.q].vals[1]], thenEnd + 1); }
-      return 0;
     };
     walk(tree, 1);
     for (const p of path) { spans[p].classList.add("run"); await new Promise(r => setTimeout(r, 600)); }
@@ -515,46 +532,44 @@ function step5() {
   };
 }
 
-/* ---------- Stufe 6: Rechnen oder lernen? (die Obstkiste) ---------- */
-const kg = g => (g / 1000).toFixed(1).replace(".", ",") + " kg";
-const fruitSmall = f => `<svg viewBox="0 0 80 80" aria-hidden="true" style="width:30px;height:30px">${fruitSvg(f).replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "")}</svg>`;
+/* ---------- Stufe 6: Rechnen oder lernen? (die Kompressen-Packung) ---------- */
+const kompresse = F("x", "Kompresse", "Kompresse", "weiß", "klein", "nein");
+const icon = f => `<svg viewBox="0 0 80 80" aria-hidden="true" style="width:22px;height:22px">${matSvg(f).replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "")}</svg>`;
 function step6() {
-  const apfel = F("x", "Apfel", "Apfel", "rot", "rund"), birne = F("x", "Birne", "Birne", "grün", "länglich");
-  const ex = [6, 8, 10, 12, 14].map(n => ({ n, g: n * 200 }));
+  const ex = [7, 10, 14, 21, 28];
   $("#stage").innerHTML = `${head(6, "Rechnen oder lernen?")}
-    <div class="task">Eine Obstkiste darf höchstens <b>2 kg</b> wiegen, sonst reißt sie. Eine Maschine lernt aus fünf Beispielkisten, wann eine Kiste zu schwer ist. In allen Beispielkisten sind Äpfel.</div>
-    <div class="walls">${ex.map(e => `<div class="wallrow"><span class="crate">${fruitSmall(apfel).repeat(Math.min(e.n, 7))}${e.n > 7 ? "…" : ""}</span><span>${e.n} Äpfel</span><b class="${e.g <= 2000 ? "okc" : "badc"}">${e.g <= 2000 ? "passt" : "zu schwer"}</b></div>`).join("")}</div>
-    <div class="machine"><div class="title">⚙ Das hat die Maschine gelernt</div><div class="rule">ab 12 Stück → zu schwer</div></div>
-    <h3>Neue Kiste: 8 Birnen</h3>
-    <div class="guess"><span class="crate">${fruitSmall(birne).repeat(8)}</span></div>
-    <p class="hint">Was sagt die Maschine?</p>
+    <div class="task">Eine Packung hat <b>20 Kompressen</b>. Reicht sie für eine Woche? Eine Maschine lernt das aus fünf Beispielwochen. In allen Beispielen brauchst du <b>eine Kompresse pro Verbandwechsel</b>.</div>
+    <div class="walls">${ex.map(n => `<div class="wallrow"><span class="crate">${icon(kompresse).repeat(Math.min(n, 4))}${n > 4 ? "…" : ""}</span><span>${n} Wechsel</span><b class="${n <= 20 ? "okc" : "badc"}">${n <= 20 ? "reicht" : "reicht nicht"}</b></div>`).join("")}</div>
+    <div class="machine"><div class="title">⚙ Das hat die Maschine gelernt</div><div class="rule">ab 21 Wechseln → reicht nicht</div></div>
+    <h3>Neue Woche: 7 Wechsel, je 3 Kompressen</h3>
+    <p class="hint">Der Verband ist größer. Darum brauchst du pro Wechsel 3 Kompressen. Was sagt die Maschine?</p>
     <div class="choices" id="predict">
-      <button type="button" data-v="ja">Die Maschine sagt: passt</button>
-      <button type="button" data-v="nein">Die Maschine sagt: zu schwer</button>
+      <button type="button" data-v="ja">Die Maschine sagt: reicht</button>
+      <button type="button" data-v="nein">Die Maschine sagt: reicht nicht</button>
     </div>
     <div id="out"></div>`;
   document.querySelectorAll("#predict button").forEach(b => b.onclick = () => {
     const ok = b.dataset.v === "ja";
     document.querySelectorAll("#predict button").forEach(x => { x.disabled = true; x.classList.toggle(ok ? "right" : "wrong", x === b); });
-    $("#out").innerHTML = `<div class="msg info"><b>Die Maschine sagt: passt.</b>8 Stück sind weniger als 12. Nach ihrer Regel ist das in Ordnung.</div>
-      <div class="row"><button type="button" class="main" id="probe">⚖ Nachrechnen</button></div><div id="out2"></div>`;
+    $("#out").innerHTML = `<div class="msg info"><b>Die Maschine sagt: reicht.</b>7 Wechsel sind weniger als 21. Nach ihrer Regel ist das in Ordnung.</div>
+      <div class="row"><button type="button" class="main" id="probe">🧮 Nachrechnen</button></div><div id="out2"></div>`;
     $("#probe").onclick = () => {
-      $("#out2").innerHTML = `<div class="probe-box">Ein Apfel wiegt 200 g.<br>Eine Birne wiegt 300 g.<br>8 Birnen × 300 g = <b>${kg(2400)}</b> → <b class="badc">zu schwer</b></div>
+      $("#out2").innerHTML = `<div class="probe-box">7 Wechsel × 3 Kompressen = <b>21 Kompressen</b><br>In der Packung sind 20.<br>21 ist mehr als 20 → <b class="badc">reicht nicht</b></div>
         <h3>Warum lag die Maschine falsch?</h3>
         <div class="choices" id="why">
-          <button type="button" data-r="stueck">Sie hat nur Stück gezählt. Dass Birnen schwerer sind, wusste sie nicht.</button>
+          <button type="button" data-r="stueck">Sie hat nur die Wechsel gezählt. Dass man mehrere Kompressen pro Wechsel brauchen kann, wusste sie nicht.</button>
           <button type="button" data-r="rechnung">Die Rechnung ist falsch.</button>
-          <button type="button" data-r="kiste">Die Kiste ist kaputt.</button>
+          <button type="button" data-r="packung">Die Packung ist kaputt.</button>
         </div><div id="out3"></div>`;
-      const WHY = { stueck: "In ihren Beispielen waren nur Äpfel. Das Gewicht pro Stück kannte sie gar nicht als Merkmal. Die Rechnung „Anzahl mal Gewicht“ merkt den Fehler sofort.",
-        rechnung: "Nein. 8 mal 300 g sind 2400 g, also 2,4 kg. Die Rechnung stimmt. Die Maschine hat nur eine Abkürzung gelernt.",
-        kiste: "Nein. Die Kiste hält 2 kg, wie bei allen Beispielen. Es liegt an der Maschine." };
+      const WHY = { stueck: "In ihren Beispielen war es immer eine Kompresse pro Wechsel. Die Zahl der Kompressen pro Wechsel kannte sie gar nicht als Merkmal. Die Rechnung „Wechsel mal Kompressen“ merkt den Fehler sofort.",
+        rechnung: "Nein. 7 mal 3 sind 21. Die Rechnung stimmt. Die Maschine hat nur eine Abkürzung gelernt.",
+        packung: "Nein. In der Packung sind 20 Kompressen, wie bei allen Beispielen. Es liegt an der Maschine." };
       document.querySelectorAll("#why button").forEach(w => w.onclick = () => {
         const ok2 = w.dataset.r === "stueck"; w.classList.add(ok2 ? "right" : "wrong");
         $("#out3").innerHTML = `<div class="msg ${ok2 ? "ok" : "bad"}"><b>${ok2 ? "Genau." : "Noch nicht."}</b>${WHY[w.dataset.r]}</div>
-          ${ok2 ? `<div class="pair"><div><b>🧮 Rechnen</b>Ein Mensch schreibt die Regel auf: Anzahl mal Gewicht. Stimmt die Regel, stimmt das Ergebnis.</div><div><b>⚙ Lernen</b>Die Maschine sucht selbst eine Regel in Beispielen. Fehlt etwas in den Beispielen, irrt sie.</div></div>
+          ${ok2 ? `<div class="pair"><div><b>🧮 Rechnen</b>Ein Mensch schreibt die Regel auf: Wechsel mal Kompressen. Stimmt die Regel, stimmt das Ergebnis.</div><div><b>⚙ Lernen</b>Die Maschine sucht selbst eine Regel in Beispielen. Fehlt etwas in den Beispielen, irrt sie.</div></div>
           <div class="msg info"><b>Darum kann eine KI falsch liegen.</b>Sie hat aus Beispielen gelernt und kennt nur, was darin vorkam. Wenn dir eine KI etwas vorschlägt: Prüf es nach.</div>
-          ${fw("Schwellenwert = die Grenze, hier 12 Stück", "Generalisierung = Gelerntes auf Neues übertragen", "Validierung = Probe mit einer sicheren Methode, hier nachrechnen")}${noteField("s6_aha", "Was war dein Aha?", "")}` + nextBtn(6, "Zum Abschluss") : ""}`;
+          ${fw("Schwellenwert = die Grenze, hier 21 Wechsel", "Generalisierung = Gelerntes auf Neues übertragen", "Validierung = Probe mit einer sicheren Methode, hier nachrechnen")}${noteField("s6_aha", "Was war dein Aha?", "")}` + nextBtn(6, "Zum Abschluss") : ""}`;
         bindNotes(); bindNext(6);
       });
     };
@@ -563,7 +578,7 @@ function step6() {
 
 /* ---------- Abschluss ---------- */
 function finale() {
-  const labels = { s2_df: "Denkfehler der Maschine", s4_aha: "Aha beim Baum", s6_aha: "Aha bei der Obstkiste", frage: "Wer sucht die Beispiele aus?", lernweg: "Wem gehört dein Lernweg?", rule: "Meine Regel" };
+  const labels = { s2_df: "Denkfehler der Maschine", s4_aha: "Aha beim Baum", s6_aha: "Aha bei der Kompressen-Packung", frage: "Wer sucht die Beispiele aus?", lernweg: "Wem gehört dein Lernweg?", rule: "Meine Regel" };
   const mine = () => Object.keys(labels).filter(k => (notes[k] || "").trim()).map(k => `${labels[k]}:\n${notes[k].trim()}`).join("\n\n");
   $("#stage").innerHTML = `
     <h2>Geschafft. So lernt eine Maschine.</h2>
@@ -575,12 +590,12 @@ function finale() {
       <dt>Trainingsdaten</dt><dd>Die Beispiele, aus denen eine Maschine lernt.</dd>
       <dt>Label</dt><dd>Der Name an einem Beispiel. Beschriften heißt: Labels vergeben.</dd>
       <dt>Überwachtes Lernen</dt><dd>Lernen aus beschrifteten Beispielen.</dd>
-      <dt>Merkmal</dt><dd>Etwas Erkennbares: Farbe, Form, Schale, Gewicht.</dd>
+      <dt>Merkmal</dt><dd>Etwas Erkennbares: Farbe, Größe, Klebefläche, Anzahl.</dd>
       <dt>Modell</dt><dd>Die Regel, die die Maschine gelernt hat.</dd>
       <dt>Trefferquote</dt><dd>Wie viele Beispiele das Modell richtig einsortiert.</dd>
       <dt>Testdaten</dt><dd>Neue Beispiele, die die Maschine beim Lernen nicht gesehen hat.</dd>
       <dt>Fehlklassifikation</dt><dd>Etwas wird falsch einsortiert.</dd>
-      <dt>Bias</dt><dd>Verzerrung durch einseitige Beispiele, zum Beispiel nur rote Äpfel.</dd>
+      <dt>Bias</dt><dd>Verzerrung durch einseitige Beispiele, zum Beispiel nur hautfarbene Pflaster.</dd>
       <dt>Datenqualität</dt><dd>Die richtigen Beispiele zählen, nicht nur viele.</dd>
       <dt>Entscheidungsbaum</dt><dd>Fragen hintereinander. Eine Frage heißt Knoten, eine Antwort am Ende heißt Blatt.</dd>
       <dt>Algorithmus</dt><dd>Eine genaue Schritt-für-Schritt-Anweisung.</dd>
@@ -588,7 +603,7 @@ function finale() {
       <dt>regelbasiert / datenbasiert</dt><dd>Ein Mensch schreibt die Regel / die Maschine findet sie in Daten.</dd>
       <dt>Schwellenwert</dt><dd>Eine Grenze, ab der die Antwort wechselt.</dd>
       <dt>Generalisierung</dt><dd>Gelerntes auf Neues übertragen. Gelingt nur, wenn die Beispiele passen.</dd>
-      <dt>Validierung</dt><dd>Das Ergebnis mit einer sicheren Methode prüfen, hier mit der Formel.</dd>
+      <dt>Validierung</dt><dd>Das Ergebnis mit einer sicheren Methode prüfen, hier mit der Rechnung.</dd>
     </dl>
     ${noteField("frage", "Wer sucht die Beispiele aus?", "Es gibt keine richtige Antwort. Was passiert, wenn etwas fehlt?")}
     ${noteField("lernweg", "Wem gehört dein Lernweg?", "Es gibt keine richtige Antwort. Was denkst du, und warum? Darfst du beim Lernen Fehler machen, ohne dass sie gegen dich verwendet werden?")}
