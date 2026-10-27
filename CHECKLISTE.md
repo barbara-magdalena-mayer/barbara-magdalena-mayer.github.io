@@ -8,6 +8,7 @@ Damit kein Spiel irgendwo fehlt. Jeder Punkt muss erledigt sein, bevor ein Spiel
 - [ ] Figur aus `bilder/barbara-figur.webp` einbauen (Pfad im Spiel: `../../bilder/barbara-figur.webp`): auf normalen Seiten den `bmm-figur`-Block vor `</body>` kopieren (z. B. aus `index.html`) – oben rechts, auf dem Handy am Seitenende; in Spielen ohne Seitenscrollen unten rechts im Spielbereich
 
 ## 2. Im Spiel selbst
+- [ ] Ganz oben (direkt nach `<body>`) der Hinweis-Balken `bmm-probe` „Arbeitsprobe. Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.“ – aus einem bestehenden Spiel kopieren
 - [ ] `<meta name="robots" content="noindex">` im Kopf (Seite soll vorerst nicht auffindbar sein)
 - [ ] Link „← Zurück zur Werkstatt“ auf `../../`
 - [ ] Titel ohne Nummern aus fremden Curricula
