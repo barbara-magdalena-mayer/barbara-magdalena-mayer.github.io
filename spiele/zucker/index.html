@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Du trägst einen Sensor am Arm. Was zeigt dein Handy?</title>
-<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Pflege. Ein Zuckersensor am Arm: Gewebeflüssigkeit, Verzögerung, Insulin und Insulinresistenz, Alarm, zwei Verläufe im Vergleich, ein kleines Python-Programm und eine KI, die sich irren kann.">
+<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Pflege. Ein Zuckersensor am Arm: Gewebeflüssigkeit, Verzögerung, Insulin und Insulinresistenz, Alarm, ein Keto-Tag mit versteckten Kohlenhydraten, drei Verläufe im Vergleich, ein kleines Python-Programm und eine KI, die sich irren kann.">
 <style>
 @font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
 @font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
@@ -131,7 +131,7 @@ footer a{color:inherit}
 <style>
 /* Handy-App */
 .app{background:var(--machine);color:var(--machine-ink);border-radius:22px;padding:14px 16px 16px;margin:14px 0;max-width:560px;position:relative}
-.app .bar{display:flex;justify-content:space-between;font:600 14px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#a8f0c8}
+.app .bar{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:space-between;font:600 14px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#a8f0c8}
 .app .now{display:flex;align-items:baseline;gap:10px;margin:6px 0 2px}
 .app .big{font:600 52px/1 var(--mono);color:#fff}
 .app .unit{font-size:18px;color:#cfe5d8}
@@ -153,6 +153,13 @@ footer a{color:inherit}
 .stats{border-collapse:collapse;margin:12px 0;font-size:18px;width:100%;max-width:560px}
 .stats th,.stats td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}
 .stats td.n{font-family:var(--mono);text-align:right}
+.stats td,.stats th{font-size:16px;padding:6px 4px}
+.acts button.sel{border-color:var(--pink);background:var(--pink-soft)}
+.acts button.right{border-color:var(--green)}.acts button.wrong{border-color:var(--red)}
+.acts .kh{font-weight:600;color:var(--ink)}
+#plan select{width:100%}
+#py .glossary{grid-template-columns:1fr}#py .glossary dt{overflow-wrap:anywhere}
+#plan label.note{display:block;margin-top:12px}
 .stats{table-layout:fixed}.stats th{font-size:16px;hyphens:auto;overflow-wrap:anywhere}
 .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:17px;margin:6px 0}
 .legend span{display:inline-flex;align-items:center;gap:6px}
@@ -166,18 +173,18 @@ footer a{color:inherit}
   </nav>
   <span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflege</span>
   <h1>Du trägst einen Sensor am Arm. Was zeigt dein Handy?</h1>
-  <p class="lead">Viele Menschen mit Diabetes tragen einen kleinen Sensor am Oberarm. Das Handy zeigt ständig ihren Zuckerwert. Auch in der ambulanten Pflege siehst du solche Werte. Hier trägst du den Sensor selbst, isst, gehst spazieren und schaust zu.</p>
-  <div class="reihe" role="note"><b>So geht es</b>Sechs Stufen. Du brauchst kein Vorwissen. Du probierst aus, dann begründest du. Fehler sind erlaubt: Sie zeigen, wo du gerade stehst.</div>
+  <p class="lead">Viele Menschen mit Diabetes tragen einen kleinen Sensor am Oberarm. Das Handy zeigt ständig ihren Zuckerwert. Auch in der ambulanten Pflege siehst du solche Werte. Hier trägst du den Sensor selbst, isst, gehst spazieren und schaust zu. Und du planst einen Keto-Tag: Was passiert, wenn kaum Kohlenhydrate ins Blut kommen?</p>
+  <div class="reihe" role="note"><b>So geht es</b>Sieben Stufen. Du brauchst kein Vorwissen. Du probierst aus, dann begründest du. Fehler sind erlaubt: Sie zeigen, wo du gerade stehst.</div>
   <div class="steps" aria-hidden="true" id="steps"></div>
   <main class="panel" id="stage" aria-live="polite"></main>
-  <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Die Kurven entstehen aus einem stark vereinfachten Übungsmodell. Sie sind keine echte Messung und keine Beratung. Wer einen Sensor trägt, bespricht Zielbereich und Alarme mit dem eigenen Behandlungsteam.</footer>
+  <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Die Kurven entstehen aus einem stark vereinfachten Übungsmodell. Sie sind keine echte Messung und keine medizinische oder Ernährungsberatung. Wer einen Sensor trägt, bespricht Zielbereich und Alarme mit dem eigenen Behandlungsteam.</footer>
 </div>
 
 <script>
 (function(){
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const STUFEN = 6, START = 7*60, ENDE = 20*60, LOW = 70, HIGH = 180, DELAY = 10;
+const STUFEN = 7, START = 7*60, ENDE = 20*60, LOW = 70, HIGH = 180, DELAY = 10;
 
 /* ============================================================
    Übungsmodell. Kein medizinisches Modell.
@@ -193,16 +200,33 @@ const FOOD = [
   {id:"kuchen",    name:"Stück Kuchen",           kh:40, tp:35, f:1,   icon:"🍰"},
   {id:"salat",     name:"Salat mit Ei",           kh:6,  tp:50, f:1,   icon:"🥗"}
 ];
+/* Keto-Tag: Richtwerte pro Portion, gerundet (Tabelle: STADA 2017, Verpackungsangaben) */
+const KETO = {
+  frueh:  [{id:"ruehrei", name:"Rührei mit Speck", kh:2, tp:50, f:1, icon:"🍳"},
+           {id:"fjoghurt", name:"Fruchtjoghurt, 150 g", kh:20, tp:35, f:1, icon:"🍓"},
+           {id:"broetchen", name:"Brötchen mit Marmelade", kh:45, tp:40, f:1, icon:"🍞"}],
+  mittag: [{id:"haehnchen", name:"Hähnchen mit Brokkoli", kh:6, tp:55, f:1, icon:"🥦"},
+           {id:"burger", name:"Burger ohne Brötchen, mit Ketchup", kh:8, tp:45, f:1, icon:"🍔"},
+           {id:"nudeln", name:"Teller Nudeln", kh:75, tp:55, f:1, icon:"🍝"}],
+  zwischen:[{id:"nuesse", name:"Handvoll Haselnüsse", kh:3, tp:60, f:1, icon:"🌰"},
+           {id:"apfel", name:"Apfel", kh:18, tp:35, f:1, icon:"🍎"},
+           {id:"milch", name:"Glas Milch", kh:10, tp:35, f:1, icon:"🥛"}],
+  abend:  [{id:"lachs", name:"Lachs mit Salat", kh:4, tp:50, f:1, icon:"🐟"},
+           {id:"kaesegurke", name:"Käse und Gurke", kh:3, tp:40, f:1, icon:"🧀"},
+           {id:"kartoffeln", name:"Kartoffeln mit Quark", kh:35, tp:50, f:1, icon:"🥔"}]
+};
+const KETOTIME = {frueh:8*60, mittag:12*60+30, zwischen:15*60+30, abend:18*60+30};
+const ALLFOOD = FOOD.concat(...Object.values(KETO)).filter((f,i,a)=>a.findIndex(x=>x.id===f.id)===i);
 const BODY = {
   ohne:{name:"ohne Diabetes", base:88, k:1.1, slow:1,   walk:12, cap:85,  floor:72},
-  mit: {name:"mit Insulinresistenz (Typ-2-Diabetes)", base:125, k:2.4, slow:1.6, walk:40, cap:null, floor:85}
+  mit: {name:"mit Insulinresistenz (Typ-2-Diabetes)", base:125, k:2.0, slow:1.6, walk:40, cap:null, floor:85}
 };
 const bump = (dt, tp) => { if (dt <= 0) return 0; const x = dt/tp; return x*Math.exp(1-x); };
 function blood(b, ev, t){
   let s = 0;
   for (const e of ev){
     const dt = t - e.t;
-    if (e.food){ const f = FOOD.find(x=>x.id===e.food); s += f.kh*b.k*f.f*bump(dt, f.tp*b.slow); }
+    if (e.food){ const f = ALLFOOD.find(x=>x.id===e.food); s += f.kh*b.k*f.f*bump(dt, f.tp*b.slow); }
     if (e.walk){ s -= b.walk*bump(dt, 35); }
   }
   let v = b.cap ? b.base + b.cap*Math.tanh(s/b.cap) : b.base + s;
@@ -244,10 +268,10 @@ let notes = {};
 try { notes = JSON.parse(localStorage.getItem("zucker-notes") || "{}"); } catch(e) { notes = {}; }
 const saveNotes = () => { try { localStorage.setItem("zucker-notes", JSON.stringify(notes)); } catch(e) {} };
 
-let stufe = 0, evMit = [];
+let stufe = 0, evMit = [], evKeto = [];
 const stage = $("#stage");
 function bar(){ $("#steps").innerHTML = Array.from({length:STUFEN},(_,i)=>`<span class="${i<=stufe?"done":""}"></span>`).join(""); }
-function go(n, first){ stufe = n; bar(); [s1,s2,s3,s4,s5,s6,ende][n](); if (first) return; stage.querySelector("h2")?.focus?.({preventScroll:true}); window.scrollTo({top: stage.offsetTop - 12, behavior: "smooth"}); }
+function go(n, first){ stufe = n; bar(); [s1,s2,s3,sKeto,s4,s5,s6,ende][n](); if (first) return; stage.querySelector("h2")?.focus?.({preventScroll:true}); window.scrollTo({top: stage.offsetTop - 12, behavior: "smooth"}); }
 function head(nr, titel){ return `<div class="stepno">Stufe ${nr} von ${STUFEN}</div><h2 tabindex="-1">${titel}</h2>`; }
 function nextBtn(label="Weiter"){ return `<div class="row"><button class="main" id="next" hidden>${label} →</button></div>`; }
 function showNext(n){ const b=$("#next"); b.hidden=false; b.onclick=()=>go(n); }
@@ -351,31 +375,109 @@ function s3(){
     3, ev => { evMit = ev.slice(); });
 }
 
-/* ---------- Stufe 4: Zwei Verläufe im Vergleich ---------- */
+/* ---------- Stufe 4: Keto. Wo stecken Kohlenhydrate? ---------- */
+const GUESS = [
+  {n:"Scheibe Käse", kh:0, icon:"🧀"}, {n:"Glas Milch, 200 ml", kh:10, icon:"🥛"},
+  {n:"Rührei aus 2 Eiern", kh:1, icon:"🍳"}, {n:"Fruchtjoghurt, 150 g", kh:20, icon:"🍓"},
+  {n:"Halbe Gurke", kh:2, icon:"🥒"}, {n:"Apfel", kh:18, icon:"🍎"},
+  {n:"2 Esslöffel Ketchup", kh:7, icon:"🍅"}, {n:"Handvoll Haselnüsse", kh:3, icon:"🌰"},
+  {n:"Glas Orangensaft, 200 ml", kh:20, icon:"🧃"}];
+const KCODE = `kohlenhydrate = {"Rührei": 1, "Käse": 0, "Apfel": 18, "Fruchtjoghurt": 20}
+
+heute = ["Rührei", "Apfel", "Käse"]
+
+summe = 0
+for essen in heute:
+    summe = summe + kohlenhydrate[essen]
+
+print(summe)`;
+function sKeto(){
+  stage.innerHTML = head(4,"Keto: Wo stecken überall Kohlenhydrate?") + `
+    <div class="body-note"><b>Keto, kurz erklärt.</b> Bei einer ketogenen Ernährung isst man sehr wenig Kohlenhydrate, meist unter 50 Gramm am Tag. Dafür mehr Fett und Eiweiß. Nach einigen Tagen holt sich der Körper seine Energie dann vor allem aus Fett. Die Leber bildet daraus <b>Ketonkörper</b>. Das nennt man <b>Ketose</b>. Für dich heißt das vor allem: Es kommt viel weniger Zucker ins Blut.</div>
+    <p class="task">Tippe alles an, was du für keto-tauglich hältst: fast keine Kohlenhydrate, unter 5 Gramm pro Portion.</p>
+    <div class="acts" id="guess">${GUESS.map((g,i)=>`<button data-i="${i}" aria-pressed="false"><span aria-hidden="true">${g.icon}</span> ${g.n}<small class="kh" hidden></small></button>`).join("")}</div>
+    <div class="row"><button class="ghost" id="check">Probe machen</button></div>
+    <div id="fb"></div>
+    <div id="plan" hidden>
+      <h3>Deine kleine Keto-App</h3>
+      <p class="task">Jetzt planst du einen Tag für den Körper mit Insulinresistenz aus Stufe 3. Wähle für jede Mahlzeit etwas aus. Die App zählt mit. Schaffst du einen Tag unter 50 Gramm?</p>
+      ${Object.entries({frueh:"Frühstück, 8 Uhr", mittag:"Mittag, 12:30 Uhr", zwischen:"Zwischendurch, 15:30 Uhr", abend:"Abend, 18:30 Uhr"}).map(([k,l])=>`
+        <label class="note">${l}<br><select data-m="${k}">${KETO[k].map(f=>`<option value="${f.id}">${f.icon} ${f.name}</option>`).join("")}</select></label>`).join("")}
+      <div id="kapp"></div>
+      <div id="fb2"></div>
+      <div id="py" hidden>
+        <h3>So zählt die Keto-App, in Python</h3>
+        <pre class="code">${esc(KCODE)}</pre>
+        <dl class="glossary">
+          <dt>{ … }</dt><dd>Ein <b>Wörterbuch</b> (englisch <i>dictionary</i>): Zu jedem Namen gehört eine Zahl, wie in einer Nährwerttabelle.</dd>
+          <dt>kohlen&shy;hydrate["Apfel"]</dt><dd>Schlägt im Wörterbuch nach: ergibt 18.</dd>
+        </dl>
+        <p><b>Frage:</b> Was zeigt <code>print(summe)</code> an?</p>
+        <div class="choices" id="qk"><button data-i="0">3</button><button data-i="1">19</button><button data-i="2">39</button></div>
+        <div id="fb3"></div>
+      </div>
+    </div>` + nextBtn();
+  stage.querySelectorAll("#guess button").forEach(b=>b.onclick=()=>{ b.setAttribute("aria-pressed", b.getAttribute("aria-pressed")==="true"?"false":"true"); b.classList.toggle("sel"); });
+  $("#check").onclick = () => {
+    let ok=0;
+    stage.querySelectorAll("#guess button").forEach(b=>{
+      const g=GUESS[+b.dataset.i], low=g.kh<5, sel=b.getAttribute("aria-pressed")==="true";
+      const k=b.querySelector(".kh"); k.hidden=false; k.textContent=`etwa ${g.kh} g Kohlenhydrate`;
+      b.classList.remove("right","wrong"); const r = low===sel; b.classList.add(r?"right":"wrong"); if(r) ok++;
+    });
+    $("#fb").innerHTML = msg(ok===GUESS.length?"ok":"info", ok===GUESS.length?"Alles richtig erkannt.":`${ok} von ${GUESS.length} richtig eingeschätzt.`,
+      "Jetzt stehen die Gramm dabei. Überrascht? Milch, Fruchtjoghurt, Apfel und Saft wirken gesund, haben aber viele Kohlenhydrate: in der Milch steckt Milchzucker, im Obst Fruchtzucker. Und im Ketchup steckt Zucker, obwohl er nicht süß schmeckt. Käse, Eier, Gurke und Nüsse haben fast keine. Genau das macht Keto im Alltag schwer: Kohlenhydrate stecken an vielen Stellen, an die man nicht denkt.")
+      + `<div class="fws"><span class="fw">ketogen</span><span class="fw">Ketose</span><span class="fw">Ketonkörper</span><span class="fw">versteckte Kohlenhydrate</span></div>`;
+    $("#plan").hidden=false; plan();
+  };
+  function plan(){
+    const pick = {}; stage.querySelectorAll("#plan select").forEach(sel=>pick[sel.dataset.m]=KETO[sel.dataset.m].find(f=>f.id===sel.value));
+    const sum = Object.values(pick).reduce((a,f)=>a+f.kh,0);
+    evKeto = Object.entries(pick).map(([k,f])=>({food:f.id, t:KETOTIME[k]}));
+    const vals = series(BODY.mit, evKeto, ENDE), st = stats(vals);
+    $("#kapp").innerHTML = `<div class="app ${sum>50?"hi":""}"><div class="bar"><span>Keto-App · Übung</span><span>Tagesplan</span></div>
+      <div class="now"><span class="big">${sum}</span><span class="unit">g Kohlenhydrate heute</span></div>
+      <div class="clock">${sum<=50?"Keto-Tag: unter 50 g":"Kein Keto-Tag: über 50 g"} · höchster Zucker ${st.max} mg/dl</div>
+      ${chart([{vals, color:"#f2d36b"}], ENDE, `Zuckerverlauf mit Insulinresistenz an diesem Tag. Höchstens ${st.max} mg/dl.`)}</div>`;
+    if (sum<=50){ $("#fb2").innerHTML = msg("ok",`${sum} Gramm: ein Keto-Tag.`,`Schau auf die gelbe Kurve: Mit Insulinresistenz bleibt der Zucker an diesem Tag unter ${st.max+1} mg/dl, ohne große Spitzen. Weniger Kohlenhydrate heißt: weniger Zucker im Blut, also muss die Bauchspeicheldrüse weniger Insulin bilden. Der Grundwert bleibt trotzdem höher als ohne Diabetes. Die Insulinresistenz ist nicht weg, sie wird nur weniger gefordert.`); $("#py").hidden=false; }
+    else $("#fb2").innerHTML = msg("info",`${sum} Gramm: noch kein Keto-Tag.`,"Welche Wahl bringt die meisten Gramm? Tausche sie aus und schau, was mit der Kurve passiert.");
+  }
+  stage.querySelectorAll("#plan select").forEach(sel=>sel.onchange=plan);
+  choiceSet("#qk", [
+    {ok:false, why:"3 wären nur die Namen. Das Programm schlägt für jedes Essen die Zahl im Wörterbuch nach und zählt sie zusammen."},
+    {ok:true},
+    {ok:false, why:"Der Fruchtjoghurt steht im Wörterbuch, aber nicht in der Liste <code>heute</code>. Zähle nur, was heute gegessen wurde."}],
+    () => { $("#fb3").innerHTML = msg("ok","Richtig: 19.","Rührei 1, Apfel 18, Käse 0. Die Schleife geht die Liste <code>heute</code> durch, schlägt jedes Essen nach und zählt dazu. So arbeitet jede Ernährungs-App im Kern: eine Tabelle mit Nährwerten und eine Schleife, die zusammenzählt.")
+        + `<div class="fws"><span class="fw">Wörterbuch (dict)</span><span class="fw">nachschlagen</span><span class="fw">Summe</span></div>`;
+      showNext(4); }, "#fb3");
+}
+
+/* ---------- Stufe 5: Drei Verläufe im Vergleich ---------- */
 function s4(){
   const ev = evMit.length ? evMit : [{food:"broetchen",t:8*60},{food:"nudeln",t:12*60},{walk:true,t:13*60},{food:"kuchen",t:15*60}];
-  const a = series(BODY.ohne, ev, ENDE), m = series(BODY.mit, ev, ENDE), sa = stats(a), sm = stats(m);
+  const evK = evKeto.length ? evKeto : [{food:"ruehrei",t:480},{food:"haehnchen",t:750},{food:"nuesse",t:930},{food:"lachs",t:1110}];
+  const a = series(BODY.ohne, ev, ENDE), m = series(BODY.mit, ev, ENDE), k = series(BODY.mit, evK, ENDE), sa = stats(a), sm = stats(m), sk = stats(k);
   const opts = [
-    {t:"Mit Insulinresistenz steigt der Wert höher und bleibt länger oben.", ok:true},
+    {t:"Mit Insulinresistenz steigt der Wert höher und bleibt länger oben. Am Keto-Tag bleibt er ruhig, aber nicht so tief wie ohne Diabetes.", ok:true},
     {t:"Beide Körper reagieren gleich. Nur der Sensor misst anders.", ok:false, why:"Es ist derselbe Sensor und dasselbe Essen. Schau auf die höchsten Werte in der Tabelle."},
-    {t:"Mit Insulinresistenz steigt der Wert langsamer und weniger.", ok:false, why:"Vergleiche die gestrichelte und die durchgezogene Linie nach dem Essen. Welche geht höher?"}];
-  stage.innerHTML = head(4,"Gleiches Essen, zwei Körper.") + `
-    <p class="task">Hier liegt dein Tag aus Stufe 3 zweimal übereinander: einmal mit dem Körper ohne Diabetes, einmal mit Insulinresistenz. Was ist der Unterschied?</p>
+    {t:"Am Keto-Tag ist die Insulinresistenz verschwunden.", ok:false, why:"Vergleiche die gelbe mit der grünen Linie. Liegt die gelbe genauso tief?"}];
+  stage.innerHTML = head(5,"Gleiches Essen, zwei Körper. Und ein Keto-Tag.") + `
+    <p class="task">Hier liegen drei Tage übereinander: dein Tag aus Stufe 3 mit dem Körper ohne Diabetes, derselbe Tag mit Insulinresistenz und dein Keto-Tag aus Stufe 4, auch mit Insulinresistenz. Was zeigt der Vergleich?</p>
     <div class="app"><div class="bar"><span>Vergleich · Übung</span><span>7 bis 20 Uhr</span></div>
-      ${chart([{vals:a, color:"#a8f0c8"},{vals:m, color:"#f6a5bf", dash:"10 6"}], ENDE, `Zwei Verläufe. Ohne Diabetes höchstens ${sa.max}, mit Insulinresistenz höchstens ${sm.max} mg/dl.`)}
-      <div class="legend"><span><i style="border-color:#a8f0c8"></i>ohne Diabetes</span><span><i style="border-color:#f6a5bf;border-top-style:dashed"></i>mit Insulinresistenz</span></div>
+      ${chart([{vals:a, color:"#a8f0c8"},{vals:m, color:"#f6a5bf", dash:"10 6"},{vals:k, color:"#f2d36b", dash:"3 5"}], ENDE, `Drei Verläufe. Ohne Diabetes höchstens ${sa.max}, mit Insulinresistenz höchstens ${sm.max}, Keto-Tag mit Insulinresistenz höchstens ${sk.max} mg/dl.`)}
+      <div class="legend"><span><i style="border-color:#a8f0c8"></i>ohne Diabetes</span><span><i style="border-color:#f6a5bf;border-top-style:dashed"></i>mit Insulinresistenz</span><span><i style="border-color:#f2d36b;border-top-style:dotted"></i>Keto-Tag, mit Insulinresistenz</span></div>
     </div>
-    <table class="stats"><thead><tr><th></th><th>ohne Diabetes</th><th>mit Insulin&shy;resistenz</th></tr></thead><tbody>
-      <tr><td>höchster Wert</td><td class="n">${sa.max} mg/dl</td><td class="n">${sm.max} mg/dl</td></tr>
-      <tr><td>Zeit über 180</td><td class="n">${sa.minHigh} min</td><td class="n">${sm.minHigh} min</td></tr>
-      <tr><td>Zeit im Zielbereich</td><td class="n">${sa.inRange} %</td><td class="n">${sm.inRange} %</td></tr>
+    <table class="stats"><thead><tr><th></th><th>ohne Diabetes</th><th>mit Insulin&shy;resistenz</th><th>Keto-Tag</th></tr></thead><tbody>
+      <tr><td>höchster Wert</td><td class="n">${sa.max}</td><td class="n">${sm.max}</td><td class="n">${sk.max}</td></tr>
+      <tr><td>Minuten über 180</td><td class="n">${sa.minHigh}</td><td class="n">${sm.minHigh}</td><td class="n">${sk.minHigh}</td></tr>
+      <tr><td>Zeit im Zielbereich</td><td class="n">${sa.inRange} %</td><td class="n">${sm.inRange} %</td><td class="n">${sk.inRange} %</td></tr>
     </tbody></table>
     <div class="choices" id="q">${opts.map((o,i)=>`<button data-i="${i}">${o.t}</button>`).join("")}</div>
     <div id="fb"></div>` + nextBtn();
   choiceSet("#q", opts, () => {
-    $("#fb").innerHTML = msg("ok","Richtig.",`Die <b>Zeit im Zielbereich</b> ist eine wichtige Zahl in solchen Apps. Fachleute empfehlen für viele Erwachsene mit Diabetes: mehr als 70 Prozent des Tages zwischen 70 und 180 mg/dl. Bei deinem Tag mit Insulinresistenz waren es ${sm.inRange} Prozent. Die App zählt dafür einfach alle Werte durch. Wie das geht, siehst du jetzt in Python.`)
+    $("#fb").innerHTML = msg("ok","Richtig.",`Die <b>Zeit im Zielbereich</b> ist eine wichtige Zahl in solchen Apps. Fachleute empfehlen für viele Erwachsene mit Diabetes: mehr als 70 Prozent des Tages zwischen 70 und 180 mg/dl. Bei deinem Tag mit Insulinresistenz waren es ${sm.inRange} Prozent, am Keto-Tag ${sk.inRange} Prozent. Die App zählt dafür einfach alle Werte durch. Wie das geht, siehst du jetzt in Python.`)
       + `<div class="fws"><span class="fw">Verlauf</span><span class="fw">Zeit im Zielbereich</span><span class="fw">Vergleich</span></div>`;
-    showNext(4);
+    showNext(5);
   }, "#fb");
 }
 
@@ -419,7 +521,7 @@ for wert in mit:
 
 print("Stunden mit Alarm:", zu_hoch)
 print("Unterschied der Höchstwerte:", max(mit) - max(ohne))`;
-  stage.innerHTML = head(5,"Die App prüft jeden Wert. Liest du mit?") + `
+  stage.innerHTML = head(6,"Die App prüft jeden Wert. Liest du mit?") + `
     <p class="task">So könnte der Alarm in einer App aussehen, in der Sprache <b>Python</b>. Darunter stehen zwei Listen mit Werten: ohne Diabetes und mit Insulinresistenz.</p>
     <pre class="code">${esc(CODE)}</pre>
     <dl class="glossary">
@@ -467,7 +569,7 @@ print("Unterschied der Höchstwerte:", max(mit) - max(ohne))`;
     {ok:false, why:"Das wäre 236 minus 192. Welcher Wert ist der größte in <code>ohne</code>?"}],
     () => { $("#fb3").innerHTML = msg("ok","Richtig: 108.","Der höchste Wert mit Insulinresistenz ist 236, ohne Diabetes 128. Der Unterschied: 108 mg/dl. So vergleicht ein Programm zwei Verläufe in einer Zeile.")
         + `<div class="fws"><span class="fw">Python</span><span class="fw">Funktion</span><span class="fw">Liste</span><span class="fw">Index</span><span class="fw">Schleife</span><span class="fw">max</span></div>`;
-      $("#coder").hidden=false; $("#src").value = mine; showNext(5); }, "#fb3");
+      $("#coder").hidden=false; $("#src").value = mine; showNext(6); }, "#fb3");
   let py=null, loading=false; const out=$("#out");
   $("#reset").onclick = () => { $("#src").value = mine; };
   $("#run").onclick = async () => {
@@ -489,14 +591,16 @@ print("Unterschied der Höchstwerte:", max(mit) - max(ohne))`;
 const CLAIMS = [
   {t:"Dein Wert ist nach dem Essen so stark gestiegen, weil der Sensor falsch misst.", a:"falsch",
    why:"Falsch. Derselbe Sensor zeigt ohne Diabetes niedrige Werte und mit Insulinresistenz hohe. Der Unterschied kommt vom Körper, nicht vom Sensor."},
-  {t:"Nach dem Spaziergang ist der Wert schneller gesunken.", a:"richtig",
-   why:"Richtig. Arbeitende Muskeln holen sich Zucker aus dem Blut. Das hast du in Stufe 3 selbst ausprobiert."},
-  {t:"Die App zeigt 140. Also ist dein Blutzucker jetzt genau 140.", a:"kommt drauf an",
-   why:"Kommt drauf an. Ist der Wert ruhig, passt er gut zum Blut. Steigt oder fällt er schnell, hinkt der Sensor 5 bis 10 Minuten hinterher. Der Pfeil zeigt dir, welcher Fall gerade ist. Wer sich unwohl fühlt, misst zusätzlich am Finger."}
+  {t:"Bei Keto lagert dein Körper kein Fett mehr an.", a:"falsch",
+   why:"Falsch. Weniger Kohlenhydrate heißt weniger Insulin, und das macht es dem Körper leichter, an seine Fettreserven zu gehen. Wer aber über längere Zeit mehr Energie isst, als er verbraucht, lagert auch bei Keto Fett ein. Fett und Eiweiß haben auch Kalorien."},
+  {t:"Mit wenig Kohlenhydraten muss die Bauchspeicheldrüse weniger Insulin bilden.", a:"richtig",
+   why:"Richtig. Es kommt weniger Zucker ins Blut, also wird weniger Insulin gebraucht. Das hast du an der gelben Kurve gesehen. Ob die Bauchspeicheldrüse dadurch auf Dauer gesünder bleibt, ist noch nicht sicher erforscht."},
+  {t:"Wer Insulin oder Diabetes-Tabletten nimmt, kann heute einfach mit Keto anfangen.", a:"kommt drauf an",
+   why:"Kommt drauf an, nämlich auf die Medikamente. Mit Insulin und manchen Tabletten kann der Zucker bei sehr wenig Kohlenhydraten zu tief fallen. Bei bestimmten Tabletten, den SGLT-2-Hemmern, droht sogar eine gefährliche Übersäuerung des Blutes. Darum: Keto nur zusammen mit dem Behandlungsteam, das die Medikamente anpasst."}
 ];
 function s6(){
-  stage.innerHTML = head(6,"Eine KI erklärt deine Kurve. Hat sie recht?") + `
-    <p class="task">Manche Apps haben eine KI, die die Kurve erklärt. Sie klingt sicher. Sie kann sich irren. Schalte sie dazu und prüfe jede Aussage mit dem, was du in Stufe 1 bis 4 gesehen hast.</p>
+  stage.innerHTML = head(7,"Eine KI erklärt deine Kurve. Hat sie recht?") + `
+    <p class="task">Manche Apps haben eine KI, die die Kurve erklärt. Sie klingt sicher. Sie kann sich irren. Schalte sie dazu und prüfe jede Aussage mit dem, was du in Stufe 1 bis 5 gesehen hast.</p>
     <label class="toggle"><input type="checkbox" id="kion"> KI dazuschalten</label>
     <div id="kibox" hidden>
       <div class="ki"><div class="title">KI-Kommentar · 20:00</div><p>Ich habe deinen Tag ausgewertet. Hier sind drei Hinweise.</p></div>
@@ -523,8 +627,8 @@ function s6(){
       box.querySelector(".fbc").innerHTML = msg("ok","Stimmt mit deiner Probe überein.", c.why);
     } else { b.classList.add("wrong"); box.querySelector(".fbc").innerHTML = msg("bad","Schau noch einmal.","Lies deine eigene Probe. Passt sie zu deiner Entscheidung?"); }
     if (done.size===CLAIMS.length){
-      $("#fb").innerHTML = msg("ok","Du hast die KI geprüft.","Einmal lag sie falsch, einmal richtig, und einmal kam es auf die Lage an. Sie klingt jedes Mal gleich sicher. Dein Maßstab war, was du selbst ausprobiert hast.");
-      showNext(6);
+      $("#fb").innerHTML = msg("ok","Du hast die KI geprüft.","Zweimal lag sie falsch, einmal richtig, und einmal kam es auf die Medikamente an. Sie klingt jedes Mal gleich sicher. Dein Maßstab war, was du selbst ausprobiert hast.");
+      showNext(7);
     }
   });
 }
@@ -533,7 +637,7 @@ function s6(){
 function ende(){
   stufe = STUFEN-1; bar();
   stage.innerHTML = `<div class="stepno">Geschafft</div><h2 tabindex="-1">Was zwischen Arm und Handy passiert</h2>
-    <div class="path"><span>Sensor</span>→<span>Gewebeflüssigkeit</span>→<span>Funk</span>→<span>App</span>→<span>Grenze</span>→<span>Alarm</span>→<span>Vergleich</span></div>
+    <div class="path"><span>Sensor</span>→<span>Gewebeflüssigkeit</span>→<span>Funk</span>→<span>App</span>→<span>Grenze</span>→<span>Alarm</span>→<span>Keto</span>→<span>Vergleich</span></div>
     <p>Der Sensor misst, das Handy vergleicht. Ein Alarm ist keine Diagnose: Er sagt nur, dass ein Wert eine Grenze überschritten hat, die jemand eingestellt hat. Was der Wert für diesen Menschen bedeutet, braucht einen Blick, der mehr sieht als die Kurve.</p>
     <label class="note" for="mit"><b>Was nimmst du mit?</b> <span class="small">Nur für dich. Es bleibt in diesem Browser.</span></label>
     <textarea id="mit" placeholder="Ich habe gemerkt, dass …"></textarea>
@@ -542,7 +646,10 @@ function ende(){
       Sensor und Verzögerung: <a href="https://www.oedg.at/diabetes-alles-klar/8-45-Gewebsglukose.pdf">Österreichische Diabetes Gesellschaft, „Diabetes – alles klar?“: Gewebsglukose</a> (5 bis 10 Minuten Verzögerung, Abweichung bei schnellem Anstieg und Abfall).<br>
       Zielbereich 70 bis 180 mg/dl, mehr als 70 % Zeit im Zielbereich: <a href="https://doi.org/10.2337/dci19-0028">Battelino u. a.: Clinical Targets for Continuous Glucose Monitoring Data Interpretation. Diabetes Care, 2019</a>.<br>
       Warum Pflegende digitale Systeme kritisch prüfen müssen: <a href="https://www.bibb.de/dienst/publikationen/de/18095">Telieps, Peters, Falkenstern, Saul: Kompetenzen für die Digitalisierung in der pflegeberuflichen Bildung. BIBB 2022</a>, S. 63.<br>
-      Python: <a href="https://docs.python.org/3/tutorial/datastructures.html">Offizielles Python-Tutorial, Kapitel „Data Structures“</a> (Listen).<br>
+      Kohlenhydrate pro Portion: <a href="https://www.stada.de/media/lagpa2zj/kh_be_umrechnungstabelle_mit_beschnitt.pdf">STADA, Kohlenhydrate-Umrechnungstabelle (2017)</a>, gerundet; Ketchup und Hauptgerichte nach üblichen Verpackungsangaben, geschätzt.<br>
+      Keto unter 50 g Kohlenhydrate am Tag, Medikamente anpassen: <a href="https://mdedge.com/content/low-carbohydrate-and-ketogenic-dietary-patterns-type-2-diabetes-management">Oh u. a.: Low-Carbohydrate and Ketogenic Dietary Patterns for Type 2 Diabetes Management. Federal Practitioner, 2024</a>.<br>
+      Übersäuerung unter SGLT-2-Hemmern bei Diät: <a href="https://www.akdae.de/arzneimitteltherapie/arzneiverordnung-in-der-praxis/ausgaben-archiv/ausgaben-ab-2015/ausgabe/artikel/2023/2023-1/ketoazidose-unter-sglt-2-inhibitoren">Arzneimittelkommission der deutschen Ärzteschaft, 2023</a>.<br>
+      Python: <a href="https://docs.python.org/3/tutorial/datastructures.html">Offizielles Python-Tutorial, Kapitel „Data Structures“</a> (Listen und Wörterbücher).<br>
       Die Kurven im Spiel stammen aus einem selbst gebauten, stark vereinfachten Übungsmodell.
     </div>
     <div class="row"><button class="ghost" id="again">Noch einmal von vorn</button><a class="ghost" href="../messwert/">Auch spielen: Messwert eintragen</a><a class="ghost" href="../../">Zur Werkstatt</a></div>`;
@@ -552,7 +659,7 @@ function ende(){
 
 let armed = null; const rs = $("#restart");
 rs.onclick = () => { if (!armed) { rs.textContent = "Wirklich? Alles löschen"; armed = setTimeout(() => { armed = null; rs.textContent = "↺ Neu beginnen"; }, 4000); return; }
-  clearTimeout(armed); armed = null; rs.textContent = "↺ Neu beginnen"; notes = {}; saveNotes(); evMit = []; go(0); };
+  clearTimeout(armed); armed = null; rs.textContent = "↺ Neu beginnen"; notes = {}; saveNotes(); evMit = []; evKeto = []; go(0); };
 
 window.__zk = { go, BODY, FOOD, sensor, series, stats };
 go(0, true);
