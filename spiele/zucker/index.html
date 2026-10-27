@@ -416,6 +416,15 @@ function sKeto(){
         <div class="choices" id="qk"><button data-i="0">3</button><button data-i="1">19</button><button data-i="2">39</button></div>
         <div id="fb3"></div>
       </div>
+      <div id="wer" hidden>
+        <h3>Wer legt deine Grenze fest?</h3>
+        <p class="task">Das Buch sagt 60 Gramm, die App sagt 20, ein Fachtext sagt 50. Wer entscheidet, welche Grenze für einen Menschen gilt? Wähle, und begründe deine Wahl.</p>
+        <div class="choices" id="qw"><button data-w="buch">Das Keto-Buch</button><button data-w="app">Die App</button><button data-w="team">Der Mensch selbst, zusammen mit dem Behandlungsteam</button></div>
+        <label class="note" for="wbeg"><b>Deine Begründung:</b> <span class="small">Warum? Schreib es kurz auf.</span></label>
+        <textarea id="wbeg" placeholder="Ich finde, … entscheidet, weil …"></textarea>
+        <div class="row"><button class="ghost" id="wok" disabled>Begründung abgeben</button></div>
+        <div id="fb4"></div>
+      </div>
     </div>` + nextBtn();
   stage.querySelectorAll("#guess button").forEach(b=>b.onclick=()=>{ b.setAttribute("aria-pressed", b.getAttribute("aria-pressed")==="true"?"false":"true"); b.classList.toggle("sel"); });
   $("#check").onclick = () => {
@@ -449,7 +458,18 @@ function sKeto(){
     {ok:false, why:"Der Fruchtjoghurt steht im Wörterbuch, aber nicht in der Liste <code>heute</code>. Zähle nur, was heute gegessen wurde."}],
     () => { $("#fb3").innerHTML = msg("ok","Richtig: 19.","Rührei 1, Apfel 18, Käse 0. Die Schleife geht die Liste <code>heute</code> durch, schlägt jedes Essen nach und zählt dazu. So arbeitet jede Ernährungs-App im Kern: eine Tabelle mit Nährwerten und eine Schleife, die zusammenzählt.")
         + `<div class="fws"><span class="fw">Wörterbuch (dict)</span><span class="fw">nachschlagen</span><span class="fw">Summe</span></div>`;
-      showNext(4); }, "#fb3");
+      $("#wer").hidden=false; }, "#fb3");
+  let wahl = null; const wbeg=$("#wbeg"), wok=$("#wok");
+  wbeg.value = notes.wer || "";
+  const wupd = () => { notes.wer = wbeg.value; saveNotes(); wok.disabled = !(wahl && wbeg.value.trim().length >= 10); };
+  wbeg.oninput = wupd;
+  stage.querySelectorAll("#qw button").forEach(b=>b.onclick=()=>{ stage.querySelectorAll("#qw button").forEach(x=>x.classList.remove("sel","right")); b.classList.add("right"); wahl=b.dataset.w; wupd(); });
+  wok.onclick = () => {
+    const vorn = {buch:"Das Buch gibt eine Richtung vor, aber es kennt keinen einzelnen Menschen.", app:"Die App zählt nur. Die Grenze hat jemand eingestellt, sie weiß nicht, warum.", team:"Das ist die Wahl, die am meisten über den Menschen weiß."}[wahl];
+    $("#fb4").innerHTML = msg("ok","Kommt drauf an, und zwar auf die Medikamente.", `${vorn} Ohne Diabetes-Medikamente kann ein Mensch seine Grenze selbst wählen, Buch und App geben Orientierung. Wer aber Insulin oder Diabetes-Tabletten nimmt, braucht das Behandlungsteam: Bei sehr wenig Kohlenhydraten müssen die Medikamente oft angepasst werden, sonst drohen Unterzucker oder, bei manchen Tabletten, eine gefährliche Übersäuerung. <b>Für dich als Pflegekraft heißt das:</b> Erzählt dir jemand im Hausbesuch, dass er mit Keto angefangen hat, frag nach seinen Medikamenten und gib es an die Praxis weiter.`)
+      + `<div class="fws"><span class="fw">Grenze</span><span class="fw">Behandlungsteam</span><span class="fw">Medikamente anpassen</span></div>`;
+    showNext(4);
+  };
 }
 
 /* ---------- Stufe 5: Drei Verläufe im Vergleich ---------- */
