@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Du trägst einen Sensor am Arm. Was zeigt dein Handy?</title>
+<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Pflege. Ein Zuckersensor am Arm: Gewebeflüssigkeit, Verzögerung, Insulin und Insulinresistenz, Alarm, zwei Verläufe im Vergleich, ein kleines Python-Programm und eine KI, die sich irren kann.">
+<style>
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("../../fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+:root{
+  --bg:#faeef1; --paper:#ffffff; --ink:#24382c; --muted:#5e5459; --line:#ead5db;
+  --green:#2f5240; --green-soft:#e3efe7; --pink:#b04e6b; --pink-soft:#f6e1e8; --teal:#7cc7bc;
+  --red:#a83232; --red-soft:#f8e0e0; --info:#f4ead2; --machine:#1f2a24; --machine-ink:#d8f0e4;
+  --band:#dcefe3; --curve:#b04e6b;
+  --display:"Literata",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#191416; --paper:#241d20; --ink:#efe6e9; --muted:#b3a5ab; --line:#3e3237;
+    --green:#7cc7a0; --green-soft:#1d3127; --pink:#e58aa6; --pink-soft:#3a2129; --red:#ef8b8b; --red-soft:#3c2222;
+    --info:#2e2a20; --machine:#101713; --band:#1d3127; --curve:#e58aa6; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:20px/1.6 var(--body)}
+.wrap{max-width:820px;margin:0 auto;padding:16px 16px 48px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;padding-right:110px}
+.top a,.top button{font:inherit;font-size:16px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--paper);border-radius:99px;padding:6px 14px;cursor:pointer}
+.eyebrow{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:600}
+h1{font-family:var(--display);font-size:34px;line-height:1.2;margin:4px 0 8px}
+h2{font-family:var(--display);font-size:28px;line-height:1.25;margin:0 0 10px}
+h3{font-size:21px;margin:20px 0 8px}
+.lead{max-width:44ch;margin:0 0 14px}
+.reihe{max-width:52ch;background:var(--green-soft);border-left:5px solid var(--green);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px;font-size:18px}
+.reihe b{display:block;margin-bottom:2px}
+.steps{display:flex;gap:6px;margin:10px 0 18px}
+.steps span{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.steps span.done{background:var(--pink)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}
+.stepno{font-size:16px;font-weight:600;color:var(--pink);text-transform:uppercase;letter-spacing:.06em}
+.task{background:var(--pink-soft);border-left:6px solid var(--pink);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 16px;max-width:46ch}
+.hint{font-size:18px;color:var(--muted);margin:6px 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+button.main{font:inherit;font-weight:600;font-size:21px;background:var(--green);color:#fff;border:none;border-radius:12px;padding:12px 22px;cursor:pointer}
+@media (prefers-color-scheme: dark){button.main{color:#10201a}}
+button.ghost,a.ghost{font:inherit;font-size:18px;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:10px 16px;cursor:pointer;text-decoration:none;display:inline-block}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,a:focus-visible,textarea:focus-visible,select:focus-visible,input:focus-visible{outline:4px solid var(--teal);outline-offset:2px}
+.msg{margin-top:14px;padding:12px 16px;border-radius:12px;max-width:52ch}
+.msg.ok{background:var(--green-soft)} .msg.bad{background:var(--red-soft)} .msg.info{background:var(--info)}
+.msg > b{display:block}
+textarea{font:inherit;font-size:18px;width:100%;min-height:80px;margin-top:6px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+select,input[type=number]{font:inherit;font-size:19px;padding:6px 8px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);max-width:100%}
+input[type=number]{width:72px}
+.fws{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.fw{background:#e6eefb;color:#1f3a66;border:1px solid #b9cbee;border-radius:99px;padding:4px 12px;font-size:16px}
+@media (prefers-color-scheme: dark){.fw{background:#1c2740;color:#cfe0ff;border-color:#33466e}}
+.glossary{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:8px 0;max-width:56ch}
+.glossary dt{font-weight:600;font-family:var(--mono);font-size:18px}
+.glossary dd{margin:0}
+.choices{display:grid;gap:10px;margin-top:10px;max-width:46ch}
+.choices button{font:inherit;text-align:left;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+.choices button.right{border-color:var(--green);background:var(--green-soft)}
+.choices button.wrong{border-color:var(--red);background:var(--red-soft)}
+.choices code,.msg code,p code,li code{font-family:var(--mono);font-size:.9em;background:var(--bg);border-radius:6px;padding:1px 5px}
+/* Messkarten */
+.meas{display:grid;gap:10px;margin:12px 0;max-width:620px}
+.mcard{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+.mcard .how{font-size:18px}
+.mcard .val{font:600 24px var(--mono);white-space:nowrap}
+.mcard.right{border-color:var(--green)} .mcard.wrong{border-color:var(--red)}
+@media(max-width:520px){.mcard{grid-template-columns:1fr auto}.mcard .how{grid-column:1/-1}}
+/* Kurve (Tabelle) */
+.sheet{width:100%;max-width:560px;border-collapse:collapse;margin:12px 0;font-size:19px}
+.sheet caption{text-align:left;font:600 15px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-bottom:6px}
+.sheet td,.sheet th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+.sheet td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+.sheet tr.pick{cursor:pointer}
+.sheet tr.pick:hover td,.sheet tr.pick:focus-visible td{background:var(--pink-soft)}
+.sheet tr.right td{background:var(--green-soft)} .sheet tr.wrong td{background:var(--red-soft)}
+.sheet tr.pick:focus-visible{outline:4px solid var(--teal)}
+/* Verlauf */
+.chart{width:100%;max-width:560px;height:auto;display:block;margin:12px 0;background:var(--bg);border-radius:12px}
+.chart text{font-family:var(--body);font-size:20px;fill:var(--muted)}
+.chart .pt text{font-family:var(--mono);font-size:22px;fill:var(--ink)}
+/* NEWS2-Tafel */
+.tablewrap{overflow-x:auto;max-width:100%;margin:12px 0}
+.news{border-collapse:collapse;font-size:16px;min-width:540px}
+.news th,.news td{border:1px solid var(--line);padding:5px 6px;text-align:center;white-space:nowrap}
+.news th{background:var(--bg);font-weight:600}
+.news td.p3{background:#f3c6c6}.news td.p2{background:#f8dcc0}.news td.p1{background:#fbefc6}.news td.p0{background:#ffffff}
+@media (prefers-color-scheme: dark){.news td.p3{background:#5a2626}.news td.p2{background:#5a3b22}.news td.p1{background:#4f4622}.news td.p0{background:#241d20}}
+.news td.lbl{text-align:left;background:var(--bg);font-weight:600}
+.score{display:grid;gap:8px;margin:12px 0;max-width:560px}
+.srow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--bg);border-radius:10px;padding:8px 12px;border:2px solid transparent}
+.srow.right{border-color:var(--green)} .srow.wrong{border-color:var(--red)}
+.srow .v{display:block;font-family:var(--mono);white-space:nowrap}
+.total{font:600 22px var(--mono);margin:8px 0}
+/* Code */
+pre.code{background:var(--machine);color:var(--machine-ink);border-radius:14px;padding:12px 14px;font:17px/1.6 var(--mono);overflow-x:auto;max-width:100%;margin:12px 0}
+pre.code .hl{background:#a8f0c855;color:#fff;border-radius:4px}
+pre.code .cm{color:#9fb8aa}
+.coder textarea{font:16px/1.55 var(--mono);min-height:260px;background:var(--machine);color:var(--machine-ink);border-color:var(--machine);white-space:pre;overflow-x:auto}
+.out{font:17px/1.5 var(--mono);background:var(--bg);border-radius:10px;padding:10px 12px;white-space:pre-wrap;min-height:44px;margin-top:8px}
+.small{font-size:16px;color:var(--muted)}
+/* KI */
+.ki{background:var(--machine);color:var(--machine-ink);border-radius:16px;padding:14px 16px;margin:14px 0;max-width:56ch}
+.ki .title{font:600 15px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#a8f0c8}
+.ki p{margin:6px 0;color:#fff}
+.claim{border:2px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0;max-width:620px}
+.claim.done{border-color:var(--green)}
+.judge{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.judge button{font:inherit;font-size:18px;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:8px 14px;cursor:pointer}
+.judge button.right{border-color:var(--green);background:var(--green-soft)}
+.judge button.wrong{border-color:var(--red);background:var(--red-soft)}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:600;margin:10px 0;cursor:pointer}
+.toggle input{width:26px;height:26px}
+.path{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:18px}
+.path span{background:var(--pink-soft);border-radius:99px;padding:4px 12px}
+.source{background:var(--info);border-radius:12px;padding:12px 16px;margin:14px 0;max-width:56ch;font-size:18px}
+.source a{color:inherit;font-weight:600}
+a.main-link{font-weight:600;font-size:21px;background:var(--green);color:#fff;border-radius:12px;padding:12px 22px;text-decoration:none;display:inline-block}
+footer{margin-top:24px;font-size:16px;color:var(--muted)}
+footer a{color:inherit}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<style>
+/* Handy-App */
+.app{background:var(--machine);color:var(--machine-ink);border-radius:22px;padding:14px 16px 16px;margin:14px 0;max-width:560px;position:relative}
+.app .bar{display:flex;justify-content:space-between;font:600 14px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#a8f0c8}
+.app .now{display:flex;align-items:baseline;gap:10px;margin:6px 0 2px}
+.app .big{font:600 52px/1 var(--mono);color:#fff}
+.app .unit{font-size:18px;color:#cfe5d8}
+.app .arrow{font-size:40px;line-height:1;color:#fff}
+.app .clock{font:16px var(--mono);color:#cfe5d8}
+.app .chart{background:#ffffff0d;margin:10px 0 0}
+.app .chart text{fill:#cfe5d8}
+.app .chart .lbl{fill:#fff}
+.app.hi{box-shadow:0 0 0 4px #f2b84b}
+.notif{display:flex;gap:10px;align-items:center;background:#fff;color:#24382c;border-radius:14px;padding:10px 12px;margin:0 0 10px;box-shadow:0 6px 18px #0005;font-size:18px}
+.notif b{display:block}
+.notif .ic{font-size:26px}
+@media(prefers-reduced-motion:no-preference){.notif{animation:shake .5s ease 2}@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}}
+.acts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:12px 0;max-width:620px}
+.acts button{font:inherit;font-size:17px;text-align:left;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;line-height:1.3}
+.acts button small{display:block;font-size:15px;color:var(--muted)}
+.acts button.walk{border-color:var(--green)}
+.log{font-size:17px;color:var(--muted);margin:6px 0}
+.stats{border-collapse:collapse;margin:12px 0;font-size:18px;width:100%;max-width:560px}
+.stats th,.stats td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}
+.stats td.n{font-family:var(--mono);text-align:right}
+.stats{table-layout:fixed}.stats th{font-size:16px;hyphens:auto;overflow-wrap:anywhere}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:17px;margin:6px 0}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:28px;height:0;border-top:4px solid}
+.body-note{background:var(--info);border-radius:12px;padding:12px 16px;margin:12px 0;max-width:56ch;font-size:18px}
+</style>
+<div class="wrap">
+  <nav class="top" aria-label="Navigation">
+    <a href="../../">← Zurück zur Werkstatt</a>
+    <button type="button" id="restart">↺ Neu beginnen</button>
+  </nav>
+  <span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflege</span>
+  <h1>Du trägst einen Sensor am Arm. Was zeigt dein Handy?</h1>
+  <p class="lead">Viele Menschen mit Diabetes tragen einen kleinen Sensor am Oberarm. Das Handy zeigt ständig ihren Zuckerwert. Auch in der ambulanten Pflege siehst du solche Werte. Hier trägst du den Sensor selbst, isst, gehst spazieren und schaust zu.</p>
+  <div class="reihe" role="note"><b>So geht es</b>Sechs Stufen. Du brauchst kein Vorwissen. Du probierst aus, dann begründest du. Fehler sind erlaubt: Sie zeigen, wo du gerade stehst.</div>
+  <div class="steps" aria-hidden="true" id="steps"></div>
+  <main class="panel" id="stage" aria-live="polite"></main>
+  <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Die Kurven entstehen aus einem stark vereinfachten Übungsmodell. Sie sind keine echte Messung und keine Beratung. Wer einen Sensor trägt, bespricht Zielbereich und Alarme mit dem eigenen Behandlungsteam.</footer>
+</div>
+
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const STUFEN = 6, START = 7*60, ENDE = 20*60, LOW = 70, HIGH = 180, DELAY = 10;
+
+/* ============================================================
+   Übungsmodell. Kein medizinisches Modell.
+   Ein Essen lässt den Wert steigen und wieder fallen.
+   Ohne Diabetes regelt der Körper mit Insulin nach (gedeckelt).
+   Mit Insulinresistenz steigt der Wert höher und fällt langsamer.
+   ============================================================ */
+const FOOD = [
+  {id:"broetchen", name:"Brötchen mit Marmelade", kh:45, tp:40, f:1,   icon:"🍞"},
+  {id:"saft",      name:"Glas Orangensaft",       kh:25, tp:25, f:1,   icon:"🧃"},
+  {id:"hafer",     name:"Haferflocken mit Milch", kh:40, tp:70, f:.7,  icon:"🥣"},
+  {id:"nudeln",    name:"Teller Nudeln",          kh:75, tp:55, f:1,   icon:"🍝"},
+  {id:"kuchen",    name:"Stück Kuchen",           kh:40, tp:35, f:1,   icon:"🍰"},
+  {id:"salat",     name:"Salat mit Ei",           kh:6,  tp:50, f:1,   icon:"🥗"}
+];
+const BODY = {
+  ohne:{name:"ohne Diabetes", base:88, k:1.1, slow:1,   walk:12, cap:85,  floor:72},
+  mit: {name:"mit Insulinresistenz (Typ-2-Diabetes)", base:125, k:2.4, slow:1.6, walk:40, cap:null, floor:85}
+};
+const bump = (dt, tp) => { if (dt <= 0) return 0; const x = dt/tp; return x*Math.exp(1-x); };
+function blood(b, ev, t){
+  let s = 0;
+  for (const e of ev){
+    const dt = t - e.t;
+    if (e.food){ const f = FOOD.find(x=>x.id===e.food); s += f.kh*b.k*f.f*bump(dt, f.tp*b.slow); }
+    if (e.walk){ s -= b.walk*bump(dt, 35); }
+  }
+  let v = b.cap ? b.base + b.cap*Math.tanh(s/b.cap) : b.base + s;
+  return Math.max(b.floor, v);
+}
+/* Der Sensor misst in der Gewebeflüssigkeit: etwas später und mit kleinem Rauschen */
+const sensor = (b, ev, t) => Math.round(blood(b, ev, t-DELAY) + 2.5*Math.sin(t/17) + 1.5*Math.sin(t/7));
+function trend(b, ev, t){
+  const d = sensor(b,ev,t) - sensor(b,ev,t-15);
+  return d > 15 ? "↑" : d > 5 ? "↗" : d < -15 ? "↓" : d < -5 ? "↘" : "→";
+}
+const hhmm = t => `${String(Math.floor(t/60)).padStart(2,"0")}:${String(t%60).padStart(2,"0")}`;
+const series = (b, ev, tEnd) => { const out=[]; for (let t=START; t<=tEnd; t+=5) out.push({t, v:sensor(b,ev,t)}); return out; };
+function stats(vals){
+  const n = vals.length, hi = vals.filter(p=>p.v>HIGH).length, inr = vals.filter(p=>p.v>=LOW && p.v<=HIGH).length;
+  return { max: Math.max(...vals.map(p=>p.v)), minHigh: hi*5, inRange: Math.round(100*inr/n) };
+}
+
+/* ---------- Kurve zeichnen ---------- */
+function chart(lines, tEnd, label){
+  const W=560,H=320,L=58,R=16,T=16,B=42, ymin=40, ymax=300;
+  const x = t => L + (t-START)*(W-L-R)/(ENDE-START);
+  const y = v => T + (ymax-Math.min(ymax,Math.max(ymin,v)))*(H-T-B)/(ymax-ymin);
+  let g = `<rect x="${L}" y="${y(HIGH)}" width="${W-L-R}" height="${y(LOW)-y(HIGH)}" fill="#7cc7a033"/>`;
+  [50,100,150,200,250,300].forEach(v=>{ g += `<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#ffffff22"/><text x="${L-8}" y="${y(v)+6}" text-anchor="end" font-size="24">${v}</text>`; });
+  [7,10,13,16,19].forEach(h=>{ g += `<text x="${x(h*60)}" y="${H-12}" text-anchor="middle" font-size="24">${h}</text>`; });
+  g += `<line x1="${L}" x2="${W-R}" y1="${y(HIGH)}" y2="${y(HIGH)}" stroke="#f2b84b" stroke-dasharray="6 5"/><text class="lbl" x="${W-R-4}" y="${y(HIGH)-6}" text-anchor="end" font-size="22">180 Alarm hoch</text>`;
+  g += `<line x1="${L}" x2="${W-R}" y1="${y(LOW)}" y2="${y(LOW)}" stroke="#ef8b8b" stroke-dasharray="6 5"/><text class="lbl" x="${W-R-4}" y="${y(LOW)+18}" text-anchor="end" font-size="22">70 Alarm niedrig</text>`;
+  if (tEnd > START) g += `<line x1="${x(tEnd)}" x2="${x(tEnd)}" y1="${T}" y2="${H-B}" stroke="#ffffff55"/>`;
+  lines.forEach(l=>{
+    if (l.vals.length < 2) return;
+    g += `<polyline points="${l.vals.map(p=>`${x(p.t).toFixed(1)},${y(p.v).toFixed(1)}`).join(" ")}" fill="none" stroke="${l.color}" stroke-width="4" ${l.dash?`stroke-dasharray="${l.dash}"`:""} stroke-linejoin="round"/>`;
+  });
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">${g}</svg>`;
+}
+
+/* Notizen bleiben nur in diesem Browser */
+let notes = {};
+try { notes = JSON.parse(localStorage.getItem("zucker-notes") || "{}"); } catch(e) { notes = {}; }
+const saveNotes = () => { try { localStorage.setItem("zucker-notes", JSON.stringify(notes)); } catch(e) {} };
+
+let stufe = 0, evMit = [];
+const stage = $("#stage");
+function bar(){ $("#steps").innerHTML = Array.from({length:STUFEN},(_,i)=>`<span class="${i<=stufe?"done":""}"></span>`).join(""); }
+function go(n, first){ stufe = n; bar(); [s1,s2,s3,s4,s5,s6,ende][n](); if (first) return; stage.querySelector("h2")?.focus?.({preventScroll:true}); window.scrollTo({top: stage.offsetTop - 12, behavior: "smooth"}); }
+function head(nr, titel){ return `<div class="stepno">Stufe ${nr} von ${STUFEN}</div><h2 tabindex="-1">${titel}</h2>`; }
+function nextBtn(label="Weiter"){ return `<div class="row"><button class="main" id="next" hidden>${label} →</button></div>`; }
+function showNext(n){ const b=$("#next"); b.hidden=false; b.onclick=()=>go(n); }
+function msg(kind, title, text){ return `<div class="msg ${kind}"><b>${title}</b>${text}</div>`; }
+function choiceSet(sel, opts, onRight, fbSel){
+  stage.querySelectorAll(sel+" button").forEach(b=>b.onclick=()=>{
+    const o = opts[+b.dataset.i]; b.classList.add(o.ok?"right":"wrong");
+    if (o.ok) onRight(o); else $(fbSel).innerHTML = msg("bad","Noch nicht.", o.why);
+  });
+}
+
+/* ---------- Stufe 1: Was misst der Sensor? ---------- */
+function s1(){
+  const opts = [
+    {t:"Der Sensor ist kaputt.", ok:false, why:"Dafür gibt es keinen Hinweis. Beide Werte steigen, nur verschieden schnell. Wo misst der Sensor?"},
+    {t:"Der Sensor misst in der Flüssigkeit unter der Haut. Dort kommt der Zucker ein paar Minuten später an.", ok:true},
+    {t:"Der Wert am Finger ist falsch.", ok:false, why:"Der Fingerstich misst direkt im Blut. Er ist hier der genauere Wert. Warum hinkt der Sensor hinterher?"}];
+  stage.innerHTML = head(1,"Der Sensor am Arm. Wo misst er?") + `
+    <p>Der Sensor ist so groß wie eine Münze und klebt etwa zwei Wochen am Oberarm. Ein dünner, weicher Faden steckt unter der Haut. Der Faden misst <b>Glukose</b>, also Zucker. Alle paar Minuten schickt der Sensor den Wert per Funk an das Handy. Das nennt man <b>CGM</b>, kontinuierliche Glukosemessung.</p>
+    <p class="task">Du hast um 8 Uhr gefrühstückt. Um 8:30 Uhr misst du zusätzlich am Finger: <b>165 mg/dl</b>. Die App zeigt im selben Moment <b>140 mg/dl ↑</b>. Warum zeigen beide etwas anderes?</p>
+    <div class="choices" id="q">${opts.map((o,i)=>`<button data-i="${i}">${o.t}</button>`).join("")}</div>
+    <div id="fb"></div>` + nextBtn("Sensor anlegen");
+  choiceSet("#q", opts, () => {
+    $("#fb").innerHTML = msg("ok","Genau.","Der Fingerstich misst im Blut. Der Sensor misst in der <b>Gewebeflüssigkeit</b> zwischen den Zellen. Der Zucker braucht etwa 5 bis 10 Minuten vom Blut dorthin. Wenn der Wert schnell steigt oder fällt, zum Beispiel nach dem Essen oder beim Sport, hinkt der Sensor hinterher. Wenn der Wert ruhig ist, passen beide gut zusammen. „mg/dl“ heißt Milligramm Zucker in einem Zehntelliter.")
+      + `<div class="fws"><span class="fw">Glukose</span><span class="fw">CGM</span><span class="fw">Gewebeflüssigkeit</span><span class="fw">Verzögerung</span><span class="fw">mg/dl</span></div>`;
+    showNext(1);
+  }, "#fb");
+}
+
+/* ---------- Ein Tag mit dem Sensor (für Stufe 2 und 3) ---------- */
+function dayGame(bodyKey, intro, task, isDone, doneMsg, nextIdx, store){
+  const b = BODY[bodyKey];
+  let t = START, ev = [], alarms = [], hiState = false, walkedAfterAlarm = false, log = [];
+  stage.innerHTML = head(bodyKey==="ohne"?2:3, intro.title) + intro.html + `
+    <p class="task">${task}</p>
+    <div id="phone"></div>
+    <div class="acts" id="acts">
+      ${FOOD.map(f=>`<button data-food="${f.id}"><span aria-hidden="true">${f.icon}</span> ${f.name}<small>etwa ${f.kh} g Kohlenhydrate</small></button>`).join("")}
+      <button class="walk" data-walk="1"><span aria-hidden="true">🚶</span> 30 Minuten spazieren<small>Bewegung</small></button>
+      <button data-wait="1"><span aria-hidden="true">⏳</span> Eine Stunde warten<small>nichts tun</small></button>
+    </div>
+    <p class="hint">Jede Wahl lässt eine Stunde vergehen.</p>
+    <p class="log" id="log"></p>
+    <div id="fb"></div>` + nextBtn();
+  function render(note){
+    const vals = series(b, ev, t), v = sensor(b, ev, t);
+    $("#phone").innerHTML = `<div class="app ${v>HIGH?"hi":""}">${note||""}
+      <div class="bar"><span>Zucker-App · Übung</span><span>${hhmm(t)}</span></div>
+      <div class="now"><span class="big">${v}</span><span class="unit">mg/dl</span><span class="arrow" aria-label="Trend">${trend(b,ev,t)}</span></div>
+      <div class="clock">Zielbereich 70 bis 180 · Uhrzeit unten</div>
+      ${chart([{vals, color:"#f6a5bf"}], t, `Verlauf heute bis ${hhmm(t)}. Aktueller Wert ${v} mg/dl.`)}
+    </div>`;
+    $("#log").textContent = log.length ? "Dein Tag: " + log.join(" · ") : "";
+    if (t >= ENDE) stage.querySelectorAll("#acts button").forEach(x=>x.disabled=true);
+  }
+  function act(e, label){
+    if (t >= ENDE) return;
+    if (e) { ev.push({...e, t}); }
+    if (e && e.walk && alarms.length) walkedAfterAlarm = true;
+    log.push(`${hhmm(t)} ${label}`);
+    let note = "";
+    for (let s=t+5; s<=t+60; s+=5){
+      const v = sensor(b, ev, s);
+      if (!hiState && v > HIGH){ hiState = true; alarms.push({t:s, v}); note = `<div class="notif" role="alert"><span class="ic" aria-hidden="true">📳</span><span><b>Alarm: Zucker hoch</b>${hhmm(s)} · ${v} mg/dl ${trend(b,ev,s)}</span></div>`; }
+      if (hiState && v < HIGH-10) hiState = false;
+    }
+    t += 60; render(note);
+    const st = { t, ev, alarms, walkedAfterAlarm, max: stats(series(b,ev,t)).max, now: sensor(b,ev,t), meals: ev.filter(x=>x.food).length };
+    if (store) store(ev);
+    if (isDone(st)){ $("#fb").innerHTML = doneMsg(st); showNext(nextIdx); }
+    else if (t >= ENDE){ $("#fb").innerHTML = msg("info","Der Tag ist vorbei.","Du kannst den Tag noch einmal spielen oder weitergehen.") + `<div class="row"><button class="ghost" id="redo">↺ Tag noch einmal</button></div>`; $("#redo").onclick = () => go(stufe); showNext(nextIdx); }
+  }
+  stage.querySelectorAll("#acts button").forEach(x=>x.onclick=()=>{
+    if (x.dataset.food){ const f=FOOD.find(y=>y.id===x.dataset.food); act({food:f.id}, f.name); }
+    else if (x.dataset.walk) act({walk:true}, "Spaziergang");
+    else act(null, "gewartet");
+  });
+  render();
+}
+
+/* ---------- Stufe 2: Treib den Wert hoch, ohne Diabetes ---------- */
+function s2(){
+  dayGame("ohne",
+    {title:"Treib deinen Wert über 180. Schaffst du es?", html:`<p>Es ist 7 Uhr. Dein Körper hat <b>keinen Diabetes</b>. Der Sensor klebt am Arm, das Handy zeigt deinen Wert.</p>`},
+    "Iss und trink, was du willst. Schaffst du es, dass die App Alarm gibt? Nach drei Mahlzeiten darfst du weiter.",
+    st => st.meals >= 3,
+    st => msg("ok",`Dein höchster Wert: ${st.max} mg/dl. ${st.alarms.length ? "" : "Kein Alarm."}`,"Der Wert steigt nach dem Essen und fällt wieder, auch ohne dass du etwas tust. Dein Körper bildet <b>Insulin</b>. Insulin ist wie ein Schlüssel: Es öffnet die Zellen, damit der Zucker aus dem Blut hineinkann. Darum bleibt der Wert im grünen Bereich.")
+      + `<div class="fws"><span class="fw">Insulin</span><span class="fw">Kohlenhydrate</span><span class="fw">Zielbereich</span></div>`,
+    2);
+}
+
+/* ---------- Stufe 3: Derselbe Tag, mit Insulinresistenz ---------- */
+function s3(){
+  evMit = [];
+  dayGame("mit",
+    {title:"Jetzt klemmt das Schloss.", html:`<div class="body-note"><b>Insulinresistenz, kurz erklärt.</b> Der Schlüssel Insulin ist da, aber das Schloss an den Zellen klemmt. Der Zucker kommt schlechter hinein und bleibt länger im Blut. Daraus kann ein <b>Typ-2-Diabetes</b> werden. Ab jetzt reagiert dein Körper so.</div>`},
+    "Bring die App zum Alarm. Dann versuche, den Wert mit Bewegung wieder unter 180 zu bringen.",
+    st => st.alarms.length > 0 && st.walkedAfterAlarm && st.now <= HIGH,
+    st => msg("ok","Geschafft: Alarm, dann wieder unter 180.",`Um ${hhmm(st.alarms[0].t)} Uhr kam der Alarm bei ${st.alarms[0].v} mg/dl. Mit dem Spaziergang haben die Muskeln Zucker verbraucht, auch ohne viel Insulin. Merke: Für den Alarm rechnet die App nichts Kompliziertes aus. Sie vergleicht jeden neuen Wert mit einer Grenze, die jemand eingestellt hat. Genau das programmierst du gleich.`)
+      + `<div class="fws"><span class="fw">Insulinresistenz</span><span class="fw">Typ-2-Diabetes</span><span class="fw">Alarm</span><span class="fw">Grenzwert</span></div>`,
+    3, ev => { evMit = ev.slice(); });
+}
+
+/* ---------- Stufe 4: Zwei Verläufe im Vergleich ---------- */
+function s4(){
+  const ev = evMit.length ? evMit : [{food:"broetchen",t:8*60},{food:"nudeln",t:12*60},{walk:true,t:13*60},{food:"kuchen",t:15*60}];
+  const a = series(BODY.ohne, ev, ENDE), m = series(BODY.mit, ev, ENDE), sa = stats(a), sm = stats(m);
+  const opts = [
+    {t:"Mit Insulinresistenz steigt der Wert höher und bleibt länger oben.", ok:true},
+    {t:"Beide Körper reagieren gleich. Nur der Sensor misst anders.", ok:false, why:"Es ist derselbe Sensor und dasselbe Essen. Schau auf die höchsten Werte in der Tabelle."},
+    {t:"Mit Insulinresistenz steigt der Wert langsamer und weniger.", ok:false, why:"Vergleiche die gestrichelte und die durchgezogene Linie nach dem Essen. Welche geht höher?"}];
+  stage.innerHTML = head(4,"Gleiches Essen, zwei Körper.") + `
+    <p class="task">Hier liegt dein Tag aus Stufe 3 zweimal übereinander: einmal mit dem Körper ohne Diabetes, einmal mit Insulinresistenz. Was ist der Unterschied?</p>
+    <div class="app"><div class="bar"><span>Vergleich · Übung</span><span>7 bis 20 Uhr</span></div>
+      ${chart([{vals:a, color:"#a8f0c8"},{vals:m, color:"#f6a5bf", dash:"10 6"}], ENDE, `Zwei Verläufe. Ohne Diabetes höchstens ${sa.max}, mit Insulinresistenz höchstens ${sm.max} mg/dl.`)}
+      <div class="legend"><span><i style="border-color:#a8f0c8"></i>ohne Diabetes</span><span><i style="border-color:#f6a5bf;border-top-style:dashed"></i>mit Insulinresistenz</span></div>
+    </div>
+    <table class="stats"><thead><tr><th></th><th>ohne Diabetes</th><th>mit Insulin&shy;resistenz</th></tr></thead><tbody>
+      <tr><td>höchster Wert</td><td class="n">${sa.max} mg/dl</td><td class="n">${sm.max} mg/dl</td></tr>
+      <tr><td>Zeit über 180</td><td class="n">${sa.minHigh} min</td><td class="n">${sm.minHigh} min</td></tr>
+      <tr><td>Zeit im Zielbereich</td><td class="n">${sa.inRange} %</td><td class="n">${sm.inRange} %</td></tr>
+    </tbody></table>
+    <div class="choices" id="q">${opts.map((o,i)=>`<button data-i="${i}">${o.t}</button>`).join("")}</div>
+    <div id="fb"></div>` + nextBtn();
+  choiceSet("#q", opts, () => {
+    $("#fb").innerHTML = msg("ok","Richtig.",`Die <b>Zeit im Zielbereich</b> ist eine wichtige Zahl in solchen Apps. Fachleute empfehlen für viele Erwachsene mit Diabetes: mehr als 70 Prozent des Tages zwischen 70 und 180 mg/dl. Bei deinem Tag mit Insulinresistenz waren es ${sm.inRange} Prozent. Die App zählt dafür einfach alle Werte durch. Wie das geht, siehst du jetzt in Python.`)
+      + `<div class="fws"><span class="fw">Verlauf</span><span class="fw">Zeit im Zielbereich</span><span class="fw">Vergleich</span></div>`;
+    showNext(4);
+  }, "#fb");
+}
+
+/* ---------- Stufe 5: Python. Alarm und Vergleich ---------- */
+const CODE = `def alarm(wert):
+    if wert < 70:
+        return "zu niedrig"
+    elif wert > 180:
+        return "zu hoch"
+    else:
+        return "im Zielbereich"
+
+ohne = [92, 128, 115, 101, 94]
+mit  = [126, 214, 236, 198, 171]
+
+print(alarm(mit[1]))`;
+const LOOP = `zu_hoch = 0
+for wert in mit:
+    if alarm(wert) == "zu hoch":
+        zu_hoch = zu_hoch + 1
+print(zu_hoch)`;
+function s5(){
+  const ev = evMit.length ? evMit : [{food:"broetchen",t:8*60},{food:"nudeln",t:12*60}];
+  const hourly = key => { const out=[]; for (let h=7; h<=20; h++) out.push(sensor(BODY[key], ev, h*60)); return out; };
+  const mine = `def alarm(wert):
+    if wert < 70:
+        return "zu niedrig"
+    elif wert > 180:
+        return "zu hoch"
+    else:
+        return "im Zielbereich"
+
+# Deine Werte von 7 bis 20 Uhr, einer pro Stunde
+ohne = [${hourly("ohne").join(", ")}]
+mit  = [${hourly("mit").join(", ")}]
+
+zu_hoch = 0
+for wert in mit:
+    if alarm(wert) == "zu hoch":
+        zu_hoch = zu_hoch + 1
+
+print("Stunden mit Alarm:", zu_hoch)
+print("Unterschied der Höchstwerte:", max(mit) - max(ohne))`;
+  stage.innerHTML = head(5,"Die App prüft jeden Wert. Liest du mit?") + `
+    <p class="task">So könnte der Alarm in einer App aussehen, in der Sprache <b>Python</b>. Darunter stehen zwei Listen mit Werten: ohne Diabetes und mit Insulinresistenz.</p>
+    <pre class="code">${esc(CODE)}</pre>
+    <dl class="glossary">
+      <dt>def</dt><dd>Eine <b>Funktion</b> mit dem Namen <code>alarm</code>. Sie bekommt einen Wert und gibt ein Wort zurück.</dd>
+      <dt>[ … ]</dt><dd>Eine <b>Liste</b>: mehrere Werte hintereinander, wie die Punkte einer Kurve.</dd>
+      <dt>mit[1]</dt><dd>Ein Wert aus der Liste. Die Zahl in der Klammer heißt <b>Index</b>.</dd>
+    </dl>
+    <p><b>Frage 1:</b> Was zeigt <code>print(alarm(mit[1]))</code> an?</p>
+    <div class="choices" id="q1">
+      <button data-i="0">im Zielbereich</button><button data-i="1">zu hoch</button><button data-i="2">zu niedrig</button>
+    </div>
+    <div id="fb1"></div>
+    <div id="p2" hidden>
+      <p><b>Frage 2:</b> Jetzt zählt das Programm. Die Schleife <code>for</code> geht jeden Wert der Liste <code>mit</code> einmal durch. Was zeigt es an?</p>
+      <pre class="code">${esc(LOOP)}</pre>
+      <div class="choices" id="q2">${[2,3,4,5].map((n,i)=>`<button data-i="${i}">${n}</button>`).join("")}</div>
+      <div id="fb2"></div>
+    </div>
+    <div id="p3" hidden>
+      <p><b>Frage 3:</b> Ein Vergleich der beiden Verläufe: <code>print(max(mit) - max(ohne))</code>. <code>max</code> sucht den größten Wert einer Liste. Was kommt heraus?</p>
+      <div class="choices" id="q3"><button data-i="0">236</button><button data-i="1">108</button><button data-i="2">44</button></div>
+      <div id="fb3"></div>
+    </div>
+    <div id="coder" class="coder" hidden>
+      <h3>Jetzt mit deinen eigenen Werten</h3>
+      <p class="small">Das sind die Werte aus deinem Tag, einer pro Stunde. Ändere eine Zahl oder die Grenze 180 und führe den Code aus. Python wird erst geladen, wenn du auf „Ausführen“ tippst. Dafür holt dein Browser einmal etwa 10 MB von cdn.jsdelivr.net.</p>
+      <label><span class="vh">Python-Code</span><textarea id="src" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></label>
+      <div class="row"><button class="ghost" id="run">▶ Ausführen</button><button class="ghost" id="reset">Code zurücksetzen</button></div>
+      <div class="out" id="out" aria-live="polite">Hier erscheint, was <code>print</code> anzeigt.</div>
+    </div>` + nextBtn();
+  choiceSet("#q1", [
+    {ok:false, why:"126 wäre im Zielbereich. Aber ist <code>mit[1]</code> wirklich der erste Wert? Python fängt beim Zählen bei 0 an."},
+    {ok:true},
+    {ok:false, why:"Kein Wert in der Liste ist unter 70. Welcher Wert ist <code>mit[1]</code>?"}],
+    () => { $("#fb1").innerHTML = msg("ok","Richtig: zu hoch.","Python zählt ab 0. <code>mit[0]</code> ist 126, <code>mit[1]</code> ist 214. Und 214 ist größer als 180. Das ist einer der häufigsten Denkfehler beim Programmieren: Man denkt, der erste Wert hat die Nummer 1."); $("#p2").hidden=false; }, "#fb1");
+  choiceSet("#q2", [
+    {ok:false, why:"Geh die Liste <code>mit</code> einzeln durch: 126, 214, 236, 198, 171. Welche sind größer als 180?"},
+    {ok:true},
+    {ok:false, why:"171 ist nicht größer als 180, 126 auch nicht. Zähle noch einmal."},
+    {ok:false, why:"Es sind nur fünf Werte, und nicht alle sind zu hoch."}],
+    () => { $("#fb2").innerHTML = msg("ok","Richtig: 3.","214, 236 und 198 sind über 180. Bei jedem Treffer zählt <code>zu_hoch = zu_hoch + 1</code> eins dazu. So ähnlich rechnet eine App die Zeit im Zielbereich aus: Sie zählt die Werte durch, nur viel mehr davon, alle paar Minuten einen."); $("#p3").hidden=false; }, "#fb2");
+  choiceSet("#q3", [
+    {ok:false, why:"236 ist nur <code>max(mit)</code>. Davon wird noch etwas abgezogen."},
+    {ok:true},
+    {ok:false, why:"Das wäre 236 minus 192. Welcher Wert ist der größte in <code>ohne</code>?"}],
+    () => { $("#fb3").innerHTML = msg("ok","Richtig: 108.","Der höchste Wert mit Insulinresistenz ist 236, ohne Diabetes 128. Der Unterschied: 108 mg/dl. So vergleicht ein Programm zwei Verläufe in einer Zeile.")
+        + `<div class="fws"><span class="fw">Python</span><span class="fw">Funktion</span><span class="fw">Liste</span><span class="fw">Index</span><span class="fw">Schleife</span><span class="fw">max</span></div>`;
+      $("#coder").hidden=false; $("#src").value = mine; showNext(5); }, "#fb3");
+  let py=null, loading=false; const out=$("#out");
+  $("#reset").onclick = () => { $("#src").value = mine; };
+  $("#run").onclick = async () => {
+    if (loading) return;
+    try {
+      if (!py){ loading=true; out.textContent = "Python wird geladen … das dauert beim ersten Mal einen Moment.";
+        await new Promise((res,rej)=>{ const s=document.createElement("script"); s.src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"; s.onload=res; s.onerror=()=>rej(new Error("laden")); document.head.appendChild(s); });
+        py = await loadPyodide(); loading=false; }
+      let text=""; py.setStdout({batched: s => { text += s + "\n"; }});
+      await py.runPythonAsync($("#src").value);
+      out.textContent = text || "(Das Programm hat nichts angezeigt. Fehlt ein print?)";
+    } catch(e){ loading=false;
+      out.textContent = e && e.message==="laden" ? "Python konnte nicht geladen werden. Vielleicht blockiert dein Browser die Seite cdn.jsdelivr.net, oder du bist offline." :
+        "Python meldet einen Fehler. Das ist normal beim Programmieren. Die letzte Zeile sagt meist, was los ist:\n\n" + String(e.message||e).trim().split("\n").slice(-3).join("\n"); }
+  };
+}
+
+/* ---------- Stufe 6: Die KI redet mit ---------- */
+const CLAIMS = [
+  {t:"Dein Wert ist nach dem Essen so stark gestiegen, weil der Sensor falsch misst.", a:"falsch",
+   why:"Falsch. Derselbe Sensor zeigt ohne Diabetes niedrige Werte und mit Insulinresistenz hohe. Der Unterschied kommt vom Körper, nicht vom Sensor."},
+  {t:"Nach dem Spaziergang ist der Wert schneller gesunken.", a:"richtig",
+   why:"Richtig. Arbeitende Muskeln holen sich Zucker aus dem Blut. Das hast du in Stufe 3 selbst ausprobiert."},
+  {t:"Die App zeigt 140. Also ist dein Blutzucker jetzt genau 140.", a:"kommt drauf an",
+   why:"Kommt drauf an. Ist der Wert ruhig, passt er gut zum Blut. Steigt oder fällt er schnell, hinkt der Sensor 5 bis 10 Minuten hinterher. Der Pfeil zeigt dir, welcher Fall gerade ist. Wer sich unwohl fühlt, misst zusätzlich am Finger."}
+];
+function s6(){
+  stage.innerHTML = head(6,"Eine KI erklärt deine Kurve. Hat sie recht?") + `
+    <p class="task">Manche Apps haben eine KI, die die Kurve erklärt. Sie klingt sicher. Sie kann sich irren. Schalte sie dazu und prüfe jede Aussage mit dem, was du in Stufe 1 bis 4 gesehen hast.</p>
+    <label class="toggle"><input type="checkbox" id="kion"> KI dazuschalten</label>
+    <div id="kibox" hidden>
+      <div class="ki"><div class="title">KI-Kommentar · 20:00</div><p>Ich habe deinen Tag ausgewertet. Hier sind drei Hinweise.</p></div>
+      ${CLAIMS.map((c,i)=>`<div class="claim" id="c${i}">
+        <p><b>KI:</b> „${esc(c.t)}“</p>
+        <label class="note" for="w${i}"><b>Deine Probe:</b> <span class="small">Was hast du selbst gesehen? Schreib es kurz auf, dann entscheide.</span></label>
+        <textarea id="w${i}" data-i="${i}" placeholder="Zum Beispiel: In Stufe 4 habe ich gesehen …"></textarea>
+        <div class="judge">${["richtig","falsch","kommt drauf an"].map(j=>`<button data-i="${i}" data-j="${j}" disabled>${j}</button>`).join("")}</div>
+        <div class="fbc"></div></div>`).join("")}
+    </div>
+    <div id="fb"></div>` + nextBtn("Zum Abschluss");
+  const done = new Set();
+  $("#kion").onchange = e => { $("#kibox").hidden = !e.target.checked; };
+  stage.querySelectorAll(".claim textarea").forEach(t=>{
+    t.value = notes["w"+t.dataset.i] || "";
+    const upd = () => { notes["w"+t.dataset.i]=t.value; saveNotes();
+      stage.querySelectorAll(`.judge button[data-i="${t.dataset.i}"]`).forEach(b=>b.disabled = t.value.trim().length < 10); };
+    t.oninput = upd; upd();
+  });
+  stage.querySelectorAll(".judge button").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i, c=CLAIMS[i], box=$("#c"+i);
+    box.querySelectorAll(".judge button").forEach(x=>x.classList.remove("right","wrong"));
+    if (b.dataset.j===c.a){ b.classList.add("right"); box.classList.add("done"); done.add(i);
+      box.querySelector(".fbc").innerHTML = msg("ok","Stimmt mit deiner Probe überein.", c.why);
+    } else { b.classList.add("wrong"); box.querySelector(".fbc").innerHTML = msg("bad","Schau noch einmal.","Lies deine eigene Probe. Passt sie zu deiner Entscheidung?"); }
+    if (done.size===CLAIMS.length){
+      $("#fb").innerHTML = msg("ok","Du hast die KI geprüft.","Einmal lag sie falsch, einmal richtig, und einmal kam es auf die Lage an. Sie klingt jedes Mal gleich sicher. Dein Maßstab war, was du selbst ausprobiert hast.");
+      showNext(6);
+    }
+  });
+}
+
+/* ---------- Abschluss ---------- */
+function ende(){
+  stufe = STUFEN-1; bar();
+  stage.innerHTML = `<div class="stepno">Geschafft</div><h2 tabindex="-1">Was zwischen Arm und Handy passiert</h2>
+    <div class="path"><span>Sensor</span>→<span>Gewebeflüssigkeit</span>→<span>Funk</span>→<span>App</span>→<span>Grenze</span>→<span>Alarm</span>→<span>Vergleich</span></div>
+    <p>Der Sensor misst, das Handy vergleicht. Ein Alarm ist keine Diagnose: Er sagt nur, dass ein Wert eine Grenze überschritten hat, die jemand eingestellt hat. Was der Wert für diesen Menschen bedeutet, braucht einen Blick, der mehr sieht als die Kurve.</p>
+    <label class="note" for="mit"><b>Was nimmst du mit?</b> <span class="small">Nur für dich. Es bleibt in diesem Browser.</span></label>
+    <textarea id="mit" placeholder="Ich habe gemerkt, dass …"></textarea>
+    <h3>Woher kommt das Wissen?</h3>
+    <div class="source">
+      Sensor und Verzögerung: <a href="https://www.oedg.at/diabetes-alles-klar/8-45-Gewebsglukose.pdf">Österreichische Diabetes Gesellschaft, „Diabetes – alles klar?“: Gewebsglukose</a> (5 bis 10 Minuten Verzögerung, Abweichung bei schnellem Anstieg und Abfall).<br>
+      Zielbereich 70 bis 180 mg/dl, mehr als 70 % Zeit im Zielbereich: <a href="https://doi.org/10.2337/dci19-0028">Battelino u. a.: Clinical Targets for Continuous Glucose Monitoring Data Interpretation. Diabetes Care, 2019</a>.<br>
+      Warum Pflegende digitale Systeme kritisch prüfen müssen: <a href="https://www.bibb.de/dienst/publikationen/de/18095">Telieps, Peters, Falkenstern, Saul: Kompetenzen für die Digitalisierung in der pflegeberuflichen Bildung. BIBB 2022</a>, S. 63.<br>
+      Python: <a href="https://docs.python.org/3/tutorial/datastructures.html">Offizielles Python-Tutorial, Kapitel „Data Structures“</a> (Listen).<br>
+      Die Kurven im Spiel stammen aus einem selbst gebauten, stark vereinfachten Übungsmodell.
+    </div>
+    <div class="row"><button class="ghost" id="again">Noch einmal von vorn</button><a class="ghost" href="../messwert/">Auch spielen: Messwert eintragen</a><a class="ghost" href="../../">Zur Werkstatt</a></div>`;
+  const t=$("#mit"); t.value = notes.mit || ""; t.oninput = () => { notes.mit=t.value; saveNotes(); };
+  $("#again").onclick = () => go(0);
+}
+
+let armed = null; const rs = $("#restart");
+rs.onclick = () => { if (!armed) { rs.textContent = "Wirklich? Alles löschen"; armed = setTimeout(() => { armed = null; rs.textContent = "↺ Neu beginnen"; }, 4000); return; }
+  clearTimeout(armed); armed = null; rs.textContent = "↺ Neu beginnen"; notes = {}; saveNotes(); evMit = []; go(0); };
+
+window.__zk = { go, BODY, FOOD, sensor, series, stats };
+go(0, true);
+})();
+</script>
+<style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Werkstatt"><img src="../../bilder/barbara-figur.webp" alt=""></a>
+</body>
+</html>
