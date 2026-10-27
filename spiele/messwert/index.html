@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Du trägst einen Messwert ein. Was passiert dann?</title>
+<title>Messwerte in der Pflegedokumentation: Was geschieht im Inneren des Computers?</title>
 <meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Pflege. Ein Messwert auf seinem Weg: messen, Einheit, eintragen, Verlauf, Frühwarnwert (NEWS2), ein kleines Python-Programm und eine KI, die sich irren kann.">
 <style>
 @font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
@@ -134,8 +134,8 @@ footer a{color:inherit}
     <button type="button" id="restart">↺ Neu beginnen</button>
   </nav>
   <span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflege</span>
-  <h1>Du trägst einen Messwert ein. Was passiert dann?</h1>
-  <p class="lead">Du misst, du trägst ein, und dann? Hier gehst du den Weg eines Messwerts mit: von deiner Hand bis in ein Programm, das Alarm schlägt. Unterwegs liest du dein erstes Stück Python.</p>
+  <h1>Messwerte in der Pflegedokumentation: Was geschieht im Inneren des Computers?</h1>
+  <p class="lead">Du misst Puls, Blutdruck und Temperatur und trägst die Werte in die Pflegedokumentation am Computer oder Tablet ein. Was geschieht dann im Inneren des Geräts? Hier gehst du den Weg eines Messwerts mit: vom Eintippen über die Kurve bis zu einem Programm, das Alarm schlägt. Unterwegs liest du dein erstes Stück Python.</p>
   <div class="reihe" role="note"><b>So geht es</b>Sechs Stufen. Du brauchst kein Vorwissen. Du machst immer zuerst die Probe, dann entscheidest du. Fehler sind erlaubt: Sie zeigen, wo du gerade stehst.</div>
   <div class="steps" aria-hidden="true" id="steps"></div>
   <main class="panel" id="stage" aria-live="polite"></main>
@@ -485,7 +485,7 @@ function ende(){
       Warum Pflegende lernende Systeme kritisch prüfen müssen: <a href="https://www.bibb.de/dienst/publikationen/de/18095">Telieps, Peters, Falkenstern, Saul: Kompetenzen für die Digitalisierung in der pflegeberuflichen Bildung. BIBB 2022</a>, S. 63.<br>
       Python: <a href="https://docs.python.org/3/tutorial/controlflow.html">Offizielles Python-Tutorial, Kapitel „More Control Flow Tools“</a>.
     </div>
-    <div class="row"><button class="ghost" id="again">Noch einmal von vorn</button><a class="ghost" href="../zucker/">Auch spielen: Sensor am Arm</a><a class="ghost" href="../../">Zur Werkstatt</a></div>`;
+    <div class="row"><button class="ghost" id="again">Noch einmal von vorn</button><a class="ghost" href="../zucker/">Auch spielen: Blutzucker-Sensor</a><a class="ghost" href="../../">Zur Werkstatt</a></div>`;
   const t=$("#mit"); t.value = notes.mit || ""; t.oninput = () => { notes.mit=t.value; saveNotes(); };
   $("#again").onclick = () => go(0);
 }

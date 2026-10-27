@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Du trägst einen Sensor am Arm. Was zeigt dein Handy?</title>
+<title>Blutzucker-Sensor auf der Haut: Wie kommen die Werte in deine App?</title>
 <meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Pflege. Ein Zuckersensor am Arm: Gewebeflüssigkeit, Verzögerung, Insulin und Insulinresistenz, Alarm, ein Keto-Tag mit versteckten Kohlenhydraten, drei Verläufe im Vergleich, ein kleines Python-Programm und eine KI, die sich irren kann.">
 <style>
 @font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
@@ -172,8 +172,8 @@ footer a{color:inherit}
     <button type="button" id="restart">↺ Neu beginnen</button>
   </nav>
   <span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflege</span>
-  <h1>Du trägst einen Sensor am Arm. Was zeigt dein Handy?</h1>
-  <p class="lead">Viele Menschen mit Diabetes tragen einen kleinen Sensor am Oberarm. Das Handy zeigt ständig ihren Zuckerwert. Auch in der ambulanten Pflege siehst du solche Werte. Hier trägst du den Sensor selbst, isst, gehst spazieren und schaust zu. Und du planst einen Keto-Tag: Was passiert, wenn kaum Kohlenhydrate ins Blut kommen?</p>
+  <h1>Blutzucker-Sensor auf der Haut: Wie kommen die Werte in deine App?</h1>
+  <p class="lead">Du trägst einen kleinen Sensor auf der Haut am Oberarm und kontrollierst deine Blutzuckerwerte in einer App auf dem Handy. Aber wie kommt der Wert vom Arm ins Handy? Und was rechnet die App damit? Hier probierst du es aus: Du isst, gehst spazieren, planst einen Keto-Tag und schaust in das Programm hinein. Auch in der ambulanten Pflege begegnen dir solche Werte.</p>
   <div class="reihe" role="note"><b>So geht es</b>Sieben Stufen. Du brauchst kein Vorwissen. Du probierst aus, dann begründest du. Fehler sind erlaubt: Sie zeigen, wo du gerade stehst.</div>
   <div class="steps" aria-hidden="true" id="steps"></div>
   <main class="panel" id="stage" aria-live="polite"></main>
@@ -672,7 +672,7 @@ function ende(){
       Python: <a href="https://docs.python.org/3/tutorial/datastructures.html">Offizielles Python-Tutorial, Kapitel „Data Structures“</a> (Listen und Wörterbücher).<br>
       Die Kurven im Spiel stammen aus einem selbst gebauten, stark vereinfachten Übungsmodell.
     </div>
-    <div class="row"><button class="ghost" id="again">Noch einmal von vorn</button><a class="ghost" href="../messwert/">Auch spielen: Messwert eintragen</a><a class="ghost" href="../../">Zur Werkstatt</a></div>`;
+    <div class="row"><button class="ghost" id="again">Noch einmal von vorn</button><a class="ghost" href="../messwert/">Auch spielen: Pflegedokumentation</a><a class="ghost" href="../../">Zur Werkstatt</a></div>`;
   const t=$("#mit"); t.value = notes.mit || ""; t.oninput = () => { notes.mit=t.value; saveNotes(); };
   $("#again").onclick = () => go(0);
 }
