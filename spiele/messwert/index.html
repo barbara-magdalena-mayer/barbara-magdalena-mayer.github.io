@@ -36,7 +36,11 @@ h3{font-size:21px;margin:20px 0 8px}
 .lead{max-width:44ch;margin:0 0 14px}
 .ziele{max-width:52ch;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:18px}
 .ziele summary{cursor:pointer;font-weight:600}
-.ziele ul{margin:6px 0 0;padding-left:22px}
+.ziele ul{list-style:none;margin:6px 0 0;padding:0}
+.ziele li{display:flex;gap:8px;margin:4px 0;color:var(--muted)}
+.ziele li::before{content:"○";flex:none;width:1.2em;color:var(--muted)}
+.ziele li.got{color:var(--ink)}
+.ziele li.got::before{content:"✓";color:var(--green);font-weight:600}
 .reihe{max-width:52ch;background:var(--green-soft);border-left:5px solid var(--green);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px;font-size:18px}
 .reihe b{display:block;margin-bottom:2px}
 .steps{display:flex;gap:6px;margin:10px 0 18px}
@@ -140,7 +144,7 @@ footer a{color:inherit}
   <span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflege</span>
   <h1>Messwerte in der Pflegedokumentation: Was geschieht im Inneren des Computers?</h1>
   <p class="lead">Du misst Puls, Blutdruck und Temperatur und trägst die Werte in die Pflegedokumentation am Computer oder Tablet ein. Was geschieht dann im Inneren des Geräts? Hier gehst du den Weg eines Messwerts mit: vom Eintippen über die Kurve bis zu einem Programm, das Alarm schlägt. Unterwegs liest du dein erstes Stück Python.</p>
-  <details class="ziele"><summary>Lernziele, für Lehrende</summary><p style="margin:6px 0 0">Lernende können …</p><ul><li>aus einem Verlauf einen Trend ablesen, den ein einzelner Messwert nicht zeigt,</li><li>eine Bedingung in Python (if/elif) lesen und eine Prüfung auf unmögliche Werte ergänzen,</li><li>Aussagen einer KI zu Messwerten mit einer eigenen Probe begründet prüfen.</li></ul></details>
+  <details class="ziele"><summary>Das kannst du danach: <span id="zcount">0</span> von 6 geschafft</summary><ul id="ziele"><li data-n="1">Du gibst jedem Messwert seine Einheit.</li><li data-n="2">Du findest einen Tippfehler, den das Programm einfach gespeichert hat.</li><li data-n="3">Du liest aus einer Kurve, was ein einzelner Wert nicht zeigt.</li><li data-n="4">Du rechnest den Frühwarnwert selbst aus und weißt, was dann zu tun ist.</li><li data-n="5">Du liest Python und baust eine Prüfung gegen unmögliche Werte ein.</li><li data-n="6">Du prüfst eine KI mit deiner eigenen Probe.</li></ul></details>
   <div class="reihe" role="note"><b>So geht es</b>Sechs Stufen. Du brauchst kein Vorwissen. Du machst immer zuerst die Probe, dann entscheidest du. Fehler sind erlaubt: Sie zeigen, wo du gerade stehst.</div>
   <div class="steps" aria-hidden="true" id="steps"></div>
   <main class="panel" id="stage" aria-live="polite"></main>
@@ -186,8 +190,9 @@ const saveNotes = () => { try { localStorage.setItem("messwert-notes", JSON.stri
 
 let stufe = 0;
 const stage = $("#stage");
+function ziele(n){ let c=0; document.querySelectorAll("#ziele li").forEach(li=>{ const g = n >= +li.dataset.n; li.classList.toggle("got", g); if(g) c++; }); const z=document.getElementById("zcount"); if(z) z.textContent=c; }
 function bar(){ $("#steps").innerHTML = Array.from({length:STUFEN},(_,i)=>`<span class="${i<=stufe?"done":""}"></span>`).join(""); }
-function go(n, first){ stufe = n; bar(); [s1,s2,s3,s4,s5,s6,ende][n](); if (first) return; stage.querySelector("h2")?.focus?.({preventScroll:true}); window.scrollTo({top: stage.offsetTop - 12, behavior: "smooth"}); }
+function go(n, first){ stufe = n; bar(); [s1,s2,s3,s4,s5,s6,ende][n](); ziele(n); if (first) return; stage.querySelector("h2")?.focus?.({preventScroll:true}); window.scrollTo({top: stage.offsetTop - 12, behavior: "smooth"}); }
 function head(nr, titel){ return `<div class="stepno">Stufe ${nr} von ${STUFEN}</div><h2 tabindex="-1">${titel}</h2>`; }
 function nextBtn(label="Weiter"){ return `<div class="row"><button class="main" id="next" hidden>${label} →</button></div>`; }
 function showNext(n){ const b=$("#next"); b.hidden=false; b.onclick=()=>go(n); }
