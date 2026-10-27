@@ -73,6 +73,7 @@ label{display:block;font-weight:700;margin-bottom:6px}
 button:not(:disabled):hover{animation:wackeln .45s ease-in-out}}
 @media(prefers-reduced-motion:reduce){.meter i{transition:none}}
 </style>
+<script src="spielende.js"></script>
 </head>
 <body>
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
@@ -231,12 +232,12 @@ function summary(){
  ${tendText}
  <ul class="sum" style="padding-left:18px;margin:0">${S.log.map(l=>`<li><strong>${l.title}:</strong> <span class="pill ${l.q}">${l.q}</span><br>${l.opt}${l.ki?`<br><span class="muted">KI-Einschätzung ${l.ki.ok?'richtig':'nicht richtig'}</span>`:''}${l.why?`<br><span class="muted">Begründung: ${esc(l.why)}</span>`:''}</li>`).join('')}</ul>
  <div><h3>Reflexion</h3><ul style="padding-left:18px;margin:0" class="muted"><li>Woran hast du erkannt, was Person X fehlte?</li><li>Wie hat deine Haltung (${S.att==='eigen'?tendency:ATT[S.att].name.toLowerCase()}) deine Entscheidungen beeinflusst? Wann war Gründlichkeit richtig, wann Zurückhaltung? Zeit verbraucht: ${S.used} von ${ATT[S.att].budget} Min.</li><li>Wann hättest du der KI geglaubt, und warum?</li><li>Könntest du deine Entscheidungen auch ohne Hilfen fachlich begründen?</li></ul></div>
- <div class="row"><button class="primary" id="again">Andere Kombination ausprobieren</button><button class="ghost" id="copy">Ergebnis kopieren</button></div><p class="muted" id="msg" aria-live="polite" style="margin:0"></p>`}
+ <div class="row"><button class="ghost" id="copy">Ergebnis kopieren</button></div><p class="muted" id="msg" aria-live="polite" style="margin:0"></p><div id="spielende"></div>`}
  <p class="warn" style="margin:0">Übungsfall mit erfundenen Daten. Keine Grundlage für reale Patientenversorgung.</p>
  </section>${side()}</div>`;
  app.querySelectorAll('[data-guess]').forEach(b=>b.onclick=()=>{S.guess=b.dataset.guess;summary()});
  document.getElementById('restart').onclick=setup;
- const a=document.getElementById('again');if(a)a.onclick=setup;
+ if(document.getElementById('spielende'))spielEnde('#spielende',{neu:setup,text:'Wie geht es weiter? Beginne neu und probier eine andere Kombination aus, oder geh zurück zur Werkstatt.'});
  const c=document.getElementById('copy');if(c)c.onclick=()=>{
   const txt=['Drei Entscheidungen, eine KI, die irren kann',`Stufe ${S.level} · ${HELP[S.help]} · ${ATT[S.att].name} · Person X fehlte: ${DEF[S.deficit]}`,'',...S.log.map(l=>`${l.title}: ${l.opt} (${l.q})${l.ki?` · KI ${l.ki.ok?'erkannt':'nicht erkannt'}`:''}${l.why?`\nBegründung: ${l.why}`:''}`),'',optimum?'Optimum erreicht.':'Optimum noch nicht erreicht.'].join('\n');
   const m=document.getElementById('msg');

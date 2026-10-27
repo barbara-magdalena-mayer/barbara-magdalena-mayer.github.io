@@ -188,6 +188,7 @@ body{font-size:clamp(16px,1.1vw,18px);background:#14231d}
 #desk:has(#win:not([hidden])) #icons,#desk:has(#win:not([hidden])) #sticky{display:none!important}
 #win:not([hidden]){z-index:9999!important}
 </style>
+<script src="spielende.js"></script>
 </head>
 <body>
 <div id="screen" aria-hidden="true">
@@ -597,10 +598,11 @@ function finish(){
   ${finds.length?`<p class="muted">Nebenbei entdeckt: ${finds.join(" und ")}.</p>`:`<p class="muted">Übrigens: Browser, Papierkorb und KI-Werkstatt hättest du auch öffnen können.</p>`}
   <label for="final">Welchen Baustein würdest du an deiner eigenen Schule als Erstes angehen, und warum?</label>
   <textarea id="final" placeholder="Als Erstes würde ich …"></textarea>
-  <div class="row"><button type="button" class="primary" id="copy">Entwurf und Begründungen kopieren</button><button type="button" class="ghost" id="again">Neue Woche</button><span class="muted" id="cmsg" aria-live="polite"></span></div>
-  <p class="foot">Idee und Didaktik: Barbara Magdalena Mayer · technische Umsetzung mit KI-Unterstützung · alle Personen erfunden, keine Rechtsberatung. <a href="index.html">← Zurück zur Werkstatt</a></p>`;
+  <div class="row"><button type="button" class="primary" id="copy">Entwurf und Begründungen kopieren</button><span class="muted" id="cmsg" aria-live="polite"></span></div>
+  <div id="spielende"></div>
+  <p class="foot">Idee und Didaktik: Barbara Magdalena Mayer · technische Umsetzung mit KI-Unterstützung · alle Personen erfunden, keine Rechtsberatung.</p>`;
  $("#win").hidden=true;$("#end").hidden=false;
- $("#again").onclick=()=>location.reload();
+ spielEnde("#spielende",{text:"Wie geht es weiter? Beginne eine neue Woche von vorn oder geh zurück zur Werkstatt."});
  $("#copy").onclick=()=>{
   const L=["Regeln zur Nutzung von KI an unserer Schule (Entwurf)",""];
   Object.keys(DEC).forEach((k,n)=>{const d=S.dec[k],o=DEC[k].opts.find(x=>x.id===d.opt);L.push(`${n+1}. ${DEC[k].titel}: ${o.regel}`,`   Begründung: ${d.why}`,`   Plus: ${o.plus} Preis: ${o.preis}`);});

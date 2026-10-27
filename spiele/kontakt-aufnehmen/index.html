@@ -55,6 +55,7 @@ dialog::backdrop{background:#000a}dialog h2{margin:0 0 8px;font-size:19px}
 @media (max-height:520px) and (min-aspect-ratio:1/1){header{padding:4px 12px}.panel{padding:12px}}
 </style>
 <style id="hintergrundbild">.picture{background-image:url('zimmer-4.webp')}</style>
+<script src="../../spielende.js"></script>
 </head><body>
 <div class="app">
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
@@ -422,10 +423,11 @@ function colleague(){
  show('door','Die Kollegin','',T().colleague,Object.keys(L).map(k=>[L[k],()=>{log('Auf „Die redet sowieso nie“: '+L[k]);
   show('door','Ein Satz, der bleibt','',RE[k],[['Zum Abschluss',finish,'wide']],[hint('Was so ein Satz mit deiner Rolle macht, ist Thema der nächsten Sequenz: in der Rolle bleiben.')])}]));
 }
+function endBox(){const d=el('div');spielEnde(d,{neu:start,titel:'Diese Begegnung ist fertig.',text:'Du kannst oben eine andere Begegnung wählen. Oder du beginnst ganz von vorn oder gehst zurück zur Werkstatt.'});return d}
 function finish(){
  S.phase='end';done.add(S.sit);
  show(null,'Die Begegnung darf offen bleiben','Du hast in deiner Rolle gehandelt. Ob die Person zufrieden ist, entscheidet nicht allein über deine Professionalität. Du hast '+S.seen.size+' von '+N+' Dingen im Zimmer entdeckt.','',
-  [...Object.keys(SIT).filter(k=>k!==S.sit).map(k=>['Andere Begegnung: '+SIT[k].label+(done.has(k)?' ✓':''),()=>door(k),'wide']),['Mein Weg ansehen',openWeg],['Neu erleben',()=>door(S.sit)],['Als Textdatei sichern',save],['Zur Auswahl',start,'quiet']],S.sit==='laut'?[el('p','support',SUPPORT)]:[]);
+  [...Object.keys(SIT).filter(k=>k!==S.sit).map(k=>['Andere Begegnung: '+SIT[k].label+(done.has(k)?' ✓':''),()=>door(k),'wide']),['Mein Weg ansehen',openWeg],['Neu erleben',()=>door(S.sit)],['Als Textdatei sichern',save]],[...(S.sit==='laut'?[el('p','support',SUPPORT)]:[]),endBox()]);
 }
 const SUPPORT='Wenn dich diese Begegnung beschäftigt – weil du so etwas selbst erlebt hast oder weil es dich gerade nicht loslässt: Du musst das nicht allein tragen. Sprich mit jemandem darüber, zum Beispiel mit deiner Praxisanleitung, deinem Team, in der Supervision oder mit einer Vertrauensperson an deiner Schule. Beleidigungen bei der Arbeit darfst du ansprechen und melden. Und wenn es dir auch außerhalb der Arbeit nicht gut geht: Die TelefonSeelsorge ist kostenlos und rund um die Uhr erreichbar, 0800 111 0 111.';
 function openWeg(){const d=$('weg');try{d.showModal()}catch(e){d.setAttribute('open','')}}

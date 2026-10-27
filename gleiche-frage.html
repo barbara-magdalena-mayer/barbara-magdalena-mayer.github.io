@@ -71,6 +71,7 @@ footer{padding:0 16px 40px;color:var(--muted);font-size:14px}
 footer a,main a{color:var(--pink-dark)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<script src="spielende.js"></script>
 </head>
 <body>
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
@@ -245,15 +246,15 @@ function reflect(){
   <p>Bias erkennt man selten an einer einzelnen Antwort. Erst der Vergleich zeigt, wo eine KI dieselbe Lage unterschiedlich behandelt. Und nicht jeder Unterschied ist eine Verzerrung: Manchmal ist er fachlich richtig.</p>
   <label for="final">Was nimmst du dir für deinen eigenen KI-Gebrauch vor?</label>
   <textarea id="final" placeholder="Wenn ich eine KI frage, werde ich …"></textarea>
-  <div class="row"><button type="button" class="primary" id="copy">Ergebnis kopieren</button><button type="button" class="ghost" id="again">Noch einmal spielen</button><span class="muted" id="cmsg" aria-live="polite"></span></div>
+  <div class="row"><button type="button" class="primary" id="copy">Ergebnis kopieren</button><span class="muted" id="cmsg" aria-live="polite"></span></div>
  </section>
  <section class="card"><h3>Quellen zum Weiterlesen</h3>
   <ul class="how">
    <li>Zack, T., Lehman, E. et al. (2024): Assessing the potential of GPT-4 to perpetuate racial and gender biases in health care. The Lancet Digital Health. <a href="https://pubmed.ncbi.nlm.nih.gov/38123252/">PubMed</a></li>
    <li>WHO (2022): Ageism in artificial intelligence for health. <a href="https://www.who.int/publications/i/item/9789240040793">WHO</a></li>
    <li>AI Now Institute (2025): Artificial Power. 2025 Landscape Report. <a href="https://ainowinstitute.org/">AI Now</a></li>
-  </ul></section>`;
- document.getElementById("again").onclick=start;
+  </ul></section><div id="spielende"></div>`;
+ spielEnde("#spielende",{neu:start});
  document.getElementById("copy").onclick=()=>{
   const lines=["Wann behandelt die KI Menschen unfair? – mein Ergebnis",`KI-Zweitmeinung: ${S.ki?"an":"aus"}`,""];
   ROUNDS.forEach((r,k)=>{const x=S.res[r.id];lines.push(`Runde ${k+1} (${r.field}): ${VERD[x.verdict]} · eingebaut: ${r.verdict==="bias"?"Verzerrung":"begründet"}${S.ki?` · KI ${x.ki==="folge"?"zugestimmt":"widersprochen"}`:""}`,`Begründung: ${x.why}`,"");});

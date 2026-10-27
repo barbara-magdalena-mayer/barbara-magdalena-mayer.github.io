@@ -132,6 +132,7 @@ footer{margin-top:22px;font-size:14px;color:var(--muted)}
 footer a{color:inherit}
 @media(max-width:700px){.grid{grid-template-columns:1fr}.side{display:contents}.frame{order:-1;position:sticky;top:0;z-index:20;box-shadow:0 8px 20px #0003}iframe{height:250px}.side>div:last-child{order:2}}
 </style>
+<script src="../../spielende.js"></script>
 </head>
 <body>
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
@@ -666,12 +667,13 @@ function finale() {
     <h3>Dein Weg durch das Spiel</h3>
     <div class="mynotes" id="mynotes"></div>
     <div class="row">
-      <a class="main" style="text-decoration:none;display:inline-block;font-weight:600;background:var(--green);color:#fff;border-radius:10px;padding:10px 18px" href="../../bauphysik-u-wert/">Weiter mit Teil 4: Deine Wand verliert Wärme. Wie viel? →</a>
       <a class="ghost" href="https://github.com/barbara-magdalena-mayer/bauphysik-u-wert/blob/main/unit/index.html">Ihren echten Code ansehen →</a>
       <a class="ghost" href="../klassenbuch/">Teil 2 noch einmal →</a>
-    </div>`;
+    </div>
+    <div id="spielende"></div>`;
   const upd = () => { $("#mynotes").textContent = mine() || "Du hast noch nichts aufgeschrieben. Das ist in Ordnung."; };
   bindNotes(); upd(); $("#n_rule").addEventListener("input", upd);
+  spielEnde("#spielende", { neu: () => go(0), titel: "Teil 3 ist fertig.", text: "Wie geht es weiter? Mach mit Teil 4 weiter, spiel noch einmal von vorn oder geh zurück zur Werkstatt.", weiter: { href: "../../bauphysik-u-wert/", text: "Weiter mit Teil 4: Deine Wand verliert Wärme. Wie viel?" } });
 }
 
 /* Neu beginnen: zweimal tippen, ohne Browser-Dialog */

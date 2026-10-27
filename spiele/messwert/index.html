@@ -134,6 +134,7 @@ footer{margin-top:24px;font-size:16px;color:var(--muted)}
 footer a{color:inherit}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
+<script src="../../spielende.js"></script>
 </head>
 <body>
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
@@ -496,9 +497,9 @@ function ende(){
       Warum Pflegende lernende Systeme kritisch prüfen müssen: <a href="https://www.bibb.de/dienst/publikationen/de/18095">Telieps, Peters, Falkenstern, Saul: Kompetenzen für die Digitalisierung in der pflegeberuflichen Bildung. BIBB 2022</a>, S. 63.<br>
       Python: <a href="https://docs.python.org/3/tutorial/controlflow.html">Offizielles Python-Tutorial, Kapitel „More Control Flow Tools“</a>.
     </div>
-    <div class="row"><button class="ghost" id="again">Noch einmal von vorn</button><a class="ghost" href="../zucker/">Auch spielen: Blutzucker-Sensor</a><a class="ghost" href="../../">Zur Werkstatt</a></div>`;
+    <div id="spielende"></div>`;
   const t=$("#mit"); t.value = notes.mit || ""; t.oninput = () => { notes.mit=t.value; saveNotes(); };
-  $("#again").onclick = () => go(0);
+  spielEnde("#spielende", { neu: () => go(0) });
 }
 
 /* Neu beginnen: zweimal tippen, ohne Browser-Dialog */

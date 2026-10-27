@@ -108,6 +108,7 @@ footer a{color:inherit}
 .reihe b{display:block;margin-bottom:2px}
 
 </style>
+<script src="../../spielende.js"></script>
 </head>
 <body>
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
@@ -428,11 +429,12 @@ function finale(){
     <h3>Dein Weg durch das Spiel</h3>
     <div class="mynotes" id="mynotes">${esc(mine||"Du hast noch nichts aufgeschrieben. Das ist in Ordnung. Du kannst jederzeit zurückgehen.")}</div>
     <div class="row">
-      <a class="main" style="text-decoration:none;display:inline-block;font-weight:600;background:var(--green);color:#fff;border-radius:10px;padding:10px 18px" href="../baukasten/">Weiter mit Teil 3: Wie baut man eine Lerneinheit? →</a>
       <a class="ghost" style="text-decoration:none;display:inline-block" href="https://github.com/barbara-magdalena-mayer/bauphysik-u-wert/blob/main/unit/scorm.js">So sieht der echte Code aus →</a>
       <a class="ghost" style="text-decoration:none;display:inline-block" href="../../bauphysik-u-wert/">Eine Lerneinheit, die das nutzt →</a>
-    </div>`;
+    </div>
+    <div id="spielende"></div>`;
   bindNotes();
+  spielEnde("#spielende",{neu:()=>go(0),titel:"Teil 2 ist fertig.",text:"Wie geht es weiter? Mach mit Teil 3 weiter, spiel noch einmal von vorn oder geh zurück zur Werkstatt.",weiter:{href:"../baukasten/",text:"Weiter mit Teil 3: Wie baut man eine Lerneinheit?"}});
   $("#n_rule").addEventListener("input",()=>{ const m=Object.keys(labels).filter(k=>(notes[k]||"").trim()).map(k=>`${labels[k]}:\n${notes[k].trim()}`).join("\n\n"); $("#mynotes").textContent=m; });
 }
 

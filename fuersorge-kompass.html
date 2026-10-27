@@ -73,6 +73,7 @@ textarea{display:block;width:100%;min-height:80px;resize:vertical;border:1px sol
 .help{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
 @media(max-width:860px){.grid{grid-template-columns:1fr}.glasses{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
+<script src="spielende.js"></script>
 </head>
 <body>
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
@@ -220,6 +221,7 @@ $('check').onclick=()=>{
  <p class="muted">So prüft diese Seite, ohne KI, mit einer offenen Regel:</p>
  <div class="rule">Zeitpunkt? Wochentag | heute | morgen | nach dem Dienst …<br>Menge? Zahl + Minuten | Uhr | mal …<br>Vorsatz statt Schritt? „mehr auf mich achten“ …</div>
  <p class="muted">Was übersieht diese Regel? Zum Beispiel, ob der Schritt zu dir passt oder ob er realistisch ist. Das kann nur ein Mensch beurteilen.</p>`;
+ if(ok)spielEnde(res,{titel:"Dein Schritt steht. Du bist fertig.",text:"Wie geht es weiter? Beginne neu mit einer anderen Einschätzung oder geh zurück zur Werkstatt."});
 };
 
 $('cmpbtn').onclick=()=>{const t=$('cmptable'),open=t.hidden;t.hidden=!open;$('cmpbtn').setAttribute('aria-expanded',open);$('cmpbtn').textContent=open?'Vergleich ausblenden':'Vergleich zeigen';cmpTable()};

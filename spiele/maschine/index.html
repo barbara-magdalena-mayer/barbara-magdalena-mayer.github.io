@@ -127,6 +127,7 @@ a.main-link{font-weight:600;font-size:21px;background:var(--green);color:#fff;bo
 footer{margin-top:24px;font-size:16px;color:var(--muted)}
 footer a{color:inherit}
 </style>
+<script src="../../spielende.js"></script>
 </head>
 <body>
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
@@ -611,18 +612,15 @@ function finale() {
     ${noteField("rule", "Meine Regel", "„Regel: …, weil …“")}
     <h3>Dein Weg durch das Spiel</h3>
     <div class="mynotes" id="mynotes"></div>
-    <h3>Wie es weitergeht</h3>
-    <div class="row">
-      <a class="main-link" href="../klassenbuch/">Teil 2 →</a>
-      <a class="ghost" href="../../lernen-am-optimum-digitale-bildung.html">Über den Lernpfad</a>
-    </div>
     <h3>Woher kommt das Wissen?</h3>
     <div class="source">
       Vorbild: <a href="https://computingeducation.de/aiunplugged.pdf">„AI Unplugged“ von Annabel Lindner und Stefan Seegerer</a>, Übung „Klassifikation mit Entscheidungsbäumen“.<br>
       Einordnung: <a href="https://dl.gi.de/bitstream/handle/20.500.12116/20121/61-GI-Empfehlung_Kompetenzen_informatische_Bildung_Primarbereich.pdf?sequence=1">Empfehlungen der Gesellschaft für Informatik für die Grundschule (2019)</a>, Bereiche „Information und Daten“, „Algorithmen“ und „Informatik, Mensch und Gesellschaft“, Tätigkeit „Begründen und Bewerten“. KI selbst kommt dort noch nicht vor.
-    </div>`;
+    </div>
+    <div id="spielende"></div>`;
   const upd = () => { $("#mynotes").textContent = mine() || "Du hast noch nichts aufgeschrieben. Das ist in Ordnung."; };
   bindNotes(); upd(); document.querySelectorAll("#n_frage,#n_rule").forEach(t => t.addEventListener("input", upd));
+  spielEnde("#spielende", { neu: () => go(0), titel: "Teil 1 ist fertig.", text: "Wie geht es weiter? Mach mit Teil 2 weiter, spiel noch einmal von vorn oder geh zurück zur Werkstatt.", weiter: { href: "../klassenbuch/", text: "Weiter mit Teil 2" } });
 }
 
 /* Neu beginnen: zweimal tippen, ohne Browser-Dialog */

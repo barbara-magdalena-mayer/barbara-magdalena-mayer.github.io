@@ -15,6 +15,8 @@ Aufbau der Website:
 - `grundbegriffe.html` = Begriffe und „Die Arbeitsproben erklärt“.
 - `werkstatt.html` = nur Weiterleitung auf die Startseite (alte Links). Nicht mehr bearbeiten.
 
+Jedes Spiel hat ein **klares Ende**: den Ende-Kasten aus `spielende.js` mit „↺ Neu beginnen“ und „← Zurück zur Werkstatt“ (im Lernpfad und bei Fallsammlungen zusätzlich ein Weiter-Knopf). Teil 4 (`bauphysik-u-wert`) hat denselben Kasten fest eingebaut, weil das SCORM-Paket ohne die Website laufen muss.
+
 In Lernmaterialien keine Personennamen; Lernende mit „du“ ansprechen. Einfache Sprache und große Schrift.
 
 Arbeiten in eigenen Repos (z. B. `bauphysik-u-wert`) liegen unter `https://barbara-magdalena-mayer.github.io/<repo>/` und werden genauso in alle drei Listen eingetragen.

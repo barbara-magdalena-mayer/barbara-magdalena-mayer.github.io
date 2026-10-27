@@ -13,6 +13,7 @@ Damit kein Spiel irgendwo fehlt. Jeder Punkt muss erledigt sein, bevor ein Spiel
 - [ ] Link „← Zurück zur Werkstatt“ auf `../../`
 - [ ] Titel ohne Nummern aus fremden Curricula
 - [ ] Lernziele spielerisch, für Anwendende (nicht für Lehrkräfte): Kasten „Das kannst du danach: x von y geschafft“ unter der Einleitung, Haken erscheinen pro geschaffter Stufe; dieselben Sätze in `ueber-mich.html` und `grundbegriffe.html`
+- [ ] **Klares Ende**: Am Schluss steht der Ende-Kasten aus `spielende.js` (im Kopf `<script src="../../spielende.js"></script>`, am Ende `spielEnde(element, { neu: … })`). Er zeigt immer „↺ Neu beginnen“ und „← Zurück zur Werkstatt“, im Lernpfad zusätzlich „Weiter mit Teil x“. Keine weiteren Knöpfe daneben, damit man sieht: Ich bin fertig.
 - [ ] Titel als Frage oder Situation, in der sich eine Person angesprochen fühlt (kein Fantasiename); gleicher Titel in `<title>`, `<h1>` und allen drei Listen
 
 ## 3. Überall verlinken – alle drei Listen
