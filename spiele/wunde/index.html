@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Wunden messen und dokumentieren: Was heißt „groß“ für den Computer?</title>
+<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Pflege. Wörter wie groß, tief und viel werden zu Messwerten: Wunde messen, eintragen, Exsudat nach Regel, Verlauf in Python und eine KI, die sich irren kann.">
+<style>
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("../../fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+:root{
+  --bg:#faeef1; --paper:#ffffff; --ink:#24382c; --muted:#5e5459; --line:#ead5db;
+  --green:#2f5240; --green-soft:#e3efe7; --pink:#b04e6b; --pink-soft:#f6e1e8; --teal:#7cc7bc;
+  --red:#a83232; --red-soft:#f8e0e0; --info:#f4ead2; --machine:#1f2a24; --machine-ink:#d8f0e4;
+  --band:#dcefe3; --curve:#b04e6b;
+  --display:"Literata",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#191416; --paper:#241d20; --ink:#efe6e9; --muted:#b3a5ab; --line:#3e3237;
+    --green:#7cc7a0; --green-soft:#1d3127; --pink:#e58aa6; --pink-soft:#3a2129; --red:#ef8b8b; --red-soft:#3c2222;
+    --info:#2e2a20; --machine:#101713; --band:#1d3127; --curve:#e58aa6; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:20px/1.6 var(--body)}
+.wrap{max-width:820px;margin:0 auto;padding:16px 16px 48px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;padding-right:110px}
+.top a,.top button{font:inherit;font-size:16px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--paper);border-radius:99px;padding:6px 14px;cursor:pointer}
+.eyebrow{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:600}
+h1{font-family:var(--display);font-size:34px;line-height:1.2;margin:4px 0 8px;hyphens:auto;overflow-wrap:break-word}
+@media(max-width:420px){h1{font-size:29px}}
+h2{font-family:var(--display);font-size:28px;line-height:1.25;margin:0 0 10px}
+h3{font-size:21px;margin:20px 0 8px}
+.lead{max-width:44ch;margin:0 0 14px}
+.ziele{max-width:52ch;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:18px}
+.ziele summary{cursor:pointer;font-weight:600}
+.ziele ul{list-style:none;margin:6px 0 0;padding:0}
+.ziele li{display:flex;gap:8px;margin:4px 0;color:var(--muted)}
+.ziele li::before{content:"○";flex:none;width:1.2em;color:var(--muted)}
+.ziele li.got{color:var(--ink)}
+.ziele li.got::before{content:"✓";color:var(--green);font-weight:600}
+.reihe{max-width:52ch;background:var(--green-soft);border-left:5px solid var(--green);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px;font-size:18px}
+.reihe b{display:block;margin-bottom:2px}
+.steps{display:flex;gap:6px;margin:10px 0 18px}
+.steps span{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.steps span.done{background:var(--pink)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}
+.stepno{font-size:16px;font-weight:600;color:var(--pink);text-transform:uppercase;letter-spacing:.06em}
+.task{background:var(--pink-soft);border-left:6px solid var(--pink);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 16px;max-width:46ch}
+.hint{font-size:18px;color:var(--muted);margin:6px 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+button.main{font:inherit;font-weight:600;font-size:21px;background:var(--green);color:#fff;border:none;border-radius:12px;padding:12px 22px;cursor:pointer}
+@media (prefers-color-scheme: dark){button.main{color:#10201a}}
+button.ghost,a.ghost{font:inherit;font-size:18px;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:10px 16px;cursor:pointer;text-decoration:none;display:inline-block}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,a:focus-visible,textarea:focus-visible,select:focus-visible,input:focus-visible{outline:4px solid var(--teal);outline-offset:2px}
+.msg{margin-top:14px;padding:12px 16px;border-radius:12px;max-width:52ch}
+.msg.ok{background:var(--green-soft)} .msg.bad{background:var(--red-soft)} .msg.info{background:var(--info)}
+.msg > b:first-child{display:block}
+textarea{font:inherit;font-size:18px;width:100%;min-height:80px;margin-top:6px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+select,input[type=number]{font:inherit;font-size:19px;padding:6px 8px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);max-width:100%}
+input[type=number]{width:72px}
+.fws{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.fw{background:#e6eefb;color:#1f3a66;border:1px solid #b9cbee;border-radius:99px;padding:4px 12px;font-size:16px}
+@media (prefers-color-scheme: dark){.fw{background:#1c2740;color:#cfe0ff;border-color:#33466e}}
+.glossary{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:8px 0;max-width:56ch}
+.glossary dt{font-weight:600;font-family:var(--mono);font-size:18px}
+.glossary dd{margin:0}
+.choices{display:grid;gap:10px;margin-top:10px;max-width:46ch}
+.choices button{font:inherit;text-align:left;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+.choices button.right{border-color:var(--green);background:var(--green-soft)}
+.choices button.wrong{border-color:var(--red);background:var(--red-soft)}
+.choices code,.msg code,p code,li code{font-family:var(--mono);font-size:.9em;background:var(--bg);border-radius:6px;padding:1px 5px}
+/* Messkarten */
+.meas{display:grid;gap:10px;margin:12px 0;max-width:620px}
+.mcard{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+.mcard .how{font-size:18px}
+.mcard .val{font:600 24px var(--mono);white-space:nowrap}
+.mcard.right{border-color:var(--green)} .mcard.wrong{border-color:var(--red)}
+@media(max-width:520px){.mcard{grid-template-columns:1fr auto}.mcard .how{grid-column:1/-1}}
+/* Kurve (Tabelle) */
+.sheet{width:100%;max-width:560px;border-collapse:collapse;margin:12px 0;font-size:19px}
+.sheet caption{text-align:left;font:600 15px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-bottom:6px}
+.sheet td,.sheet th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+.sheet td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+.sheet tr.pick{cursor:pointer}
+.sheet tr.pick:hover td,.sheet tr.pick:focus-visible td{background:var(--pink-soft)}
+.sheet tr.right td{background:var(--green-soft)} .sheet tr.wrong td{background:var(--red-soft)}
+.sheet tr.pick:focus-visible{outline:4px solid var(--teal)}
+/* Verlauf */
+.chart{width:100%;max-width:560px;height:auto;display:block;margin:12px 0;background:var(--bg);border-radius:12px}
+.chart text{font-family:var(--body);font-size:20px;fill:var(--muted)}
+.chart .pt text{font-family:var(--mono);font-size:22px;fill:var(--ink)}
+/* NEWS2-Tafel */
+.tablewrap{overflow-x:auto;max-width:100%;margin:12px 0}
+.news{border-collapse:collapse;font-size:16px;min-width:540px}
+.news th,.news td{border:1px solid var(--line);padding:5px 6px;text-align:center;white-space:nowrap}
+.news th{background:var(--bg);font-weight:600}
+.news td.p3{background:#f3c6c6}.news td.p2{background:#f8dcc0}.news td.p1{background:#fbefc6}.news td.p0{background:#ffffff}
+@media (prefers-color-scheme: dark){.news td.p3{background:#5a2626}.news td.p2{background:#5a3b22}.news td.p1{background:#4f4622}.news td.p0{background:#241d20}}
+.news td.lbl{text-align:left;background:var(--bg);font-weight:600}
+.score{display:grid;gap:8px;margin:12px 0;max-width:560px}
+.srow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--bg);border-radius:10px;padding:8px 12px;border:2px solid transparent}
+.srow.right{border-color:var(--green)} .srow.wrong{border-color:var(--red)}
+.srow .v{display:block;font-family:var(--mono);white-space:nowrap}
+.total{font:600 22px var(--mono);margin:8px 0}
+/* Code */
+pre.code{background:var(--machine);color:var(--machine-ink);border-radius:14px;padding:12px 14px;font:17px/1.6 var(--mono);overflow-x:auto;max-width:100%;margin:12px 0}
+pre.code .hl{background:#a8f0c855;color:#fff;border-radius:4px}
+pre.code .cm{color:#9fb8aa}
+.coder textarea{font:16px/1.55 var(--mono);min-height:260px;background:var(--machine);color:var(--machine-ink);border-color:var(--machine);white-space:pre;overflow-x:auto}
+.out{font:17px/1.5 var(--mono);background:var(--bg);border-radius:10px;padding:10px 12px;white-space:pre-wrap;min-height:44px;margin-top:8px}
+.small{font-size:16px;color:var(--muted)}
+/* KI */
+.ki{background:var(--machine);color:var(--machine-ink);border-radius:16px;padding:14px 16px;margin:14px 0;max-width:56ch}
+.ki .title{font:600 15px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#a8f0c8}
+.ki p{margin:6px 0;color:#fff}
+.claim{border:2px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0;max-width:620px}
+.claim.done{border-color:var(--green)}
+.judge{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.judge button{font:inherit;font-size:18px;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:8px 14px;cursor:pointer}
+.judge button.right{border-color:var(--green);background:var(--green-soft)}
+.judge button.wrong{border-color:var(--red);background:var(--red-soft)}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:600;margin:10px 0;cursor:pointer}
+.toggle input{width:26px;height:26px}
+.path{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:18px}
+.path span{background:var(--pink-soft);border-radius:99px;padding:4px 12px}
+.source{background:var(--info);border-radius:12px;padding:12px 16px;margin:14px 0;max-width:56ch;font-size:18px}
+.source a{color:inherit;font-weight:600}
+a.main-link{font-weight:600;font-size:21px;background:var(--green);color:#fff;border-radius:12px;padding:12px 22px;text-decoration:none;display:inline-block}
+footer{margin-top:24px;font-size:16px;color:var(--muted)}
+footer a{color:inherit}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* Wundspiel: Zusätze */
+.wounds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0;max-width:620px}
+@media(max-width:520px){.wounds{grid-template-columns:1fr}}
+.wcard{background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.wcard svg{width:100%;max-width:200px;height:auto;display:block;margin:0 auto}
+.wcard .entry{font:600 20px var(--mono);margin-top:6px}
+.wcard .real{font-size:16px;color:var(--muted);margin-top:4px}
+.grid-svg{width:100%;max-width:420px;height:auto;display:block;margin:12px 0;background:var(--paper);border:2px solid var(--line);border-radius:12px}
+.grid-svg text{font-family:var(--body);font-size:15px;fill:var(--muted)}
+.form{display:grid;gap:10px;margin:12px 0;max-width:560px}
+.frow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.frow.right{border-color:var(--green)} .frow.wrong{border-color:var(--red)}
+.frow input[type=text]{font:inherit;font-size:19px;width:90px;padding:6px 8px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+.entries{display:grid;gap:10px;margin:12px 0;max-width:620px}
+.erow{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+.erow .e{font:600 22px var(--mono);white-space:pre;min-width:5.5em;background:var(--paper);border:1px dashed var(--muted);border-radius:8px;padding:2px 8px}
+.erow.right{border-color:var(--green)} .erow.wrong{border-color:var(--red)}
+@media(max-width:520px){.erow{grid-template-columns:1fr}}
+.rule{border-collapse:collapse;font-size:18px;margin:12px 0;max-width:560px;width:100%}
+.rule td,.rule th{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+.rule th{background:var(--bg)}
+.dress{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0;max-width:640px}
+@media(max-width:560px){.dress{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.dcard{background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:8px;text-align:center;font-size:17px}
+.dcard svg{width:100%;max-width:120px;height:auto;display:block;margin:0 auto 6px}
+.dcard.right{border-color:var(--green)} .dcard.wrong{border-color:var(--red)}
+.dcard select{width:100%}
+.mine{background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:10px 14px;margin:12px 0;max-width:620px;font-size:18px}
+.mine ul{margin:4px 0 0;padding-left:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top" aria-label="Navigation">
+    <a href="../../">← Zurück zur Werkstatt</a>
+    <button type="button" id="restart">↺ Neu beginnen</button>
+  </nav>
+  <span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflege</span>
+  <h1>Wunden messen und dokumentieren: Was heißt „groß“ für den Computer?</h1>
+  <p class="lead">„Große Wunde, tief, viel Exsudat.“ Für dich ist das klar. Für die Kollegin aus dem Spätdienst vielleicht nicht. Und für den Computer sind es nur Buchstaben. Hier übersetzt du Wörter in Messwerte und siehst, was das Programm mit deinen Einträgen macht. Unterwegs liest du ein Stück Python.</p>
+  <details class="ziele"><summary>Das kannst du danach: <span id="zcount">0</span> von 6 geschafft</summary><ul id="ziele"><li data-n="1">Du merkst, wann ein Wort wie „tief“ für jeden etwas anderes heißt.</li><li data-n="2">Du misst eine Wunde in Zentimetern, mit Kopf-Fuß-Richtung und Uhr.</li><li data-n="3">Du erkennst, welche Einträge der Computer versteht und welche nicht.</li><li data-n="4">Du ordnest „wenig“ und „viel“ Exsudat nach einer festen Regel ein.</li><li data-n="5">Du liest Python und findest eine falsche Einheit im Verlauf.</li><li data-n="6">Du prüfst eine KI mit dem Standard.</li></ul></details>
+  <div class="reihe" role="note"><b>So geht es</b>Sechs Stufen. Du brauchst kein Vorwissen. Du machst immer zuerst die Probe, dann entscheidest du. Fehler sind erlaubt: Sie zeigen, wo du gerade stehst.</div>
+  <div class="steps" aria-hidden="true" id="steps"></div>
+  <main class="panel" id="stage" aria-live="polite"></main>
+  <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Ein Übungsfall, keine echte Person, keine echte Klinik-Software. Es gelten immer die Vorgaben deiner Einrichtung.</footer>
+</div>
+
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const STUFEN = 6;
+
+let notes = {};
+try { notes = JSON.parse(localStorage.getItem("wunde-notes") || "{}"); } catch(e) { notes = {}; }
+const saveNotes = () => { try { localStorage.setItem("wunde-notes", JSON.stringify(notes)); } catch(e) {} };
+
+let stufe = 0;
+const stage = $("#stage");
+function ziele(n){ let c=0; document.querySelectorAll("#ziele li").forEach(li=>{ const g = n >= +li.dataset.n; li.classList.toggle("got", g); if(g) c++; }); $("#zcount").textContent=c; }
+function bar(){ $("#steps").innerHTML = Array.from({length:STUFEN},(_,i)=>`<span class="${i<=stufe?"done":""}"></span>`).join(""); }
+function go(n, first){ stufe = n; bar(); [s1,s2,s3,s4,s5,s6,ende][n](); ziele(n); if (first) return; stage.querySelector("h2")?.focus?.({preventScroll:true}); window.scrollTo({top: stage.offsetTop - 12, behavior: "smooth"}); }
+function head(nr, titel){ return `<div class="stepno">Stufe ${nr} von ${STUFEN}</div><h2 tabindex="-1">${titel}</h2>`; }
+function nextBtn(label="Weiter"){ return `<div class="row"><button class="main" id="next" hidden>${label} →</button></div>`; }
+function showNext(n){ const b=$("#next"); b.hidden=false; b.onclick=()=>go(n); }
+function msg(kind, title, text){ return `<div class="msg ${kind}"><b>${title}</b>${text}</div>`; }
+const pickIn = (box, fn) => stage.querySelectorAll(box+" button").forEach(b=>b.onclick=()=>fn(b));
+const num = s => { const t = String(s).trim().replace(",", "."); return t==="" || isNaN(+t) ? NaN : +t; };
+
+/* Querschnitt durch die Haut, Wundtiefe in cm (1 cm = 40 px) */
+function quer(tiefe){
+  const d = Math.round(tiefe*40);
+  return `<svg viewBox="0 0 200 150" aria-hidden="true">
+    <rect x="0" y="20" width="200" height="14" fill="#f2c9b8"/>
+    <rect x="0" y="34" width="200" height="40" fill="#f7dcc8"/>
+    <rect x="0" y="74" width="200" height="76" fill="#f6eac2"/>
+    <path d="M70 20 Q100 ${20+d*2} 130 20 Z" fill="#b04e6b"/>
+    <line x1="160" y1="20" x2="160" y2="${20+d}" stroke="#24382c" stroke-width="3"/>
+    <line x1="152" y1="${20+d}" x2="168" y2="${20+d}" stroke="#24382c" stroke-width="3"/>
+  </svg>`;
+}
+
+/* ---------- Stufe 1: Ein Wort, drei Wunden ---------- */
+function s1(){
+  const W = [{t:0.3, real:"3 Millimeter tief"},{t:1, real:"1 Zentimeter tief"},{t:3, real:"3 Zentimeter tief: Ein Stäbchen verschwindet fast ganz"}];
+  stage.innerHTML = head(1,"„Tief“: Was meinst du damit?") + `
+    <p class="task">Ab wann ist eine Wunde für dich <b>tief</b>? Es gibt hier kein Richtig oder Falsch. Antworte so, wie du es im Dienst sagen würdest.</p>
+    <div class="choices" id="q0">
+      <button data-n="0">Schon ab ein paar Millimetern</button>
+      <button data-n="1">Ab etwa einem Zentimeter</button>
+      <button data-n="2">Erst, wenn ein Stäbchen mehrere Zentimeter hineingeht</button>
+    </div>
+    <div id="fb0"></div>
+    <div id="p2" hidden>
+      <p>Drei Pflegekräfte haben drei verschiedene Wunden versorgt. Alle drei haben in die Dokumentation dasselbe Wort geschrieben.</p>
+      <div class="wounds">${W.map((w,i)=>`<div class="wcard">${quer(w.t)}<div class="entry">Tiefe: „tief“</div><div class="real">In echt: ${w.real}</div></div>`).join("")}</div>
+      <p><b>Frage:</b> Das Programm vergleicht die drei Einträge. Was kommt heraus?</p>
+      <div class="choices" id="q1">
+        <button data-n="0">Die dritte Wunde ist am tiefsten.</button>
+        <button data-n="1">Alle drei Wunden sind gleich tief.</button>
+        <button data-n="2">Eine Fehlermeldung.</button>
+      </div>
+      <div id="fb1"></div>
+    </div>
+    <div id="p3" hidden>
+      <p><b>Frage:</b> Was hilft?</p>
+      <div class="choices" id="q2">
+        <button data-n="0">Statt „tief“ künftig „sehr tief“ schreiben.</button>
+        <button data-n="1">Die Tiefe in Zentimetern messen und als Zahl eintragen.</button>
+        <button data-n="2">Ein Foto machen, das reicht.</button>
+      </div>
+      <div id="fb2"></div>
+    </div>` + nextBtn();
+  pickIn("#q0", b => {
+    stage.querySelectorAll("#q0 button").forEach(x=>x.classList.remove("right"));
+    b.classList.add("right");
+    $("#fb0").innerHTML = msg("info","Das ist deine Grenze.","Frag einmal im Team herum: Die Antworten gehen oft weit auseinander. Für die eine ist „tief“ schon ein paar Millimeter, für den anderen erst drei Zentimeter. Jeder hat recht, und genau das ist das Problem.");
+    $("#p2").hidden=false;
+  });
+  pickIn("#q1", b => {
+    if (b.dataset.n==="1"){ b.classList.add("right");
+      $("#fb1").innerHTML = msg("ok","Genau so sieht es der Computer.","Für das Programm ist „tief“ eine Folge von Buchstaben. Es vergleicht Buchstabe für Buchstabe: <code>\"tief\" == \"tief\"</code> ergibt in Python <code>True</code>, also wahr. Drei sehr verschiedene Wunden sind im Computer gleich. Aus Wörtern kann er keinen Verlauf berechnen.")
+        + `<div class="fws"><span class="fw">Text (String)</span><span class="fw">== heißt: ist gleich?</span><span class="fw">True / False</span></div>`;
+      $("#p3").hidden=false;
+    } else { b.classList.add("wrong"); $("#fb1").innerHTML = msg("bad","Noch nicht.", b.dataset.n==="0" ? "Das weißt du, weil du die Bilder siehst. Das Programm sieht nur die Einträge. Was steht dort?" : "Für Python ist ein Wort kein Fehler. Es vergleicht einfach die Buchstaben."); }
+  });
+  pickIn("#q2", b => {
+    if (b.dataset.n==="1"){ b.classList.add("right");
+      $("#fb2").innerHTML = msg("ok","Richtig: messen statt beschreiben.","Eine Zahl mit Einheit bedeutet für alle dasselbe: 1,5 cm sind 1,5 cm, egal wer misst. Fachleute nennen das <b>operationalisieren</b>: Ein Wort wird so festgelegt, dass man es messen kann. Wie man misst, kommt jetzt.")
+        + `<div class="fws"><span class="fw">operationalisieren</span><span class="fw">Messwert</span><span class="fw">Einheit</span></div>`;
+      showNext(1);
+    } else { b.classList.add("wrong"); $("#fb2").innerHTML = msg("bad","Das hilft nicht.", b.dataset.n==="0" ? "„Sehr tief“ ist auch nur ein Wort. Ab wann ist es „sehr“?" : "Ein Foto ist gut für Farbe und Rand. Die Tiefe sieht man auf einem Foto von oben kaum. Und das Programm kann aus einem Foto keine Zahl ablesen, wenn niemand misst."); }
+  });
+}
+
+/* ---------- Stufe 2: Messen nach Standard ---------- */
+const MASS = {laenge:6, breite:4, tiefe:1.5, uhr:3};
+function s2(){
+  const S=36, ox=36, oy=48, cols=8, rows=8;
+  const cx = ox + 4*S, cy = oy + 4*S;
+  let grid = "";
+  for(let i=0;i<=cols;i++) grid += `<line x1="${ox+i*S}" y1="${oy}" x2="${ox+i*S}" y2="${oy+rows*S}" stroke="var(--line)"/>`;
+  for(let j=0;j<=rows;j++) grid += `<line x1="${ox}" y1="${oy+j*S}" x2="${ox+cols*S}" y2="${oy+j*S}" stroke="var(--line)"/>`;
+  const clock = [12,3,6,9].map(h=>{ const a=(h%12)/12*2*Math.PI; const r=4.3*S; return `<text x="${cx+Math.sin(a)*r}" y="${cy-Math.cos(a)*r+5}" text-anchor="middle" style="font-weight:600;fill:var(--ink)">${h}</text>`; }).join("");
+  const svg = `<svg class="grid-svg" viewBox="0 0 360 400" role="img" aria-label="Eine ovale Wunde auf Karopapier, ein Kästchen ist ein Zentimeter. Oben ist der Kopf. Die Wunde reicht über sechs Kästchen von oben nach unten und über vier Kästchen quer. Rechts, bei 3 Uhr, ist unter dem Rand eine gestrichelte Tasche.">
+    <text x="${cx}" y="18" text-anchor="middle" style="fill:var(--ink);font-weight:600">↑ Kopf</text>
+    ${grid}
+    <ellipse cx="${cx}" cy="${cy}" rx="${2*S}" ry="${3*S}" fill="#c96a84" stroke="#8a2e48" stroke-width="3"/>
+    <ellipse cx="${cx}" cy="${cy+10}" rx="${1.1*S}" ry="${1.8*S}" fill="#e7b9a0" opacity=".8"/>
+    <path d="M${cx+2*S-4} ${cy-22} q30 22 0 44" fill="none" stroke="#8a2e48" stroke-width="3" stroke-dasharray="6 5"/>
+    ${clock}
+    <text x="${ox}" y="${oy+rows*S+22}">1 Kästchen = 1 cm</text>
+    <text x="${cx}" y="${oy+rows*S+44}" text-anchor="middle" style="fill:var(--ink);font-weight:600">↓ Fuß</text>
+  </svg>`;
+  const stab = `<svg class="grid-svg" viewBox="0 0 360 120" role="img" aria-label="Ein Watteträger liegt neben einem Lineal. Die Feuchtigkeit reicht von der Spitze bis zur Markierung bei eineinhalb Zentimetern.">
+    ${[0,1,2,3,4,5,6,7].map(c=>`<line x1="${30+c*40}" y1="70" x2="${30+c*40}" y2="90" stroke="var(--ink)"/><text x="${30+c*40}" y="110" text-anchor="middle">${c}</text>`).join("")}
+    ${[0,1,2,3,4,5,6].map(c=>`<line x1="${50+c*40}" y1="70" x2="${50+c*40}" y2="80" stroke="var(--ink)"/>`).join("")}
+    <line x1="30" y1="70" x2="330" y2="70" stroke="var(--ink)"/>
+    <rect x="30" y="40" width="290" height="8" rx="4" fill="#efe2c4" stroke="#b9a77a"/>
+    <ellipse cx="34" cy="44" rx="12" ry="10" fill="#ffffff" stroke="#b9a77a"/>
+    <rect x="24" y="34" width="66" height="20" rx="8" fill="#c96a84" opacity=".45"/>
+    <text x="30" y="26">Spitze war in der Wunde, feucht bis hier</text>
+  </svg>`;
+  stage.innerHTML = head(2,"Du misst. Wie macht man es für alle gleich?") + `
+    <p class="task">Eine Wunde am Gesäß. Oben ist der Kopf. Miss so, wie es in vielen Standards steht: die <b>Länge</b> von Kopf nach Fuß, die <b>Breite</b> quer dazu, beides in Zentimetern. Die Tiefe misst du mit einem sterilen Watteträger an der tiefsten Stelle.</p>
+    ${svg}
+    ${stab}
+    <div class="form">
+      <div class="frow" id="f_laenge"><label for="i_laenge">Länge (Kopf–Fuß) in cm</label><input type="text" inputmode="decimal" id="i_laenge"></div>
+      <div class="frow" id="f_breite"><label for="i_breite">Breite (quer) in cm</label><input type="text" inputmode="decimal" id="i_breite"></div>
+      <div class="frow" id="f_tiefe"><label for="i_tiefe">Tiefe in cm</label><input type="text" inputmode="decimal" id="i_tiefe"></div>
+      <div class="frow" id="f_uhr"><label for="i_uhr">Tasche unter dem Rand: bei wie viel Uhr?</label><select id="i_uhr"><option value="">Uhr?</option>${[12,1,2,3,4,5,6,7,8,9,10,11].map(h=>`<option>${h}</option>`).join("")}</select></div>
+    </div>
+    <p class="hint">Die Uhr liegt wie ein Zifferblatt auf der Wunde: 12 Uhr zeigt zum Kopf, 6 Uhr zu den Füßen.</p>
+    <div class="row"><button class="ghost" id="check">Probe machen</button></div>
+    <div id="fb"></div>` + nextBtn();
+  $("#check").onclick = () => {
+    const r = {
+      laenge: num($("#i_laenge").value)===MASS.laenge,
+      breite: num($("#i_breite").value)===MASS.breite,
+      tiefe:  num($("#i_tiefe").value)===MASS.tiefe,
+      uhr:    +$("#i_uhr").value===MASS.uhr };
+    let ok=0; Object.keys(r).forEach(k=>{ $("#f_"+k).className = "frow " + (r[k]?"right":"wrong"); if(r[k]) ok++; });
+    if (ok===4){
+      $("#fb").innerHTML = msg("ok","Alles richtig: 6 × 4 cm, 1,5 cm tief, Tasche bei 3 Uhr.","Jetzt kann jede Pflegekraft deine Werte nachmessen und vergleichen. Wichtig: Es gibt mehr als eine Messweise. Manche messen die längste Strecke in beliebiger Richtung statt Kopf–Fuß. Welche gilt, legt deine Einrichtung fest. Hauptsache, alle messen gleich, sonst wird der Verlauf zum Zufall.")
+        + `<div class="fws"><span class="fw">Länge × Breite</span><span class="fw">Zentimeter</span><span class="fw">Uhrzeiger-Methode</span><span class="fw">Unterminierung (Tasche)</span></div>`;
+      showNext(2);
+    } else {
+      $("#fb").innerHTML = msg("bad",`${ok} von 4 stimmen.`,"Zähle die Kästchen der rosa Fläche: von oben nach unten für die Länge, von links nach rechts für die Breite. Für die Tiefe schau, bis wohin der Watteträger feucht ist. Für die Uhr: Wo liegt die gestrichelte Linie, wenn 12 Uhr oben ist?");
+    }
+  };
+}
+
+/* ---------- Stufe 3: Eintragen. Was versteht der Computer? ---------- */
+const EINTR = [
+  {e:"6",        a:"ok",   why:"<code>float(\"6\")</code> ergibt 6.0. Das Programm kann damit rechnen."},
+  {e:"6,0",      a:"err",  why:"Python erwartet einen Punkt, kein Komma. <code>float(\"6,0\")</code> meldet einen <code>ValueError</code>. Viele deutsche Programme übersetzen das Komma für dich, aber nicht alle."},
+  {e:"ca. 6 cm", a:"err",  why:"„ca.“ und „cm“ sind Buchstaben. Das Programm findet darin keine Zahl und meldet einen Fehler. Die Einheit gehört neben das Feld, nicht hinein."},
+  {e:"60",       a:"bad",  why:"Für das Programm ist 60 eine gute Zahl. Gemeint waren aber 60 Millimeter, also 6 cm. Das Programm rechnet ohne jede Meldung mit 60 cm weiter. Das ist der gefährlichste Fall."},
+  {e:"",         a:"err",  why:"Ein leeres Feld ist nicht 0. Es heißt: nicht gemessen. <code>float(\"\")</code> meldet einen Fehler. Gut gebaute Programme fragen hier nach, statt 0 einzutragen."}
+];
+const LBL = {ok:"rechnet richtig", err:"Fehlermeldung", bad:"rechnet falsch, ohne Meldung"};
+function s3(){
+  stage.innerHTML = head(3,"Du trägst ein. Was versteht der Computer?") + `
+    <p class="task">Fünf Pflegekräfte tragen dieselbe Wunde ein, Länge 6 cm. Jede tippt etwas anderes in das Feld. Hinter dem Feld arbeitet dieses kleine Stück Python:</p>
+    <pre class="code">${esc('eintrag = "6,0"         # das, was du ins Feld tippst\nlaenge = float(eintrag)  # Text in eine Kommazahl umwandeln\nprint(laenge)')}</pre>
+    <dl class="glossary">
+      <dt>"…"</dt><dd>Alles in Anführungszeichen ist für Python <b>Text</b> (englisch <i>String</i>), auch wenn Ziffern darin stehen.</dd>
+      <dt>float()</dt><dd>Wandelt Text in eine <b>Kommazahl</b> um. Python schreibt Kommazahlen mit Punkt: 6.0.</dd>
+      <dt>#</dt><dd>Ein <b>Kommentar</b>: eine Notiz für Menschen. Python überliest ihn.</dd>
+    </dl>
+    <p>Was passiert mit jedem Eintrag?</p>
+    <div class="entries">${EINTR.map((x,i)=>`<div class="erow" id="e${i}"><span class="e">${x.e===""?" ":esc(x.e)}</span>
+      <label><span class="vh">Was passiert mit dem Eintrag ${esc(x.e||"leer")}?</span><select data-i="${i}"><option value="">Was passiert?</option>${Object.entries(LBL).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select></label></div>`).join("")}</div>
+    <div class="row"><button class="ghost" id="check">Probe machen</button></div>
+    <div id="fb"></div>` + nextBtn();
+  $("#check").onclick = () => {
+    let ok=0, out="";
+    EINTR.forEach((x,i)=>{ const v=stage.querySelector(`select[data-i="${i}"]`).value; const r=v===x.a; if(r) ok++;
+      $("#e"+i).className = "erow " + (r?"right":"wrong");
+      if (r) out += `<li><code>${esc(x.e===""?"(leer)":x.e)}</code>: ${x.why}</li>`; });
+    if (ok===EINTR.length){
+      $("#fb").innerHTML = msg("ok","Alle fünf stimmen.",`<ul>${out}</ul>Deshalb haben gute Eingabemasken ein Zahlenfeld, die Einheit fest daneben und eine Prüfung, ob die Zahl zu einer Wunde passt.`)
+        + `<div class="fws"><span class="fw">Text (String)</span><span class="fw">Kommazahl (float)</span><span class="fw">Fehlermeldung (ValueError)</span><span class="fw">Pflichtfeld</span></div>`;
+      showNext(3);
+    } else {
+      $("#fb").innerHTML = msg("bad",`${ok} von ${EINTR.length} stimmen.`,"Tipp: Python kennt nur Ziffern und einen Punkt als Komma. Alles andere ist für <code>float()</code> ein Fehler. Und wenn eine Zahl durchkommt: Stimmt dann auch die Einheit?");
+    }
+  };
+}
+
+/* ---------- Stufe 4: Wenig, viel. Ein Wort bekommt eine Regel ---------- */
+const VERB = [{p:0, wet:true, a:"sehr wenig"},{p:15, a:"wenig"},{p:50, a:"mäßig"},{p:90, a:"viel"}];
+const KAT = ["kein","sehr wenig","wenig","mäßig","viel"];
+function verband(p, wet){
+  const h = Math.round(80*p/100);
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><rect x="10" y="10" width="80" height="80" rx="8" fill="#ffffff" stroke="#b9a77a" stroke-width="2"/>
+    ${h?`<path d="M10 ${90-h} q20 -8 40 0 t40 0 V90 H10 Z" fill="#e2c46a" opacity=".75"/>`:""}
+    ${wet?`<circle cx="50" cy="50" r="6" fill="#b04e6b" opacity=".35"/>`:""}</svg>`;
+}
+function s4(){
+  stage.innerHTML = head(4,"„Viel Exsudat“: Wie viel ist viel?") + `
+    <p class="task">Bei Exsudat, also Wundflüssigkeit, bleibt es meist bei Wörtern: wenig, mäßig, viel. Damit alle dasselbe meinen, braucht das Wort eine <b>Regel</b>. Eine verbreitete Regel schaut darauf, wie viel vom Verband durchfeuchtet ist.</p>
+    <table class="rule"><caption class="small" style="text-align:left;padding-bottom:6px">Regel: Menge des Exsudats</caption>
+      <tr><th>Wort</th><th>Was du siehst</th></tr>
+      <tr><td>kein</td><td>Der Wundgrund ist trocken.</td></tr>
+      <tr><td>sehr wenig</td><td>Die Wunde ist feucht, auf dem Verband ist nichts zu sehen.</td></tr>
+      <tr><td>wenig</td><td>Weniger als ein Viertel des Verbands ist nass.</td></tr>
+      <tr><td>mäßig</td><td>Ein Viertel bis drei Viertel des Verbands sind nass.</td></tr>
+      <tr><td>viel</td><td>Mehr als drei Viertel des Verbands sind nass.</td></tr>
+    </table>
+    <p>Vier Verbände beim Verbandwechsel. Ordne jedem das passende Wort zu.</p>
+    <div class="dress">${VERB.map((v,i)=>`<div class="dcard" id="d${i}">${verband(v.p, v.wet)}
+      <div>${v.wet?"Wunde feucht, Verband trocken":"etwa "+v.p+" % nass"}</div>
+      <label><span class="vh">Menge für Verband ${i+1}</span><select data-i="${i}"><option value="">Wort?</option>${KAT.map(k=>`<option>${k}</option>`).join("")}</select></label></div>`).join("")}</div>
+    <div class="row"><button class="ghost" id="check">Probe machen</button></div>
+    <div id="fb"></div>` + nextBtn();
+  $("#check").onclick = () => {
+    let ok=0;
+    VERB.forEach((v,i)=>{ const r = stage.querySelector(`select[data-i="${i}"]`).value===v.a; $("#d"+i).className="dcard "+(r?"right":"wrong"); if(r) ok++; });
+    if (ok===VERB.length){
+      $("#fb").innerHTML = msg("ok","Alles richtig.","Mit der Regel wird aus „viel“ etwas, das zwei Menschen gleich einordnen. Im Programm heißt so etwas <b>Auswahlliste</b>: Du kannst nur eines der festgelegten Wörter wählen. Eine Auswahlliste ohne Regel hilft wenig, weil dann wieder jeder „viel“ anders versteht. Diese Regel stammt aus einem Lehrbuch. Deine Einrichtung kann eine andere festlegen. Wichtig ist, dass es überhaupt eine gibt und alle sie kennen.")
+        + `<div class="fws"><span class="fw">Exsudat</span><span class="fw">Auswahlliste</span><span class="fw">Definition</span><span class="fw">Freitext</span></div>`;
+      showNext(4);
+    } else $("#fb").innerHTML = msg("bad",`${ok} von ${VERB.length} stimmen.`,"Schau für jeden Verband: Wie viel ist nass? Weniger als ein Viertel, bis drei Viertel oder mehr? Und wenn nichts nass ist, die Wunde aber feucht?");
+  };
+}
+
+/* ---------- Stufe 5: Verlauf in Python ---------- */
+const CODE = `verlauf = [
+    (6.0, 4.0),   # Woche 1: Länge, Breite in cm
+    (5.5, 4.0),   # Woche 2
+    (50, 35),     # Woche 3
+    (5.0, 3.0),   # Woche 4
+]
+
+woche = 1
+for laenge, breite in verlauf:
+    flaeche = laenge * breite
+    print("Woche", woche, ":", flaeche, "cm²")
+    woche = woche + 1`;
+const CHECK = `    if laenge > 30:
+        print("Woche", woche, ": Bitte Einheit prüfen")
+        woche = woche + 1
+        continue
+`;
+function s5(){
+  stage.innerHTML = head(5,"Vier Wochen Verlauf. Was rechnet das Programm?") + `
+    <p class="task">Die Wunde wird jede Woche gemessen. Das Programm speichert Länge und Breite in einer <b>Liste</b> und rechnet daraus die Fläche. Lies den Code von oben nach unten.</p>
+    <pre class="code" id="code">${esc(CODE)}</pre>
+    <dl class="glossary">
+      <dt>[ … ]</dt><dd>Eine <b>Liste</b>: mehrere Werte hintereinander, hier eine Zeile pro Woche.</dd>
+      <dt>( , )</dt><dd>Ein <b>Paar</b> aus zwei Werten, hier Länge und Breite.</dd>
+      <dt>for … in</dt><dd>Eine <b>Schleife</b>: Python geht die Liste Zeile für Zeile durch.</dd>
+      <dt>*</dt><dd>Mal. Länge mal Breite ergibt die Fläche in cm².</dd>
+    </dl>
+    <p><b>Frage 1:</b> Was zeigt das Programm für Woche 3 an?</p>
+    <div class="choices" id="q1"><button data-n="0">Woche 3 : 17.5 cm²</button><button data-n="1">Woche 3 : 1750 cm²</button><button data-n="2">Eine Fehlermeldung</button></div>
+    <div id="fb1"></div>
+    <div id="part2" hidden>
+      <p><b>Frage 2:</b> Was ist in Woche 3 passiert?</p>
+      <div class="choices" id="q2"><button data-n="0">Die Wunde ist stark gewachsen.</button><button data-n="1">Jemand hat in Millimetern gemessen und eingetragen.</button><button data-n="2">Python hat sich verrechnet.</button></div>
+      <div id="fb2"></div>
+    </div>
+    <div id="part3" hidden>
+      <p><b>Frage 3:</b> Du darfst in die Schleife eine Prüfung einbauen. Welche hilft?</p>
+      <div class="choices" id="q3">
+        <button data-n="0"><code>if flaeche == 1750:</code> Bitte Einheit prüfen</button>
+        <button data-n="1"><code>if laenge > 30:</code> Bitte Einheit prüfen</button>
+        <button data-n="2">Jede Länge immer durch 10 teilen</button>
+      </div>
+      <div id="fb3"></div>
+    </div>
+    <div id="coder" class="coder" hidden>
+      <h3>Selbst ausprobieren</h3>
+      <p class="small">Ändere Zahlen in der Liste und führe den Code aus. Python wird erst geladen, wenn du auf „Ausführen“ tippst. Dafür holt dein Browser einmal etwa 10 MB von cdn.jsdelivr.net.</p>
+      <label><span class="vh">Python-Code</span><textarea id="src" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></label>
+      <div class="row"><button class="ghost" id="run">▶ Ausführen</button><button class="ghost" id="reset">Code zurücksetzen</button></div>
+      <div class="out" id="out" aria-live="polite">Hier erscheint, was <code>print</code> anzeigt.</div>
+    </div>` + nextBtn();
+  const NEU = CODE.replace("    flaeche = laenge * breite\n", CHECK + "    flaeche = laenge * breite\n");
+  pickIn("#q1", b => {
+    if (b.dataset.n==="1"){ b.classList.add("right");
+      $("#fb1").innerHTML = msg("ok","Richtig: 1750.","50 mal 35 ist 1750. Python rechnet genau das, was in der Liste steht. Das Programm meldet keinen Fehler, denn 50 und 35 sind gültige Zahlen. Die anderen Wochen ergeben 24, 22 und 15 cm².");
+      $("#part2").hidden=false;
+    } else { b.classList.add("wrong"); $("#fb1").innerHTML = msg("bad","Noch nicht.", b.dataset.n==="0" ? "17,5 wäre richtig, wenn in der Liste 5.0 und 3.5 stünden. Was steht dort wirklich?" : "50 und 35 sind für Python ganz normale Zahlen. Es gibt keinen Fehler. Rechne 50 mal 35."); }
+  });
+  pickIn("#q2", b => {
+    if (b.dataset.n==="1"){ b.classList.add("right");
+      $("#fb2").innerHTML = msg("ok","Genau: Millimeter statt Zentimeter.","50 mm sind 5 cm, 35 mm sind 3,5 cm. Die echte Fläche ist 17,5 cm². Die Wunde ist also kleiner geworden, nicht größer. In der Liste steht keine Einheit, deshalb merkt das Programm nichts.");
+      $("#part3").hidden=false;
+    } else { b.classList.add("wrong"); $("#fb2").innerHTML = msg("bad","Prüfe das.", b.dataset.n==="0" ? "Von 5,5 cm in einer Woche auf 50 cm, also einen halben Meter? Und eine Woche später wieder 5 cm? Das passt nicht zu einer Wunde." : "Python rechnet richtig. Das Problem liegt davor, in der Liste."); }
+  });
+  pickIn("#q3", b => {
+    if (b.dataset.n==="1"){ b.classList.add("right");
+      $("#code").innerHTML = esc(NEU).replace(esc(CHECK), `<span class="hl">${esc(CHECK)}</span>`);
+      $("#fb3").innerHTML = msg("ok","Richtig. Das ist eine Plausibilitätsprüfung.","Eine Wunde, die länger als 30 cm sein soll, ist so selten, dass das Programm nachfragt. Die Grenze 30 ist ein Beispiel. Wo sie liegt, legen Fachleute fest. <code>continue</code> heißt: diese Woche überspringen und mit der nächsten weitermachen.")
+        + `<div class="fws"><span class="fw">Liste</span><span class="fw">Schleife (for)</span><span class="fw">Plausibilitätsprüfung</span><span class="fw">continue</span></div>`
+        + `<div class="source">Übrigens: Länge mal Breite ergibt ein Rechteck. Eine Wunde ist meist oval, also ist die echte Fläche kleiner. In einer kleinen Studie lag die Rechnung im Schnitt um 41 % zu hoch. Für den Verlauf taugt sie trotzdem, wenn alle immer gleich messen.</div>`;
+      $("#coder").hidden=false; $("#src").value = NEU;
+      showNext(5);
+    } else { b.classList.add("wrong"); $("#fb3").innerHTML = msg("bad","Das hilft nicht.", b.dataset.n==="0" ? "Diese Zeile fängt nur genau diesen einen Fehler. Was ist mit 60 mm × 40 mm?" : "Dann wären alle richtigen Werte in Zentimetern auf einmal zehnmal zu klein."); }
+  });
+  let py=null, loading=false;
+  const out = $("#out");
+  $("#reset").onclick = () => { $("#src").value = NEU; };
+  $("#run").onclick = async () => {
+    if (loading) return;
+    try {
+      if (!py){ loading=true; out.textContent = "Python wird geladen … das dauert beim ersten Mal einen Moment.";
+        await new Promise((res,rej)=>{ const s=document.createElement("script"); s.src="https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js"; s.onload=res; s.onerror=()=>rej(new Error("laden")); document.head.appendChild(s); });
+        py = await loadPyodide(); loading=false; }
+      let text = "";
+      py.setStdout({batched: s => { text += s + "\n"; }});
+      await py.runPythonAsync($("#src").value);
+      out.textContent = text || "(Das Programm hat nichts angezeigt. Fehlt ein print?)";
+    } catch(e){
+      loading=false;
+      out.textContent = e && e.message === "laden" ? "Python konnte nicht geladen werden. Vielleicht blockiert dein Browser die Seite cdn.jsdelivr.net, oder du bist offline." :
+        "Python meldet einen Fehler. Das ist normal beim Programmieren. Die letzte Zeile sagt meist, was los ist:\n\n" + String(e.message||e).trim().split("\n").slice(-3).join("\n");
+    }
+  };
+}
+
+/* ---------- Stufe 6: Die KI redet mit ---------- */
+const CLAIMS = [
+  {t:"In Woche 3 ist die Wunde auf 1750 cm² gewachsen. Bitte sofort ärztlich abklären lassen.", a:"falsch",
+   why:"Falsch. In Woche 3 wurde in Millimetern eingetragen. Umgerechnet sind es 5 × 3,5 cm, also 17,5 cm². Die KI hat die Zahl ernst genommen, ohne die Einheit zu prüfen."},
+  {t:"Die Fläche ist von 24 auf 15 cm² gesunken. Die Wunde heilt.", a:"kommt drauf an",
+   why:"Kommt drauf an. Die Fläche ist kleiner geworden, aber die Tiefe ist von 1,5 auf 2 cm gestiegen. Eine Wunde kann oben kleiner und unten tiefer werden. Dazu gehören auch Rand, Umgebung, Beläge und Exsudat. Die KI schaut nur auf eine Zahl."},
+  {t:"Die Mazeration am Wundrand gehört zur Wundfläche und wird bei Länge und Breite mitgemessen.", a:"falsch",
+   why:"Falsch. Nach den Standards der Initiative Chronische Wunden gehört eine Mazeration am Rand zur Wundumgebung, nicht zur Wunde. Wer sie mitmisst, macht die Wunde größer, als sie ist."},
+  {t:"Damit die Wochen vergleichbar sind, muss jedes Mal auf dieselbe Weise gemessen werden.", a:"richtig",
+   why:"Richtig. Gleiche Richtung, gleiche Einheit, gleiche Stelle für die Tiefe. Sonst misst du Unterschiede zwischen Menschen, nicht die Veränderung der Wunde."}
+];
+function s6(){
+  stage.innerHTML = head(6,"Eine KI redet mit. Hat sie recht?") + `
+    <p class="task">Das Programm hat eine KI, die den Wundverlauf kommentiert. Sie klingt sicher. Sie kann sich irren. Schalte sie dazu und prüfe jede Aussage mit dem, was du in diesem Spiel gelernt hast.</p>
+    <div class="mine"><b>Dein Standard aus den Stufen 1 bis 5</b><ul>
+      <li>Messen statt beschreiben: Zahl und Einheit.</li>
+      <li>Länge Kopf–Fuß, Breite quer, in cm. Tiefe mit Watteträger. Uhr: 12 Uhr zum Kopf.</li>
+      <li>Wörter wie „viel“ nur mit Regel.</li>
+      <li>Verlauf: Woche 1: 6 × 4 cm, 1,5 cm tief. Woche 3: eingetragen 50 × 35. Woche 4: 5 × 3 cm, 2 cm tief.</li>
+    </ul></div>
+    <label class="toggle"><input type="checkbox" id="kion"> KI dazuschalten</label>
+    <div id="kibox" hidden>
+      <div class="ki"><div class="title">KI-Kommentar · Wundverlauf</div><p>Ich habe die Wunddokumentation der letzten vier Wochen ausgewertet. Hier sind vier Hinweise.</p></div>
+      ${CLAIMS.map((c,i)=>`<div class="claim" id="c${i}">
+        <p><b>KI:</b> „${esc(c.t)}“</p>
+        <label class="note" for="w${i}"><b>Deine Probe:</b> <span class="small">Was weißt du dazu? Schreib es kurz auf, dann entscheide.</span></label>
+        <textarea id="w${i}" data-i="${i}" placeholder="Zum Beispiel: Laut Standard …"></textarea>
+        <div class="judge">${["richtig","falsch","kommt drauf an"].map(j=>`<button data-i="${i}" data-j="${j}" disabled>${j}</button>`).join("")}</div>
+        <div class="fbc"></div></div>`).join("")}
+    </div>
+    <div id="fb"></div>` + nextBtn("Zum Abschluss");
+  const done = new Set();
+  $("#kion").onchange = e => { $("#kibox").hidden = !e.target.checked; };
+  stage.querySelectorAll(".claim textarea").forEach(t=>{
+    t.value = notes["w"+t.dataset.i] || "";
+    const upd = () => { notes["w"+t.dataset.i]=t.value; saveNotes();
+      stage.querySelectorAll(`.judge button[data-i="${t.dataset.i}"]`).forEach(b=>b.disabled = t.value.trim().length < 10); };
+    t.oninput = upd; upd();
+  });
+  stage.querySelectorAll(".judge button").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i, c=CLAIMS[i], box=$("#c"+i);
+    box.querySelectorAll(".judge button").forEach(x=>x.classList.remove("right","wrong"));
+    if (b.dataset.j===c.a){ b.classList.add("right"); box.classList.add("done"); done.add(i);
+      box.querySelector(".fbc").innerHTML = msg("ok","Stimmt mit deiner Probe überein.", c.why);
+    } else { b.classList.add("wrong");
+      box.querySelector(".fbc").innerHTML = msg("bad","Schau noch einmal in deinen Standard.","Lies deine eigene Probe. Passt sie zu deiner Entscheidung?"); }
+    if (done.size===CLAIMS.length){
+      $("#fb").innerHTML = msg("ok","Du hast dich gegen die KI durchgesetzt, wo sie falsch lag.","Zweimal lag sie falsch, einmal fehlte ihr der Blick aufs Ganze, einmal hatte sie recht. Sie klingt dabei immer gleich sicher. Dein Maßstab war der Standard und deine eigene Probe.");
+      showNext(6);
+    }
+  });
+}
+
+/* ---------- Abschluss ---------- */
+function ende(){
+  stufe = STUFEN-1; bar();
+  stage.innerHTML = `<div class="stepno">Geschafft</div><h2 tabindex="-1">Vom Wort zum Messwert</h2>
+    <div class="path"><span>„tief“</span>→<span>messen</span>→<span>Zahl + Einheit</span>→<span>eintragen</span>→<span>Regel</span>→<span>Verlauf</span>→<span>Programm</span>→<span>KI</span></div>
+    <p>Ein Wort wie „groß“ oder „viel“ trägt nur so weit, wie alle dasselbe darunter verstehen. Ein Computer versteht gar nichts darunter, er vergleicht Buchstaben. Deshalb braucht die Wunddokumentation Messwerte mit Einheit, feste Regeln für Wörter und eine Messweise, die alle gleich anwenden.</p>
+    <p>An jeder Stelle bist du die Person, die merkt, wenn etwas nicht stimmt: das Komma, die Millimeter, die Mazeration, die nicht zur Wunde gehört.</p>
+    <label class="note" for="mit"><b>Was nimmst du mit?</b> <span class="small">Nur für dich. Es bleibt in diesem Browser.</span></label>
+    <textarea id="mit" placeholder="Ich habe gemerkt, dass …"></textarea>
+    <h3>Woher kommt das Wissen?</h3>
+    <div class="source">
+      Begriffe, Wundrand und Wundumgebung, Mazeration: <a href="https://www.icwunden.de/wp-content/uploads/2025/12/251211_Standards_Chronische-Wunden_A5_Web.pdf">Initiative Chronische Wunden: Diagnostik und Therapie chronischer Wunden, Standards der ICW, Stand 01/2026</a>.<br>
+      Einschätzung beim Verbandwechsel, Auswertung spätestens nach vier Wochen: <a href="https://www.dnqp.de/fileadmin/HSOS/Homepages/DNQP/Dateien/Expertenstandards/Chronische_Wunden/cWunden_2Akt_Auszug.pdf">DNQP: Expertenstandard Pflege von Menschen mit chronischen Wunden, 2. Aktualisierung (Auszug)</a>.<br>
+      Messen mit Lineal, Watteträger und Uhr, Regel für die Exsudatmenge: <a href="https://wtcs.pressbooks.pub/nursingskills/chapter/20-3-assessing-wounds/">Nursing Skills, 2. Auflage, Kapitel 20.3 Assessing Wounds, Chippewa Valley Technical College 2023, CC BY 4.0</a>; <a href="https://ecampusontario.pressbooks.pub/skinandwoundcare/chapter/measurement/">eCampusOntario: Skin and Wound Care, Kapitel Measurement</a>.<br>
+      Länge mal Breite liegt zu hoch: <a href="https://pubmed.ncbi.nlm.nih.gov/20663440">Rogers u. a.: Digital planimetry results in more accurate wound measurements. Journal of Diabetes Science and Technology 2010</a>.<br>
+      Python: <a href="https://docs.python.org/3/tutorial/introduction.html">Offizielles Python-Tutorial, Kapitel „An Informal Introduction to Python“</a>.
+    </div>
+    <div class="row"><button class="ghost" id="again">Noch einmal von vorn</button><a class="ghost" href="../messwert/">Auch spielen: Messwerte in der Pflegedokumentation</a><a class="ghost" href="../../">Zur Werkstatt</a></div>`;
+  const t=$("#mit"); t.value = notes.mit || ""; t.oninput = () => { notes.mit=t.value; saveNotes(); };
+  $("#again").onclick = () => go(0);
+}
+
+let armed = null; const rs = $("#restart");
+rs.onclick = () => { if (!armed) { rs.textContent = "Wirklich? Alles löschen"; armed = setTimeout(() => { armed = null; rs.textContent = "↺ Neu beginnen"; }, 4000); return; }
+  clearTimeout(armed); armed = null; rs.textContent = "↺ Neu beginnen"; notes = {}; saveNotes(); go(0); };
+
+window.__wd = { go };
+go(0, true);
+})();
+</script>
+<style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Werkstatt"><img src="../../bilder/barbara-figur.webp" alt=""></a>
+</body>
+</html>
