@@ -393,14 +393,14 @@ for essen in heute:
 print(summe)`;
 function sKeto(){
   stage.innerHTML = head(4,"Keto: Wo stecken überall Kohlenhydrate?") + `
-    <div class="body-note"><b>Keto, kurz erklärt.</b> Bei einer ketogenen Ernährung isst man sehr wenig Kohlenhydrate, meist unter 50 Gramm am Tag. Dafür mehr Fett und Eiweiß. Nach einigen Tagen holt sich der Körper seine Energie dann vor allem aus Fett. Die Leber bildet daraus <b>Ketonkörper</b>. Das nennt man <b>Ketose</b>. Für dich heißt das vor allem: Es kommt viel weniger Zucker ins Blut.</div>
+    <div class="body-note"><b>Keto, kurz erklärt.</b> Bei einer ketogenen Ernährung isst man sehr wenig Kohlenhydrate. Das Ziel heißt oft: unter 60 Gramm am Tag, streng sogar unter 20 Gramm. Wo genau die Grenze liegt, ist nicht einheitlich, viele Fachtexte nennen unter 50 Gramm. Dafür mehr Fett und Eiweiß. Nach einigen Tagen holt sich der Körper seine Energie dann vor allem aus Fett. Die Leber bildet daraus <b>Ketonkörper</b>. Das nennt man <b>Ketose</b>. Für dich heißt das vor allem: Es kommt viel weniger Zucker ins Blut.</div>
     <p class="task">Tippe alles an, was du für keto-tauglich hältst: fast keine Kohlenhydrate, unter 5 Gramm pro Portion.</p>
     <div class="acts" id="guess">${GUESS.map((g,i)=>`<button data-i="${i}" aria-pressed="false"><span aria-hidden="true">${g.icon}</span> ${g.n}<small class="kh" hidden></small></button>`).join("")}</div>
     <div class="row"><button class="ghost" id="check">Probe machen</button></div>
     <div id="fb"></div>
     <div id="plan" hidden>
       <h3>Deine kleine Keto-App</h3>
-      <p class="task">Jetzt planst du einen Tag für den Körper mit Insulinresistenz aus Stufe 3. Wähle für jede Mahlzeit etwas aus. Die App zählt mit. Schaffst du einen Tag unter 50 Gramm?</p>
+      <p class="task">Jetzt planst du einen Tag für den Körper mit Insulinresistenz aus Stufe 3. Wähle für jede Mahlzeit etwas aus. Die App zählt mit. Schaffst du einen Tag unter 60 Gramm? Und schaffst du es sogar streng, unter 20 Gramm?</p>
       ${Object.entries({frueh:"Frühstück, 8 Uhr", mittag:"Mittag, 12:30 Uhr", zwischen:"Zwischendurch, 15:30 Uhr", abend:"Abend, 18:30 Uhr"}).map(([k,l])=>`
         <label class="note">${l}<br><select data-m="${k}">${KETO[k].map(f=>`<option value="${f.id}">${f.icon} ${f.name}</option>`).join("")}</select></label>`).join("")}
       <div id="kapp"></div>
@@ -435,12 +435,12 @@ function sKeto(){
     const sum = Object.values(pick).reduce((a,f)=>a+f.kh,0);
     evKeto = Object.entries(pick).map(([k,f])=>({food:f.id, t:KETOTIME[k]}));
     const vals = series(BODY.mit, evKeto, ENDE), st = stats(vals);
-    $("#kapp").innerHTML = `<div class="app ${sum>50?"hi":""}"><div class="bar"><span>Keto-App · Übung</span><span>Tagesplan</span></div>
+    $("#kapp").innerHTML = `<div class="app ${sum>60?"hi":""}"><div class="bar"><span>Keto-App · Übung</span><span>Tagesplan</span></div>
       <div class="now"><span class="big">${sum}</span><span class="unit">g Kohlenhydrate heute</span></div>
-      <div class="clock">${sum<=50?"Keto-Tag: unter 50 g":"Kein Keto-Tag: über 50 g"} · höchster Zucker ${st.max} mg/dl</div>
+      <div class="clock">${sum<=20?"Strenger Keto-Tag: unter 20 g":sum<=60?"Ziel erreicht: unter 60 g":"Über dem Ziel: mehr als 60 g"} · höchster Zucker ${st.max} mg/dl</div>
       ${chart([{vals, color:"#f2d36b"}], ENDE, `Zuckerverlauf mit Insulinresistenz an diesem Tag. Höchstens ${st.max} mg/dl.`)}</div>`;
-    if (sum<=50){ $("#fb2").innerHTML = msg("ok",`${sum} Gramm: ein Keto-Tag.`,`Schau auf die gelbe Kurve: Mit Insulinresistenz bleibt der Zucker an diesem Tag unter ${st.max+1} mg/dl, ohne große Spitzen. Weniger Kohlenhydrate heißt: weniger Zucker im Blut, also muss die Bauchspeicheldrüse weniger Insulin bilden. Der Grundwert bleibt trotzdem höher als ohne Diabetes. Die Insulinresistenz ist nicht weg, sie wird nur weniger gefordert.`); $("#py").hidden=false; }
-    else $("#fb2").innerHTML = msg("info",`${sum} Gramm: noch kein Keto-Tag.`,"Welche Wahl bringt die meisten Gramm? Tausche sie aus und schau, was mit der Kurve passiert.");
+    if (sum<=60){ $("#fb2").innerHTML = msg("ok", sum<=20 ? `${sum} Gramm: ein strenger Keto-Tag.` : `${sum} Gramm: unter 60, Ziel erreicht. Streng wären es unter 20 Gramm. Schaffst du das auch?`,`Schau auf die gelbe Kurve: Mit Insulinresistenz bleibt der Zucker an diesem Tag unter ${st.max+1} mg/dl, ohne große Spitzen. Weniger Kohlenhydrate heißt: weniger Zucker im Blut, also muss die Bauchspeicheldrüse weniger Insulin bilden. Der Grundwert bleibt trotzdem höher als ohne Diabetes. Die Insulinresistenz ist nicht weg, sie wird nur weniger gefordert.`); $("#py").hidden=false; }
+    else $("#fb2").innerHTML = msg("info",`${sum} Gramm: über dem Ziel von 60 Gramm.`,"Welche Wahl bringt die meisten Gramm? Tausche sie aus und schau, was mit der Kurve passiert.");
   }
   stage.querySelectorAll("#plan select").forEach(sel=>sel.onchange=plan);
   choiceSet("#qk", [
@@ -647,7 +647,7 @@ function ende(){
       Zielbereich 70 bis 180 mg/dl, mehr als 70 % Zeit im Zielbereich: <a href="https://doi.org/10.2337/dci19-0028">Battelino u. a.: Clinical Targets for Continuous Glucose Monitoring Data Interpretation. Diabetes Care, 2019</a>.<br>
       Warum Pflegende digitale Systeme kritisch prüfen müssen: <a href="https://www.bibb.de/dienst/publikationen/de/18095">Telieps, Peters, Falkenstern, Saul: Kompetenzen für die Digitalisierung in der pflegeberuflichen Bildung. BIBB 2022</a>, S. 63.<br>
       Kohlenhydrate pro Portion: <a href="https://www.stada.de/media/lagpa2zj/kh_be_umrechnungstabelle_mit_beschnitt.pdf">STADA, Kohlenhydrate-Umrechnungstabelle (2017)</a>, gerundet; Ketchup und Hauptgerichte nach üblichen Verpackungsangaben, geschätzt.<br>
-      Keto unter 50 g Kohlenhydrate am Tag, Medikamente anpassen: <a href="https://mdedge.com/content/low-carbohydrate-and-ketogenic-dietary-patterns-type-2-diabetes-management">Oh u. a.: Low-Carbohydrate and Ketogenic Dietary Patterns for Type 2 Diabetes Management. Federal Practitioner, 2024</a>.<br>
+      Grenzen für Keto (dort unter 50 g am Tag) und Medikamente anpassen: <a href="https://mdedge.com/content/low-carbohydrate-and-ketogenic-dietary-patterns-type-2-diabetes-management">Oh u. a.: Low-Carbohydrate and Ketogenic Dietary Patterns for Type 2 Diabetes Management. Federal Practitioner, 2024</a>.<br>
       Übersäuerung unter SGLT-2-Hemmern bei Diät: <a href="https://www.akdae.de/arzneimitteltherapie/arzneiverordnung-in-der-praxis/ausgaben-archiv/ausgaben-ab-2015/ausgabe/artikel/2023/2023-1/ketoazidose-unter-sglt-2-inhibitoren">Arzneimittelkommission der deutschen Ärzteschaft, 2023</a>.<br>
       Python: <a href="https://docs.python.org/3/tutorial/datastructures.html">Offizielles Python-Tutorial, Kapitel „Data Structures“</a> (Listen und Wörterbücher).<br>
       Die Kurven im Spiel stammen aus einem selbst gebauten, stark vereinfachten Übungsmodell.
