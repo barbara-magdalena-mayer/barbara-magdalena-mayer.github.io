@@ -34,6 +34,9 @@ h1{font-family:var(--display);font-size:34px;line-height:1.2;margin:4px 0 8px;hy
 h2{font-family:var(--display);font-size:28px;line-height:1.25;margin:0 0 10px}
 h3{font-size:21px;margin:20px 0 8px}
 .lead{max-width:44ch;margin:0 0 14px}
+.ziele{max-width:52ch;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:18px}
+.ziele summary{cursor:pointer;font-weight:600}
+.ziele ul{margin:6px 0 0;padding-left:22px}
 .reihe{max-width:52ch;background:var(--green-soft);border-left:5px solid var(--green);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px;font-size:18px}
 .reihe b{display:block;margin-bottom:2px}
 .steps{display:flex;gap:6px;margin:10px 0 18px}
@@ -175,6 +178,7 @@ footer a{color:inherit}
   <span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflege</span>
   <h1>Blutzucker-Sensor auf der Haut: Wie kommen die Werte in deine App?</h1>
   <p class="lead">Du trägst einen kleinen Sensor auf der Haut am Oberarm und kontrollierst deine Blutzuckerwerte in einer App auf dem Handy. Aber wie kommt der Wert vom Arm ins Handy? Und was rechnet die App damit? Hier probierst du es aus: Du isst, gehst spazieren, planst einen Keto-Tag und schaust in das Programm hinein. Auch in der ambulanten Pflege begegnen dir solche Werte.</p>
+  <details class="ziele"><summary>Lernziele, für Lehrende</summary><p style="margin:6px 0 0">Lernende können …</p><ul><li>erklären, warum der Sensor in der Gewebeflüssigkeit misst und dem Blutzucker 5 bis 10 Minuten hinterherläuft,</li><li>einen Alarm der App als Vergleich mit einer eingestellten Grenze deuten, nicht als Diagnose,</li><li>versteckte Kohlenhydrate erkennen und begründen, wann bei Keto das Behandlungsteam mitentscheiden muss,</li><li>ein kurzes Python-Programm mit Liste, Schleife und Wörterbuch lesen.</li></ul></details>
   <div class="reihe" role="note"><b>So geht es</b>Sieben Stufen. Du brauchst kein Vorwissen. Du probierst aus, dann begründest du. Fehler sind erlaubt: Sie zeigen, wo du gerade stehst.</div>
   <div class="steps" aria-hidden="true" id="steps"></div>
   <main class="panel" id="stage" aria-live="polite"></main>

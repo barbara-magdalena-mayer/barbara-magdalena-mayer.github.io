@@ -11,6 +11,7 @@ Damit kein Spiel irgendwo fehlt. Jeder Punkt muss erledigt sein, bevor ein Spiel
 - [ ] `<meta name="robots" content="noindex">` im Kopf (Seite soll vorerst nicht auffindbar sein)
 - [ ] Link „← Zurück zur Werkstatt“ auf `../../`
 - [ ] Titel ohne Nummern aus fremden Curricula
+- [ ] Lernziele für Lehrende („Lernende können …“) als aufklappbarer Kasten unter der Einleitung und in `ueber-mich.html` (Feld „Lernziele“) und `grundbegriffe.html`
 - [ ] Titel als Frage oder Situation, in der sich eine Person angesprochen fühlt (kein Fantasiename); gleicher Titel in `<title>`, `<h1>` und allen drei Listen
 
 ## 3. Überall verlinken – alle drei Listen
