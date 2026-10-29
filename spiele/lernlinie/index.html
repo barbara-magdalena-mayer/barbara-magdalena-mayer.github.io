@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Deine Lernlinie: Was hat dich bis hierher gebracht?</title>
+<meta name="description" content="Lernspiel zur Biografiearbeit für jeden Beruf und jeden Neuanfang. Du zeichnest deine eigene Lernlinie, findest deine Kraftquellen, entscheidest, was privat bleibt, und leitest ein nächstes Ziel ab.">
+<style>
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("../../fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+:root{
+  --bg:#faeef1; --paper:#ffffff; --ink:#24382c; --muted:#5e5459; --line:#ead5db;
+  --green:#2f5240; --green-soft:#e3efe7; --pink:#b04e6b; --pink-soft:#f6e1e8; --teal:#7cc7bc;
+  --red:#a83232; --red-soft:#f8e0e0; --info:#f4ead2; --machine:#1f2a24; --machine-ink:#d8f0e4;
+  --band:#dcefe3; --curve:#b04e6b;
+  --display:"Literata",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#191416; --paper:#241d20; --ink:#efe6e9; --muted:#b3a5ab; --line:#3e3237;
+    --green:#7cc7a0; --green-soft:#1d3127; --pink:#e58aa6; --pink-soft:#3a2129; --red:#ef8b8b; --red-soft:#3c2222;
+    --info:#2e2a20; --machine:#101713; --band:#1d3127; --curve:#e58aa6; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:20px/1.6 var(--body)}
+.wrap{max-width:820px;margin:0 auto;padding:16px 16px 48px}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;padding-right:110px}
+.top a,.top button{font:inherit;font-size:16px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--paper);border-radius:99px;padding:6px 14px;cursor:pointer}
+.eyebrow{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:600}
+h1{font-family:var(--display);font-size:34px;line-height:1.2;margin:4px 0 8px;hyphens:auto;overflow-wrap:break-word}
+@media(max-width:420px){h1{font-size:29px}}
+h2{font-family:var(--display);font-size:28px;line-height:1.25;margin:0 0 10px}
+h3{font-size:21px;margin:20px 0 8px}
+.lead{max-width:44ch;margin:0 0 14px}
+.ziele{max-width:52ch;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:18px}
+.ziele summary{cursor:pointer;font-weight:600}
+.ziele ul{list-style:none;margin:6px 0 0;padding:0}
+.ziele li{display:flex;gap:8px;margin:4px 0;color:var(--muted)}
+.ziele li::before{content:"○";flex:none;width:1.2em;color:var(--muted)}
+.ziele li.got{color:var(--ink)}
+.ziele li.got::before{content:"✓";color:var(--green);font-weight:600}
+.reihe{max-width:52ch;background:var(--green-soft);border-left:5px solid var(--green);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 14px;font-size:18px}
+.reihe b{display:block;margin-bottom:2px}
+.steps{display:flex;gap:6px;margin:10px 0 18px}
+.steps span{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.steps span.done{background:var(--pink)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}
+.stepno{font-size:16px;font-weight:600;color:var(--pink);text-transform:uppercase;letter-spacing:.06em}
+.task{background:var(--pink-soft);border-left:6px solid var(--pink);border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 16px;max-width:46ch}
+.hint{font-size:18px;color:var(--muted);margin:6px 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+button.main{font:inherit;font-weight:600;font-size:21px;background:var(--green);color:#fff;border:none;border-radius:12px;padding:12px 22px;cursor:pointer}
+@media (prefers-color-scheme: dark){button.main{color:#10201a}}
+button.ghost,a.ghost{font:inherit;font-size:18px;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:10px 16px;cursor:pointer;text-decoration:none;display:inline-block}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,a:focus-visible,textarea:focus-visible,select:focus-visible,input:focus-visible{outline:4px solid var(--teal);outline-offset:2px}
+.msg{margin-top:14px;padding:12px 16px;border-radius:12px;max-width:52ch}
+.msg.ok{background:var(--green-soft)} .msg.bad{background:var(--red-soft)} .msg.info{background:var(--info)}
+.msg > b:first-child{display:block}
+textarea{font:inherit;font-size:18px;width:100%;min-height:80px;margin-top:6px;padding:10px 12px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+select,input[type=number]{font:inherit;font-size:19px;padding:6px 8px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);max-width:100%}
+input[type=number]{width:72px}
+.fws{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.fw{background:#e6eefb;color:#1f3a66;border:1px solid #b9cbee;border-radius:99px;padding:4px 12px;font-size:16px}
+@media (prefers-color-scheme: dark){.fw{background:#1c2740;color:#cfe0ff;border-color:#33466e}}
+.glossary{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:8px 0;max-width:56ch}
+.glossary dt{font-weight:600;font-family:var(--mono);font-size:18px}
+.glossary dd{margin:0}
+.choices{display:grid;gap:10px;margin-top:10px;max-width:46ch}
+.choices button{font:inherit;text-align:left;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+.choices button.right{border-color:var(--green);background:var(--green-soft)}
+.choices button.wrong{border-color:var(--red);background:var(--red-soft)}
+.choices code,.msg code,p code,li code{font-family:var(--mono);font-size:.9em;background:var(--bg);border-radius:6px;padding:1px 5px}
+/* Messkarten */
+.meas{display:grid;gap:10px;margin:12px 0;max-width:620px}
+.mcard{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 12px}
+.mcard .how{font-size:18px}
+.mcard .val{font:600 24px var(--mono);white-space:nowrap}
+.mcard.right{border-color:var(--green)} .mcard.wrong{border-color:var(--red)}
+@media(max-width:520px){.mcard{grid-template-columns:1fr auto}.mcard .how{grid-column:1/-1}}
+/* Kurve (Tabelle) */
+.sheet{width:100%;max-width:560px;border-collapse:collapse;margin:12px 0;font-size:19px}
+.sheet caption{text-align:left;font:600 15px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-bottom:6px}
+.sheet td,.sheet th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+.sheet td.n{font-family:var(--mono);text-align:right;white-space:nowrap}
+.sheet tr.pick{cursor:pointer}
+.sheet tr.pick:hover td,.sheet tr.pick:focus-visible td{background:var(--pink-soft)}
+.sheet tr.right td{background:var(--green-soft)} .sheet tr.wrong td{background:var(--red-soft)}
+.sheet tr.pick:focus-visible{outline:4px solid var(--teal)}
+/* Verlauf */
+.chart{width:100%;max-width:560px;height:auto;display:block;margin:12px 0;background:var(--bg);border-radius:12px}
+.chart text{font-family:var(--body);font-size:20px;fill:var(--muted)}
+.chart .pt text{font-family:var(--mono);font-size:22px;fill:var(--ink)}
+/* NEWS2-Tafel */
+.tablewrap{overflow-x:auto;max-width:100%;margin:12px 0}
+.news{border-collapse:collapse;font-size:16px;min-width:540px}
+.news th,.news td{border:1px solid var(--line);padding:5px 6px;text-align:center;white-space:nowrap}
+.news th{background:var(--bg);font-weight:600}
+.news td.p3{background:#f3c6c6}.news td.p2{background:#f8dcc0}.news td.p1{background:#fbefc6}.news td.p0{background:#ffffff}
+@media (prefers-color-scheme: dark){.news td.p3{background:#5a2626}.news td.p2{background:#5a3b22}.news td.p1{background:#4f4622}.news td.p0{background:#241d20}}
+.news td.lbl{text-align:left;background:var(--bg);font-weight:600}
+.score{display:grid;gap:8px;margin:12px 0;max-width:560px}
+.srow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--bg);border-radius:10px;padding:8px 12px;border:2px solid transparent}
+.srow.right{border-color:var(--green)} .srow.wrong{border-color:var(--red)}
+.srow .v{display:block;font-family:var(--mono);white-space:nowrap}
+.total{font:600 22px var(--mono);margin:8px 0}
+/* Code */
+pre.code{background:var(--machine);color:var(--machine-ink);border-radius:14px;padding:12px 14px;font:17px/1.6 var(--mono);overflow-x:auto;max-width:100%;margin:12px 0}
+pre.code .hl{background:#a8f0c855;color:#fff;border-radius:4px}
+pre.code .cm{color:#9fb8aa}
+.coder textarea{font:16px/1.55 var(--mono);min-height:260px;background:var(--machine);color:var(--machine-ink);border-color:var(--machine);white-space:pre;overflow-x:auto}
+.out{font:17px/1.5 var(--mono);background:var(--bg);border-radius:10px;padding:10px 12px;white-space:pre-wrap;min-height:44px;margin-top:8px}
+.small{font-size:16px;color:var(--muted)}
+/* KI */
+.ki{background:var(--machine);color:var(--machine-ink);border-radius:16px;padding:14px 16px;margin:14px 0;max-width:56ch}
+.ki .title{font:600 15px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:#a8f0c8}
+.ki p{margin:6px 0;color:#fff}
+.claim{border:2px solid var(--line);border-radius:14px;padding:12px 14px;margin:12px 0;max-width:620px}
+.claim.done{border-color:var(--green)}
+.judge{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.judge button{font:inherit;font-size:18px;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:8px 14px;cursor:pointer}
+.judge button.right{border-color:var(--green);background:var(--green-soft)}
+.judge button.wrong{border-color:var(--red);background:var(--red-soft)}
+.toggle{display:flex;align-items:center;gap:10px;font-weight:600;margin:10px 0;cursor:pointer}
+.toggle input{width:26px;height:26px}
+.path{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0;font-size:18px}
+.path span{background:var(--pink-soft);border-radius:99px;padding:4px 12px}
+.source{background:var(--info);border-radius:12px;padding:12px 16px;margin:14px 0;max-width:56ch;font-size:18px}
+.source a{color:inherit;font-weight:600}
+a.main-link{font-weight:600;font-size:21px;background:var(--green);color:#fff;border-radius:12px;padding:12px 22px;text-decoration:none;display:inline-block}
+footer{margin-top:24px;font-size:16px;color:var(--muted)}
+footer a{color:inherit}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* Lernlinie: Zusätze */
+.impulse{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.impulse button{font:inherit;font-size:17px;text-align:left;background:var(--info);color:var(--ink);border:2px solid transparent;border-radius:12px;padding:8px 12px;cursor:pointer}
+.impulse button:hover{border-color:var(--line)}
+.addform{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px;align-items:end;max-width:620px;background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:12px}
+.addform label{display:block;font-size:16px;font-weight:600;margin-bottom:4px}
+.addform input{font:inherit;font-size:19px;width:100%;padding:8px 10px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+.addform .full{grid-column:1/-1}
+@media(max-width:420px){.addform{grid-template-columns:1fr}}
+.evlist{display:grid;gap:8px;margin:14px 0;max-width:620px;padding:0;list-style:none}
+.ev{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.ev .age{font:600 18px var(--mono);white-space:nowrap;color:var(--pink)}
+.ev .was{overflow-wrap:break-word;min-width:0}
+@media(max-width:480px){.ev{grid-template-columns:minmax(0,1fr) auto}.ev .was{grid-column:1/-1;grid-row:2}}
+.ev button{font:inherit;font-size:16px;background:var(--bg);border:1px solid var(--line);border-radius:99px;color:var(--muted);cursor:pointer;padding:4px 10px;white-space:nowrap}
+.slide{display:grid;gap:4px;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0;max-width:620px}
+.slide .lab{display:flex;justify-content:space-between;gap:10px;font-size:18px}
+.slide .lab b{font-family:var(--mono);color:var(--pink);white-space:nowrap}
+.slide input[type=range]{width:100%;accent-color:var(--pink);height:32px}
+.slide .ends{display:flex;justify-content:space-between;font-size:15px;color:var(--muted)}
+.linewrap{overflow-x:auto;max-width:100%;margin:12px 0;background:var(--bg);border-radius:14px}
+.tl{display:block;height:auto}
+.tl text{font-family:var(--body);fill:var(--muted)}
+.tl .lbl{font-size:15px;fill:var(--ink)}
+.tl .age{font:600 14px var(--mono);fill:var(--pink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chips button{font:inherit;font-size:17px;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:99px;padding:6px 14px;cursor:pointer}
+.chips button.on{border-color:var(--green);background:var(--green-soft);font-weight:600}
+.peak{background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:10px 14px;margin:12px 0;max-width:620px}
+.peak h3{margin:0 0 4px;font-size:19px}
+.peak.low{border-style:dashed}
+.privrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:8px 12px;margin:8px 0;max-width:620px}
+.privrow button{font:inherit;font-size:17px;border-radius:99px;padding:6px 14px;cursor:pointer;border:2px solid var(--line);background:var(--bg);color:var(--ink);white-space:nowrap}
+.privrow button.teilen{border-color:var(--green);background:var(--green-soft)}
+.views{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.views button{font:inherit;font-size:17px;background:var(--paper);color:var(--ink);border:2px solid var(--line);border-radius:99px;padding:6px 14px;cursor:pointer}
+.views button.on{border-color:var(--pink);background:var(--pink-soft);font-weight:600}
+.frame{display:grid;gap:12px;max-width:620px;margin:12px 0}
+.frame label{display:block;font-weight:600;font-size:18px}
+.frame input,.frame select{font:inherit;font-size:19px;width:100%;padding:8px 10px;border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink)}
+.poster{background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:18px 16px;margin:8px 0 16px;max-width:680px}
+.poster .ptitle{font-family:var(--display);font-size:28px;line-height:1.2;margin:0 0 4px}
+.poster .psub{color:var(--muted);font-size:17px;margin:0 0 8px}
+.poster h3{font-size:18px;text-transform:uppercase;letter-spacing:.06em;color:var(--pink);margin:16px 0 6px}
+.goal{background:var(--green-soft);border-radius:12px;padding:12px 14px;font-size:19px}
+.goal p{margin:4px 0}
+.safe{background:var(--green-soft);border-radius:12px;padding:10px 14px;margin:0 0 14px;max-width:56ch;font-size:18px}
+</style>
+<script src="../../spielende.js"></script>
+</head>
+<body>
+<style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
+<div class="wrap">
+  <nav class="top" aria-label="Navigation">
+    <a href="../../">← Zurück zur Werkstatt</a>
+    <button type="button" id="restart">↺ Neu beginnen</button>
+  </nav>
+  <span class="eyebrow">Didaktik · Lernen am Optimum</span>
+  <h1>Deine Lernlinie: Was hat dich bis hierher gebracht?</h1>
+  <p class="lead">Egal, ob du gerade eine Ausbildung beginnst, umschulst oder neu anfängst: Du hast schon einen Lernweg hinter dir. Hier zeichnest du ihn als Lernlinie: die Stationen, die dich bis hierher gebracht haben. Am Ende hast du ein Bild davon, was dir Kraft gibt, und ein nächstes Ziel.</p>
+  <div class="safe" role="note"><b>Nur für dich.</b> Alles, was du einträgst, bleibt auf diesem Gerät. Nichts wird verschickt. Stichworte reichen. Schreib nur auf, was du aufschreiben willst.</div>
+  <details class="ziele"><summary>Das kannst du danach: <span id="zcount">0</span> von 5 geschafft</summary><ul id="ziele"><li data-n="1">Du sammelst die Stationen deines Lernwegs bis heute.</li><li data-n="2">Du bewertest sie und siehst deine Lernlinie.</li><li data-n="3">Du findest heraus, was dir geholfen hat: deine Kraftquellen.</li><li data-n="4">Du entscheidest, was privat bleibt und was du teilst.</li><li data-n="5">Du leitest daraus dein nächstes Ziel ab.</li></ul></details>
+  <div class="steps" aria-hidden="true" id="steps"></div>
+  <main class="panel" id="stage" aria-live="polite"></main>
+  <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Die Lernlinie ist eine Methode der Biografiearbeit. Sie ersetzt kein Gespräch.</footer>
+</div>
+
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const STUFEN = 5;
+const KEY = "lernlinie-v1";
+const KRAFT = ["Menschen, die an mich geglaubt haben","Freundinnen und Freunde","meine Familie","meine Neugier","Durchhalten","Humor","mein Glaube","Sport oder Bewegung","etwas Praktisches tun","Zeit für mich"];
+const IMPULSE = ["Ein Mensch, der dir etwas zugetraut hat","Etwas, das du ganz allein gelernt hast","Ein Moment, in dem du aufgeben wolltest","Ein Schulwechsel oder Umzug","Ein Praktikum oder Job","Ein Abschluss, auf den du stolz bist","Wann hast du zum ersten Mal an deinen jetzigen Weg gedacht?"];
+const BEISPIEL = [
+  {alter:6, was:"Einschulung, viel Angst", wert:-2},
+  {alter:11, was:"Lehrerin traut mir Mathe zu", wert:4},
+  {alter:14, was:"Schulwechsel, keine Freunde", wert:-4},
+  {alter:16, was:"Praktikum in einer Werkstatt", wert:3},
+  {alter:22, was:"Job verloren", wert:-3},
+  {alter:24, was:"Zusage für den Neuanfang", wert:5}
+];
+
+let st = load();
+function blank(){ return {stufe:0, ev:[], kraft:[], ziel:{will:"", hilft:"", merke:""}, beispiel:false}; }
+function load(){ try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.ev)) return Object.assign(blank(), s); } catch(e){} return blank(); }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e){} }
+let uid = Date.now();
+const sorted = () => st.ev.slice().sort((a,b)=>a.alter-b.alter);
+
+const stage = $("#stage");
+function ziele(n){ let c=0; document.querySelectorAll("#ziele li").forEach(li=>{ const g = n >= +li.dataset.n; li.classList.toggle("got", g); if(g) c++; }); $("#zcount").textContent=c; }
+function bar(){ $("#steps").innerHTML = Array.from({length:STUFEN},(_,i)=>`<span class="${i<=Math.min(st.stufe,STUFEN-1)?"done":""}"></span>`).join(""); }
+function go(n, first){ st.stufe = n; save(); bar(); [s1,s2,s3,s4,s5,schluss][n](); ziele(n); if (first) return; var h2 = stage.querySelector("h2"); if (h2) { try { h2.focus({preventScroll:true}); } catch(e) {} } window.scrollTo({top: stage.offsetTop - 12, behavior: "smooth"}); }
+function head(nr, titel){ return `<div class="stepno">Stufe ${nr} von ${STUFEN}</div><h2 tabindex="-1">${titel}</h2>`; }
+function navRow(back, nextLabel="Weiter"){ return `<div class="row">${back!==null?`<button class="ghost" id="back">← Zurück</button>`:""}<button class="main" id="next">${nextLabel} →</button></div><div id="hold"></div>`; }
+function wire(back, next, check){
+  if (back!==null) $("#back").onclick = () => go(back);
+  $("#next").onclick = () => { const m = check ? check() : ""; if (m) { $("#hold").innerHTML = `<div class="msg info"><b>Noch ein Schritt.</b>${m}</div>`; return; } go(next); };
+}
+
+/* Zeitlinie zeichnen. Werte -5 … +5, Abstand nach Reihenfolge. */
+function lineSVG(list, opts={}){
+  const n = list.length;
+  if (!n) return `<p class="small">Hier erscheint deine Lernlinie, sobald du Stationen einträgst.</p>`;
+  const gap = 120, padL = 56, padR = 30, top = 40, h = 240, W = Math.max(360, padL + padR + (n-1)*gap), H = top + h + 64;
+  const y = v => top + h/2 - (v/5)*(h/2);
+  let g = "";
+  [5,0,-5].forEach(v => { g += `<line x1="${padL-10}" y1="${y(v)}" x2="${W-20}" y2="${y(v)}" stroke="var(--line)" ${v===0?'stroke-width="2"':'stroke-dasharray="4 6"'}/>`; });
+  g += `<text x="${padL-16}" y="${y(5)+5}" text-anchor="end" style="font-size:20px">☺</text><text x="${padL-16}" y="${y(-5)+5}" text-anchor="end" style="font-size:20px">☹</text>`;
+  const pts = list.map((e,i)=>[padL + i*gap, y(e.wert||0)]);
+  const path = pts.map((p,i)=>(i?"L":"M")+p[0]+" "+p[1]).join(" ");
+  const short = t => t.length > 16 ? t.slice(0,15)+"…" : t;
+  const dots = list.map((e,i)=>{
+    const [x,yy] = pts[i], up = (e.wert||0) >= 0;
+    const col = (e.wert||0) > 0 ? "var(--green)" : (e.wert||0) < 0 ? "var(--pink)" : "var(--muted)";
+    const lab = e.verborgen ? "🔒 privat" : short(e.was);
+    return `<circle cx="${x}" cy="${yy}" r="9" fill="${col}"/>`
+      + `<text class="lbl" x="${i===0&&n>1 ? x-8 : i===n-1&&n>1 ? x+8 : x}" y="${up ? yy-18 : yy+28}" text-anchor="${i===0&&n>1 ? "start" : i===n-1&&n>1 ? "end" : "middle"}">${esc(lab)}</text>`
+      + `<text class="age" x="${x}" y="${top+h+30}" text-anchor="middle">${esc(e.alter)} Jahre</text>`;
+  }).join("");
+  const desc = list.map(e=>`${e.alter} Jahre: ${e.verborgen?"privat":e.was}, Wert ${e.wert||0}`).join("; ");
+  return (W > 420 ? `<p class="small" style="margin:8px 0 0">Die Linie ist breiter als dein Bildschirm: zur Seite wischen →</p>` : "") + `<div class="linewrap"><svg class="tl" viewBox="0 0 ${W} ${H}" ${W > 420 ? `width="${W}"` : `width="100%"`} role="img" aria-label="Lernlinie. ${esc(desc)}">${g}<path d="${path}" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>${dots}</svg></div>`;
+}
+
+/* ---------- Stufe 1: Stationen sammeln ---------- */
+function s1(){
+  stage.innerHTML = head(1,"Welche Stationen haben dich hierher gebracht?") + `
+    <p class="task">Denk an deinen Weg vom ersten Schultag bis heute: Schule, Arbeit, Wechsel, alles, wo du etwas gelernt hast. Was war wichtig? Trag mindestens <b>drei</b> Stationen ein: Alter und ein Stichwort.</p>
+    <p class="hint">Fällt dir nichts ein? Tipp auf eine Frage:</p>
+    <div class="impulse">${IMPULSE.map((t,i)=>`<button type="button" data-i="${i}">${t}</button>`).join("")}</div>
+    <div class="addform">
+      <p class="hint full" id="frage" hidden style="margin:0;color:var(--ink);font-size:19px"></p>
+      <div><label for="alter">Alter</label><input id="alter" type="number" inputmode="numeric" min="0" max="80" placeholder="14"></div>
+      <div><label for="was">Was war da?</label><input id="was" type="text" maxlength="40" placeholder="Stichwort"></div>
+      <div class="full"><button class="ghost" id="add" type="button">+ Station eintragen</button></div>
+    </div>
+    <h3 id="listhead" hidden>Deine Stationen</h3>
+    <ul class="evlist" id="list"></ul>
+    <p class="small">Lieber erst schauen, wie es geht? <button class="ghost" id="bsp" type="button" style="font-size:16px;padding:6px 12px">Mit einem Beispiel ausprobieren</button></p>
+    ` + navRow(null);
+  const list = () => {
+    $("#list").innerHTML = sorted().map(e=>`<li class="ev"><span class="age">${esc(e.alter)} Jahre</span><span class="was">${esc(e.was)}</span><button type="button" data-id="${e.id}" aria-label="${esc(e.was)} löschen">✕ löschen</button></li>`).join("");
+    $("#listhead").hidden = !st.ev.length; $("#list").querySelectorAll("button").forEach(b=>b.onclick=()=>{ st.ev = st.ev.filter(e=>String(e.id)!==b.dataset.id); save(); list(); });
+  };
+  stage.querySelectorAll(".impulse button").forEach(b=>b.onclick=()=>{ const f = $("#frage"); f.hidden = false; f.innerHTML = "<b>Deine Frage:</b> " + IMPULSE[b.dataset.i]; $("#alter").focus(); });
+  $("#add").onclick = () => {
+    const a = parseInt($("#alter").value,10), w = $("#was").value.trim();
+    if (isNaN(a) || a < 0 || a > 80 || !w) { $("#hold").innerHTML = `<div class="msg info"><b>Fast.</b>Trag ein Alter (eine Zahl) und ein Stichwort ein.</div>`; return; }
+    st.ev.push({id: uid++, alter:a, was:w, wert:0, privat:true}); st.beispiel = false; save();
+    $("#alter").value = ""; $("#was").value = ""; $("#frage").hidden = true; $("#hold").innerHTML = ""; list(); $("#alter").focus();
+  };
+  $("#was").onkeydown = e => { if (e.key==="Enter") $("#add").click(); };
+  $("#bsp").onclick = () => { st.ev = BEISPIEL.map(e=>Object.assign({id:uid++, privat:true}, e)); st.beispiel = true; save(); list(); $("#hold").innerHTML = `<div class="msg info"><b>Beispiel geladen.</b>Das ist ein ausgedachter Lernweg. Du kannst ihn ansehen, ändern oder alles löschen und deinen eigenen eintragen.</div>`; };
+  list();
+  wire(null, 1, () => st.ev.length < 3 ? `Trag noch ${3-st.ev.length} Station${3-st.ev.length>1?"en":""} ein.` : "");
+}
+
+/* ---------- Stufe 2: Bewerten, Linie entsteht ---------- */
+function s2(){
+  const L = sorted();
+  stage.innerHTML = head(2,"Wie ging es dir da?") + `
+    <p class="task">Schieb für jede Station den Regler: Wie gut ging es dir mit dem Lernen in dieser Zeit? Von <b>−5</b> (sehr schwer) bis <b>+5</b> (richtig gut). Die Linie zeichnet sich mit.</p>
+    <div id="line">${lineSVG(L)}</div>
+    ${L.map(e=>`<div class="slide"><div class="lab"><label for="r${e.id}">${esc(e.alter)} Jahre: ${esc(e.was)}</label><b id="v${e.id}">${e.wert>0?"+":""}${e.wert}</b></div><input type="range" id="r${e.id}" min="-5" max="5" step="1" value="${e.wert}"><div class="ends" aria-hidden="true"><span>sehr schwer</span><span>richtig gut</span></div></div>`).join("")}
+    ` + navRow(0);
+  L.forEach(e => { $("#r"+e.id).oninput = ev => { e.wert = +ev.target.value; $("#v"+e.id).textContent = (e.wert>0?"+":"")+e.wert; $("#line").innerHTML = lineSVG(sorted()); save(); }; });
+  wire(0, 2, () => L.every(e=>e.wert===0) ? "Schieb mindestens einen Regler. Eine ganz flache Linie gibt es selten." : "");
+}
+
+/* ---------- Stufe 3: Kraftquellen finden ---------- */
+function s3(){
+  const L = sorted();
+  const hoch = L.filter(e=>e.wert>0).sort((a,b)=>b.wert-a.wert).slice(0,2);
+  const tief = L.filter(e=>e.wert<0).sort((a,b)=>a.wert-b.wert).slice(0,1);
+  const chipBox = id => `<div class="chips" id="${id}">${KRAFT.map(k=>`<button type="button" data-k="${esc(k)}" class="${st.kraft.includes(k)?"on":""}">${k}</button>`).join("")}</div>`;
+  stage.innerHTML = head(3,"Was hat dir Kraft gegeben?") + `
+    <p class="task">Schau auf deine Linie. Die Hochpunkte zeigen, wo es gut lief. Dort steckt etwas, das dir geholfen hat. Das nennt man eine <b>Ressource</b> oder <b>Kraftquelle</b>.</p>
+    ${lineSVG(L)}
+    ${hoch.map(e=>`<div class="peak"><h3>☺ ${esc(e.alter)} Jahre: ${esc(e.was)}</h3><p class="hint" style="margin:0">Was hat dir da geholfen? Tipp alles an, was passt.</p>${chipBox("h"+e.id)}</div>`).join("") || `<div class="msg info"><b>Keine Hochpunkte.</b>Auch das ist eine Lernlinie. Frag dich trotzdem: Was hat dich bis hierher getragen? Tipp an, was passt.</div>${chipBox("h0")}`}
+    ${tief.map(e=>`<div class="peak low"><h3>☹ ${esc(e.alter)} Jahre: ${esc(e.was)}</h3><p style="margin:0">Du bist durch diese Zeit gekommen. <b>Was hat dir da geholfen, oder was hätte dir gefehlt?</b> Tipp an, was passt.</p>${chipBox("t"+e.id)}</div>`).join("")}
+    <div class="frame"><div><label for="eigen">Etwas anderes? Schreib es auf.</label><input id="eigen" type="text" maxlength="40" placeholder="Meine Kraftquelle …"></div></div>
+    <div id="sum"></div>` + navRow(1);
+  const sum = () => { const k = st.kraft; $("#sum").innerHTML = k.length ? `<div class="msg ok"><b>Deine Kraftquellen</b><div class="chips">${k.map(x=>`<span class="fw">${esc(x)}</span>`).join("")}</div>Das nimmst du mit auf deinen weiteren Weg.</div>` : ""; };
+  stage.querySelectorAll(".chips button").forEach(b => b.onclick = () => {
+    const k = b.dataset.k; const on = st.kraft.includes(k);
+    st.kraft = on ? st.kraft.filter(x=>x!==k) : st.kraft.concat(k); save();
+    stage.querySelectorAll(`.chips button`).forEach(x=>{ if (x.dataset.k===k) x.classList.toggle("on", !on); }); sum();
+  });
+  const eig = $("#eigen"); const old = st.kraft.find(k=>!KRAFT.includes(k)); if (old) eig.value = old;
+  eig.onchange = () => { st.kraft = st.kraft.filter(k=>KRAFT.includes(k)); if (eig.value.trim()) st.kraft.push(eig.value.trim()); save(); sum(); };
+  sum();
+  wire(1, 3, () => { eig.onchange(); return st.kraft.length ? "" : "Tipp mindestens eine Kraftquelle an oder schreib eine auf."; });
+}
+
+/* ---------- Stufe 4: Privat oder teilen ---------- */
+function s4(){
+  stage.innerHTML = head(4,"Was bleibt privat, was teilst du?") + `
+    <p class="task">Vielleicht zeigst du deine Lernlinie anderen, zum Beispiel in einer Gruppe oder einem Gespräch. Lege fest, was du erzählen willst. Am Anfang ist alles <b>privat</b>. Du gibst nur frei, was du teilen möchtest.</p>
+    <div id="rows"></div>
+    <div class="views" role="group" aria-label="Ansicht"><button type="button" data-v="ich" class="on">So siehst du es</button><button type="button" data-v="gruppe">So sieht es die Gruppe</button></div>
+    <div id="line"></div>
+    <div class="msg info"><b>Deine Grenze gilt.</b>Was hinter einem Schloss steht, erzählst du nicht. Niemand fragt nach. Das gilt auch umgekehrt: Wer dir von seinem Leben erzählt, darf auch Nein sagen.</div>` + navRow(2);
+  let view = "ich";
+  const draw = () => {
+    const L = sorted().map(e => Object.assign({}, e, {verborgen: view==="gruppe" && e.privat}));
+    $("#line").innerHTML = lineSVG(L);
+    $("#rows").innerHTML = sorted().map(e=>`<div class="privrow"><span>${esc(e.alter)} Jahre: ${esc(e.was)}</span><button type="button" data-id="${e.id}" class="${e.privat?"":"teilen"}" aria-pressed="${!e.privat}">${e.privat?"🔒 privat":"👁 teile ich"}</button></div>`).join("");
+    $("#rows").querySelectorAll("button").forEach(b=>b.onclick=()=>{ const e = st.ev.find(x=>String(x.id)===b.dataset.id); e.privat = !e.privat; save(); draw(); });
+  };
+  stage.querySelectorAll(".views button").forEach(b=>b.onclick=()=>{ view = b.dataset.v; stage.querySelectorAll(".views button").forEach(x=>x.classList.toggle("on", x===b)); draw(); });
+  draw();
+  wire(2, 4, null);
+}
+
+/* ---------- Stufe 5: Ziel ableiten ---------- */
+function s5(){
+  const opts = `<option value="">Wähle eine Kraftquelle</option>` + st.kraft.map(k=>`<option ${st.ziel.hilft===k?"selected":""}>${esc(k)}</option>`).join("");
+  stage.innerHTML = head(5,"Was ist dein nächstes Ziel?") + `
+    <p class="task">Deine Linie zeigt, was dir hilft. Nutze das für das, was jetzt vor dir liegt. Ergänze die drei Sätze. Ein kleines Ziel ist besser als ein großes, das du nicht schaffst.</p>
+    <div class="frame">
+      <div><label for="will">Als Nächstes will ich …</label><input id="will" type="text" maxlength="90" placeholder="z. B. mich trauen, Fragen zu stellen"></div>
+      <div><label for="hilft">Dabei hilft mir …</label><select id="hilft">${opts}</select></div>
+      <div><label for="merke">Ich merke, dass ich es geschafft habe, wenn …</label><input id="merke" type="text" maxlength="90" placeholder="z. B. ich jede Woche einmal etwas gefragt habe"></div>
+    </div>` + navRow(3, "Meine Lernlinie ansehen");
+  ["will","merke"].forEach(k => { const i = $("#"+k); i.value = st.ziel[k]; i.oninput = () => { st.ziel[k] = i.value; save(); }; });
+  $("#hilft").onchange = e => { st.ziel.hilft = e.target.value; save(); };
+  wire(3, 5, () => !st.ziel.will.trim() ? "Schreib auf, was du schaffen willst." : !st.ziel.hilft ? "Wähle aus, was dir dabei hilft." : !st.ziel.merke.trim() ? "Schreib auf, woran du merkst, dass du es geschafft hast." : "");
+}
+
+/* ---------- Schluss: Deine Lernlinie ---------- */
+function schluss(){
+  st.stufe = 5; save(); bar(); ziele(5);
+  stage.innerHTML = `<div class="stepno">Dein Ergebnis</div><h2 tabindex="-1">Deine Lernlinie ist fertig</h2>
+    <div class="poster" id="poster">
+      <p class="ptitle">Meine Lernlinie</p>
+      <p class="psub">Bis heute${st.beispiel?" · Beispiel":""}</p>
+      <div class="views" role="group" aria-label="Ansicht"><button type="button" data-v="ich" class="on">Für mich</button><button type="button" data-v="gruppe">Für die Gruppe</button></div>
+      <div id="line"></div>
+      <h3>Meine Kraftquellen</h3>
+      <div class="chips">${st.kraft.map(k=>`<span class="fw">${esc(k)}</span>`).join("")}</div>
+      <h3>Mein nächstes Ziel</h3>
+      <div class="goal"><p>Ich will <b>${esc(st.ziel.will)}</b>.</p><p>Dabei hilft mir: <b>${esc(st.ziel.hilft)}</b>.</p><p>Ich merke es, wenn <b>${esc(st.ziel.merke)}</b>.</p></div>
+    </div>
+    <p class="small">Mach ein Bildschirmfoto, wenn du deine Lernlinie mitnehmen willst. Sie bleibt außerdem auf diesem Gerät gespeichert. <button class="ghost" id="loeschen" type="button" style="font-size:16px;padding:6px 12px">Alles löschen</button></p>
+    <h3>Wozu das Ganze?</h3>
+    <p>Wer auf seinen Lernweg schaut, sieht mehr als Noten und Zeugnisse. Du siehst, was dich durch schwere Zeiten getragen hat. Genau das kannst du wieder nutzen, wenn etwas Neues schwer wird.</p>
+    <p>Du hast auch gemerkt: Manches erzählt man gern, manches behält man lieber für sich. Das gilt für jeden Menschen. Diese Art, auf ein Leben zu schauen, heißt <b>Biografiearbeit</b>.</p>
+    <div class="msg info"><b>Deine Lernlinie geht weiter</b>Sie bleibt auf diesem Gerät gespeichert. Du kannst sie jederzeit öffnen, neue Stationen eintragen und weiterarbeiten.</div>
+    <div id="spielende"></div>`;
+  let view = "ich";
+  const draw = () => $("#line").innerHTML = lineSVG(sorted().map(e => Object.assign({}, e, {verborgen: view==="gruppe" && e.privat})));
+  stage.querySelectorAll("#poster .views button").forEach(b=>b.onclick=()=>{ view=b.dataset.v; stage.querySelectorAll("#poster .views button").forEach(x=>x.classList.toggle("on", x===b)); draw(); });
+  draw();
+  let sicher = false;
+  $("#loeschen").onclick = e => {
+    if (!sicher) { sicher = true; e.target.textContent = "Wirklich löschen? Noch einmal tippen"; return; }
+    st = blank(); save(); go(0);
+  };
+  spielEnde("#spielende", { titel:"Deine Lernlinie ist fertig.", text:"Du kannst jederzeit weiterarbeiten: Tipp auf „Neu beginnen“. Deine Einträge bleiben erhalten, bis du sie löschst.", neu: () => go(0) });
+}
+
+$("#restart").onclick = () => go(0);
+go(st.stufe >= 5 ? 5 : 0, true);
+})();
+</script>
+<style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Werkstatt"><img src="../../bilder/barbara-figur.webp" alt=""></a>
+</body>
+</html>
