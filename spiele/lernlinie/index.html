@@ -267,8 +267,8 @@ function s1(){
     <div class="impulse">${IMPULSE.map((t,i)=>`<button type="button" data-i="${i}">${t}</button>`).join("")}</div>
     <div class="addform">
       <p class="hint full" id="frage" hidden style="margin:0;color:var(--ink);font-size:19px"></p>
-      <div><label for="alter">Alter</label><input id="alter" type="number" inputmode="numeric" min="0" max="80" placeholder="14"></div>
-      <div><label for="was">Was war da?</label><input id="was" type="text" maxlength="40" placeholder="Stichwort"></div>
+      <div><label for="alter">Alter</label><input id="alter" type="number" name="alter-feld" autocomplete="off" inputmode="numeric" min="0" max="80" placeholder="14"></div>
+      <div><label for="was">Was war da?</label><input id="was" type="text" name="was-feld" autocomplete="off" autocorrect="on" autocapitalize="sentences" spellcheck="true" enterkeyhint="next" maxlength="40" placeholder="Stichwort"></div>
       <div class="full"><button class="ghost" id="add" type="button">+ Station eintragen</button></div>
     </div>
     <h3 id="listhead" hidden>Deine Stationen</h3>
@@ -315,7 +315,7 @@ function s3(){
     ${lineSVG(L)}
     ${hoch.map(e=>`<div class="peak"><h3>☺ ${esc(e.alter)} Jahre: ${esc(e.was)}</h3><p class="hint" style="margin:0">Was hat dir da geholfen? Tipp alles an, was passt.</p>${chipBox("h"+e.id)}</div>`).join("") || `<div class="msg info"><b>Keine Hochpunkte.</b>Auch das ist eine Lernlinie. Frag dich trotzdem: Was hat dich bis hierher getragen? Tipp an, was passt.</div>${chipBox("h0")}`}
     ${tief.map(e=>`<div class="peak low"><h3>☹ ${esc(e.alter)} Jahre: ${esc(e.was)}</h3><p style="margin:0">Du bist durch diese Zeit gekommen. <b>Was hat dir da geholfen, oder was hätte dir gefehlt?</b> Tipp an, was passt.</p>${chipBox("t"+e.id)}</div>`).join("")}
-    <div class="frame"><div><label for="eigen">Etwas anderes? Schreib es auf.</label><input id="eigen" type="text" maxlength="40" placeholder="Meine Kraftquelle …"></div></div>
+    <div class="frame"><div><label for="eigen">Etwas anderes? Schreib es auf.</label><input id="eigen" type="text" name="eigen-feld" autocomplete="off" autocorrect="on" autocapitalize="sentences" spellcheck="true" enterkeyhint="next" maxlength="40" placeholder="Meine Kraftquelle …"></div></div>
     <div id="sum"></div>` + navRow(1);
   const sum = () => { const k = st.kraft; $("#sum").innerHTML = k.length ? `<div class="msg ok"><b>Deine Kraftquellen</b><div class="chips">${k.map(x=>`<span class="fw">${esc(x)}</span>`).join("")}</div>Das nimmst du mit auf deinen weiteren Weg.</div>` : ""; };
   stage.querySelectorAll(".chips button").forEach(b => b.onclick = () => {
@@ -324,7 +324,7 @@ function s3(){
     stage.querySelectorAll(`.chips button`).forEach(x=>{ if (x.dataset.k===k) x.classList.toggle("on", !on); }); sum();
   });
   const eig = $("#eigen"); const old = st.kraft.find(k=>!KRAFT.includes(k)); if (old) eig.value = old;
-  eig.onchange = () => { st.kraft = st.kraft.filter(k=>KRAFT.includes(k)); if (eig.value.trim()) st.kraft.push(eig.value.trim()); save(); sum(); };
+  eig.oninput = eig.onchange = () => { st.kraft = st.kraft.filter(k=>KRAFT.includes(k)); if (eig.value.trim()) st.kraft.push(eig.value.trim()); save(); sum(); };
   sum();
   wire(1, 3, () => { eig.onchange(); return st.kraft.length ? "" : "Tipp mindestens eine Kraftquelle an oder schreib eine auf."; });
 }
@@ -355,13 +355,14 @@ function s5(){
   stage.innerHTML = head(5,"Was ist dein nächstes Ziel?") + `
     <p class="task">Deine Linie zeigt, was dir hilft. Nutze das für das, was jetzt vor dir liegt. Ergänze die drei Sätze. Ein kleines Ziel ist besser als ein großes, das du nicht schaffst.</p>
     <div class="frame">
-      <div><label for="will">Als Nächstes will ich …</label><input id="will" type="text" maxlength="90" placeholder="z. B. mich trauen, Fragen zu stellen"></div>
+      <div><label for="will">Als Nächstes will ich …</label><input id="will" type="text" name="will-feld" autocomplete="off" autocorrect="on" autocapitalize="sentences" spellcheck="true" enterkeyhint="next" maxlength="90" placeholder="z. B. mich trauen, Fragen zu stellen"></div>
       <div><label for="hilft">Dabei hilft mir …</label><select id="hilft">${opts}</select></div>
-      <div><label for="merke">Ich merke, dass ich es geschafft habe, wenn …</label><input id="merke" type="text" maxlength="90" placeholder="z. B. ich jede Woche einmal etwas gefragt habe"></div>
+      <div><label for="merke">Ich merke, dass ich es geschafft habe, wenn …</label><input id="merke" type="text" name="merke-feld" autocomplete="off" autocorrect="on" autocapitalize="sentences" spellcheck="true" enterkeyhint="next" maxlength="90" placeholder="z. B. ich jede Woche einmal etwas gefragt habe"></div>
     </div>` + navRow(3, "Meine Lernlinie ansehen");
-  ["will","merke"].forEach(k => { const i = $("#"+k); i.value = st.ziel[k]; i.oninput = () => { st.ziel[k] = i.value; save(); }; });
+  const lesen = () => { st.ziel.will = $("#will").value; st.ziel.merke = $("#merke").value; st.ziel.hilft = $("#hilft").value; save(); };
+  ["will","merke"].forEach(k => { const i = $("#"+k); i.value = st.ziel[k]; i.oninput = lesen; i.onchange = lesen; i.onblur = lesen; });
   $("#hilft").onchange = e => { st.ziel.hilft = e.target.value; save(); };
-  wire(3, 5, () => !st.ziel.will.trim() ? "Schreib auf, was du schaffen willst." : !st.ziel.hilft ? "Wähle aus, was dir dabei hilft." : !st.ziel.merke.trim() ? "Schreib auf, woran du merkst, dass du es geschafft hast." : "");
+  wire(3, 5, () => { lesen(); return !st.ziel.will.trim() ? "Schreib auf, was du schaffen willst." : !st.ziel.hilft ? "Wähle aus, was dir dabei hilft." : !st.ziel.merke.trim() ? "Schreib auf, woran du merkst, dass du es geschafft hast." : ""; });
 }
 
 /* ---------- Schluss: Deine Lernlinie ---------- */
