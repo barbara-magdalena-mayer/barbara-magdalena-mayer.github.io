@@ -61,7 +61,7 @@ dialog::backdrop{background:#000a}dialog h2{margin:0 0 8px;font-size:19px}
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
 <header>
  <div><h1>Drei Begegnungen, die nicht laufen wie erhofft</h1><small>Lernen am Optimum · Ein Zimmer, drei Begegnungen</small></div>
- <div class="hbtns"><span class="count" id="count" aria-live="polite">0 / 12 entdeckt</span><button class="hbtn" id="openweg">Mein Weg</button><button class="hbtn" id="restart">↺ Neu</button><a class="back" href="../../">← Werkstatt</a></div>
+ <div class="hbtns"><span class="count" id="count" aria-live="polite">0 / 12 entdeckt</span><button class="hbtn" id="openweg">Mein Weg</button><button class="hbtn" id="restart">↺ Neu</button><a class="back" href="../../arbeitsproben.html">← Arbeitsproben</a></div>
 </header>
 <div class="main">
  <div class="stagewrap">
@@ -423,7 +423,7 @@ function colleague(){
  show('door','Die Kollegin','',T().colleague,Object.keys(L).map(k=>[L[k],()=>{log('Auf „Die redet sowieso nie“: '+L[k]);
   show('door','Ein Satz, der bleibt','',RE[k],[['Zum Abschluss',finish,'wide']],[hint('Was so ein Satz mit deiner Rolle macht, ist Thema der nächsten Sequenz: in der Rolle bleiben.')])}]));
 }
-function endBox(){const d=el('div');spielEnde(d,{neu:start,titel:'Diese Begegnung ist fertig.',text:'Du kannst oben eine andere Begegnung wählen. Oder du beginnst ganz von vorn oder gehst zurück zur Werkstatt.'});return d}
+function endBox(){const d=el('div');spielEnde(d,{neu:start,titel:'Diese Begegnung ist fertig.',text:'Du kannst oben eine andere Begegnung wählen. Oder du beginnst ganz von vorn oder gehst zurück zu den Arbeitsproben.'});return d}
 function finish(){
  S.phase='end';done.add(S.sit);
  show(null,'Die Begegnung darf offen bleiben','Du hast in deiner Rolle gehandelt. Ob die Person zufrieden ist, entscheidet nicht allein über deine Professionalität. Du hast '+S.seen.size+' von '+N+' Dingen im Zimmer entdeckt.','',

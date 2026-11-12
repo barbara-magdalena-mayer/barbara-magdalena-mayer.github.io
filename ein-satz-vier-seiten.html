@@ -114,7 +114,7 @@ footer a{color:var(--pink-dark)}
 
 <footer><div class="wrap">
   <p>Idee, Fälle und Didaktik: Barbara Magdalena Mayer · didaktische Grundlage: B. M. Mayer, „Erfolgreich durch die Pflegeausbildung“ (2026) · technische Umsetzung mit KI-Unterstützung · alle Personen und KI-Aussagen sind erfunden bzw. simuliert.</p>
-  <p><a href="index.html">← Zurück zur Werkstatt</a></p>
+  <p><a href="arbeitsproben.html">← Zurück zu den Arbeitsproben</a></p>
 </div></footer>
 
 <script>
@@ -514,7 +514,7 @@ function viewCase(){
   $("#toReveal").onclick=()=>{st.kiStage="done";st.rev=true;S.done[i]=true;render();document.querySelector(".reveal").scrollIntoView({behavior:"smooth",block:"start"});};
   $("#skipKi").onclick=()=>{st.kiStage="done";st.rev=true;S.done[i]=true;render();document.querySelector(".reveal").scrollIntoView({behavior:"smooth",block:"start"});};
  }
- if(rev){$("#oral").oninput=e=>{st.oral=e.target.value;};spielEnde("#spielende",{titel:"Dieser Fall ist fertig.",text:"Wie geht es weiter? Wähle den nächsten Fall, beginne ganz von vorn oder geh zurück zur Werkstatt.",weiter:{text:"Nächsten Fall wählen",onclick:()=>{S.view="pick";render();window.scrollTo({top:0});}}});}
+ if(rev){$("#oral").oninput=e=>{st.oral=e.target.value;};spielEnde("#spielende",{titel:"Dieser Fall ist fertig.",text:"Wie geht es weiter? Wähle den nächsten Fall, beginne ganz von vorn oder geh zurück zu den Arbeitsproben.",weiter:{text:"Nächsten Fall wählen",onclick:()=>{S.view="pick";render();window.scrollTo({top:0});}}});}
  function check(){const need=[];if(!SIDES.every(s=>st.pick[s.k]!==undefined||(st.own[s.k]||"").trim().length>3))need.push("alle vier Seiten");if(!st.ax)need.push("ein Axiom");if(st.why.trim().length<8)need.push("eine Begründung");if(st.miss.trim().length<8)need.push("das mögliche Missverständnis");const b=$("#rev");if(!b)return;b.disabled=need.length>0;$("#msg").textContent=need.length?"Noch offen: "+need.join(", "):"";}
 }
 

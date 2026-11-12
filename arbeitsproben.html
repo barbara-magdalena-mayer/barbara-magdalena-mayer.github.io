@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Arbeitsproben · Barbara Magdalena Mayer</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Schmale, mobilfreundliche Linkseite mit den lokalen Schriften und Farben der Hauptseite. */
+@font-face{font-family:"Literata";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/literata-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Literata";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-style:normal;font-weight:500;font-display:swap;src:url("fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
+:root{
+  --bg:#faeef1; --ink:#24382c; --muted:#5e5459; --line:#ead5db;
+  --green:#2f5240; --pink:#b04e6b; --pink-dark:#8a3a52; --night:#0b1214; --teal:#7cc7bc; --surface:#ffffff;
+  --display:"Literata",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --plus:#ff0a69;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{width:min(440px,100%);margin:0 auto;padding-block:40px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.plus-mark{display:block;color:var(--plus);font-family:var(--display);font-size:2rem;font-weight:600;line-height:1}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
+h1{font-family:var(--display);font-weight:600;font-size:1.6rem;line-height:1.15;margin:0;text-wrap:balance}
+.lead{margin:0;color:var(--muted);max-width:32ch}
+.links{list-style:none;margin:10px 0 0;padding:0;width:100%;display:flex;flex-direction:column;gap:12px}
+.links a,.links button{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;text-decoration:none;font:inherit;font-weight:600;border:0;border-radius:14px;padding:14px 18px;cursor:pointer;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 3px 0 var(--line)}
+.links small{font-weight:400;font-size:.85rem;color:var(--muted)}
+.links .group{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin:10px 0 -4px}
+.links .night{background:var(--night);color:#fff;border-color:var(--night);box-shadow:0 3px 0 #2c3e43}
+.links .night small{color:var(--teal)}
+.links .pink{background:var(--pink);color:#fff;border-color:var(--pink);box-shadow:0 3px 0 var(--pink-dark)}
+.links .pink small{color:#fde4ec}
+a:focus-visible,button:focus-visible{outline:3px solid #d4a373;outline-offset:2px}
+.mail{font-family:var(--mono);font-size:.85rem;color:var(--muted);user-select:all;word-break:break-all}
+.media-note{width:100%;align-self:stretch;text-align:left;border:2px solid var(--pink);background:#fff9f5;border-radius:14px;padding:14px;display:grid;gap:9px;box-shadow:0 4px 14px rgba(176,78,107,.1)}
+.media-note-head{display:flex;align-items:center;gap:9px}
+.media-note-icon{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;font-size:1.2rem;line-height:1}
+.media-note h2{font-family:var(--body);font-size:1rem;line-height:1.25;margin:0;color:var(--pink-dark)}
+.media-note p{margin:0;font-size:.9rem}
+.media-note details{border-top:1px solid var(--line);padding-top:8px}
+.media-note summary{cursor:pointer;color:var(--green);font-weight:600}
+.browser-steps{display:grid;gap:8px;margin-top:8px}
+.browser-steps p{font-size:.85rem}
+.media-note a{color:var(--green);font-weight:600;text-decoration:underline}
+@media(prefers-reduced-motion:no-preference){.media-note-icon{animation:media-note-pulse .75s ease-out 1s 2}@keyframes media-note-pulse{50%{transform:scale(1.12);box-shadow:0 0 0 5px rgba(176,78,107,.17)}}}
+@media(prefers-reduced-motion:reduce){.media-note-icon{animation:none}}
+.copied{font-size:.85rem;color:var(--green)}
+footer{font-size:.8rem;color:var(--muted);margin-top:8px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px}
+footer a{color:var(--green)}
+</style>
+</head>
+<body>
+<style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Alles hier sind Arbeitsproben.</b> Vereinfachte Modelle, um zu verstehen und Einblick zu bekommen. Sie zeigen, was möglich ist. Keine Beratung, keine fertigen Produkte.</p>
+<main class="wrap">
+  <div class="plus-mark" aria-label="Plus-Marke von Barbara Magdalena Mayer">Plus</div>
+  <span class="eyebrow">Barbara Magdalena Mayer · Bildungswissenschaft und KI</span>
+  <h1>Arbeitsproben</h1>
+  <p class="lead">Lernspiele und Prototypen zu Lernen, Arbeit und KI, geordnet nach Berufen.</p>
+
+  <ul class="links">
+    <li class="group">Hier anfangen</li>
+    <li><a class="night" href="https://barbara-magdalena-mayer.github.io/spiele/lernlinie/">▶ Deine Lernlinie: Was hat dich bis hierher gebracht?<small>Didaktik · für jeden Beruf · deine Stationen, Kraftquellen, nächstes Ziel</small></a></li>
+    <li class="group">Helfende Berufe</li>
+    <li><a class="night" href="https://barbara-magdalena-mayer.github.io/spiele/darf-das-in-den-chat/">▶ Daten in der Ausbildung: Darf das in den Chat?<small>Neu · Digitale Bildung · acht Situationen, Datenschutz, Schweigepflicht · mit KI</small></a></li>
+    <li><a class="pink" href="https://barbara-magdalena-mayer.github.io/spiele/wunde/">▶ Wunden messen und dokumentieren: Was heißt „groß“ für den Computer?<small>Digitale Bildung · Wunde messen, eintragen, Verlauf · mit Python und KI</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/spiele/zucker/">▶ Blutzucker-Sensor auf der Haut: Wie kommen die Werte in deine App?<small>Digitale Bildung · Sensor, App, Alarm, Keto · mit Python und KI</small></a></li>
+    <li class="group">Handwerkliche Berufe</li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/lernen-am-optimum-digitale-bildung.html">Lernen am Optimum: Digitale Bildung<small>Lernpfad in vier Teilen, mit KI als Zweitstimme</small></a></li>
+    <li><a class="night" href="https://barbara-magdalena-mayer.github.io/spiele/maschine/">▶ Wie lernt eine Maschine?<small>KI · Teil 1 von 4 · hier anfangen</small></a></li>
+    <li><a class="pink" href="https://barbara-magdalena-mayer.github.io/bauphysik-u-wert/">▶ Deine Wand verliert Wärme. Wie viel?<small>Fachlernen · Teil 4 von 4 · mit KI</small></a></li>
+    <li class="group">Alles auf einen Blick</li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html">Alle Arbeitsproben ausführlich<small>Jede Arbeit mit Form, Lernabsicht und Rolle der KI, auch zu KI für alle Berufe</small></a></li>
+    <li><a href="https://barbara-magdalena-mayer.github.io/">← Zur Startseite<small>Bildungswissenschaft und KI: das Aktuelle</small></a></li>
+  </ul>
+  <footer><span>Stand: November 2026</span><a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html#impressum">Impressum</a><a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html#datenschutz">Datenschutz</a></footer>
+</main>
+
+<style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="./" aria-label="Barbara – zur Startseite"><img src="bilder/barbara-figur.webp" alt=""></a>
+</body>
+</html>

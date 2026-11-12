@@ -1,5 +1,7 @@
 # Hinweise für Claude
 
+Überschrift der ganzen Website (Nov. 2026): **Bildungswissenschaft und KI** – „Das Plus ist die KI.“ Pflege bleibt Barbaras Beispiel und Fach.
+
 Beim Einbinden oder Ändern eines Spiels immer `CHECKLISTE.md` vollständig abarbeiten.
 
 Aufbau der Website:
@@ -9,14 +11,15 @@ Aufbau der Website:
 - **Einstieg „Hier anfangen“** (Okt. 2026, von Barbara entschieden): Vor beiden Bereichen steht überall `spiele/lernlinie/` „Deine Lernlinie: Was hat dich bis hierher gebracht?“ (Didaktik · Lernen am Optimum; berufsoffen, Biografiearbeit am eigenen Lernweg, ohne KI, Einträge bleiben im Browser). Ausnahme von der Regel, dass berufsoffene Arbeiten nicht auf die Startseite kommen. Ein Folgespiel soll die gespeicherte Lernlinie (localStorage `lernlinie-v1`) weiterverwenden.
 - **Reihenfolge überall: Helfende Berufe zuerst, dann Handwerkliche Berufe** – Neuestes steht oben. „Drei Entscheidungen, eine KI, die irren kann“ trägt das Etikett „Lernen am Optimum: Pflege“. Arbeiten, die zu keinem Beruf gehören (KI für alle Berufe), stehen nur in `ueber-mich.html` unter „Für alle Berufe: KI“, nicht auf der Startseite.
 - Jede Arbeit trägt einen **Blick** vorne im Etikett: Fachlernen, Didaktik, KI oder Digitale Bildung. Es soll die Bandbreite der Arbeitsproben zeigen.
-- `index.html` = **Startseite = Werkstatt**: kurze Linkliste mit Zwischenüberschriften „Hier anfangen“ (Lernlinie), „Helfende Berufe“ (2–3 Arbeiten, die neueste mit „Neu ·“ und dunkler Karte) und „Handwerkliche Berufe“ (Projektseite, Teil 1, Teil 4), dann „Alles auf einen Blick“ mit „Über mich & alle Arbeitsproben“; volle Adressen! Bio-Links auf Instagram und Bluesky landen hier.
+- `index.html` = **Startseite „Bildungswissenschaft und KI“** (Nov. 2026 von Barbara entschieden, ersetzt die Werkstatt-Linkliste als Startseite): Motto „Das Plus ist die KI.“, kurzer Satz zu ihr, dann „Aktuell“ (immer das aktuelle Thema; jetzt die Handreichung `artikel/ki-an-der-berufsbildenden-schule/` als dunkle große Karte, dazu das Lernspiel `spiele/darf-das-in-den-chat/` und `schulrechner.html`), „Grundlegendes“ (Lernen am Optimum in `grundbegriffe.html#optimum`, die Lernlinie, Über mich), „Arbeitsproben“ (Link auf `arbeitsproben.html`), Kontakt. Volle Adressen! Bio-Links auf Instagram und Bluesky landen hier. Spiele stehen hier nur, wenn sie zum aktuellen Thema gehören.
+- `arbeitsproben.html` = **Arbeitsproben** (früher die Werkstatt-Startseite): kurze Linkliste mit „Hier anfangen“ (Lernlinie), „Helfende Berufe“ (2–3 Arbeiten, die neueste mit „Neu ·“ und dunkler Karte), „Handwerkliche Berufe“ (Projektseite, Teil 1, Teil 4), „Alles auf einen Blick“. Alle Rückwege aus Spielen („← Zurück zu den Arbeitsproben“, auch im Ende-Kasten von `spielende.js`) führen hierher. Die Figur führt zur Startseite.
 - Kein „Technik“ und kein „Informatik“ in Namen, Etiketten und eigenen Texten (Barbara hat Informatik nicht studiert). „Informatik“ nur in Quellentiteln, z. B. Gesellschaft für Informatik. `lernen-am-optimum-informatik.html` ist nur Weiterleitung.
 - Kein „Technik“ im Namen. Die Frage „Wem gehört dein Lernweg?“ bleibt **offen**: Nirgends auf der Website wird sie beantwortet (kein „Der Lernweg gehört dir“).
 - `ueber-mich.html` = Über mich, **alle** Arbeitsproben ausführlich, Impressum und Datenschutz.
 - `grundbegriffe.html` = Begriffe und „Die Arbeitsproben erklärt“.
 - `werkstatt.html` = nur Weiterleitung auf die Startseite (alte Links). Nicht mehr bearbeiten.
 
-Jedes Spiel hat ein **klares Ende**: den Ende-Kasten aus `spielende.js` mit „↺ Neu beginnen“ und „← Zurück zur Werkstatt“ (im Lernpfad und bei Fallsammlungen zusätzlich ein Weiter-Knopf). Teil 4 (`bauphysik-u-wert`) hat denselben Kasten fest eingebaut, weil das SCORM-Paket ohne die Website laufen muss.
+Jedes Spiel hat ein **klares Ende**: den Ende-Kasten aus `spielende.js` mit „↺ Neu beginnen“ und „← Zurück zu den Arbeitsproben“ (im Lernpfad und bei Fallsammlungen zusätzlich ein Weiter-Knopf). Teil 4 (`bauphysik-u-wert`) hat denselben Kasten fest eingebaut, weil das SCORM-Paket ohne die Website laufen muss; sein Rückweg führt noch auf die Startseite und sollte auf `arbeitsproben.html` umgestellt werden.
 
 In Lernmaterialien keine Personennamen; Lernende mit „du“ ansprechen. Einfache Sprache und große Schrift.
 

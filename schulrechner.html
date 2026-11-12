@@ -612,7 +612,7 @@ function finish(){
   <div id="spielende"></div>
   <p class="foot">Idee und Didaktik: Barbara Magdalena Mayer · technische Umsetzung mit KI-Unterstützung · alle Personen erfunden, keine Rechtsberatung.</p>`;
  $("#win").hidden=true;$("#end").hidden=false;
- spielEnde("#spielende",{text:"Wie geht es weiter? Beginne eine neue Woche von vorn oder geh zurück zur Werkstatt."});
+ spielEnde("#spielende",{text:"Wie geht es weiter? Beginne eine neue Woche von vorn oder geh zurück zu den Arbeitsproben."});
  $("#copy").onclick=()=>{
   const L=["Regeln zur Nutzung von KI an unserer Schule (Entwurf)",""];
   Object.keys(DEC).forEach((k,n)=>{const d=S.dec[k],o=DEC[k].opts.find(x=>x.id===d.opt);L.push(`${n+1}. ${DEC[k].titel}: ${o.regel}`,`   Begründung: ${d.why}`,`   Plus: ${o.plus} Preis: ${o.preis}`);});

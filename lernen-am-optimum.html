@@ -237,7 +237,7 @@ function summary(){
  </section>${side()}</div>`;
  app.querySelectorAll('[data-guess]').forEach(b=>b.onclick=()=>{S.guess=b.dataset.guess;summary()});
  document.getElementById('restart').onclick=setup;
- if(document.getElementById('spielende'))spielEnde('#spielende',{neu:setup,text:'Wie geht es weiter? Beginne neu und probier eine andere Kombination aus, oder geh zurück zur Werkstatt.'});
+ if(document.getElementById('spielende'))spielEnde('#spielende',{neu:setup,text:'Wie geht es weiter? Beginne neu und probier eine andere Kombination aus, oder geh zurück zu den Arbeitsproben.'});
  const c=document.getElementById('copy');if(c)c.onclick=()=>{
   const txt=['Drei Entscheidungen, eine KI, die irren kann',`Stufe ${S.level} · ${HELP[S.help]} · ${ATT[S.att].name} · Person X fehlte: ${DEF[S.deficit]}`,'',...S.log.map(l=>`${l.title}: ${l.opt} (${l.q})${l.ki?` · KI ${l.ki.ok?'erkannt':'nicht erkannt'}`:''}${l.why?`\nBegründung: ${l.why}`:''}`),'',optimum?'Optimum erreicht.':'Optimum noch nicht erreicht.'].join('\n');
   const m=document.getElementById('msg');

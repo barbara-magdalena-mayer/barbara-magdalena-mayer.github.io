@@ -114,7 +114,7 @@ footer a{color:inherit}
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
 <div class="wrap">
   <nav class="top" aria-label="Navigation">
-    <a href="../../">← Zurück zur Werkstatt</a>
+    <a href="../../arbeitsproben.html">← Zurück zu den Arbeitsproben</a>
     <a href="../maschine/">← Teil 1</a>
     <a href="../baukasten/">Teil 3 →</a>
     <button type="button" id="restart">↺ Neu beginnen</button>
@@ -434,7 +434,7 @@ function finale(){
     </div>
     <div id="spielende"></div>`;
   bindNotes();
-  spielEnde("#spielende",{neu:()=>go(0),titel:"Teil 2 ist fertig.",text:"Wie geht es weiter? Mach mit Teil 3 weiter, spiel noch einmal von vorn oder geh zurück zur Werkstatt.",weiter:{href:"../baukasten/",text:"Weiter mit Teil 3: Wie baut man eine Lerneinheit?"}});
+  spielEnde("#spielende",{neu:()=>go(0),titel:"Teil 2 ist fertig.",text:"Wie geht es weiter? Mach mit Teil 3 weiter, spiel noch einmal von vorn oder geh zurück zu den Arbeitsproben.",weiter:{href:"../baukasten/",text:"Weiter mit Teil 3: Wie baut man eine Lerneinheit?"}});
   $("#n_rule").addEventListener("input",()=>{ const m=Object.keys(labels).filter(k=>(notes[k]||"").trim()).map(k=>`${labels[k]}:\n${notes[k].trim()}`).join("\n\n"); $("#mynotes").textContent=m; });
 }
 
@@ -446,6 +446,6 @@ rs.onclick=()=>{ if(!armed){ rs.textContent="Wirklich? Alles löschen"; armed=se
 go(0);
 })();
 </script>
-<style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Werkstatt"><img src="../../bilder/barbara-figur.webp" alt=""></a>
+<style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Startseite"><img src="../../bilder/barbara-figur.webp" alt=""></a>
 </body>
 </html>

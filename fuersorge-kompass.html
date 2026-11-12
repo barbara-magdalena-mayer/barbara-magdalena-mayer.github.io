@@ -221,7 +221,7 @@ $('check').onclick=()=>{
  <p class="muted">So prüft diese Seite, ohne KI, mit einer offenen Regel:</p>
  <div class="rule">Zeitpunkt? Wochentag | heute | morgen | nach dem Dienst …<br>Menge? Zahl + Minuten | Uhr | mal …<br>Vorsatz statt Schritt? „mehr auf mich achten“ …</div>
  <p class="muted">Was übersieht diese Regel? Zum Beispiel, ob der Schritt zu dir passt oder ob er realistisch ist. Das kann nur ein Mensch beurteilen.</p>`;
- if(ok)spielEnde(res,{titel:"Dein Schritt steht. Du bist fertig.",text:"Wie geht es weiter? Beginne neu mit einer anderen Einschätzung oder geh zurück zur Werkstatt."});
+ if(ok)spielEnde(res,{titel:"Dein Schritt steht. Du bist fertig.",text:"Wie geht es weiter? Beginne neu mit einer anderen Einschätzung oder geh zurück zu den Arbeitsproben."});
 };
 
 $('cmpbtn').onclick=()=>{const t=$('cmptable'),open=t.hidden;t.hidden=!open;$('cmpbtn').setAttribute('aria-expanded',open);$('cmpbtn').textContent=open?'Vergleich ausblenden':'Vergleich zeigen';cmpTable()};
