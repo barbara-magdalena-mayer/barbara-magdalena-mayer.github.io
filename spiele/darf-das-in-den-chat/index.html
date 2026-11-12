@@ -81,8 +81,20 @@ h3{font-size:21px;margin:0}
   background:var(--card);border:2px solid var(--line);border-radius:12px;padding:16px;
   display:flex;flex-direction:column;gap:6px;min-height:132px;
   transition:border-color .15s, transform .15s;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;
 }
-.station:hover{border-color:var(--pink);transform:translateY(-2px)}
+.station *{pointer-events:none}
+@media(hover:hover){.station:hover{border-color:var(--pink);transform:translateY(-2px)}}
+.station:active{border-color:var(--pink);transform:scale(.97)}
+.station.hop{border-color:var(--pink)}
+@media(prefers-reduced-motion:no-preference){
+  .station.hop{animation:st-hop .22s ease-out}
+  @keyframes st-hop{40%{transform:translateY(-8px)}100%{transform:none}}
+  .grid .station{animation:st-hop .45s ease-out 1}
+  .grid .station:nth-child(2){animation-delay:.05s}.grid .station:nth-child(3){animation-delay:.1s}.grid .station:nth-child(4){animation-delay:.15s}
+  .grid .station:nth-child(5){animation-delay:.2s}.grid .station:nth-child(6){animation-delay:.25s}.grid .station:nth-child(7){animation-delay:.3s}.grid .station:nth-child(8){animation-delay:.35s}
+  .grid .station.hop.hop{animation:st-hop .22s ease-out 0s 1}
+}
 .station:focus-visible,button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
 .station .num{font-family:var(--mono);font-size:14px;color:var(--pink);font-weight:600}
 .station .t{font-weight:700;font-size:20px;line-height:1.25}
@@ -421,7 +433,12 @@ function renderStart(){
     <button class="btn ${n?"":"ghost"}" id="to-end">${n===S.length?"Zu deiner Merkliste":"Ich bin fertig: zur Merkliste"}</button>
   </div>
   <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Grundlage: DSGVO, Schweigepflicht (§ 203 StGB), Urheberrecht, EU AI Act, Stand November 2026. Mehr dazu in der <a href="../../artikel/ki-an-der-berufsbildenden-schule/">Handreichung</a>. Es gelten immer die Regeln deiner Schule und Einrichtung.</footer>`;
-  app.querySelectorAll("[data-go]").forEach(b => b.onclick = () => open(+b.dataset.go));
+  app.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
+    if(b.classList.contains("hop")) return;
+    b.style.animation = "none"; void b.offsetWidth; b.style.animation = "";
+    b.classList.add("hop");
+    setTimeout(() => { open(+b.dataset.go); window.scrollTo({top:0}); }, 200);
+  }));
   document.getElementById("to-end").onclick = () => { state.view="end"; render(); };
 }
 
