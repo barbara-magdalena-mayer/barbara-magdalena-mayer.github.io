@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Patientendaten und KI: Darf das in den Chat?</title>
-<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Pflege. Acht Situationen zu Patientendaten, Datenschutz und KI in der Pflegeausbildung, mit einer KI, die sich irren kann, und einem Blick ins Innere.">
+<title>Daten in der Ausbildung: Darf das in den Chat?</title>
+<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Pflege. Acht Situationen zu Daten, Datenschutz und KI in der beruflichen Ausbildung, am Beispiel Pflege, mit einer KI, die sich irren kann, und einem Blick ins Innere.">
 <script src="../../spielende.js"></script>
 <style>
 @font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
@@ -387,7 +387,7 @@ const app = document.getElementById("app");
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 function head(){
-  return `<nav class="top" aria-label="Navigation"><a href="../../">← Zurück zur Werkstatt</a><a href="../../artikel/ki-an-der-pflegeschule/">Handreichung lesen</a></nav>
+  return `<nav class="top" aria-label="Navigation"><a href="../../">← Zurück zur Werkstatt</a><a href="../../artikel/ki-an-der-berufsbildenden-schule/">Handreichung lesen</a></nav>
   ${zieleBox()}`;
 }
 function zieleBox(){
@@ -401,9 +401,10 @@ function renderStart(){
   app.innerHTML = head() + `
   <div>
     <span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflege</span>
-    <h1>Patientendaten und KI: Darf das in <span class="q">den Chat?</span></h1>
+    <h1>Daten in der Ausbildung: Darf das in <span class="q">den Chat?</span></h1>
   </div>
-  <p class="lead">Du bist in der Pflegeausbildung und willst KI nutzen. In acht Situationen entscheidest du: Was gibst du der KI, was nicht, und warum?</p>
+  <p class="lead">Du bist in der Ausbildung und willst KI nutzen. In acht Situationen entscheidest du: Was gibst du der KI, was nicht, und warum?</p>
+  <p class="sub">Das Beispiel ist die Pflege. Dort sind die Regeln am strengsten, weil es um Gesundheitsdaten und Schweigepflicht geht. Dieselben Fragen stellen sich in jedem Beruf: bei Kundendaten, Dienstplänen, Unterlagen aus dem Betrieb.</p>
   <p class="sub">Eine KI redet mit. Manchmal hat sie recht, manchmal nicht. Du siehst bei jeder Entscheidung, was im Inneren passiert: wohin deine Eingabe wandert und was dort gespeichert wird. Du darfst hier Fehler machen.</p>
   <div class="row"><span class="tag">Wähle selbst, wo du anfängst · ${n} von ${S.length} angeschaut</span></div>
   <div class="grid">
@@ -419,7 +420,7 @@ function renderStart(){
   <div class="row">
     <button class="btn ${n?"":"ghost"}" id="to-end">${n===S.length?"Zu deiner Merkliste":"Ich bin fertig: zur Merkliste"}</button>
   </div>
-  <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Grundlage: DSGVO, Schweigepflicht (§ 203 StGB), Urheberrecht, EU AI Act, Stand November 2026. Mehr dazu in der <a href="../../artikel/ki-an-der-pflegeschule/">Handreichung</a>. Es gelten immer die Regeln deiner Schule und Einrichtung.</footer>`;
+  <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Grundlage: DSGVO, Schweigepflicht (§ 203 StGB), Urheberrecht, EU AI Act, Stand November 2026. Mehr dazu in der <a href="../../artikel/ki-an-der-berufsbildenden-schule/">Handreichung</a>. Es gelten immer die Regeln deiner Schule und Einrichtung.</footer>`;
   app.querySelectorAll("[data-go]").forEach(b => b.onclick = () => open(+b.dataset.go));
   document.getElementById("to-end").onclick = () => { state.view="end"; render(); };
 }
@@ -532,9 +533,9 @@ function renderEnd(){
   </ul>
   <div class="panel">
     <h3>Die eine Regel hinter allem</h3>
-    <p style="margin:0">Keine echten Daten von Menschen in eine KI, die nicht ausdrücklich dafür freigegeben ist. Und jede KI-Antwort prüfst du selbst, mit Fachwissen und einer guten Quelle.</p>
+    <p style="margin:0">Keine echten Daten von Menschen und keine Geheimnisse aus dem Betrieb in eine KI, die nicht ausdrücklich dafür freigegeben ist. Und jede KI-Antwort prüfst du selbst, mit Fachwissen und einer guten Quelle. Das gilt in der Pflege genauso wie in der Werkstatt, im Büro oder im Laden.</p>
   </div>
-  <p class="sub">Mehr dazu, mit Checklisten zum Ausdrucken: <a href="../../artikel/ki-an-der-pflegeschule/">Deine Pflegeschule will KI nutzen. Was ist erlaubt?</a></p>
+  <p class="sub">Mehr dazu, mit Checklisten zum Ausdrucken: <a href="../../artikel/ki-an-der-berufsbildenden-schule/">Deine berufsbildende Schule will KI nutzen. Was ist erlaubt?</a></p>
   <div id="spielende"></div>`;
   const b = document.getElementById("back"); if(b) b.onclick = e => { e.preventDefault(); state.view="start"; render(); };
   spielEnde("#spielende", { neu: () => { state = {view:"start",cur:null,step:1,ans:{}}; render(); }, titel: n===S.length ? "Du bist fertig." : "Du hast eine Pause gemacht." });
