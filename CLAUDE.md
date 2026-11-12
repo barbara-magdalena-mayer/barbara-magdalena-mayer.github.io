@@ -2,6 +2,8 @@
 
 Überschrift der ganzen Website (Nov. 2026): **Bildungswissenschaft und KI** – „Das Plus ist die KI.“ Pflege bleibt Barbaras Beispiel und Fach.
 
+**Logo „BM+“** (Nov. 2026): Initialen BM in Literata, dunkelgrün `#2f5240`, mit pinkem Plus `#ff0a69` als Hochzahl. Dateien in `bilder/logo/` (hell, dunkel, einfarbig, rund, PNG für Profilbilder). Auf jeder Seite als Browser-Symbol, rund unter der Figur (hüpft, führt zur Startseite), auf Startseite und Arbeitsproben oben statt des Worts „Plus“. Kein rotes Kreuz allein auf Weiß verwenden (Rotkreuz-Emblem ist gesetzlich geschützt).
+
 Beim Einbinden oder Ändern eines Spiels immer `CHECKLISTE.md` vollständig abarbeiten.
 
 Aufbau der Website:

@@ -25,7 +25,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
 .wrap{width:min(440px,100%);margin:0 auto;padding-block:40px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
-.plus-mark{display:block;color:var(--plus);font-family:var(--display);font-size:2rem;font-weight:600;line-height:1}
+.plus-mark{display:block;height:48px;width:auto}
 .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
 h1{font-family:var(--display);font-weight:600;font-size:1.6rem;line-height:1.15;margin:0;text-wrap:balance}
 .lead{margin:0;color:var(--muted);max-width:34ch}
@@ -58,11 +58,12 @@ a:focus-visible,button:focus-visible{outline:3px solid #d4a373;outline-offset:2p
 footer{font-size:.8rem;color:var(--muted);margin-top:8px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px}
 footer a{color:var(--green)}
 </style>
+<link rel="icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/apple-touch-icon.png">
 </head>
 <body>
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Alles hier sind Arbeitsproben.</b> Texte und vereinfachte Modelle, um zu verstehen und Einblick zu bekommen. Keine Beratung, keine fertigen Produkte.</p>
 <main class="wrap">
-  <div class="plus-mark" aria-label="Plus-Marke von Barbara Magdalena Mayer">Plus</div>
+  <img class="plus-mark" src="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus.svg" alt="BM+, Logo von Barbara Magdalena Mayer" width="125" height="48">
   <span class="eyebrow">Barbara Magdalena Mayer</span>
   <h1>Bildungswissenschaft und KI</h1>
   <p class="motto">Das Plus ist die KI.</p>
@@ -95,6 +96,6 @@ document.getElementById('copy').addEventListener('click',function(){
   try{navigator.clipboard.writeText(t).then(function(){c.textContent='Kopiert';c.hidden=false;setTimeout(function(){c.hidden=true},2000)},fallback)}catch(e){fallback()}
 });
 </script>
-<style>.bmm-figur{position:fixed;bottom:max(14px,env(safe-area-inset-bottom,0px));right:max(14px,env(safe-area-inset-right,0px));z-index:30;display:block;line-height:0}@media(min-width:641px){body{padding-bottom:210px}}.bmm-figur img{height:132px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur{-webkit-tap-highlight-color:transparent;touch-action:manipulation}.bmm-figur:active img{transform:scale(.94)}.bmm-figur:focus-visible{outline:3px solid #b04e6b;outline-offset:4px;border-radius:12px}.bmm-box{display:inline-flex;flex-direction:column;align-items:center;gap:6px}.bmm-plus{position:relative;display:block;width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 3px 8px #0003}.bmm-plus::before,.bmm-plus::after{content:"";position:absolute;background:#ff0a69;border-radius:3px}.bmm-plus::before{left:10px;right:10px;top:17px;height:10px}.bmm-plus::after{top:10px;bottom:10px;left:17px;width:10px}@media(prefers-reduced-motion:no-preference){.bmm-plus{animation:bmm-hop 4s ease-in-out 1s infinite}@keyframes bmm-hop{0%,78%,100%{transform:none}84%{transform:translateY(-14px)}90%{transform:none}95%{transform:translateY(-5px)}}.bmm-figur:hover .bmm-plus,.bmm-figur:focus-visible .bmm-plus{animation:bmm-hop-now .5s ease-out}@keyframes bmm-hop-now{40%{transform:translateY(-14px)}100%{transform:none}}}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:104px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="./" aria-label="Barbara – zur Startseite"><span class="bmm-box"><img src="bilder/barbara-figur.webp" alt=""><span class="bmm-plus" aria-hidden="true"></span></span></a>
+<style>.bmm-figur{position:fixed;bottom:max(14px,env(safe-area-inset-bottom,0px));right:max(14px,env(safe-area-inset-right,0px));z-index:30;display:block;line-height:0}@media(min-width:641px){body{padding-bottom:210px}}.bmm-figur img{height:132px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur{-webkit-tap-highlight-color:transparent;touch-action:manipulation}.bmm-figur:active img{transform:scale(.94)}.bmm-figur:focus-visible{outline:3px solid #b04e6b;outline-offset:4px;border-radius:12px}.bmm-box{display:inline-flex;flex-direction:column;align-items:center;gap:6px}.bmm-figur img.bmm-plus{display:block;height:58px;width:58px;filter:drop-shadow(0 3px 6px #0004)}@media(prefers-reduced-motion:no-preference){.bmm-plus{animation:bmm-hop 4s ease-in-out 1s infinite}@keyframes bmm-hop{0%,78%,100%{transform:none}84%{transform:translateY(-14px)}90%{transform:none}95%{transform:translateY(-5px)}}.bmm-figur:hover .bmm-plus,.bmm-figur:focus-visible .bmm-plus{animation:bmm-hop-now .5s ease-out}@keyframes bmm-hop-now{40%{transform:translateY(-14px)}100%{transform:none}}}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:104px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="./" aria-label="Barbara – zur Startseite"><span class="bmm-box"><img src="bilder/barbara-figur.webp" alt=""><img class="bmm-plus" src="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" alt=""></span></a>
 </body>
 </html>

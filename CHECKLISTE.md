@@ -5,9 +5,10 @@ Damit kein Spiel irgendwo fehlt. Jeder Punkt muss erledigt sein, bevor ein Spiel
 ## 1. Ablage
 - [ ] Eigener Ordner: `spiele/<kurzer-name>/index.html` – oder ein eigenes Repo (dann erreichbar unter `https://barbara-magdalena-mayer.github.io/<repo>/`; Rückweg und Figur mit voller Adresse)
 - [ ] Bilder als eigene Dateien daneben (WebP), **nicht** in die HTML-Datei eingebettet
-- [ ] Figur aus `bilder/barbara-figur.webp` einbauen (Pfad im Spiel: `../../bilder/barbara-figur.webp`): auf normalen Seiten den `bmm-figur`-Block vor `</body>` kopieren (z. B. aus `index.html`) – fest unten rechts in der Ecke wie ein Knopf (Figur 132 px hoch und ruhig, darunter ein rotes Plus in weißem Kreis, das alle paar Sekunden hüpft; Platz am Seitenende frei), auf dem Handy am Seitenende; im Schulrechner oben rechts; in Spielen ohne Seitenscrollen unten rechts im Spielbereich – wenn dort Bedienelemente liegen (z. B. Nachtdienst: Hilfe oben rechts), links in der Mitte (`position:fixed;left:12px;top:50%`), auf dem Handy ausblenden
+- [ ] Figur aus `bilder/barbara-figur.webp` einbauen (Pfad im Spiel: `../../bilder/barbara-figur.webp`): auf normalen Seiten den `bmm-figur`-Block vor `</body>` kopieren (z. B. aus `index.html`) – fest unten rechts in der Ecke wie ein Knopf (Figur 132 px hoch und ruhig, darunter das runde Logo BM+ (`bilder/logo/bm-plus-rund.svg`), das alle paar Sekunden hüpft; Platz am Seitenende frei), auf dem Handy am Seitenende; im Schulrechner oben rechts; in Spielen ohne Seitenscrollen unten rechts im Spielbereich – wenn dort Bedienelemente liegen (z. B. Nachtdienst: Hilfe oben rechts), links in der Mitte (`position:fixed;left:12px;top:50%`), auf dem Handy ausblenden
 
 ## 2. Im Spiel selbst
+- [ ] Logo BM+ als Browser-Symbol im Kopf: `<link rel="icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" type="image/svg+xml">` und `apple-touch-icon.png` (aus einer bestehenden Seite kopieren)
 - [ ] Ganz oben (direkt nach `<body>`) der Hinweis-Balken `bmm-probe` „Arbeitsprobe. Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.“ – aus einem bestehenden Spiel kopieren
 - [ ] `<meta name="robots" content="noindex">` im Kopf (Seite soll vorerst nicht auffindbar sein)
 - [ ] Link „← Zurück zu den Arbeitsproben“ auf `../../arbeitsproben.html`
