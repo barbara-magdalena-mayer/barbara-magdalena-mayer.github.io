@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Patientendaten und KI: Darf das in den Chat?</title>
+<meta name="description" content="Lernspiel in einfacher Sprache, Lernen am Optimum: Pflege. Acht Situationen zu Patientendaten, Datenschutz und KI in der Pflegeausbildung, mit einer KI, die sich irren kann, und einem Blick ins Innere.">
+<script src="../../spielende.js"></script>
+<style>
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("../../fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
+/* Layout: eine ruhige Spalte wie ein Pflegeformular auf Kurvenblatt-Papier; das "Innere" der Technik erscheint in Maschinenschrift. */
+:root{
+  --paper:#faeef1;
+  --grid:#f1dfe5;
+  --ink:#24382c;
+  --muted:#5e5459;
+  --line:#ead5db;
+  --card:#ffffff;
+  --pink:#b04e6b;
+  --pink-soft:#f6e1e8;
+  --ok:#1d7448;
+  --ok-soft:#e3f3ea;
+  --warn:#9a5a00;
+  --warn-soft:#fdf1dc;
+  --bad:#b42318;
+  --bad-soft:#fde8e6;
+  --machine:#0f1a30;
+  --machine-ink:#d6e4ff;
+  --display:"Literata", Georgia, serif;
+  --body:"Source Sans 3", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "Consolas", monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1422; --grid:#172136; --ink:#e7edf7; --muted:#9ba8bf; --line:#2c3a55; --card:#141d30;
+    --pink:#ff5d9b; --pink-soft:#3a1527; --ok:#53c48d; --ok-soft:#10301f; --warn:#f2aa47; --warn-soft:#352409;
+    --bad:#ff7b70; --bad-soft:#3a1512; --machine:#060b16; --machine-ink:#c7d9ff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1422; --grid:#172136; --ink:#e7edf7; --muted:#9ba8bf; --line:#2c3a55; --card:#141d30;
+  --pink:#ff5d9b; --pink-soft:#3a1527; --ok:#53c48d; --ok-soft:#10301f; --warn:#f2aa47; --warn-soft:#352409;
+  --bad:#ff7b70; --bad-soft:#3a1512; --machine:#060b16; --machine-ink:#c7d9ff; color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:28px 28px;
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:20px;
+  line-height:1.55;
+}
+.wrap{max-width:780px;margin:0 auto;padding:24px 18px 64px;display:flex;flex-direction:column;gap:22px}
+header.brand{display:flex;align-items:center;gap:12px;font-size:16px;color:var(--muted)}
+.cross{width:30px;height:30px;flex:none}
+.notice{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--pink);border-radius:10px;padding:14px 16px;font-size:17px;color:var(--muted)}
+.notice strong{color:var(--ink)}
+h1{font-family:var(--display);font-size:clamp(34px,7vw,52px);line-height:1.08;margin:6px 0 0;letter-spacing:-0.01em;text-wrap:balance}
+h1 .q{color:var(--pink)}
+h2{font-size:28px;line-height:1.2;margin:0;text-wrap:balance}
+h3{font-size:21px;margin:0}
+.lead{font-size:22px;max-width:62ch;margin:0}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.tag{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* Übersicht */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.station{
+  text-align:left;font:inherit;color:inherit;cursor:pointer;
+  background:var(--card);border:2px solid var(--line);border-radius:12px;padding:16px;
+  display:flex;flex-direction:column;gap:6px;min-height:132px;
+  transition:border-color .15s, transform .15s;
+}
+.station:hover{border-color:var(--pink);transform:translateY(-2px)}
+.station:focus-visible,button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+.station .num{font-family:var(--mono);font-size:14px;color:var(--pink);font-weight:600}
+.station .t{font-weight:700;font-size:20px;line-height:1.25}
+.station .s{font-size:16px;color:var(--muted)}
+.station.done{border-style:dashed}
+.station .state{margin-top:auto;font-size:15px;color:var(--muted)}
+.station.done .state{color:var(--ok);font-weight:700}
+
+/* Buttons */
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{
+  font:inherit;font-weight:700;font-size:19px;cursor:pointer;border-radius:10px;padding:12px 20px;
+  border:2px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;display:inline-block
+}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Situation */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.step{font-family:var(--mono);font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.step.on{border-color:var(--pink);color:var(--pink);font-weight:600}
+.input{
+  font-family:var(--mono);font-size:16px;line-height:1.5;background:var(--paper);border:1px dashed var(--line);
+  border-radius:8px;padding:12px 14px;white-space:pre-wrap;word-break:break-word
+}
+.ki{display:flex;gap:14px;align-items:flex-start;background:var(--pink-soft);border-radius:12px;padding:14px 16px}
+.ki .face{flex:none;width:44px;height:44px;border-radius:10px;background:var(--pink);color:#fff;font-family:var(--mono);font-weight:600;display:grid;place-items:center;font-size:15px}
+.ki .who{font-size:15px;color:var(--muted)}
+.ki p{margin:2px 0 0}
+.choice{
+  width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;background:var(--card);
+  border:2px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start
+}
+.choice:hover{border-color:var(--ink)}
+.choice .k{font-family:var(--mono);font-weight:600;color:var(--pink);flex:none;width:22px}
+.choice.picked{border-color:var(--pink);background:var(--pink-soft)}
+.list{display:flex;flex-direction:column;gap:10px}
+textarea{width:100%;min-height:90px;font:inherit;font-size:18px;padding:12px;border-radius:10px;border:2px solid var(--line);background:var(--paper);color:var(--ink)}
+label{font-weight:700}
+
+/* Auflösung */
+.verdict{border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.verdict .v{font-weight:700}
+.v-gut{background:var(--ok-soft)} .v-gut .v{color:var(--ok)}
+.v-geht,.v-teil{background:var(--warn-soft)} .v-geht .v,.v-teil .v{color:var(--warn)}
+.v-nein{background:var(--bad-soft)} .v-nein .v{color:var(--bad)}
+.rule{border:2px solid var(--ink);border-radius:12px;padding:14px 16px;font-weight:700;font-size:21px}
+.rule .tag{display:block;margin-bottom:4px;font-weight:400}
+
+/* Das Innere */
+.machine{background:var(--machine);color:var(--machine-ink);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.machine h3{color:#fff;font-family:var(--mono);font-size:16px;letter-spacing:.04em;text-transform:uppercase}
+.machine .hint{font-family:var(--body);font-size:16px;color:#9fb3d9;margin:0}
+.path{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.node{flex:1 1 120px;min-width:118px;border-radius:10px;padding:10px;border:1px solid #2a3b5e;background:#111d36;display:flex;flex-direction:column;gap:2px}
+.node .l{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8ea4cf}
+.node .val{font-family:var(--mono);font-size:15px;font-weight:500;color:#fff}
+.node .st{font-family:var(--mono);font-size:12px;margin-top:auto}
+.node.s-ok{border-color:#2f8f5f}.node.s-ok .st{color:#6fdc9f}
+.node.s-warn{border-color:#a8701a}.node.s-warn .st{color:#ffc56b}
+.node.s-bad{border-color:#c23b30}.node.s-bad .st{color:#ff8f86}
+.node.s-n .st{color:#8ea4cf}
+.arrow{align-self:center;color:#5a72a3;font-family:var(--mono)}
+pre.record{margin:0;font-family:var(--mono);font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word;background:#0a1224;border-radius:8px;padding:12px;color:var(--machine-ink)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{font-family:var(--mono);font-size:14px;cursor:pointer;border-radius:8px;padding:6px 12px;border:1px solid #2a3b5e;background:transparent;color:#c7d9ff}
+.tabs button.on{background:#c7d9ff;color:#0f1a30;font-weight:600}
+
+/* Ende */
+.end-list{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.end-list li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;gap:12px}
+.end-list .mark{flex:none;font-family:var(--mono);font-weight:600;width:96px;font-size:14px}
+.mk-gut{color:var(--ok)} .mk-geht{color:var(--warn)} .mk-nein{color:var(--bad)} .mk-offen{color:var(--muted)}
+footer{font-size:15px;color:var(--muted)}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-right:110px}
+.top a,.top button{font:inherit;font-size:16px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;cursor:pointer}
+.ziele{max-width:56ch;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-size:18px}
+.ziele summary{cursor:pointer;font-weight:600}
+.ziele ul{list-style:none;margin:6px 0 0;padding:0}
+.ziele li{display:flex;gap:8px;margin:4px 0;color:var(--muted)}
+.ziele li::before{content:"○";flex:none;width:1.2em}
+.ziele li.got{color:var(--ink)}
+.ziele li.got::before{content:"✓";color:var(--ok);font-weight:600}
+.eyebrow{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:600}
+@media (max-width:480px){ body{font-size:19px} .arrow{display:none} }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+<style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
+<div class="wrap" id="app"></div>
+
+<script>
+const UNUSED_CROSS = '<svg class="cross" viewBox="0 0 30 30" aria-hidden="true"><rect x="10" y="2" width="10" height="26" rx="2" fill="var(--pink)"/><rect x="2" y="10" width="26" height="10" rx="2" fill="var(--pink)"/></svg>';
+const WERKSTATT = "https://barbara-magdalena-mayer.github.io/";
+
+const ST = {ok:"sicher", warn:"achtung", bad:"problem", n:"–"};
+const VERDICT = {gut:"Guter Weg", geht:"Geht, aber …", teil:"Halb richtig", nein:"Hier steckt ein Denkfehler"};
+
+// Ein Pfad: [Station, Wert, Status]
+const P = (...nodes) => nodes.map(([l,v,s]) => ({l,v,s}));
+
+const S = [
+{
+  id:"pflegeplanung", ziel:"Du machst einen echten Patientenfall unkenntlich oder erfindest ihn, bevor er in eine KI kommt.", titel:"Pflegeplanung aus dem Einsatz", kurz:"Ein echter Fall, aber ohne Namen. Reicht das?",
+  lage:"Du hast im Praxiseinsatz eine Patientin versorgt. Für die Schule schreibst du eine Pflegeplanung. Du willst die KI um Hilfe bitten. Du tippst in dein privates Konto:",
+  eingabe:"Patientin Zimmer 12, Station 3, Innere. 84 Jahre. Seit gestern Oberschenkelhalsbruch rechts. Diabetes Typ 2. Lebt allein. Bitte schreib eine Pflegeplanung.",
+  ki:"Kein Problem! Es steht ja kein Name drin. Damit ist das anonym. Schick es ab.", kiRecht:false,
+  kiAufl:"Die KI lag falsch. Ohne Namen ist ein Fall noch lange nicht anonym.",
+  opt:[
+    {t:"So abschicken", v:"nein", fb:"Zimmer, Station, Alter, Datum und Diagnose zusammen machen die Person erkennbar. Das sind Gesundheitsdaten. Und du hast Schweigepflicht, auch in der Ausbildung.",
+     path:P(["Eingabe","echter Fall","bad"],["Konto","privat","bad"],["Server","USA","warn"],["Speichern","unbegrenzt","bad"],["Training","an","bad"]),
+     rec:'konto:        "privat"\nserverort:    "USA"\ntraining:     true\nspeichern:    "bis du löschst"\ninhalt:       "Patientin Zimmer 12, Station 3 … 84 J. … Oberschenkelhalsbruch …"\n\n→ Dein Text liegt jetzt beim Anbieter. Du bekommst ihn nicht zurück.'},
+    {t:"Zimmer und Station streichen, dann abschicken", v:"nein", fb:"Besser, aber nicht genug. Alter, Datum, Diagnose und „lebt allein“ können reichen, um die Person zu erkennen. Und das private Konto bleibt: kein Vertrag, Training an.",
+     path:P(["Eingabe","fast echter Fall","bad"],["Konto","privat","bad"],["Server","USA","warn"],["Speichern","unbegrenzt","bad"],["Training","an","bad"]),
+     rec:'konto:        "privat"\ntraining:     true\ninhalt:       "Patientin, 84 J., seit gestern Oberschenkelhalsbruch, Diabetes, lebt allein"\n\n→ Wer die Station kennt, weiß, wer gemeint ist.'},
+    {t:"Fall verändern oder erfinden und den Schulzugang nehmen", v:"gut", fb:"Du änderst Alter, Datum und Details so, dass niemand die Person erkennt. Oder du erfindest den Fall gleich. Im Schulzugang gibt es einen Vertrag, und deine Eingaben trainieren die KI nicht.",
+     path:P(["Eingabe","erfundener Fall","ok"],["Konto","Schule","ok"],["Server","EU","ok"],["Speichern","30 Tage","ok"],["Training","aus","ok"]),
+     rec:'konto:        "Schule"\nserverort:    "EU"\ntraining:     false\nspeichern:    "30 Tage"\ninhalt:       "Erfundener Fall: ältere Person nach Sturz mit Hüftfraktur …"\n\n→ Kein echter Mensch steckt dahinter. Du kannst frei üben.'}
+  ],
+  gr:[
+    {t:"Ohne Namen ist es anonym.", v:"nein", fb:"Das ist der häufigste Denkfehler. Anonym ist ein Fall erst, wenn niemand die Person erkennen kann, auch nicht mit Zusatzwissen."},
+    {t:"Mit Zusatzwissen kann man die Person erkennen. Es sind Gesundheitsdaten, und ich habe Schweigepflicht.", v:"gut", fb:"Genau. Datenschutz und Schweigepflicht greifen beide."},
+    {t:"Die KI braucht echte Daten, sonst wird die Planung schlecht.", v:"nein", fb:"Zum Lernen reicht ein guter erfundener Fall. Er kann genau das zeigen, was du üben sollst."}
+  ],
+  regel:"Echte Patientenfälle kommen nicht in die KI. Erst verändern oder erfinden, auch wenn kein Name drin steht."
+},
+{
+  id:"hausarbeit", ziel:"Du weißt, warum der Zugang der Schule etwas anderes ist als dein privates Konto.", titel:"Hausarbeit: welches Konto?", kurz:"Nur Fachwissen, keine Personen. Ist das Konto dann egal?",
+  lage:"Du schreibst eine Hausarbeit über Mundpflege. Es geht nur um Fachwissen, um keine Person. Die Schule hat einen eigenen KI-Zugang. Du hast auch ein privates Konto.",
+  eingabe:"Erkläre mir den Unterschied zwischen Mundpflege und Mundhygiene. Nenne Quellen.",
+  ki:"Nimm einfach dein privates Konto. Ist doch egal, wo du fragst.", kiRecht:false,
+  kiAufl:"Die KI lag halb falsch. Für den Datenschutz ist es hier nicht schlimm. Aber es gibt die Schulregel, und deine eigenen Daten zählen auch.",
+  opt:[
+    {t:"Privates Konto nehmen", v:"geht", fb:"Ohne Personendaten ist das kein großes Datenschutzproblem. Aber du gibst deine eigenen Daten an den Anbieter, und vielleicht trainiert er damit. Die Schulregel sagt: Schulzugang für Schulaufgaben.",
+     path:P(["Eingabe","nur Fachfrage","ok"],["Konto","privat","warn"],["Server","USA","warn"],["Speichern","unbegrenzt","warn"],["Training","an","warn"]),
+     rec:'konto:        "privat"\nangemeldet:   "deine E-Mail-Adresse"\ntraining:     true\ninhalt:       "Unterschied Mundpflege / Mundhygiene"\n\n→ Über dich wird gespeichert, was du wann gefragt hast.'},
+    {t:"Schulzugang nehmen und angeben, wofür ich KI genutzt habe", v:"gut", fb:"Genau so. Der Schulzugang hat einen Vertrag. In der Arbeit schreibst du, wobei KI geholfen hat. Und prüf die Quellen: KI erfindet manchmal Quellen, die es nicht gibt.",
+     path:P(["Eingabe","nur Fachfrage","ok"],["Konto","Schule","ok"],["Server","EU","ok"],["Speichern","30 Tage","ok"],["Training","aus","ok"]),
+     rec:'konto:        "Schule"\nangemeldet:   "Kürzel, kein Klarname"\ntraining:     false\nquellen:      "von dir geprüft"\n\n→ Die Schule weiß, wo deine Daten liegen.'},
+    {t:"Gar keine KI nehmen", v:"geht", fb:"Auch in Ordnung. Ohne KI lernst du anders, nicht schlechter. Wenn die Aufgabe KI erlaubt, darfst du sie aber nutzen.",
+     path:P(["Eingabe","keine","n"],["Konto","–","n"],["Server","–","n"],["Speichern","–","n"],["Training","–","n"]),
+     rec:'→ Nichts verlässt deinen Kopf und dein Heft.'}
+  ],
+  gr:[
+    {t:"Im Schulzugang gibt es einen Vertrag. Meine Eingaben trainieren die KI nicht.", v:"gut", fb:"Richtig. Das ist der Unterschied zum privaten Konto."},
+    {t:"KI ist sowieso verboten.", v:"nein", fb:"Nein. KI ist nicht verboten. Es kommt darauf an, welche Daten du eingibst und welchen Zugang du nutzt."},
+    {t:"Ist egal, es sind ja keine Personendaten drin.", v:"teil", fb:"Halb richtig. Für den Datenschutz ist das hier kein großes Problem. Aber die Schulregel, die Angabe der KI-Nutzung und deine eigenen Daten zählen trotzdem."}
+  ],
+  regel:"Für Schulaufgaben den Zugang der Schule nehmen und angeben, wofür du KI genutzt hast."
+},
+{
+  id:"lehrbuch", ziel:"Du weißt, welche Texte du hochladen darfst und welche nicht.", titel:"Ein Lehrbuch hochladen", kurz:"40 Seiten in die KI, damit sie zusammenfasst?",
+  lage:"Du hast ein Lehrbuch als PDF. Kapitel 7 hat 40 Seiten. Du willst, dass die KI es für dich zusammenfasst.",
+  eingabe:"[PDF: Lehrbuch, Kapitel 7, 40 Seiten]\nFasse das zusammen.",
+  ki:"Lade gern das ganze Buch hoch. Dann fasse ich alles zusammen.", kiRecht:false,
+  kiAufl:"Die KI lag falsch. Sie achtet nicht darauf, wem ein Text gehört.",
+  opt:[
+    {t:"Das ganze Kapitel hochladen", v:"nein", fb:"Das Buch gehört dem Verlag und den Menschen, die es geschrieben haben. Wer es ganz hochlädt, macht eine Kopie. Das Urheberrecht erlaubt für den Unterricht nur Teile.",
+     path:P(["Eingabe","fremdes Werk","bad"],["Umfang","40 Seiten","bad"],["Konto","Schule","ok"],["Server","EU","ok"],["Kopie","beim Anbieter","warn"]),
+     rec:'datei:        "Lehrbuch_Kap7.pdf"\nseiten:       40\nrechte:       "Verlag"\n\n→ Eine vollständige Kopie liegt jetzt auf einem fremden Server.'},
+    {t:"Meine eigenen Notizen zum Kapitel eingeben", v:"gut", fb:"Deine Notizen gehören dir. Die KI kann sie ordnen, und du merkst, was du schon verstanden hast.",
+     path:P(["Eingabe","eigene Notizen","ok"],["Umfang","1 Seite","ok"],["Konto","Schule","ok"],["Server","EU","ok"],["Kopie","nur von dir","ok"]),
+     rec:'inhalt:       "Meine Stichpunkte zu Kapitel 7"\nrechte:       "du"\n\n→ Du lernst doppelt: beim Schreiben und beim Ordnen.'},
+    {t:"Eine frei verfügbare Quelle nehmen", v:"gut", fb:"Offene Lernmaterialien und frei veröffentlichte Quellen darfst du viel freier nutzen. Prüfe trotzdem, ob sie aktuell sind.",
+     path:P(["Eingabe","offene Quelle","ok"],["Umfang","passend","ok"],["Konto","Schule","ok"],["Server","EU","ok"],["Kopie","erlaubt","ok"]),
+     rec:'quelle:       "frei verfügbar, mit Lizenz"\nstand:        "von dir geprüft"\n\n→ Die Lizenz sagt dir, was du damit machen darfst.'}
+  ],
+  gr:[
+    {t:"Das Buch gehört nicht mir. Ein ganzes Kapitel hochladen ist eine Kopie.", v:"gut", fb:"Genau. Kurze Auszüge und eigene Texte sind der sichere Weg."},
+    {t:"Ich habe das Buch gekauft, also darf ich alles damit machen.", v:"nein", fb:"Kaufen heißt lesen dürfen. Kopieren und weitergeben ist etwas anderes."},
+    {t:"Die KI vergisst das sofort wieder.", v:"nein", fb:"Das weißt du nicht. Viele Dienste speichern Eingaben eine Zeit lang."}
+  ],
+  regel:"Keine ganzen Bücher in die KI. Eigene Notizen oder offene Quellen gehen."
+},
+{
+  id:"sturz", ziel:"Du prüfst eine KI-Antwort mit dem Expertenstandard und findest ihren Fehler.", titel:"Die KI rät etwas zum Sturz", kurz:"Die Antwort klingt sicher. Stimmt sie auch?",
+  lage:"Ihr übt an einem erfundenen Fall: eine ältere Person mit hohem Sturzrisiko. Du fragst die KI nach Maßnahmen.",
+  eingabe:"Erfundener Fall: 79 Jahre, unsicherer Gang, nachts verwirrt. Welche Maßnahmen gegen Stürze?",
+  ki:"Bei hohem Sturzrisiko: Bettgitter hochziehen und die Person nachts fixieren. Das verhindert Stürze sicher.", kiRecht:false,
+  kiAufl:"Die KI lag falsch, und das klang sehr sicher. Genau darum geht es hier.",
+  opt:[
+    {t:"Die Antwort so übernehmen", v:"nein", fb:"Gefährlich. Bettgitter und Fixierung verhindern Stürze nicht sicher. Wer über ein Bettgitter klettert, fällt tiefer. Und solche Maßnahmen nehmen Freiheit: Sie brauchen eine rechtliche Grundlage.",
+     path:P(["Frage","erfundener Fall","ok"],["Modell","rechnet Wörter","n"],["Antwort","klingt sicher","warn"],["Prüfung","fehlt","bad"],["Ergebnis","Fehler übernommen","bad"]),
+     rec:'satz:   "Bei Sturzrisiko: Bettgitter …"\nnächstes Wort?\n        hochziehen   0.41\n        absenken     0.22\n        prüfen       0.09\n        (ausgedachte Zahlen zum Verstehen)\n\n→ Die KI wählt oft das Wort, das am häufigsten folgt.\n  Ob es fachlich stimmt, prüft sie nicht.'},
+    {t:"Mit dem Expertenstandard prüfen und korrigieren", v:"gut", fb:"Du vergleichst mit dem Expertenstandard Sturzprophylaxe. Dort stehen andere Dinge im Mittelpunkt: Risiko einschätzen, Umgebung sicher machen, Bewegung fördern, Hilfsmittel, Beratung.",
+     path:P(["Frage","erfundener Fall","ok"],["Modell","rechnet Wörter","n"],["Antwort","klingt sicher","warn"],["Prüfung","Expertenstandard","ok"],["Ergebnis","korrigiert","ok"]),
+     rec:'ki_vorschlag:  "Bettgitter hoch, fixieren"\nquelle:        "Expertenstandard Sturzprophylaxe"\nergebnis:      "Vorschlag verworfen, eigene Maßnahmen begründet"\n\n→ Das Fachurteil bleibt bei dir.'},
+    {t:"Die KI nie wieder fragen", v:"geht", fb:"Verständlich. Aber gerade so ein Fehler ist lehrreich. Wer ihn findet, lernt mehr als mit einer perfekten Antwort.",
+     path:P(["Frage","–","n"],["Modell","–","n"],["Antwort","–","n"],["Prüfung","–","n"],["Ergebnis","ohne KI","n"]),
+     rec:'→ Ohne KI kein Fehler von der KI. Aber auch keine Übung im Prüfen.'}
+  ],
+  gr:[
+    {t:"Die KI prüft nicht, ob etwas stimmt. Sie schreibt, was wahrscheinlich klingt.", v:"gut", fb:"Genau. Deshalb brauchst du eine gute Quelle und dein Fachwissen."},
+    {t:"Die KI hat recht, sie weiß mehr als ich.", v:"nein", fb:"Die KI klingt sicher, auch wenn sie irrt. Dein Fachwissen und der Standard entscheiden."},
+    {t:"Fixieren ist immer verboten.", v:"teil", fb:"Nicht ganz. Es ist nicht immer verboten, aber nur unter strengen rechtlichen Bedingungen erlaubt. Gegen Stürze ist es kein sicheres Mittel."}
+  ],
+  regel:"KI-Antworten immer mit einer guten Quelle prüfen. Klingt sicher heißt nicht: stimmt."
+},
+{
+  id:"dienstplan", ziel:"Du schützt die Daten deiner Kolleginnen und Kollegen.", titel:"Dienstplan im Einsatz", kurz:"Die KI soll beim Diensttausch helfen.",
+  lage:"Im Praxiseinsatz willst du Dienste tauschen. Du überlegst, den ganzen Dienstplan in die KI zu kopieren. Sie soll einen Tauschvorschlag machen.",
+  eingabe:"Dienstplan Station 3, November:\n[Namen aller Kolleginnen und Kollegen], Frühdienst, Spätdienst, „krank“ bei zwei Personen …",
+  ki:"Lass Namen und Krankmeldungen lieber weg. Beschreib mir nur das Muster, dann helfe ich dir.", kiRecht:true,
+  kiAufl:"Diesmal lag die KI richtig. Trotzdem brauchst du deinen eigenen Grund.",
+  opt:[
+    {t:"Den ganzen Plan kopieren", v:"nein", fb:"Namen und Dienste sind Daten deiner Kolleginnen und Kollegen. „Krank“ ist sogar ein Gesundheitsdatum. Das gehört nicht in eine KI.",
+     path:P(["Eingabe","ganzer Plan","bad"],["Personen","alle im Team","bad"],["Gesundheit","2 x krank","bad"],["Konto","privat","bad"],["Training","an","bad"]),
+     rec:'personen:     14\ngesundheit:   ["krank", "krank"]\n\n→ Daten von 14 Menschen, die nicht gefragt wurden.'},
+    {t:"Namen durch Kürzel ersetzen", v:"nein", fb:"Kürzel helfen wenig. Auf einer Station weiß jeder, wer „MK“ ist. Und die Krankmeldungen bleiben drin.",
+     path:P(["Eingabe","Plan mit Kürzeln","bad"],["Personen","erkennbar","bad"],["Gesundheit","2 x krank","bad"],["Konto","privat","bad"],["Training","an","bad"]),
+     rec:'personen:     ["MK", "TS", "AB", …]\n\n→ Ein Kürzel ist kein Versteck, wenn jeder es zuordnen kann.'},
+    {t:"Nur das Muster beschreiben", v:"gut", fb:"Zum Beispiel: „Ich habe drei Frühdienste und brauche einen Spätdienst am Freitag.“ Das reicht für einen Vorschlag, ohne fremde Daten.",
+     path:P(["Eingabe","nur das Muster","ok"],["Personen","nur du","ok"],["Gesundheit","keine","ok"],["Konto","egal","ok"],["Training","harmlos","ok"]),
+     rec:'inhalt:       "3 x Früh, brauche 1 x Spät am Freitag"\n\n→ Mehr braucht die KI nicht.'}
+  ],
+  gr:[
+    {t:"Kürzel machen es anonym.", v:"nein", fb:"Kürzel sind kein Schutz, wenn man sie leicht zuordnen kann."},
+    {t:"Es sind fremde Daten. Krankmeldungen sind Gesundheitsdaten.", v:"gut", fb:"Genau. Und die Menschen wurden nicht gefragt."},
+    {t:"Die KI hat es doch selbst gesagt.", v:"teil", fb:"Diesmal lag die KI richtig. Aber du brauchst einen eigenen Grund. Nächstes Mal liegt sie vielleicht falsch."}
+  ],
+  regel:"Keine Daten von Kolleginnen und Kollegen in die KI. Beschreib nur das Muster."
+},
+{
+  id:"kamera", ziel:"Du erkennst eine KI-Funktion, die in der Schule verboten ist.", titel:"Lernplattform mit Kamera", kurz:"Eine Kamera misst, wie du dich fühlst.",
+  lage:"Eure Schule testet eine neue Lernplattform. Eine Funktion: Die Kamera misst, ob du aufmerksam bist und wie du dich fühlst. Die Lehrkraft sieht dann eine Zahl.",
+  eingabe:"(keine Eingabe von dir: die Kamera beobachtet dein Gesicht)",
+  ki:"Super Funktion! So weiß die Lehrkraft sofort, wer abschaltet.", kiRecht:false,
+  kiAufl:"Die KI lag falsch. Diese Funktion ist in Schulen verboten.",
+  opt:[
+    {t:"Einfach mitmachen", v:"nein", fb:"Gefühle per Kamera auswerten ist in Bildungseinrichtungen verboten. Das steht im EU AI Act, Artikel 5.",
+     path:P(["Kamera","an","bad"],["Gesicht","wird ausgewertet","bad"],["Rechnung","Gefühl geraten","bad"],["Ergebnis","Zahl über dich","bad"],["Sieht es","Lehrkraft","warn"]),
+     rec:'aufmerksamkeit:   62 %\nstimmung:         "gelangweilt"\nsicherheit:       "niedrig"\n\n→ Aus einem Gesichtsausdruck wird eine Zahl.\n  Sie sieht genau aus, ist aber geraten.'},
+    {t:"Bei der Schule nachfragen und die Funktion ansprechen", v:"gut", fb:"Richtig. Die Schule muss die Funktion abschalten oder die Plattform nicht nutzen. Du hilfst allen, wenn du es ansprichst.",
+     path:P(["Kamera","aus","ok"],["Gesicht","privat","ok"],["Rechnung","keine","ok"],["Ergebnis","keine Zahl","ok"],["Sieht es","niemand","ok"]),
+     rec:'funktion:     "Emotionserkennung"\nstatus:       "abgeschaltet"\n\n→ Lernen ohne Beobachtung.'},
+    {t:"Kamera abkleben und weitermachen", v:"geht", fb:"Das schützt dich selbst, aber nicht die anderen. Die Funktion bleibt für alle an.",
+     path:P(["Kamera","abgeklebt","warn"],["Gesicht","nur deins geschützt","warn"],["Rechnung","bei anderen an","bad"],["Ergebnis","Zahlen über andere","bad"],["Sieht es","Lehrkraft","warn"]),
+     rec:'du:           "kein Bild"\ndie_anderen:  "werden weiter ausgewertet"'}
+  ],
+  gr:[
+    {t:"Gefühlserkennung in der Bildung ist nach dem AI Act verboten.", v:"gut", fb:"Genau. Ausnahmen gibt es nur aus medizinischen oder Sicherheitsgründen."},
+    {t:"Es ist erlaubt, wenn alle zustimmen.", v:"nein", fb:"Das Verbot gilt auch mit Zustimmung."},
+    {t:"Ich mag einfach keine Kamera.", v:"teil", fb:"Ein verständliches Gefühl. Der stärkere Grund ist das Gesetz: Diese Funktion ist verboten."}
+  ],
+  regel:"Keine KI, die in der Schule deine Gefühle oder deine Aufmerksamkeit per Kamera auswertet. Das ist verboten."
+},
+{
+  id:"infoblatt", ziel:"Du prüfst einen KI-Text fachlich und kennzeichnest ihn.", titel:"Infoblatt in einfacher Sprache", kurz:"Die KI schreibt einen Entwurf für den Flur.",
+  lage:"Für eine Ausstellung im Flur willst du ein Infoblatt zur Händedesinfektion machen. Die KI schreibt dir einen Entwurf in einfacher Sprache.",
+  eingabe:"Schreibe ein kurzes Infoblatt zur Händedesinfektion in einfacher Sprache.",
+  ki:"Hier ist dein Infoblatt: „Nehmen Sie Desinfektionsmittel. Verreiben Sie es 5 Sekunden. Fertig!“", kiRecht:false,
+  kiAufl:"Die KI lag falsch. Der Text klingt fertig, aber die Zahl stimmt nicht.",
+  opt:[
+    {t:"Direkt ausdrucken und aufhängen", v:"nein", fb:"Da steckt ein Fehler drin. Das Mittel muss etwa 30 Sekunden einwirken, die Hände bleiben dabei feucht. 5 Sekunden reichen nicht.",
+     path:P(["KI-Entwurf","5 Sekunden","bad"],["Prüfung","fehlt","bad"],["Korrektur","keine","bad"],["Kennzeichnung","fehlt","warn"],["Aushang","falsch","bad"]),
+     rec:'text:         "Verreiben Sie es 5 Sekunden."\nrichtig:      "etwa 30 Sekunden"\n\n→ Ein falscher Wert hängt jetzt im Flur.'},
+    {t:"Mit einer guten Quelle prüfen und „mit KI erstellt“ dazuschreiben", v:"gut", fb:"Zum Beispiel mit den Materialien der Aktion Saubere Hände. Und du schreibst offen dazu, dass KI geholfen hat.",
+     path:P(["KI-Entwurf","5 Sekunden","warn"],["Prüfung","Quelle","ok"],["Korrektur","30 Sekunden","ok"],["Kennzeichnung","mit KI erstellt","ok"],["Aushang","richtig","ok"]),
+     rec:'text:         "Verreiben Sie es 30 Sekunden."\ngeprüft_mit:  "Aktion Saubere Hände"\nhinweis:      "Mit KI erstellt und geprüft"\n\n→ Ehrlich und richtig.'},
+    {t:"Selbst schreiben, ohne KI", v:"geht", fb:"Geht auch. Prüfen musst du dann trotzdem: Auch eigene Texte können Fehler haben.",
+     path:P(["KI-Entwurf","keiner","n"],["Prüfung","nötig","warn"],["Korrektur","je nachdem","n"],["Kennzeichnung","nicht nötig","n"],["Aushang","je nachdem","n"]),
+     rec:'→ Auch ohne KI gilt: erst prüfen, dann aufhängen.'}
+  ],
+  gr:[
+    {t:"KI-Texte klingen fertig, aber Zahlen können falsch sein. Und KI-Texte kennzeichnet man.", v:"gut", fb:"Genau. Prüfen und offen sagen, wo KI geholfen hat."},
+    {t:"Einfache Sprache heißt, Details sind egal.", v:"nein", fb:"Einfache Sprache heißt: einfach gesagt. Nicht: falsch gesagt."},
+    {t:"Ein Infoblatt im Flur ist nicht so wichtig.", v:"nein", fb:"Andere verlassen sich darauf. Ein falscher Wert kann Infektionen begünstigen."}
+  ],
+  regel:"KI-Texte vor dem Aushang fachlich prüfen und kennzeichnen."
+},
+{
+  id:"pruefung", ziel:"Du weißt, wo KI in der Prüfung verboten ist und wo sie beim Üben hilft.", titel:"Prüfungszeit", kurz:"Kurz in der Pause aufs Handy?",
+  lage:"Die schriftliche Abschlussprüfung läuft. Das ist eine staatliche Prüfung. In der Pause denkst du: Kurz aufs Handy, die KI weiß das sicher.",
+  eingabe:"Welche Antwort ist richtig bei Frage 4: …?",
+  ki:"In der Prüfung nur erlaubte Hilfsmittel. Zum Üben davor helfe ich dir gern.", kiRecht:true,
+  kiAufl:"Diesmal lag die KI richtig.",
+  opt:[
+    {t:"Heimlich nachschauen", v:"nein", fb:"Unerlaubte Hilfsmittel gelten als Täuschung. Das kann zum Nichtbestehen führen.",
+     path:P(["Ort","Prüfung","bad"],["Hilfsmittel","nicht erlaubt","bad"],["Wer weiß es","nur du","warn"],["Folge","Täuschung","bad"],["Gelernt","nichts","bad"]),
+     rec:'pruefung:     "staatlich"\nhilfsmittel:  "KI auf dem Handy"\nerlaubt:      false'},
+    {t:"Nur nutzen, was erlaubt ist, und vorher fragen", v:"gut", fb:"Genau. Was erlaubt ist, sagt die Prüfungsleitung. Wenn du unsicher bist, frag vor der Prüfung.",
+     path:P(["Ort","Prüfung","ok"],["Hilfsmittel","nur erlaubte","ok"],["Wer weiß es","alle","ok"],["Folge","fair","ok"],["Gelernt","zeigt dein Können","ok"]),
+     rec:'hilfsmittel:  "nur erlaubte"\n\n→ Das Ergebnis gehört dir.'},
+    {t:"Vorher mit KI üben, zum Beispiel mit Übungsfragen", v:"gut", fb:"Prima Weg. Prüf die Übungsfragen aber: Auch dabei kann die KI falsch liegen.",
+     path:P(["Ort","Vorbereitung","ok"],["Hilfsmittel","KI zum Üben","ok"],["Wer weiß es","egal","ok"],["Folge","besser vorbereitet","ok"],["Gelernt","viel","ok"]),
+     rec:'uebungsfragen: 20\ngeprüft:       "mit Unterricht und Quellen"\n\n→ Üben im eigenen Tempo.'}
+  ],
+  gr:[
+    {t:"Unerlaubte Hilfsmittel in der Prüfung sind Täuschung.", v:"gut", fb:"Genau. Vorher üben ist etwas ganz anderes."},
+    {t:"Wenn es keiner merkt, ist es okay.", v:"nein", fb:"Es geht nicht ums Erwischtwerden. Die Prüfung zeigt, was du kannst. Das ist wichtig für die Menschen, die du später pflegst."},
+    {t:"KI ist immer verboten.", v:"nein", fb:"In der Prüfung ohne Erlaubnis ja. Beim Üben davor nicht."}
+  ],
+  regel:"In der Prüfung nur erlaubte Hilfsmittel. Zum Üben davor darf KI helfen."
+}
+];
+
+let state = {view:"start", cur:null, step:1, ans:{}};
+const app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function head(){
+  return `<nav class="top" aria-label="Navigation"><a href="../../">← Zurück zur Werkstatt</a><a href="../../artikel/ki-an-der-pflegeschule/">Handreichung lesen</a></nav>
+  ${zieleBox()}`;
+}
+function zieleBox(){
+  const n = doneCount();
+  return `<details class="ziele"><summary>Das kannst du danach: ${n} von ${S.length} geschafft</summary><ul>${S.map(s=>`<li class="${state.ans[s.id]&&state.ans[s.id].done?"got":""}">${esc(s.ziel)}</li>`).join("")}</ul></details>`;
+}
+function doneCount(){ return S.filter(s => state.ans[s.id] && state.ans[s.id].done).length; }
+
+function renderStart(){
+  const n = doneCount();
+  app.innerHTML = head() + `
+  <div>
+    <span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflege</span>
+    <h1>Patientendaten und KI: Darf das in <span class="q">den Chat?</span></h1>
+  </div>
+  <p class="lead">Du bist in der Pflegeausbildung und willst KI nutzen. In acht Situationen entscheidest du: Was gibst du der KI, was nicht, und warum?</p>
+  <p class="sub">Eine KI redet mit. Manchmal hat sie recht, manchmal nicht. Du siehst bei jeder Entscheidung, was im Inneren passiert: wohin deine Eingabe wandert und was dort gespeichert wird. Du darfst hier Fehler machen.</p>
+  <div class="row"><span class="tag">Wähle selbst, wo du anfängst · ${n} von ${S.length} angeschaut</span></div>
+  <div class="grid">
+    ${S.map((s,i) => {
+      const d = state.ans[s.id] && state.ans[s.id].done;
+      return `<button class="station ${d?"done":""}" data-go="${i}" id="st-${s.id}">
+        <span class="num">${String(i+1).padStart(2,"0")}</span>
+        <span class="t">${esc(s.titel)}</span>
+        <span class="s">${esc(s.kurz)}</span>
+        <span class="state">${d?"angeschaut":"offen"}</span>
+      </button>`;}).join("")}
+  </div>
+  <div class="row">
+    <button class="btn ${n?"":"ghost"}" id="to-end">${n===S.length?"Zu deiner Merkliste":"Ich bin fertig: zur Merkliste"}</button>
+  </div>
+  <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Grundlage: DSGVO, Schweigepflicht (§ 203 StGB), Urheberrecht, EU AI Act, Stand November 2026. Mehr dazu in der <a href="../../artikel/ki-an-der-pflegeschule/">Handreichung</a>. Es gelten immer die Regeln deiner Schule und Einrichtung.</footer>`;
+  app.querySelectorAll("[data-go]").forEach(b => b.onclick = () => open(+b.dataset.go));
+  document.getElementById("to-end").onclick = () => { state.view="end"; render(); };
+}
+
+function open(i){
+  state.view="sit"; state.cur=i;
+  const a = state.ans[S[i].id];
+  state.step = a && a.done ? 4 : 1;
+  render();
+}
+
+function stepsBar(){
+  const names = ["Lesen","Entscheiden","Begründen","Auflösung"];
+  return `<div class="steps">${names.map((n,k)=>`<span class="step ${state.step===k+1?"on":""}">${k+1} · ${n}</span>`).join("")}</div>`;
+}
+
+function inside(opt, s, sel){
+  return `<div class="machine" id="inside">
+    <h3>Im Inneren</h3>
+    <p class="hint">So würde der Weg aussehen. Wechsle oben zwischen den Möglichkeiten und vergleiche.</p>
+    <div class="tabs" role="tablist">${s.opt.map((o,k)=>`<button role="tab" aria-selected="${k===sel}" class="${k===sel?"on":""}" data-tab="${k}">${String.fromCharCode(65+k)}</button>`).join("")}</div>
+    <div class="path">${opt.path.map((p,k)=>`${k?'<span class="arrow" aria-hidden="true">→</span>':""}<div class="node s-${p.s}"><span class="l">${esc(p.l)}</span><span class="val">${esc(p.v)}</span><span class="st">${ST[p.s]}</span></div>`).join("")}</div>
+    <pre class="record">${esc(opt.rec)}</pre>
+  </div>`;
+}
+
+function renderSit(){
+  const s = S[state.cur];
+  const a = state.ans[s.id] || (state.ans[s.id] = {o:null, g:null, text:"", done:false, tab:null});
+  let body = `
+  <div class="row"><button class="btn ghost" id="back">← Übersicht</button><span class="tag">Situation ${state.cur+1} von ${S.length}</span></div>
+  <h2>${esc(s.titel)}</h2>
+  ${stepsBar()}
+  <div class="panel">
+    <p style="margin:0">${esc(s.lage)}</p>
+    <div class="input" aria-label="Eingabe">${esc(s.eingabe)}</div>
+    <div class="ki"><div class="face">KI</div><div><span class="who">Die KI sagt dazu (sie kann falsch liegen):</span><p>${esc(s.ki)}</p></div></div>
+  </div>`;
+
+  if(state.step===1){
+    body += `<div class="row"><button class="btn" id="next">Weiter: Was tust du?</button></div>`;
+  }
+  if(state.step===2){
+    body += `<div class="panel"><h3>Was tust du?</h3><div class="list">
+      ${s.opt.map((o,k)=>`<button class="choice ${a.o===k?"picked":""}" data-o="${k}" id="o-${s.id}-${k}"><span class="k">${String.fromCharCode(65+k)}</span><span>${esc(o.t)}</span></button>`).join("")}
+    </div></div>
+    <div class="row"><button class="btn" id="next" ${a.o===null?"disabled":""}>Weiter: Warum?</button></div>`;
+  }
+  if(state.step===3){
+    body += `<div class="panel"><h3>Warum entscheidest du so?</h3>
+      <p class="sub" style="margin:0">Du hast gewählt: <strong>${esc(s.opt[a.o].t)}</strong></p>
+      <div class="list">
+      ${s.gr.map((g,k)=>`<button class="choice ${a.g===k?"picked":""}" data-g="${k}" id="g-${s.id}-${k}"><span class="k">${k+1}</span><span>${esc(g.t)}</span></button>`).join("")}
+      </div>
+      <label for="frei-${s.id}">In deinen eigenen Worten (freiwillig, wird nicht gespeichert)</label>
+      <textarea id="frei-${s.id}" placeholder="Ich glaube, …">${esc(a.text)}</textarea>
+    </div>
+    <div class="row"><button class="btn" id="next" ${a.g===null?"disabled":""}>Auflösung zeigen</button></div>`;
+  }
+  if(state.step===4){
+    const o = s.opt[a.o], g = s.gr[a.g];
+    const tab = a.tab===null ? a.o : a.tab;
+    body += `
+    <div class="verdict v-${o.v}"><span class="v">Deine Entscheidung: ${VERDICT[o.v]}</span><span>${esc(o.fb)}</span></div>
+    <div class="verdict v-${g.v}"><span class="v">Deine Begründung: ${VERDICT[g.v]}</span><span>${esc(g.fb)}</span></div>
+    ${a.text.trim()?`<div class="panel"><span class="tag">Deine eigenen Worte</span><p style="margin:0">${esc(a.text)}</p><p class="sub" style="margin:0">Lies sie noch einmal: Passt deine Begründung zur Auflösung? Wo würdest du heute anders denken?</p></div>`:""}
+    <div class="ki"><div class="face">KI</div><div><span class="who">Und die KI?</span><p>${esc(s.kiAufl)}</p></div></div>
+    ${inside(s.opt[tab], s, tab)}
+    <div class="panel"><h3>Die anderen Wege</h3><div class="list">
+      ${s.opt.map((x,k)=> k===a.o ? "" : `<div class="verdict v-${x.v}"><span class="v">${String.fromCharCode(65+k)}: ${esc(x.t)} · ${VERDICT[x.v]}</span><span>${esc(x.fb)}</span></div>`).join("")}
+    </div></div>
+    <div class="rule"><span class="tag">Merksatz</span>${esc(s.regel)}</div>
+    <div class="row">
+      ${state.cur < S.length-1 ? `<button class="btn" id="nextsit">Nächste Situation</button>` : `<button class="btn" id="to-end">Zur Merkliste</button>`}
+      <button class="btn ghost" id="back2">Zur Übersicht</button>
+      <button class="btn ghost" id="again">Noch einmal entscheiden</button>
+    </div>`;
+  }
+  app.innerHTML = head() + body;
+
+  const q = id => document.getElementById(id);
+  q("back").onclick = () => { state.view="start"; render(); };
+  if(q("next")) q("next").onclick = () => {
+    if(state.step===3){ a.done = true; a.tab = null; }
+    state.step++; render(); window.scrollTo({top:0});
+  };
+  app.querySelectorAll("[data-o]").forEach(b => b.onclick = () => { a.o = +b.dataset.o; render(); });
+  app.querySelectorAll("[data-g]").forEach(b => b.onclick = () => { a.text = (q("frei-"+s.id)||{}).value ?? a.text; a.g = +b.dataset.g; render(); });
+  const ta = q("frei-"+s.id); if(ta) ta.oninput = e => { a.text = e.target.value; };
+  app.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { a.tab = +b.dataset.tab; render(); document.getElementById("inside").scrollIntoView({block:"nearest"}); });
+  if(q("nextsit")) q("nextsit").onclick = () => { open(state.cur+1); window.scrollTo({top:0}); };
+  if(q("back2")) q("back2").onclick = () => { state.view="start"; render(); window.scrollTo({top:0}); };
+  if(q("to-end")) q("to-end").onclick = () => { state.view="end"; render(); window.scrollTo({top:0}); };
+  if(q("again")) q("again").onclick = () => { state.ans[s.id] = {o:null,g:null,text:"",done:false,tab:null}; state.step=1; render(); window.scrollTo({top:0}); };
+}
+
+function renderEnd(){
+  const n = doneCount();
+  app.innerHTML = head() + `
+  <h2>Deine Merkliste</h2>
+  <p class="lead">${n===S.length ? "Du hast alle acht Situationen angeschaut." : `Du hast ${n} von ${S.length} Situationen angeschaut. Die offenen kannst du jederzeit noch spielen.`}</p>
+  <p class="sub">Was du hier gewählt und geschrieben hast, wird nirgends gespeichert. Wenn du die Seite schließt, ist es weg.</p>${n<S.length?`<p class="sub"><a href="#" id="back">Offene Situationen spielen</a></p>`:""}
+  <ul class="end-list">
+    ${S.map(s => {
+      const a = state.ans[s.id];
+      const m = a && a.done ? s.opt[a.o].v : "offen";
+      const word = {gut:"gut", geht:"geht", nein:"Denkfehler", offen:"offen"}[m];
+      return `<li><span class="mark mk-${m}">${word}</span><span><strong>${esc(s.titel)}</strong><br>${esc(s.regel)}</span></li>`;
+    }).join("")}
+  </ul>
+  <div class="panel">
+    <h3>Die eine Regel hinter allem</h3>
+    <p style="margin:0">Keine echten Daten von Menschen in eine KI, die nicht ausdrücklich dafür freigegeben ist. Und jede KI-Antwort prüfst du selbst, mit Fachwissen und einer guten Quelle.</p>
+  </div>
+  <p class="sub">Mehr dazu, mit Checklisten zum Ausdrucken: <a href="../../artikel/ki-an-der-pflegeschule/">Deine Pflegeschule will KI nutzen. Was ist erlaubt?</a></p>
+  <div id="spielende"></div>`;
+  const b = document.getElementById("back"); if(b) b.onclick = e => { e.preventDefault(); state.view="start"; render(); };
+  spielEnde("#spielende", { neu: () => { state = {view:"start",cur:null,step:1,ans:{}}; render(); }, titel: n===S.length ? "Du bist fertig." : "Du hast eine Pause gemacht." });
+}
+
+function render(){
+  if(state.view==="sit") renderSit();
+  else if(state.view==="end") renderEnd();
+  else renderStart();
+}
+
+function start(data){
+  if(data && data.view) state = Object.assign({view:"start",cur:null,step:1,ans:{}}, data);
+  render();
+}
+start({});
+</script>
+<style>.bmm-figur{position:absolute;top:10px;right:12px;z-index:30;display:block;line-height:0}.bmm-figur img{height:96px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur:hover img,.bmm-figur:focus-visible img{transform:translateY(-3px)}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:72px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Werkstatt"><img src="../../bilder/barbara-figur.webp" alt=""></a>
+</body>
+</html>
