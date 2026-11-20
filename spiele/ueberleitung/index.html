@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Was kommt beim Pflegedienst an? Person X und der digitale Überleitungsbogen</title>
+<meta name="description" content="Lernspiel für die Pflegefachassistenz: Person X wird aus der Klinik entlassen. Du erlebst die Überleitung erst auf der Station, dann im ambulanten Pflegedienst, siehst im Inneren, was ein digitales Formular aus einem Gespräch macht, widersprichst einer KI und stellst eine gezielte Rückfrage.">
+<script src="../../spielende.js"></script>
+<script src="../begriffe.js"></script>
+<style>
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("../../fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
+/* Layout: eine ruhige Spalte wie ein Pflegeformular auf Kurvenblatt-Papier; das "Innere" der Technik erscheint in Maschinenschrift. */
+:root{
+  --paper:#faeef1;
+  --grid:#f1dfe5;
+  --ink:#24382c;
+  --muted:#5e5459;
+  --line:#ead5db;
+  --card:#ffffff;
+  --pink:#b04e6b;
+  --pink-soft:#f6e1e8;
+  --ok:#1d7448;
+  --ok-soft:#e3f3ea;
+  --warn:#9a5a00;
+  --warn-soft:#fdf1dc;
+  --bad:#b42318;
+  --bad-soft:#fde8e6;
+  --machine:#0f1a30;
+  --machine-ink:#d6e4ff;
+  --display:"Literata", Georgia, serif;
+  --body:"Source Sans 3", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "Consolas", monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1422; --grid:#172136; --ink:#e7edf7; --muted:#9ba8bf; --line:#2c3a55; --card:#141d30;
+    --pink:#ff5d9b; --pink-soft:#3a1527; --ok:#53c48d; --ok-soft:#10301f; --warn:#f2aa47; --warn-soft:#352409;
+    --bad:#ff7b70; --bad-soft:#3a1512; --machine:#060b16; --machine-ink:#c7d9ff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1422; --grid:#172136; --ink:#e7edf7; --muted:#9ba8bf; --line:#2c3a55; --card:#141d30;
+  --pink:#ff5d9b; --pink-soft:#3a1527; --ok:#53c48d; --ok-soft:#10301f; --warn:#f2aa47; --warn-soft:#352409;
+  --bad:#ff7b70; --bad-soft:#3a1512; --machine:#060b16; --machine-ink:#c7d9ff; color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:28px 28px;
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:20px;
+  line-height:1.55;
+}
+.wrap{max-width:780px;margin:0 auto;padding:24px 18px 64px;display:flex;flex-direction:column;gap:22px}
+header.brand{display:flex;align-items:center;gap:12px;font-size:16px;color:var(--muted)}
+.cross{width:30px;height:30px;flex:none}
+.notice{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--pink);border-radius:10px;padding:14px 16px;font-size:17px;color:var(--muted)}
+.notice strong{color:var(--ink)}
+h1{font-family:var(--display);font-size:clamp(34px,7vw,52px);line-height:1.08;margin:6px 0 0;letter-spacing:-0.01em;text-wrap:balance}
+h1 .q{color:var(--pink)}
+h2{font-size:28px;line-height:1.2;margin:0;text-wrap:balance}
+h3{font-size:21px;margin:0}
+.lead{font-size:22px;max-width:62ch;margin:0}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.tag{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* Übersicht */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.station{
+  text-align:left;font:inherit;color:inherit;cursor:pointer;
+  background:var(--card);border:2px solid var(--line);border-radius:12px;padding:16px;
+  display:flex;flex-direction:column;gap:6px;min-height:132px;
+  transition:border-color .15s, transform .15s;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;
+}
+.station *{pointer-events:none}
+@media(hover:hover){.station:hover{border-color:var(--pink);transform:translateY(-2px)}}
+.station:active{border-color:var(--pink);transform:scale(.97)}
+.station.hop{border-color:var(--pink)}
+@media(prefers-reduced-motion:no-preference){
+  .station.hop{animation:st-hop .22s ease-out}
+  @keyframes st-hop{40%{transform:translateY(-8px)}100%{transform:none}}
+  .grid .station{animation:st-hop .45s ease-out 1}
+  .grid .station:nth-child(2){animation-delay:.05s}.grid .station:nth-child(3){animation-delay:.1s}.grid .station:nth-child(4){animation-delay:.15s}
+  .grid .station:nth-child(5){animation-delay:.2s}.grid .station:nth-child(6){animation-delay:.25s}.grid .station:nth-child(7){animation-delay:.3s}.grid .station:nth-child(8){animation-delay:.35s}
+  .grid .station.hop.hop{animation:st-hop .22s ease-out 0s 1}
+}
+.station:focus-visible,button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+.station .num{font-family:var(--mono);font-size:14px;color:var(--pink);font-weight:600}
+.station .t{font-weight:700;font-size:20px;line-height:1.25}
+.station .s{font-size:16px;color:var(--muted)}
+.station.done{border-style:dashed}
+.station .state{margin-top:auto;font-size:15px;color:var(--muted)}
+.station.done .state{color:var(--ok);font-weight:700}
+
+/* Buttons */
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{
+  font:inherit;font-weight:700;font-size:19px;cursor:pointer;border-radius:10px;padding:12px 20px;
+  border:2px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;display:inline-block
+}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Situation */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.step{font-family:var(--mono);font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.step.on{border-color:var(--pink);color:var(--pink);font-weight:600}
+.input{
+  font-family:var(--mono);font-size:16px;line-height:1.5;background:var(--paper);border:1px dashed var(--line);
+  border-radius:8px;padding:12px 14px;white-space:pre-wrap;word-break:break-word
+}
+.ki{display:flex;gap:14px;align-items:flex-start;background:var(--pink-soft);border-radius:12px;padding:14px 16px}
+.ki .face{flex:none;width:44px;height:44px;border-radius:10px;background:var(--pink);color:#fff;font-family:var(--mono);font-weight:600;display:grid;place-items:center;font-size:15px}
+.ki .who{font-size:15px;color:var(--muted)}
+.ki p{margin:2px 0 0}
+.choice{
+  width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;background:var(--card);
+  border:2px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start
+}
+.choice:hover{border-color:var(--ink)}
+.choice .k{font-family:var(--mono);font-weight:600;color:var(--pink);flex:none;width:22px}
+.choice.picked{border-color:var(--pink);background:var(--pink-soft)}
+.list{display:flex;flex-direction:column;gap:10px}
+textarea{width:100%;min-height:90px;font:inherit;font-size:18px;padding:12px;border-radius:10px;border:2px solid var(--line);background:var(--paper);color:var(--ink)}
+label{font-weight:700}
+
+/* Auflösung */
+.verdict{border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.verdict .v{font-weight:700}
+.v-gut{background:var(--ok-soft)} .v-gut .v{color:var(--ok)}
+.v-geht,.v-teil{background:var(--warn-soft)} .v-geht .v,.v-teil .v{color:var(--warn)}
+.v-nein{background:var(--bad-soft)} .v-nein .v{color:var(--bad)}
+.rule{border:2px solid var(--ink);border-radius:12px;padding:14px 16px;font-weight:700;font-size:21px}
+.rule .tag{display:block;margin-bottom:4px;font-weight:400}
+
+/* Das Innere */
+.machine{background:var(--machine);color:var(--machine-ink);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.machine h3{color:#fff;font-family:var(--mono);font-size:16px;letter-spacing:.04em;text-transform:uppercase}
+.machine .hint{font-family:var(--body);font-size:16px;color:#9fb3d9;margin:0}
+.path{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.node{flex:1 1 120px;min-width:118px;border-radius:10px;padding:10px;border:1px solid #2a3b5e;background:#111d36;display:flex;flex-direction:column;gap:2px}
+.node .l{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8ea4cf}
+.node .val{font-family:var(--mono);font-size:15px;font-weight:500;color:#fff}
+.node .st{font-family:var(--mono);font-size:12px;margin-top:auto}
+.node.s-ok{border-color:#2f8f5f}.node.s-ok .st{color:#6fdc9f}
+.node.s-warn{border-color:#a8701a}.node.s-warn .st{color:#ffc56b}
+.node.s-bad{border-color:#c23b30}.node.s-bad .st{color:#ff8f86}
+.node.s-n .st{color:#8ea4cf}
+.arrow{align-self:center;color:#5a72a3;font-family:var(--mono)}
+pre.record{margin:0;font-family:var(--mono);font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word;background:#0a1224;border-radius:8px;padding:12px;color:var(--machine-ink)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{font-family:var(--mono);font-size:14px;cursor:pointer;border-radius:8px;padding:6px 12px;border:1px solid #2a3b5e;background:transparent;color:#c7d9ff}
+.tabs button.on{background:#c7d9ff;color:#0f1a30;font-weight:600}
+
+/* Ende */
+.end-list{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.end-list li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;gap:12px}
+.end-list .mark{flex:none;font-family:var(--mono);font-weight:600;width:96px;font-size:14px}
+.mk-gut{color:var(--ok)} .mk-geht{color:var(--warn)} .mk-nein{color:var(--bad)} .mk-offen{color:var(--muted)}
+footer{font-size:15px;color:var(--muted)}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-right:110px}
+.top a,.top button{font:inherit;font-size:16px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;cursor:pointer}
+.ziele{max-width:56ch;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-size:18px}
+.ziele summary{cursor:pointer;font-weight:600}
+.ziele ul{list-style:none;margin:6px 0 0;padding:0}
+.ziele li{display:flex;gap:8px;margin:4px 0;color:var(--muted)}
+.ziele li::before{content:"○";flex:none;width:1.2em}
+.ziele li.got{color:var(--ink)}
+.ziele li.got::before{content:"✓";color:var(--ok);font-weight:600}
+.eyebrow{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:600}
+@media (max-width:480px){ body{font-size:19px} .arrow{display:none} }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+<link rel="icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/apple-touch-icon.png">
+<style>
+/* Lesehilfe: markierte Wörter im Bericht, Erklärkarten, Glossar nach Fragen */
+.report{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px}
+.report .src{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.report h2{font-family:var(--display);font-size:26px}
+.report p{margin:0;line-height:1.75}
+.term{font:inherit;font-size:inherit;line-height:inherit;color:inherit;background:var(--pink-soft);border:0;border-bottom:2px solid var(--pink);border-radius:4px 4px 0 0;padding:0 3px;cursor:pointer}
+.term.unsure{background:var(--warn-soft);border-bottom-color:var(--warn)}
+.term.known{background:var(--ok-soft);border-bottom-color:var(--ok)}
+.term.open{outline:2px solid var(--pink);outline-offset:1px}
+.term.read::after{content:" ✓";color:var(--ok);font-size:.8em;font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:16px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:-2px;background:var(--pink-soft);border-bottom:2px solid var(--pink)}
+.legend .lu::before{background:var(--warn-soft);border-bottom-color:var(--warn)}
+.legend .lk::before{background:var(--ok-soft);border-bottom-color:var(--ok)}
+.pick{display:flex;flex-wrap:wrap;gap:8px}
+.pick button{font:inherit;font-size:17px;cursor:pointer;border-radius:99px;padding:6px 14px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+.pick button.on{border-color:var(--pink);background:var(--pink-soft);font-weight:600}
+.card{background:var(--card);border:2px solid var(--pink);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.card h3{font-family:var(--display);font-size:24px}
+.card .q{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--pink)}
+.card .bsp{background:var(--paper);border-radius:10px;padding:10px 12px;font-size:18px}
+.card .bsp b{display:block;font-size:15px;color:var(--muted);font-weight:600}
+.card .also{font-size:16px;color:var(--muted)}
+.card .also a{color:var(--ink)}
+.count{font-family:var(--mono);font-size:15px;color:var(--muted)}
+.sortq{display:flex;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.sortq p{margin:0}
+.claim{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.claim.done{border-style:dashed}
+.claim p{margin:0}
+.glossar{display:flex;flex-direction:column;gap:18px}
+.glossar section{display:flex;flex-direction:column;gap:8px}
+.glossar h3{font-family:var(--display);font-size:22px}
+.glossar dl{margin:0;display:flex;flex-direction:column;gap:8px}
+.glossar .e{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.glossar dt{font-weight:700}
+.glossar dd{margin:2px 0 0;font-size:18px}
+.glossar .meta{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.glossar .meta a{color:var(--muted)}
+.source{font-size:17px;color:var(--muted);line-height:1.7}
+.source a{color:var(--ink)}
+.stepno{font-family:var(--mono);font-size:14px;color:var(--pink);font-weight:600;letter-spacing:.04em}
+.hint{font-size:17px;color:var(--muted);margin:0}
+.sub a{color:var(--ink)}
+
+/* Überleitung: Formular, Zitat, Erklärkarte */
+.quote{background:var(--card);border-left:5px solid var(--pink);border-radius:0 12px 12px 0;padding:12px 16px;font-style:italic;max-width:62ch}
+.task{margin:0}
+.form{background:var(--card);border:2px solid var(--ink);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;max-width:620px}
+.form-h{font-family:var(--mono);font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:6px}
+.checks{display:flex;flex-direction:column;gap:6px}
+.chk{display:flex;gap:10px;align-items:center;font-weight:400;cursor:pointer}
+.chk input{width:22px;height:22px;accent-color:var(--pink);flex:none}
+.small-l{font-size:17px}
+.form input[type=text]{font:inherit;font-size:18px;width:100%;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink)}
+.hilfe{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:18px}
+.hilfe summary{cursor:pointer;font-weight:600}
+.hilfe p{margin:6px 0 0}
+.path-light{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-family:var(--mono);font-size:14px;color:var(--muted)}
+.path-light span{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:4px 10px;color:var(--ink)}
+.termbox{display:flex;flex-direction:column;gap:8px}
+.machine .term{color:#fff;background:#2a3b5e;border-bottom-color:var(--pink)}
+.node .term{font-size:12px}
+</style>
+</head>
+<body>
+<style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
+<div class="wrap" id="app"></div>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const {FRAGEN, B, SPIELE} = window.BEGRIFFE;
+const KEY = "ueberleitung-v1";
+const STUFEN = 5;
+
+let st = load();
+function blank(){ return {stufe:1, cur:1, mark:[], s1ok:false, form:{liste:[], frei:""}, s2:null, s3a:null, s3ki:null, frage:"", check:[], vor:"", klaeren:""}; }
+function load(){ try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === "object") return Object.assign(blank(), s); } catch(e){} return blank(); }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e){} }
+
+const app = $("#app");
+const ZIELE = [
+  "Du erkennst, welche Informationen beim ersten Besuch zu Hause helfen.",
+  "Du siehst, wie ein digitales Formular eine Aussage verkürzt.",
+  "Du trennst, was im Bericht steht, von dem, was du nur weißt oder vermutest, und widersprichst einer KI mit Begründung.",
+  "Du formulierst eine gezielte Rückfrage und begründest sie.",
+  "Du planst den ersten Besuch so, dass Person X selbst entscheiden kann."
+];
+function term(k, label){ return `<button type="button" class="term" data-k="${k}">${esc(label || B[k].wort)}</button>`; }
+function karte(k){
+  const b = B[k];
+  const also = (b.also||[]).filter(s=>s!=="ueberleitung").map(s=>`<a href="${SPIELE[s].u}">${SPIELE[s].t}</a>`).join(", ");
+  return `<div class="card"><span class="q">${FRAGEN[b.f]}</span><h3>${esc(b.wort)}</h3><p style="margin:0">${esc(b.kurz)}</p><div class="bsp"><b>Zum Beispiel</b>${esc(b.bsp)}</div>${also?`<p class="also" style="margin:0">Kommt auch vor in: ${also}</p>`:""}<p class="also" style="margin:0"><a href="../lesehilfe/">Zur Begriffsliste in der Lesehilfe</a></p></div>`;
+}
+function kopf(){
+  const n = Math.min(Math.max(st.stufe-1,0), STUFEN);
+  return `<nav class="top" aria-label="Navigation"><a href="../../arbeitsproben.html">← Zurück zu den Arbeitsproben</a><button type="button" id="restart">↺ Neu beginnen</button></nav>
+  <div><span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflegefachassistenz</span>
+  <h1>Was kommt beim Pflegedienst an? <span class="q">Person X und der digitale Überleitungsbogen</span></h1></div>
+  <p class="lead">Person X wird aus der Klinik entlassen. Du erlebst die Überleitung von zwei Seiten: erst auf der Station, dann im ambulanten Pflegedienst. Dabei siehst du, was ein digitales Formular aus einem Gespräch macht.</p>
+  <details class="ziele"><summary>Das kannst du danach: ${n} von ${STUFEN} geschafft</summary><ul>${ZIELE.map((z,i)=>`<li class="${i<n?"got":""}">${z}</li>`).join("")}</ul></details>
+  <p class="hint">Unterstrichene Wörter kannst du antippen. Dann erscheint eine Erklärung. Du musst sie nicht lernen.</p>`;
+}
+function go(n){ if (n<1) n=1; st.stufe = Math.max(st.stufe, n); st.cur = n; save(); render(); const h = app.querySelector("h2"); if (h) { h.setAttribute("tabindex","-1"); try { h.focus({preventScroll:true}); } catch(e){} } const p = $("#stage"); if (p) window.scrollTo({top: p.offsetTop - 12, behavior:"smooth"}); }
+function head(nr, ort, t){ return `<div class="stepno">Stufe ${nr} von ${STUFEN} · ${ort}</div><h2>${t}</h2>`; }
+function nav(back, label){ return `<div class="row">${back!==null?`<button class="btn ghost" id="back" type="button">← Zurück</button>`:""}<button class="btn" id="next" type="button">${label||"Weiter"} →</button></div><div id="hold"></div>`; }
+function wire(back, next, check){
+  if (back!==null) $("#back").onclick = () => go(back);
+  $("#next").onclick = () => { const m = check ? check() : ""; if (m) { $("#hold").innerHTML = verdict("teil","Noch ein Schritt.", m); return; } go(next); };
+}
+function verdict(kind, title, text){ return `<div class="verdict v-${kind}"><span class="v">${title}</span><span>${text}</span></div>`; }
+
+/* ---------- Stufe 1: Auf der Station ---------- */
+const AUSSAGEN = [
+  {id:"a", t:"Eine kurze Erinnerung ans Frühstück hilft Person X.", ok:true},
+  {id:"b", t:"Person X trinkt morgens gern Tee.", ok:false, f:"Das ist freundlich zu wissen. Für den ersten Besuch ist es aber nicht entscheidend."},
+  {id:"c", t:"Über den weiteren Tag möchte Person X selbst entscheiden.", ok:true},
+  {id:"d", t:"Person X wohnt im zweiten Stock.", ok:false, f:"Das steht schon in der Adresse. Es sagt nichts darüber, welche Unterstützung Person X wünscht."},
+  {id:"e", t:"Person X hat in der Klinik gern Puzzle gemacht.", ok:false, f:"Eine schöne Information für später. Beim ersten Besuch geht es um den Morgen und darum, was Person X selbst entscheiden will."}
+];
+function s1(){
+  return { html: head(1,"Auf der Station","Was sagt Person X?") + `
+    <p class="sub">Du arbeitest auf der Station einer psychiatrischen Klinik. Person X wird morgen entlassen. Ein ambulanter Pflegedienst übernimmt den ersten Besuch zu Hause. Im Gespräch sagt Person X:</p>
+    <div class="quote">„Morgens trinke ich gern Tee. Wenn dann gleich jemand mit mir den ganzen Tag plant, ist mir das zu viel. Eine kurze Erinnerung ans Frühstück hilft mir. Danach möchte ich selbst entscheiden, was ich mache. Ich wohne im zweiten Stock. In der Klinik habe ich gern gepuzzelt.“</div>
+    <p class="task"><b>Markiere die zwei Informationen, die dem Pflegedienst beim ersten Besuch am meisten helfen.</b></p>
+    <div class="list" id="aus">${AUSSAGEN.map(a=>`<button type="button" class="choice${st.mark.includes(a.id)?" picked":""}" data-id="${a.id}" aria-pressed="${st.mark.includes(a.id)}"><span class="k">${st.mark.includes(a.id)?"✓":"○"}</span><span>${esc(a.t)}</span></button>`).join("")}</div>
+    <div class="row"><button class="btn ghost" id="check" type="button">Prüfen</button></div>
+    <div id="fb"></div>` + nav(null,"Bogen ausfüllen"),
+    after(){
+      app.querySelectorAll("#aus .choice").forEach(b => b.onclick = () => {
+        const id = b.dataset.id; st.mark = st.mark.includes(id) ? st.mark.filter(x=>x!==id) : st.mark.concat(id); st.s1ok = false; save();
+        const on = st.mark.includes(id); b.classList.toggle("picked", on); b.setAttribute("aria-pressed", on); b.querySelector(".k").textContent = on ? "✓" : "○"; $("#fb").innerHTML = "";
+      });
+      const pruefen = () => {
+        const falsch = st.mark.map(id=>AUSSAGEN.find(a=>a.id===id)).filter(a=>!a.ok);
+        const fehlt = AUSSAGEN.filter(a=>a.ok && !st.mark.includes(a.id));
+        if (!falsch.length && !fehlt.length) { st.s1ok = true; save(); $("#fb").innerHTML = verdict("gut","Genau diese zwei.","Eine kurze Erinnerung ans Frühstück hilft Person X. Über den weiteren Tag möchte Person X selbst entscheiden. Beides gehört in die Überleitung: Es sagt, welche Unterstützung gewünscht ist, und wo sie aufhört."); return; }
+        $("#fb").innerHTML = verdict("teil","Noch nicht ganz.", (falsch.length ? falsch.map(a=>esc(a.f)).join(" ") + " " : "") + (fehlt.length ? "Eine wichtige Information fehlt noch. Was sagt Person X über den Morgen und über den Rest des Tages?" : ""));
+      };
+      $("#check").onclick = pruefen;
+      if (st.s1ok) pruefen();
+      wire(null, 2, () => st.s1ok ? "" : "Markiere die zwei wichtigsten Informationen und tippe auf „Prüfen“.");
+    }};
+}
+
+/* ---------- Stufe 2: Den Bogen ausfüllen (Im Inneren) ---------- */
+const LISTE = ["Körperpflege","Ernährung","Tagesstruktur","Mobilität","Medikamente"];
+const MAX = 40;
+function s2(){
+  const f = st.form;
+  return { html: head(2,"Auf der Station","Du füllst den Überleitungsbogen aus") + `
+    <p class="sub">Es ist kurz vor Dienstende. Im Programm der Klinik öffnest du den digitalen Überleitungsbogen. Er hat ein ${term("feld","Feld")} „Unterstützungsbedarf“: eine ${term("auswahl","Auswahlliste")} zum Ankreuzen und ein kleines Freitextfeld mit höchstens ${MAX} Zeichen.</p>
+    <div class="form" role="group" aria-labelledby="fl">
+      <div class="form-h" id="fl">Überleitungsbogen · Unterstützungsbedarf</div>
+      <div class="checks">${LISTE.map((l,i)=>`<label class="chk"><input type="checkbox" id="l${i}" value="${l}" ${f.liste.includes(l)?"checked":""}> ${l}</label>`).join("")}</div>
+      <label for="frei" class="small-l">Bemerkung (Freitext)</label>
+      <input id="frei" type="text" maxlength="${MAX}" autocomplete="off" value="${esc(f.frei)}" placeholder="Was soll der Pflegedienst wissen?">
+      <span class="count" id="rest"></span>
+    </div>
+    <div class="row"><button class="btn ghost" id="send" type="button">Bogen absenden</button></div>
+    <div id="inner"></div>
+    <div id="q2" hidden>
+      <p class="task"><b>Warum ist die Feinheit beim Pflegedienst nicht angekommen?</b></p>
+      <div class="list">${[
+        "Die Station hat schlampig gearbeitet.",
+        "Das Formular hat für Wünsche nur ein kleines Freitextfeld, und das Programm des Pflegedienstes zeigt es nicht in der Übersicht.",
+        "Eine KI hat den Text gelöscht."
+      ].map((t,i)=>`<button type="button" class="choice${st.s2===i?" picked":""}" data-i="${i}"><span class="k">${"ABC"[i]}</span><span>${t}</span></button>`).join("")}</div>
+      <div id="fb2"></div>
+    </div>` + nav(1,"Zum Pflegedienst wechseln"),
+    after(){
+      const frei = $("#frei");
+      const rest = () => { $("#rest").textContent = `${MAX - frei.value.length} Zeichen übrig`; };
+      frei.oninput = () => { f.frei = frei.value; save(); rest(); };
+      LISTE.forEach((l,i) => { $("#l"+i).onchange = e => { f.liste = e.target.checked ? f.liste.concat(l) : f.liste.filter(x=>x!==l); save(); }; });
+      rest();
+      const zeigen = () => {
+        const daten = `unterstuetzung = ${JSON.stringify(f.liste)}\nbemerkung     = ${JSON.stringify(f.frei)}`;
+        const uebersicht = f.liste.length ? f.liste.join(", ") : "(nichts angekreuzt)";
+        $("#inner").innerHTML = `<div class="machine">
+          <h3>Im Inneren</h3>
+          <p class="hint">So speichert das Programm der Klinik deinen Eintrag. Die Liste ist ${term("strukturiert","strukturiert")}, die Bemerkung ist freier Text.</p>
+          <pre class="record">${esc(daten)}</pre>
+          <div class="path">
+            <div class="node s-ok"><span class="l">Klinik</span><span class="val">Liste + Bemerkung</span><span class="st">gespeichert</span></div>
+            <span class="arrow">→</span>
+            <div class="node s-warn"><span class="l">${term("schnittstelle","Schnittstelle")}</span><span class="val">Liste als Feld, Bemerkung als Anhang</span><span class="st">übertragen</span></div>
+            <span class="arrow">→</span>
+            <div class="node s-bad"><span class="l">Pflegedienst</span><span class="val">Übersicht: ${esc(uebersicht)}</span><span class="st">Bemerkung nur im Anhang</span></div>
+          </div>
+          <p class="hint">Vereinfachtes Übungsmodell. Wie Programme Daten austauschen, ist in jeder Einrichtung anders.</p>
+        </div>`;
+        $("#q2").hidden = false;
+        bindTerms();
+      };
+      $("#send").onclick = () => {
+        if (!f.liste.length) { $("#inner").innerHTML = verdict("teil","Fast.","Kreuz mindestens an, wobei Person X Unterstützung braucht."); return; }
+        st.sent = true; save(); zeigen();
+      };
+      if (st.sent) zeigen();
+      const fb = () => {
+        if (st.s2===null) return;
+        const t = [
+          ["nein","Das greift zu kurz.","Auch wer sorgfältig arbeitet, hat kurz vor Dienstende wenig Zeit. Und selbst ein guter Freitext landet hier nur im Anhang. Das Problem liegt im Formular und im Weg der Daten, nicht nur bei einzelnen Menschen."],
+          ["gut","Genau.","Ankreuzen geht schnell, und das Angekreuzte kommt sichtbar an. Die Feinheit „kurz erinnern, sonst selbst entscheiden“ passt nur in den Freitext. Und der verschwindet beim Pflegedienst im Anhang."],
+          ["nein","Nein.","Hier war keine KI beteiligt. Der Text ist nicht gelöscht, er steht nur an einer Stelle, die beim ersten Blick niemand sieht."]
+        ][st.s2];
+        $("#fb2").innerHTML = verdict(t[0], t[1], t[2]);
+      };
+      app.querySelectorAll("#q2 .choice").forEach(b => b.onclick = () => { st.s2 = +b.dataset.i; save(); app.querySelectorAll("#q2 .choice").forEach(x=>x.classList.toggle("picked", x===b)); fb(); });
+      fb();
+      wire(1, 3, () => !st.sent ? "Fülle den Bogen aus und sende ihn ab." : st.s2!==1 ? "Beantworte die Frage, warum die Feinheit nicht angekommen ist." : "");
+    }};
+}
+
+/* ---------- Stufe 3: Der Bericht kommt an ---------- */
+const S3 = [
+  {t:"Person X braucht einen vorgegebenen Tagesplan.", v:"nein", f:"Der Bericht nennt einen Unterstützungsbedarf. Welche Unterstützung Person X braucht oder wünscht, bleibt offen."},
+  {t:"Person X braucht Unterstützung bei der Tagesstruktur. Wie diese aussehen soll, bleibt offen.", v:"gut", f:"Richtig. Mehr steht dort nicht. Für den ersten Besuch brauchst du eine konkretere Information."},
+  {t:"Person X wünscht morgens eine kurze Erinnerung ans Frühstück.", v:"teil", f:"Das hast du auf der Station erfahren. In der Übersicht des Pflegedienstes steht es nicht. Wer nur den Bericht kennt, weiß es nicht."}
+];
+const KIW = [
+  {t:"Vorschlag übernehmen. Die KI hat den Bericht ja gelesen.", v:"nein", f:"Die KI hat nur das Wort „Tagesstruktur“ gelesen und daraus etwas gemacht, das wahrscheinlich klingt. Für Person X wäre ein ganzer Tagesplan am Morgen genau das, was zu viel ist."},
+  {t:"Vorschlag ablehnen und erst nachfragen, welche Unterstützung Person X wünscht.", v:"gut", f:"Du lässt dich nicht von einer sicher klingenden Antwort leiten. Die KI hat aus einem einzigen Wort einen Plan gemacht. Was Person X will, steht nicht im Bericht, also fragst du nach."}
+];
+function s3(){
+  return { html: head(3,"Im ambulanten Pflegedienst","Der Bericht kommt an") + `
+    <p class="sub">Jetzt wechselst du die Seite. Du arbeitest im ambulanten Pflegedienst und bereitest den ersten Besuch bei Person X vor. In deinem Programm siehst du:</p>
+    <div class="form"><div class="form-h">Überleitung · Übersicht</div><p style="margin:0"><b>Unterstützungsbedarf:</b> Benötigt Unterstützung bei der Tagesstruktur.</p><p class="hint" style="margin:0">Anhänge: 1 Dokument</p></div>
+    <p class="task"><b>Was kannst du aus diesem Eintrag sicher entnehmen?</b></p>
+    <div class="list" id="a3">${S3.map((o,i)=>`<button type="button" class="choice${st.s3a===i?" picked":""}" data-i="${i}"><span class="k">${"ABC"[i]}</span><span>${esc(o.t)}</span></button>`).join("")}</div>
+    <div id="fb3"></div>
+    <div id="kiwrap" hidden>
+      <div class="ki"><div class="face">KI</div><div><div class="who">Assistent im Programm des Pflegedienstes · ein ${term("modell","KI-Modell")}</div><p>„Unterstützung bei der Tagesstruktur erkannt. Mein Vorschlag: Erstelle beim ersten Besuch gemeinsam mit Person X einen festen Tagesplan von 8 bis 20 Uhr.“</p></div></div>
+      <p class="task"><b>Was machst du mit dem Vorschlag?</b></p>
+      <div class="list" id="k3">${KIW.map((o,i)=>`<button type="button" class="choice${st.s3ki===i?" picked":""}" data-i="${i}"><span class="k">${"AB"[i]}</span><span>${esc(o.t)}</span></button>`).join("")}</div>
+      <div id="fbk"></div>
+    </div>` + nav(2,"Rückfrage stellen"),
+    after(){
+      const f3 = () => { if (st.s3a===null) return; const o = S3[st.s3a]; $("#fb3").innerHTML = verdict(o.v, o.v==="gut"?"Richtig.":o.v==="teil"?"Vorsicht.":"Nein.", o.f); if (o.v==="gut") $("#kiwrap").hidden = false; bindTerms(); };
+      const fk = () => { if (st.s3ki===null) return; const o = KIW[st.s3ki]; $("#fbk").innerHTML = verdict(o.v, o.v==="gut"?"Gut begründet.":"Lies den Vorschlag noch einmal.", o.f); };
+      app.querySelectorAll("#a3 .choice").forEach(b => b.onclick = () => { st.s3a = +b.dataset.i; save(); app.querySelectorAll("#a3 .choice").forEach(x=>x.classList.toggle("picked", x===b)); f3(); });
+      app.querySelectorAll("#k3 .choice").forEach(b => b.onclick = () => { st.s3ki = +b.dataset.i; save(); app.querySelectorAll("#k3 .choice").forEach(x=>x.classList.toggle("picked", x===b)); fk(); });
+      f3(); fk();
+      wire(2, 4, () => st.s3a!==1 ? "Finde heraus, was du sicher aus dem Eintrag entnehmen kannst." : st.s3ki!==1 ? "Entscheide, was du mit dem Vorschlag der KI machst." : "");
+    }};
+}
+
+/* ---------- Stufe 4: Die Rückfrage ---------- */
+const PRUEF = ["Ich habe benannt, was im Bericht fehlt.", "Ich habe konkret gefragt: welche Unterstützung, und was Person X selbst entscheiden will.", "Ich habe begründet, warum die Antwort beim ersten Besuch hilft."];
+function s4(){
+  return { html: head(4,"Im ambulanten Pflegedienst","Die Rückfrage") + `
+    <p class="sub">Formuliere eine Rückfrage an die zuständige Pflegefachperson. Begründe in einem Satz, warum die Antwort beim ersten Besuch hilft. Stichpunkte reichen.</p>
+    <details class="hilfe"><summary>Sprachhilfe öffnen</summary><p>Im Bericht steht …<br>Für den ersten Besuch möchte ich wissen …<br>Die Antwort hilft uns, weil …</p></details>
+    <label for="frage">Meine Rückfrage</label>
+    <textarea id="frage" placeholder="Im Bericht steht …"></textarea>
+    <p class="hint">Nur für dich. Es bleibt in diesem Browser.</p>
+    <div class="row"><button class="btn ghost" id="bsp" type="button" disabled>Beispiel ansehen</button></div>
+    <div id="bspbox"></div>` + nav(3,"Zur ergänzten Überleitung"),
+    after(){
+      const t = $("#frage"); t.value = st.frage || "";
+      const upd = () => { $("#bsp").disabled = t.value.trim().length < 15; };
+      t.oninput = () => { st.frage = t.value; save(); upd(); };
+      const zeig = () => {
+        $("#bspbox").innerHTML = `<div class="card"><span class="q">Ein Beispiel, keine Musterlösung</span><p style="margin:0">„Im Bericht steht nur: Unterstützung bei der Tagesstruktur. Welche Unterstützung wünscht sich Person X am Morgen, und was möchte Person X selbst entscheiden? Die Antwort hilft uns, beim ersten Besuch passende Unterstützung anzubieten und die Wünsche von Person X zu achten.“</p></div>
+        <p class="task"><b>Prüf deine eigene Rückfrage. Was trifft zu?</b></p>
+        <div class="checks">${PRUEF.map((p,i)=>`<label class="chk"><input type="checkbox" id="p${i}" ${st.check.includes(i)?"checked":""}> ${p}</label>`).join("")}</div>
+        <div id="fbp"></div>`;
+        const fp = () => { const n = st.check.length; $("#fbp").innerHTML = n===3 ? verdict("gut","Deine Rückfrage trägt.","Sie benennt die Lücke, fragt gezielt und sagt, wozu die Antwort gebraucht wird.") : verdict("teil",`${n} von 3.`,"Du kannst deine Rückfrage oben noch ergänzen. Ehrlich ankreuzen hilft dir mehr als schnell fertig sein."); };
+        PRUEF.forEach((p,i) => { $("#p"+i).onchange = e => { st.check = e.target.checked ? st.check.concat(i) : st.check.filter(x=>x!==i); save(); fp(); }; });
+        fp();
+      };
+      $("#bsp").onclick = () => { st.bspSeen = true; save(); zeig(); };
+      if (st.bspSeen) zeig();
+      upd();
+      wire(3, 5, () => !st.bspSeen ? "Schreib deine Rückfrage und sieh dir dann das Beispiel an." : st.check.length < 3 ? "Ergänze deine Rückfrage, bis alle drei Punkte zutreffen." : "");
+    }};
+}
+
+/* ---------- Stufe 5: Die ergänzte Überleitung ---------- */
+function s5(){
+  return { html: head(5,"Im ambulanten Pflegedienst","Die ergänzte Überleitung") + `
+    <p class="sub">Nach deiner Rückfrage ergänzt das Stationsteam den Bericht. Diesmal steht es in der Übersicht:</p>
+    <div class="form"><div class="form-h">Überleitung · Übersicht · ergänzt</div><p style="margin:0"><b>Unterstützungsbedarf:</b> Benötigt Unterstützung bei der Tagesstruktur.</p><p style="margin:0"><b>Ergänzung:</b> Person X wünscht morgens eine kurze Erinnerung ans Frühstück. Über den weiteren Tagesablauf möchte Person X selbst entscheiden.</p></div>
+    <label for="vor">Was bereitest du für den ersten Besuch vor?</label>
+    <textarea id="vor" placeholder="Ich plane …"></textarea>
+    <label for="kl">Was möchtest du beim Besuch direkt mit Person X klären?</label>
+    <textarea id="kl" placeholder="Ich frage Person X, …"></textarea>
+    <p class="hint">Nur für dich. Es bleibt in diesem Browser.</p>
+    <div id="fb5"></div>` + nav(4,"Abschluss"),
+    after(){
+      const v = $("#vor"), k = $("#kl"); v.value = st.vor || ""; k.value = st.klaeren || "";
+      v.oninput = () => { st.vor = v.value; save(); }; k.oninput = () => { st.klaeren = k.value; save(); };
+      wire(4, 6, () => (v.value.trim().length < 8 || k.value.trim().length < 8) ? "Schreib zu beiden Fragen ein paar Stichworte." : "");
+    }};
+}
+
+/* ---------- Ende ---------- */
+const BENUTZT = ["feld","auswahl","strukturiert","schnittstelle","modell"];
+function ende(){
+  return { html: `<div class="stepno">Geschafft</div><h2>Was ein Formular aus einem Gespräch macht</h2>
+    <div class="path-light"><span>Gespräch</span>→<span>Formular</span>→<span>Schnittstelle</span>→<span>Übersicht</span>→<span>Rückfrage</span>→<span>Gespräch</span></div>
+    <p>Person X hat genau gesagt, was hilft und was zu viel ist. Auf dem Weg durch das Formular ist davon ein Wort übrig geblieben: „Tagesstruktur“. Eine KI hat daraus einen Plan gemacht, der Person X überfordert hätte.</p>
+    <p>Du hast gemerkt, was fehlt, nachgefragt und begründet. Und beim ersten Besuch fragst du Person X selbst. Kein Formular ersetzt dieses Gespräch.</p>
+    <h3>Diese Begriffe hast du unterwegs benutzt</h3>
+    <ul class="end-list">${BENUTZT.map(k=>`<li><span class="mark mk-gut">${esc(B[k].wort)}</span><span>${esc(B[k].kurz)}</span></li>`).join("")}</ul>
+    <p class="sub">Alle Begriffe stehen gesammelt in der <a href="../lesehilfe/">Begriffsliste der Lesehilfe</a>, geordnet nach Fragen.</p>
+    <h3>Woher kommt das Wissen?</h3>
+    <div class="source">
+      Entlassung gut vorbereiten, Informationen weitergeben, Wünsche der Person einbeziehen: <a href="https://www.dnqp.de/fileadmin/HSOS/Homepages/DNQP/Dateien/Expertenstandards/Entlassungsmanagement_in_der_Pflege/Entlassung_2Akt_Auszug.pdf">DNQP, Expertenstandard Entlassungsmanagement in der Pflege, 2. Aktualisierung (Auszug, PDF)</a>.<br>
+      Die bundeseinheitliche Ausbildung zur Pflegefachassistenz: <a href="https://www.bundesgesundheitsministerium.de/presse/pressemitteilungen/bundestag-beschliesst-gesetz-fuer-neuen-pflege-beruf">Bundesgesundheitsministerium: Bundestag beschließt Gesetz für neuen Pflege-Beruf</a>.<br>
+      Der Fall ist ausgedacht. Formular und Programme sind ein vereinfachtes Übungsmodell.
+    </div>
+    <div id="spielende"></div>`,
+    after(){ spielEnde("#spielende", { neu: () => { st = blank(); save(); go(1); } }); }};
+}
+
+/* ---------- Begriffe antippen ---------- */
+let offen = null;
+function bindTerms(){
+  app.querySelectorAll(".term").forEach(t => t.onclick = () => {
+    const k = t.dataset.k;
+    const box = $("#termbox");
+    if (offen === k) { offen = null; box.innerHTML = ""; box.hidden = true; return; }
+    offen = k; box.hidden = false; box.innerHTML = karte(k) + `<button type="button" class="btn ghost" id="tclose">Erklärung schließen</button>`;
+    $("#tclose").onclick = () => { offen = null; box.innerHTML = ""; box.hidden = true; t.focus(); };
+    const anchor = t.closest(".machine, .ki, .form, p, .sub") || t;
+    anchor.after(box);
+    box.scrollIntoView({behavior:"smooth", block:"nearest"});
+  });
+}
+
+const STAGES = [null, s1, s2, s3, s4, s5, ende];
+function render(){
+  const cur = st.cur || 1;
+  const s = STAGES[Math.min(cur, 6)]();
+  const steps = `<div class="steps" aria-hidden="true">${[1,2,3,4,5].map(i=>`<span class="step${i===Math.min(cur,5)?" on":""}">${i}</span>`).join("")}</div>`;
+  app.innerHTML = kopf() + steps + `<main class="panel" id="stage" aria-live="polite">${s.html}</main>
+    <div id="termbox" class="termbox" hidden aria-live="polite"></div>
+    <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Ein ausgedachter Fall zum Üben, keine echte Person, kein echtes Programm. Es gelten immer die Vorgaben deiner Einrichtung.</footer>`;
+  offen = null;
+  s.after();
+  bindTerms();
+  $("#restart").onclick = () => { st = blank(); save(); go(1); };
+}
+app.addEventListener("click", e => { const h = document.getElementById("hold"); if (h && !e.target.closest("#next")) h.innerHTML = ""; });
+render();
+})();
+</script>
+<style>.bmm-figur{position:fixed;bottom:max(14px,env(safe-area-inset-bottom,0px));right:max(14px,env(safe-area-inset-right,0px));z-index:30;display:block;line-height:0}@media(min-width:641px){body{padding-bottom:210px}}.bmm-figur img{height:132px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur{-webkit-tap-highlight-color:transparent;touch-action:manipulation}.bmm-figur:active img{transform:scale(.94)}.bmm-figur:focus-visible{outline:3px solid #b04e6b;outline-offset:4px;border-radius:12px}.bmm-box{display:inline-flex;flex-direction:column;align-items:center;gap:6px}.bmm-figur img.bmm-plus{display:block;height:58px;width:58px;filter:drop-shadow(0 3px 6px #0004)}@media(prefers-reduced-motion:no-preference){.bmm-plus{animation:bmm-hop 4s ease-in-out 1s infinite}@keyframes bmm-hop{0%,78%,100%{transform:none}84%{transform:translateY(-14px)}90%{transform:none}95%{transform:translateY(-5px)}}.bmm-figur:hover .bmm-plus,.bmm-figur:focus-visible .bmm-plus{animation:bmm-hop-now .5s ease-out}@keyframes bmm-hop-now{40%{transform:translateY(-14px)}100%{transform:none}}}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:104px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Startseite"><span class="bmm-box"><img src="../../bilder/barbara-figur.webp" alt=""><img class="bmm-plus" src="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" alt=""></span></a>
+</body>
+</html>
