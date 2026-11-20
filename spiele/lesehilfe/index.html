@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Wem gehört die Software? Einen Bericht über Digitales verstehen</title>
+<meta name="description" content="Lesehilfe in einfacher Sprache: Du entschlüsselst einen kurzen Bericht über Software in einer Klinik, unterscheidest Open Source, Open Weight und proprietäre Software, prüfst eine KI-Zusammenfassung und baust dir eine eigene Begriffsliste.">
+<script src="../../spielende.js"></script>
+<style>
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("../../fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
+/* Layout: eine ruhige Spalte wie ein Pflegeformular auf Kurvenblatt-Papier; das "Innere" der Technik erscheint in Maschinenschrift. */
+:root{
+  --paper:#faeef1;
+  --grid:#f1dfe5;
+  --ink:#24382c;
+  --muted:#5e5459;
+  --line:#ead5db;
+  --card:#ffffff;
+  --pink:#b04e6b;
+  --pink-soft:#f6e1e8;
+  --ok:#1d7448;
+  --ok-soft:#e3f3ea;
+  --warn:#9a5a00;
+  --warn-soft:#fdf1dc;
+  --bad:#b42318;
+  --bad-soft:#fde8e6;
+  --machine:#0f1a30;
+  --machine-ink:#d6e4ff;
+  --display:"Literata", Georgia, serif;
+  --body:"Source Sans 3", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "Consolas", monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1422; --grid:#172136; --ink:#e7edf7; --muted:#9ba8bf; --line:#2c3a55; --card:#141d30;
+    --pink:#ff5d9b; --pink-soft:#3a1527; --ok:#53c48d; --ok-soft:#10301f; --warn:#f2aa47; --warn-soft:#352409;
+    --bad:#ff7b70; --bad-soft:#3a1512; --machine:#060b16; --machine-ink:#c7d9ff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1422; --grid:#172136; --ink:#e7edf7; --muted:#9ba8bf; --line:#2c3a55; --card:#141d30;
+  --pink:#ff5d9b; --pink-soft:#3a1527; --ok:#53c48d; --ok-soft:#10301f; --warn:#f2aa47; --warn-soft:#352409;
+  --bad:#ff7b70; --bad-soft:#3a1512; --machine:#060b16; --machine-ink:#c7d9ff; color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:28px 28px;
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:20px;
+  line-height:1.55;
+}
+.wrap{max-width:780px;margin:0 auto;padding:24px 18px 64px;display:flex;flex-direction:column;gap:22px}
+header.brand{display:flex;align-items:center;gap:12px;font-size:16px;color:var(--muted)}
+.cross{width:30px;height:30px;flex:none}
+.notice{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--pink);border-radius:10px;padding:14px 16px;font-size:17px;color:var(--muted)}
+.notice strong{color:var(--ink)}
+h1{font-family:var(--display);font-size:clamp(34px,7vw,52px);line-height:1.08;margin:6px 0 0;letter-spacing:-0.01em;text-wrap:balance}
+h1 .q{color:var(--pink)}
+h2{font-size:28px;line-height:1.2;margin:0;text-wrap:balance}
+h3{font-size:21px;margin:0}
+.lead{font-size:22px;max-width:62ch;margin:0}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.tag{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* Übersicht */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.station{
+  text-align:left;font:inherit;color:inherit;cursor:pointer;
+  background:var(--card);border:2px solid var(--line);border-radius:12px;padding:16px;
+  display:flex;flex-direction:column;gap:6px;min-height:132px;
+  transition:border-color .15s, transform .15s;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;
+}
+.station *{pointer-events:none}
+@media(hover:hover){.station:hover{border-color:var(--pink);transform:translateY(-2px)}}
+.station:active{border-color:var(--pink);transform:scale(.97)}
+.station.hop{border-color:var(--pink)}
+@media(prefers-reduced-motion:no-preference){
+  .station.hop{animation:st-hop .22s ease-out}
+  @keyframes st-hop{40%{transform:translateY(-8px)}100%{transform:none}}
+  .grid .station{animation:st-hop .45s ease-out 1}
+  .grid .station:nth-child(2){animation-delay:.05s}.grid .station:nth-child(3){animation-delay:.1s}.grid .station:nth-child(4){animation-delay:.15s}
+  .grid .station:nth-child(5){animation-delay:.2s}.grid .station:nth-child(6){animation-delay:.25s}.grid .station:nth-child(7){animation-delay:.3s}.grid .station:nth-child(8){animation-delay:.35s}
+  .grid .station.hop.hop{animation:st-hop .22s ease-out 0s 1}
+}
+.station:focus-visible,button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+.station .num{font-family:var(--mono);font-size:14px;color:var(--pink);font-weight:600}
+.station .t{font-weight:700;font-size:20px;line-height:1.25}
+.station .s{font-size:16px;color:var(--muted)}
+.station.done{border-style:dashed}
+.station .state{margin-top:auto;font-size:15px;color:var(--muted)}
+.station.done .state{color:var(--ok);font-weight:700}
+
+/* Buttons */
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{
+  font:inherit;font-weight:700;font-size:19px;cursor:pointer;border-radius:10px;padding:12px 20px;
+  border:2px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;display:inline-block
+}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Situation */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.step{font-family:var(--mono);font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.step.on{border-color:var(--pink);color:var(--pink);font-weight:600}
+.input{
+  font-family:var(--mono);font-size:16px;line-height:1.5;background:var(--paper);border:1px dashed var(--line);
+  border-radius:8px;padding:12px 14px;white-space:pre-wrap;word-break:break-word
+}
+.ki{display:flex;gap:14px;align-items:flex-start;background:var(--pink-soft);border-radius:12px;padding:14px 16px}
+.ki .face{flex:none;width:44px;height:44px;border-radius:10px;background:var(--pink);color:#fff;font-family:var(--mono);font-weight:600;display:grid;place-items:center;font-size:15px}
+.ki .who{font-size:15px;color:var(--muted)}
+.ki p{margin:2px 0 0}
+.choice{
+  width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;background:var(--card);
+  border:2px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start
+}
+.choice:hover{border-color:var(--ink)}
+.choice .k{font-family:var(--mono);font-weight:600;color:var(--pink);flex:none;width:22px}
+.choice.picked{border-color:var(--pink);background:var(--pink-soft)}
+.list{display:flex;flex-direction:column;gap:10px}
+textarea{width:100%;min-height:90px;font:inherit;font-size:18px;padding:12px;border-radius:10px;border:2px solid var(--line);background:var(--paper);color:var(--ink)}
+label{font-weight:700}
+
+/* Auflösung */
+.verdict{border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.verdict .v{font-weight:700}
+.v-gut{background:var(--ok-soft)} .v-gut .v{color:var(--ok)}
+.v-geht,.v-teil{background:var(--warn-soft)} .v-geht .v,.v-teil .v{color:var(--warn)}
+.v-nein{background:var(--bad-soft)} .v-nein .v{color:var(--bad)}
+.rule{border:2px solid var(--ink);border-radius:12px;padding:14px 16px;font-weight:700;font-size:21px}
+.rule .tag{display:block;margin-bottom:4px;font-weight:400}
+
+/* Das Innere */
+.machine{background:var(--machine);color:var(--machine-ink);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.machine h3{color:#fff;font-family:var(--mono);font-size:16px;letter-spacing:.04em;text-transform:uppercase}
+.machine .hint{font-family:var(--body);font-size:16px;color:#9fb3d9;margin:0}
+.path{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.node{flex:1 1 120px;min-width:118px;border-radius:10px;padding:10px;border:1px solid #2a3b5e;background:#111d36;display:flex;flex-direction:column;gap:2px}
+.node .l{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8ea4cf}
+.node .val{font-family:var(--mono);font-size:15px;font-weight:500;color:#fff}
+.node .st{font-family:var(--mono);font-size:12px;margin-top:auto}
+.node.s-ok{border-color:#2f8f5f}.node.s-ok .st{color:#6fdc9f}
+.node.s-warn{border-color:#a8701a}.node.s-warn .st{color:#ffc56b}
+.node.s-bad{border-color:#c23b30}.node.s-bad .st{color:#ff8f86}
+.node.s-n .st{color:#8ea4cf}
+.arrow{align-self:center;color:#5a72a3;font-family:var(--mono)}
+pre.record{margin:0;font-family:var(--mono);font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word;background:#0a1224;border-radius:8px;padding:12px;color:var(--machine-ink)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{font-family:var(--mono);font-size:14px;cursor:pointer;border-radius:8px;padding:6px 12px;border:1px solid #2a3b5e;background:transparent;color:#c7d9ff}
+.tabs button.on{background:#c7d9ff;color:#0f1a30;font-weight:600}
+
+/* Ende */
+.end-list{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.end-list li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;gap:12px}
+.end-list .mark{flex:none;font-family:var(--mono);font-weight:600;width:96px;font-size:14px}
+.mk-gut{color:var(--ok)} .mk-geht{color:var(--warn)} .mk-nein{color:var(--bad)} .mk-offen{color:var(--muted)}
+footer{font-size:15px;color:var(--muted)}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-right:110px}
+.top a,.top button{font:inherit;font-size:16px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;cursor:pointer}
+.ziele{max-width:56ch;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-size:18px}
+.ziele summary{cursor:pointer;font-weight:600}
+.ziele ul{list-style:none;margin:6px 0 0;padding:0}
+.ziele li{display:flex;gap:8px;margin:4px 0;color:var(--muted)}
+.ziele li::before{content:"○";flex:none;width:1.2em}
+.ziele li.got{color:var(--ink)}
+.ziele li.got::before{content:"✓";color:var(--ok);font-weight:600}
+.eyebrow{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:600}
+@media (max-width:480px){ body{font-size:19px} .arrow{display:none} }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+<link rel="icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/apple-touch-icon.png">
+<style>
+/* Lesehilfe: markierte Wörter im Bericht, Erklärkarten, Glossar nach Fragen */
+.report{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px}
+.report .src{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.report h2{font-family:var(--display);font-size:26px}
+.report p{margin:0;line-height:1.75}
+.term{font:inherit;font-size:inherit;line-height:inherit;color:inherit;background:var(--pink-soft);border:0;border-bottom:2px solid var(--pink);border-radius:4px 4px 0 0;padding:0 3px;cursor:pointer}
+.term.unsure{background:var(--warn-soft);border-bottom-color:var(--warn)}
+.term.known{background:var(--ok-soft);border-bottom-color:var(--ok)}
+.term.open{outline:2px solid var(--pink);outline-offset:1px}
+.term.read::after{content:" ✓";color:var(--ok);font-size:.8em;font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:16px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:-2px;background:var(--pink-soft);border-bottom:2px solid var(--pink)}
+.legend .lu::before{background:var(--warn-soft);border-bottom-color:var(--warn)}
+.legend .lk::before{background:var(--ok-soft);border-bottom-color:var(--ok)}
+.pick{display:flex;flex-wrap:wrap;gap:8px}
+.pick button{font:inherit;font-size:17px;cursor:pointer;border-radius:99px;padding:6px 14px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+.pick button.on{border-color:var(--pink);background:var(--pink-soft);font-weight:600}
+.card{background:var(--card);border:2px solid var(--pink);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.card h3{font-family:var(--display);font-size:24px}
+.card .q{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--pink)}
+.card .bsp{background:var(--paper);border-radius:10px;padding:10px 12px;font-size:18px}
+.card .bsp b{display:block;font-size:15px;color:var(--muted);font-weight:600}
+.card .also{font-size:16px;color:var(--muted)}
+.card .also a{color:var(--ink)}
+.count{font-family:var(--mono);font-size:15px;color:var(--muted)}
+.sortq{display:flex;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.sortq p{margin:0}
+.claim{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.claim.done{border-style:dashed}
+.claim p{margin:0}
+.glossar{display:flex;flex-direction:column;gap:18px}
+.glossar section{display:flex;flex-direction:column;gap:8px}
+.glossar h3{font-family:var(--display);font-size:22px}
+.glossar dl{margin:0;display:flex;flex-direction:column;gap:8px}
+.glossar .e{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.glossar dt{font-weight:700}
+.glossar dd{margin:2px 0 0;font-size:18px}
+.glossar .meta{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.glossar .meta a{color:var(--muted)}
+.source{font-size:17px;color:var(--muted);line-height:1.7}
+.source a{color:var(--ink)}
+.stepno{font-family:var(--mono);font-size:14px;color:var(--pink);font-weight:600;letter-spacing:.04em}
+.hint{font-size:17px;color:var(--muted);margin:0}
+.sub a{color:var(--ink)}
+</style>
+</head>
+<body>
+<style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
+<div class="wrap" id="app"></div>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const KEY = "lesehilfe-1-v1";
+const STUFEN = 5;
+
+/* ---------- Die Begriffe. Jeder Begriff gehört zu einer Frage. ---------- */
+const FRAGEN = {
+  gehoert: "Wem gehört die Software?",
+  daten:   "Wo liegen die Daten?",
+  ki:      "Wie funktioniert die KI?",
+  wechsel: "Kann man später wechseln?"
+};
+const B = {
+  proprietaer: {wort:"proprietäre Software", f:"gehoert",
+    kurz:"Software, die einer Firma gehört. Du darfst sie nutzen, wenn du dafür eine Erlaubnis kaufst. Hineinschauen und verändern darfst du nicht.",
+    bsp:"Viele Programme in Kliniken sind proprietär. Wenn etwas fehlt, kann nur der Hersteller es ändern."},
+  lizenz: {wort:"Lizenz", f:"gehoert",
+    kurz:"Die Erlaubnis, eine Software zu nutzen, mit Regeln: wie viele Personen, wie lange, was man damit darf. Bei proprietärer Software kostet sie meist jedes Jahr Geld.",
+    bsp:"Eine Pflegeschule zahlt pro Lehrkraft und Jahr für ihr Büroprogramm. Steigt der Preis, steigen die Kosten für alle."},
+  quellcode: {wort:"Quellcode", f:"gehoert",
+    kurz:"Der Bauplan eines Programms, geschrieben in einer Programmiersprache. Wer ihn lesen kann, sieht, was das Programm genau tut.",
+    bsp:"In den Spielen zu Messwerten und Wunden liest du kleine Stücke Quellcode in Python.", also:["messwert","wunde"]},
+  opensource: {wort:"Open Source", f:"gehoert",
+    kurz:"Der Quellcode ist offen. Jede und jeder darf ihn lesen, verändern und weitergeben. Das regelt eine offene Lizenz. Open Source heißt nicht automatisch kostenlos: Einrichtung, Betrieb und Betreuung kosten trotzdem.",
+    bsp:"Moodle, die Lernplattform vieler Schulen, ist Open Source. Eine Schule kann sie selbst betreiben oder einen Dienstleister bezahlen."},
+  cloud: {wort:"Cloud", f:"daten",
+    kurz:"Die Software läuft nicht auf deinem Gerät oder im eigenen Haus, sondern auf den Rechnern eines Anbieters. Du greifst über das Internet darauf zu.",
+    bsp:"Du öffnest die Dokumentation im Browser. Die Daten liegen dann in einem Rechenzentrum des Anbieters, vielleicht in einem anderen Land."},
+  rechenzentrum: {wort:"eigenes Rechenzentrum", f:"daten",
+    kurz:"Die Klinik betreibt die Rechner selbst, im eigenen Haus oder bei einem Dienstleister ihrer Wahl. Fachleute sagen auch „On-Premises“, also „im Haus“. Dafür braucht sie eigenes Fachpersonal.",
+    bsp:"Fällt ein Rechner aus, kümmert sich die IT-Abteilung der Klinik, nicht ein Anbieter irgendwo auf der Welt."},
+  dsgvo: {wort:"DSGVO", f:"daten",
+    kurz:"Die Datenschutz-Grundverordnung der EU. Sie regelt, wer personenbezogene Daten wie verarbeiten darf. Gesundheitsdaten sind dort besonders geschützt. Daten in Länder außerhalb der EU zu geben, ist nur unter strengen Bedingungen erlaubt.",
+    bsp:"Ein Pflegebericht enthält Gesundheitsdaten. Wo er gespeichert wird, ist deshalb keine Nebensache.", also:["darf-das-in-den-chat"]},
+  souveraenitaet: {wort:"digitale Souveränität", f:"daten",
+    kurz:"Selbst entscheiden können: welche Software man nutzt, wo die Daten liegen und ob man später wechseln kann. Das Gegenteil ist Abhängigkeit.",
+    bsp:"Eine Klinik ist souverän, wenn sie ihre Daten jederzeit mitnehmen und den Anbieter wechseln könnte, auch wenn sie es nicht tut."},
+  modell: {wort:"KI-Modell", f:"ki",
+    kurz:"Das, was beim Lernen einer KI herauskommt: ein großes Rechenwerk, das aus Beispielen Muster gelernt hat. Es sagt voraus, was wahrscheinlich passt. Es kann sich dabei irren.",
+    bsp:"Im Spiel „Wie lernt eine Maschine?“ siehst du, wie aus Beispielen eine Regel entsteht.", also:["maschine"]},
+  trainingsdaten: {wort:"Trainingsdaten", f:"ki",
+    kurz:"Die Beispiele, aus denen ein KI-Modell gelernt hat. Was darin fehlt oder schief ist, steckt später auch im Modell.",
+    bsp:"Lernt eine KI nur aus Berichten über junge Menschen, schätzt sie ältere Menschen schlechter ein."},
+  openweight: {wort:"Open Weight", f:"ki",
+    kurz:"Das fertig trainierte Modell wird veröffentlicht, also seine „Gewichte“, die gelernten Zahlen. Wie es trainiert wurde und mit welchen Daten, bleibt verborgen. Man kann es nutzen, aber nicht vollständig nachprüfen.",
+    bsp:"Ein Hersteller nennt sein Modell „offen“. Fragst du nach den Trainingsdaten, heißt es: geheim. Dann ist es Open Weight, nicht Open Source."},
+  lockin: {wort:"Anbieterabhängigkeit", f:"wechsel",
+    kurz:"Man kommt von einem Anbieter kaum noch los: Die Daten stecken in seinem Format, alle sind an sein Programm gewöhnt, ein Wechsel wäre teuer. Fachleute sagen auch „Lock-in“, also „eingeschlossen“.",
+    bsp:"Der Hersteller erhöht die Preise. Die Klinik zahlt, weil ein Wechsel noch teurer wäre."},
+  standard: {wort:"offene Standards", f:"wechsel",
+    kurz:"Öffentlich beschriebene Formate und Regeln, wie Daten gespeichert und ausgetauscht werden. Jedes Programm darf sie nutzen. Dann kann man Daten von einem Programm ins andere mitnehmen.",
+    bsp:"Kommen die Werte vom Zuckersensor nur in einer einzigen App an, fehlt ein offener Standard.", also:["zucker"]}
+};
+const SPIELE = {
+  messwert:{t:"Messwerte in der Pflegedokumentation", u:"../messwert/"},
+  wunde:{t:"Wunden messen und dokumentieren", u:"../wunde/"},
+  "darf-das-in-den-chat":{t:"Darf das in den Chat?", u:"../darf-das-in-den-chat/"},
+  maschine:{t:"Wie lernt eine Maschine?", u:"../maschine/"},
+  zucker:{t:"Blutzucker-Sensor auf der Haut", u:"../zucker/"}
+};
+
+/* ---------- Der Bericht: ausgedacht, im Stil einer Fachmeldung ---------- */
+const BERICHT = [
+  "Ein großer Klinikverbund will seine Programme für Büro und Pflegedokumentation umstellen. Bisher nutzt er [[proprietaer]] eines Herstellers aus den USA. Sie läuft in dessen [[cloud]]. Die Kosten für die [[lizenz|Lizenzen]] steigen jedes Jahr.",
+  "Ein Wechsel ist schwierig: Die Daten liegen in einem Format, das nur dieses Programm lesen kann. [[standard]] fehlen. Fachleute sprechen von [[lockin]].",
+  "Jetzt prüft der Verbund Programme mit [[opensource]]. Ihren [[quellcode]] darf jede und jeder einsehen. Er könnte sie auch in einem [[rechenzentrum|eigenen Rechenzentrum]] betreiben.",
+  "Für die Pflegedokumentation soll außerdem ein KI-Assistent helfen. Der Hersteller nennt sein [[modell]] „offen“. Veröffentlicht hat er aber nur das fertige Modell, nicht die [[trainingsdaten]]. Kritische Stimmen sprechen deshalb von [[openweight]], nicht von Open Source.",
+  "Der Datenschutzbeauftragte erinnert daran, dass Gesundheitsdaten nach der [[dsgvo]] besonders geschützt sind. Das Ziel des Verbunds heißt [[souveraenitaet]]."
+];
+function renderBericht(cls){
+  return BERICHT.map(p => "<p>" + esc(p).replace(/\[\[([a-z]+)(?:\|([^\]]+))?\]\]/g, (m,k,label) => {
+    const w = label || B[k].wort;
+    return `<button type="button" class="term ${cls(k)}" data-k="${k}">${w}</button>`;
+  }) + "</p>").join("");
+}
+const KEYS = Object.keys(B);
+
+/* ---------- Speicher (nur in diesem Browser) ---------- */
+let st = load();
+function blank(){ return {stufe:0, mark:{}, read:{}, sort:{}, ki:{}, wahl:null, grund:"", mit:""}; }
+function load(){ try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === "object") return Object.assign(blank(), s); } catch(e){} return blank(); }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e){} }
+
+const app = $("#app");
+const ZIELE = [
+  "Du schätzt ehrlich ein, welche Wörter in einem Bericht du schon kennst.",
+  "Du erklärst Begriffe wie Open Source, Cloud und Anbieterabhängigkeit in eigenen Worten.",
+  "Du unterscheidest Open Source, Open Weight und proprietäre Software.",
+  "Du prüfst eine KI-Zusammenfassung und findest, was nicht stimmt.",
+  "Du begründest, worauf eine Klinik oder Schule bei neuer Software achten sollte."
+];
+function kopf(){
+  const n = Math.min(Math.max((st.stufe||1)-1,0), STUFEN);
+  return `<nav class="top" aria-label="Navigation"><a href="../../arbeitsproben.html">← Zurück zu den Arbeitsproben</a><button type="button" id="restart">↺ Neu beginnen</button></nav>
+  <div><span class="eyebrow">Digitale Bildung · Lernen am Optimum: Lesehilfe 1</span>
+  <h1>Wem gehört die Software? <span class="q">Einen Bericht über Digitales verstehen</span></h1></div>
+  <p class="lead">In Berichten über Kliniken, Schulen und KI stehen Wörter wie Open Source, Cloud oder Anbieterabhängigkeit. Hier liest du einen kurzen Bericht und entschlüsselst die Wörter Schritt für Schritt. Am Ende hast du eine eigene Begriffsliste.</p>
+  <details class="ziele"><summary>Das kannst du danach: ${n} von ${STUFEN} geschafft</summary><ul>${ZIELE.map((z,i)=>`<li class="${i<n?"got":""}">${z}</li>`).join("")}</ul></details>`;
+}
+function go(n){ st.stufe = Math.max(st.stufe, n); st.cur = n; save(); render(); const h = app.querySelector("h2"); if (h) { h.setAttribute("tabindex","-1"); try { h.focus({preventScroll:true}); } catch(e){} } const p = $("#stage"); if (p) window.scrollTo({top: p.offsetTop - 12, behavior:"smooth"}); }
+function head(nr, t){ return `<div class="stepno">Stufe ${nr} von ${STUFEN}</div><h2>${t}</h2>`; }
+function nav(back, label){ return `<div class="row">${back!==null?`<button class="btn ghost" id="back" type="button">← Zurück</button>`:""}<button class="btn" id="next" type="button">${label||"Weiter"} →</button></div><div id="hold"></div>`; }
+function wire(back, next, check){
+  if (back!==null) $("#back").onclick = () => go(back);
+  $("#next").onclick = () => { const m = check ? check() : ""; if (m) { $("#hold").innerHTML = `<div class="verdict v-teil"><span class="v">Noch ein Schritt.</span>${m}</div>`; return; } go(next); };
+}
+function verdict(kind, title, text){ return `<div class="verdict v-${kind}"><span class="v">${title}</span><span>${text}</span></div>`; }
+function karte(k){
+  const b = B[k];
+  const also = (b.also||[]).map(s=>`<a href="${SPIELE[s].u}">${SPIELE[s].t}</a>`).join(", ");
+  return `<div class="card"><span class="q">${FRAGEN[b.f]}</span><h3>${esc(b.wort)}</h3><p style="margin:0">${esc(b.kurz)}</p><div class="bsp"><b>Zum Beispiel</b>${esc(b.bsp)}</div>${also?`<p class="also" style="margin:0">Kommt vor in: ${also}</p>`:""}</div>`;
+}
+
+/* ---------- Stufe 1: Was kenne ich schon? ---------- */
+function s1(){
+  let modus = "unsure";
+  return { html: head(1,"Was kennst du schon?") + `
+    <p class="sub">Lies den Bericht. Markiert sind 13 Fachwörter. Tipp jedes Wort an, das du <b>nicht sicher</b> erklären könntest. Ehrlich sein hilft dir: Genau diese Wörter schauen wir uns an.</p>
+    <div class="report"><span class="src">Ausgedachter Bericht · im Stil einer Fachmeldung</span><h2>Klinikverbund prüft neue Software</h2>${renderBericht(k => st.mark[k]==="unsure"?"unsure":(st.mark[k]==="known"?"known":""))}</div>
+    <div class="legend"><span class="lu">nicht sicher</span><span>noch nicht markiert</span></div>
+    <p class="count" id="cnt"></p>` + nav(null,"Wörter entschlüsseln"),
+    after(){
+      const cnt = () => { const u = KEYS.filter(k=>st.mark[k]==="unsure").length; $("#cnt").textContent = `${u} von ${KEYS.length} Wörtern als „nicht sicher“ markiert.`; };
+      app.querySelectorAll(".term").forEach(t => t.onclick = () => {
+        const k = t.dataset.k; st.mark[k] = st.mark[k]==="unsure" ? "known" : "unsure"; save();
+        app.querySelectorAll(`.term[data-k="${k}"]`).forEach(x=>{ x.classList.toggle("unsure", st.mark[k]==="unsure"); x.classList.toggle("known", false); });
+        cnt();
+      });
+      cnt();
+      wire(null, 2, () => "");
+    }};
+}
+
+/* ---------- Stufe 2: Wörter entschlüsseln ---------- */
+function s2(){
+  const ziel = () => { const u = KEYS.filter(k=>st.mark[k]==="unsure"); return u.length >= 3 ? u : u.concat(KEYS.filter(k=>!u.includes(k))).slice(0,Math.max(3,u.length)); };
+  return { html: head(2,"Die Wörter entschlüsseln") + `
+    <p class="sub">Tipp ein Wort im Bericht an. Darunter erscheint die Erklärung. Schau dir mindestens alle Wörter an, die du als „nicht sicher“ markiert hast. Hast du weniger als drei markiert, schau dir trotzdem drei an und prüf, ob du richtig lagst.</p>
+    <div class="report"><span class="src">Ausgedachter Bericht · im Stil einer Fachmeldung</span><h2>Klinikverbund prüft neue Software</h2>${renderBericht(k => (st.mark[k]==="unsure"?"unsure ":"") + (st.read[k]?"read":""))}</div>
+    <div id="card" aria-live="polite"><p class="hint">Noch kein Wort angetippt.</p></div>
+    <p class="count" id="cnt"></p>` + nav(1,"Unterscheiden"),
+    after(){
+      const cnt = () => { const z = ziel(); const done = z.filter(k=>st.read[k]).length; $("#cnt").textContent = `Angeschaut: ${KEYS.filter(k=>st.read[k]).length} von ${KEYS.length}. Deine Wörter: ${done} von ${z.length}.`; };
+      app.querySelectorAll(".term").forEach(t => t.onclick = () => {
+        const k = t.dataset.k; st.read[k] = true; save();
+        app.querySelectorAll(".term").forEach(x=>x.classList.toggle("open", x.dataset.k===k));
+        app.querySelectorAll(`.term[data-k="${k}"]`).forEach(x=>x.classList.add("read"));
+        $("#card").innerHTML = karte(k); cnt();
+        if (window.matchMedia("(max-width:640px)").matches) $("#card").scrollIntoView({behavior:"smooth", block:"nearest"});
+      });
+      cnt();
+      wire(1, 3, () => { const z = ziel(); const fehlt = z.filter(k=>!st.read[k]); return fehlt.length ? `Schau dir noch an: ${fehlt.map(k=>B[k].wort).join(", ")}.` : ""; });
+    }};
+}
+
+/* ---------- Stufe 3: Offen ist nicht gleich offen ---------- */
+const SORT = [
+  {id:"a", t:"Du darfst den Bauplan lesen, verändern und weitergeben.", r:"opensource"},
+  {id:"b", t:"Du darfst das Programm nutzen, wenn du zahlst. Hineinschauen darfst du nicht.", r:"proprietaer"},
+  {id:"c", t:"Du bekommst das fertig trainierte Modell. Mit welchen Daten es gelernt hat, erfährst du nicht.", r:"openweight"},
+  {id:"d", t:"Ein Programm ist offen, aber die Klinik muss trotzdem für Einrichtung und Betreuung bezahlen.", r:"opensource"}
+];
+const SORT_OPT = ["opensource","openweight","proprietaer"];
+function s3(){
+  return { html: head(3,"Offen ist nicht gleich offen") + `
+    <p class="sub">Im Bericht heißt etwas „offen“, das gar nicht ganz offen ist. Ordne jede Beschreibung zu.</p>
+    <div class="list">${SORT.map(s=>`<div class="sortq" id="q${s.id}"><p>${esc(s.t)}</p><div class="pick">${SORT_OPT.map(o=>`<button type="button" data-q="${s.id}" data-o="${o}" class="${st.sort[s.id]===o?"on":""}">${B[o].wort}</button>`).join("")}</div><div class="fb"></div></div>`).join("")}</div>` + nav(2,"KI prüfen"),
+    after(){
+      const show = id => {
+        const s = SORT.find(x=>x.id===id), v = st.sort[id], fb = $("#q"+id+" .fb");
+        if (!v) { fb.innerHTML = ""; return; }
+        if (v===s.r) fb.innerHTML = verdict("gut","Richtig.", id==="d" ? "Open Source betrifft die Rechte am Quellcode, nicht die Kosten. Betrieb und Betreuung kosten trotzdem Geld." : id==="c" ? "Das ist Open Weight: nutzbar, aber nicht vollständig nachprüfbar." : "");
+        else fb.innerHTML = verdict("nein","Noch nicht.", v==="openweight" ? "Open Weight betrifft nur KI-Modelle: Die Gewichte sind frei, die Trainingsdaten nicht." : v==="proprietaer" ? "Bei proprietärer Software darfst du gar nicht hineinschauen. Passt das zur Beschreibung?" : "Bei Open Source ist der ganze Bauplan offen. Ist das hier so?");
+      };
+      app.querySelectorAll(".pick button").forEach(b => b.onclick = () => {
+        st.sort[b.dataset.q] = b.dataset.o; save();
+        app.querySelectorAll(`.pick button[data-q="${b.dataset.q}"]`).forEach(x=>x.classList.toggle("on", x===b));
+        show(b.dataset.q);
+      });
+      SORT.forEach(s=>show(s.id));
+      wire(2, 4, () => SORT.every(s=>st.sort[s.id]===s.r) ? "" : "Ordne alle vier Beschreibungen richtig zu.");
+    }};
+}
+
+/* ---------- Stufe 4: Die KI fasst zusammen ---------- */
+const KI = [
+  {t:"Der Klinikverbund nutzt bisher Open-Source-Software.", a:"falsch", f:"Im Bericht steht: proprietäre Software eines Herstellers aus den USA. Die KI hat die Lage vor und nach dem Wechsel vertauscht."},
+  {t:"Wenn der Verbund die Software im eigenen Rechenzentrum betreibt, entscheidet er selbst, wo die Daten liegen.", a:"stimmt", f:"Genau das ist der Vorteil des eigenen Betriebs, und ein Teil der digitalen Souveränität."},
+  {t:"Open Weight heißt: Alles am Modell ist offen, auch die Trainingsdaten.", a:"falsch", f:"Bei Open Weight sind nur die Gewichte frei. Die Trainingsdaten bleiben verborgen. Deshalb kann man das Modell nicht vollständig prüfen."},
+  {t:"Mit Open Source spart der Verbund alle Kosten.", a:"falsch", f:"Open Source regelt die Rechte am Quellcode, nicht den Preis. Einrichtung, Betrieb, Schulung und Betreuung kosten weiterhin."},
+  {t:"Mit dem KI-Assistenten wird die Pflegedokumentation fehlerfrei.", a:"offen", f:"Davon steht nichts im Bericht. Ein KI-Modell sagt voraus, was wahrscheinlich passt, und kann sich irren. Die Verantwortung für die Dokumentation bleibt bei der Pflegefachperson."}
+];
+const KI_TXT = {stimmt:"stimmt", falsch:"falsch", offen:"steht nicht im Bericht"};
+function s4(){
+  return { html: head(4,"Eine KI fasst den Bericht zusammen") + `
+    <div class="ki"><div class="face">KI</div><div><div class="who">Zweitstimme</div><p>Ich habe den Bericht für dich zusammengefasst. Hier sind die wichtigsten Punkte.</p></div></div>
+    <p class="sub">Prüf jede Aussage mit dem Bericht und mit dem, was du gerade gelernt hast.</p>
+    <div class="list">${KI.map((k,i)=>`<div class="claim${st.ki[i]===k.a?" done":""}" id="c${i}"><p>„${esc(k.t)}“</p><div class="pick">${Object.entries(KI_TXT).map(([a,t])=>`<button type="button" data-c="${i}" data-a="${a}" class="${st.ki[i]===a?"on":""}">${t}</button>`).join("")}</div><div class="fb"></div></div>`).join("")}</div>` + nav(3,"Entscheiden"),
+    after(){
+      const show = i => {
+        const k = KI[i], v = st.ki[i], fb = $("#c"+i+" .fb");
+        if (!v) { fb.innerHTML = ""; return; }
+        if (v===k.a) { fb.innerHTML = verdict("gut","Richtig: "+KI_TXT[k.a]+".", k.f); $("#c"+i).classList.add("done"); }
+        else fb.innerHTML = verdict("nein","Noch nicht.","Steht es im Bericht so? Steht es dort anders? Oder steht es gar nicht dort?");
+      };
+      app.querySelectorAll(".claim .pick button").forEach(b => b.onclick = () => {
+        st.ki[b.dataset.c] = b.dataset.a; save();
+        app.querySelectorAll(`.claim .pick button[data-c="${b.dataset.c}"]`).forEach(x=>x.classList.toggle("on", x===b));
+        show(+b.dataset.c);
+      });
+      KI.forEach((k,i)=>show(i));
+      wire(3, 5, () => KI.every((k,i)=>st.ki[i]===k.a) ? "" : "Prüf alle fünf Aussagen, bis jede richtig eingeordnet ist.");
+    }};
+}
+
+/* ---------- Stufe 5: Was heißt das für eine Klinik oder Schule? ---------- */
+const WAHL = [
+  {t:"Sofort alles auf Open Source umstellen. Das ist kostenlos und sicher.", v:"nein", f:"Open Source ist nicht automatisch kostenlos und auch nicht automatisch sicher. Ohne Plan für Betrieb, Schulung und Betreuung wird ein schneller Wechsel teuer."},
+  {t:"Beim bisherigen Anbieter bleiben. Ein Wechsel ist zu anstrengend.", v:"teil", f:"Das kann eine Zeit lang vernünftig sein. Aber genau so entsteht Anbieterabhängigkeit: Jedes Jahr wird der Wechsel schwerer."},
+  {t:"Erst prüfen: Wo liegen die Daten? Kann man sie später mitnehmen? Wer betreut die Software? Was kann die KI, und wer prüft sie?", v:"gut", f:"Du stellst die Fragen, um die es im Bericht eigentlich geht: Datenschutz, offene Standards, Betreuung und eine KI, die sich irren kann. Mit diesen Fragen kann eine Klinik oder Schule begründet entscheiden."}
+];
+function s5(){
+  return { html: head(5,"Was heißt das für eine Klinik oder Schule?") + `
+    <p class="sub">Stell dir vor, deine Klinik oder Pflegeschule steht vor derselben Entscheidung. Was rätst du? Wähl aus und schreib einen Satz dazu. Erst dann bekommst du eine Rückmeldung.</p>
+    <div class="list">${WAHL.map((w,i)=>`<button type="button" class="choice${st.wahl===i?" picked":""}" data-i="${i}"><span class="k">${"ABC"[i]}</span><span>${esc(w.t)}</span></button>`).join("")}</div>
+    <label for="grund">Ich rate das, weil …</label>
+    <textarea id="grund" placeholder="Ich rate das, weil …"></textarea>
+    <p class="hint">Nur für dich. Es bleibt in diesem Browser.</p>
+    <div class="row"><button class="btn ghost" id="check" type="button" disabled>Rückmeldung zeigen</button></div>
+    <div id="fb"></div>` + nav(4,"Meine Begriffsliste"),
+    after(){
+      const t = $("#grund"); t.value = st.grund || "";
+      const upd = () => { $("#check").disabled = st.wahl===null || t.value.trim().length < 8; };
+      t.oninput = () => { st.grund = t.value; save(); upd(); };
+      app.querySelectorAll(".choice").forEach(b => b.onclick = () => { st.wahl = +b.dataset.i; st.wahlOk = false; save(); app.querySelectorAll(".choice").forEach(x=>x.classList.toggle("picked", x===b)); $("#fb").innerHTML=""; upd(); });
+      const show = () => { const w = WAHL[st.wahl]; $("#fb").innerHTML = verdict(w.v, w.v==="gut"?"Das trägt.":"Lies deine Begründung noch einmal.", w.f + (w.v==="gut"?"":" Probier eine andere Wahl. Deine Begründung darfst du ändern.")); };
+      $("#check").onclick = () => { st.wahlOk = WAHL[st.wahl].v==="gut"; save(); show(); };
+      if (st.wahl!==null && st.wahlOk) show();
+      upd();
+      wire(4, 6, () => st.wahlOk ? "" : "Wähl eine Antwort, begründe sie und hol dir die Rückmeldung. Weiter geht es, wenn deine Wahl trägt.");
+    }};
+}
+
+/* ---------- Ende: die eigene Begriffsliste ---------- */
+function ende(){
+  const neu = KEYS.filter(k=>st.mark[k]==="unsure");
+  return { html: `<div class="stepno">Deine Begriffsliste</div><h2>Diese Wörter kannst du jetzt erklären</h2>
+    <p class="sub">${neu.length ? `Neu für dich waren ${neu.length} Wörter. Sie sind unten mit <b>neu</b> markiert.` : "Du hast kein Wort als unsicher markiert. Prüf mit der Liste, ob deine Erklärungen zu meinen passen."} Die Liste ist nach Fragen geordnet, nicht nach dem Alphabet. So findest du beim nächsten Bericht schneller, was gemeint ist.</p>
+    <div class="glossar">${Object.entries(FRAGEN).map(([f,ft])=>`<section><h3>${ft}</h3><dl>${KEYS.filter(k=>B[k].f===f).map(k=>{ const b=B[k]; const also=(b.also||[]).map(s=>`<a href="${SPIELE[s].u}">${SPIELE[s].t}</a>`).join(", "); return `<div class="e"><dt>${esc(b.wort)}${st.mark[k]==="unsure"?` <span class="tag" style="color:var(--pink)">neu</span>`:""}</dt><dd>${esc(b.kurz)}</dd><div class="meta">Aufgenommen: November 2026 · Lesehilfe 1${also?` · Kommt vor in: ${also}`:""}</div></div>`; }).join("")}</dl></section>`).join("")}</div>
+    <label for="mit">Was nimmst du mit? <span class="hint" style="font-weight:400">Nur für dich. Es bleibt in diesem Browser.</span></label>
+    <textarea id="mit" placeholder="Beim nächsten Bericht achte ich darauf, …"></textarea>
+    <p class="sub">Weitere Begriffe zum Lernen mit KI findest du in den <a href="../../grundbegriffe.html">Grundbegriffen</a>.</p>
+    <h3>Woher kommt das Wissen?</h3>
+    <div class="source">
+      Was Open Source heißt: <a href="https://opensource.org/osd">Open Source Initiative, The Open Source Definition</a>.<br>
+      Wann ein KI-Modell als Open Source gilt und was Open Weight davon unterscheidet: <a href="https://opensource.org/ai/open-source-ai-definition">Open Source Initiative, The Open Source AI Definition 1.0 (2024)</a> und <a href="https://opensource.org/ai/faq">FAQ dazu</a>.<br>
+      Gesundheitsdaten sind besonders geschützt: <a href="https://dsgvo-gesetz.de/art-9-dsgvo/">DSGVO, Artikel 9</a>.<br>
+      Daten in Länder außerhalb der EU: <a href="https://dsgvo-gesetz.de/art-44-dsgvo/">DSGVO, Artikel 44</a>.<br>
+      Der Bericht ist ausgedacht. Er ähnelt Meldungen, wie sie seit 2024 häufig über Kliniken, Behörden und digitale Souveränität erscheinen.
+    </div>
+    <div id="spielende"></div>`,
+    after(){
+      const t = $("#mit"); t.value = st.mit || ""; t.oninput = () => { st.mit = t.value; save(); };
+      spielEnde("#spielende", { titel:"Deine Begriffsliste ist fertig.", text:"Sie bleibt in diesem Browser gespeichert. Beim nächsten Mal kannst du sie hier wieder ansehen.", neu: () => { st = blank(); save(); go(0); } });
+    }};
+}
+
+const STAGES = [null, s1, s2, s3, s4, s5, ende];
+function render(){
+  const cur = st.cur || 1;
+  const s = STAGES[Math.min(cur, 6)]();
+  const steps = `<div class="steps" aria-hidden="true">${[1,2,3,4,5].map(i=>`<span class="step${i===Math.min(cur,5)?" on":""}">${i}</span>`).join("")}</div>`;
+  app.innerHTML = kopf() + steps + `<main class="panel" id="stage" aria-live="polite">${s.html}</main>
+    <footer>Lernspiel von Barbara Magdalena Mayer · Idee und Didaktik von mir, programmiert mit KI-Unterstützung · Ein ausgedachter Bericht zum Üben. Keine Rechts- oder Kaufberatung. Stand November 2026.</footer>`;
+  s.after();
+  $("#restart").onclick = () => { st = blank(); save(); go(1); };
+}
+const _go = go;
+go = function(n){ if (n<1) n = 1; _go(n); };
+app.addEventListener("click", e => { const h = document.getElementById("hold"); if (h && !e.target.closest("#next")) h.innerHTML = ""; });
+render();
+})();
+</script>
+<style>.bmm-figur{position:fixed;bottom:max(14px,env(safe-area-inset-bottom,0px));right:max(14px,env(safe-area-inset-right,0px));z-index:30;display:block;line-height:0}@media(min-width:641px){body{padding-bottom:210px}}.bmm-figur img{height:132px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur{-webkit-tap-highlight-color:transparent;touch-action:manipulation}.bmm-figur:active img{transform:scale(.94)}.bmm-figur:focus-visible{outline:3px solid #b04e6b;outline-offset:4px;border-radius:12px}.bmm-box{display:inline-flex;flex-direction:column;align-items:center;gap:6px}.bmm-figur img.bmm-plus{display:block;height:58px;width:58px;filter:drop-shadow(0 3px 6px #0004)}@media(prefers-reduced-motion:no-preference){.bmm-plus{animation:bmm-hop 4s ease-in-out 1s infinite}@keyframes bmm-hop{0%,78%,100%{transform:none}84%{transform:translateY(-14px)}90%{transform:none}95%{transform:translateY(-5px)}}.bmm-figur:hover .bmm-plus,.bmm-figur:focus-visible .bmm-plus{animation:bmm-hop-now .5s ease-out}@keyframes bmm-hop-now{40%{transform:translateY(-14px)}100%{transform:none}}}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:104px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Startseite"><span class="bmm-box"><img src="../../bilder/barbara-figur.webp" alt=""><img class="bmm-plus" src="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" alt=""></span></a>
+</body>
+</html>
