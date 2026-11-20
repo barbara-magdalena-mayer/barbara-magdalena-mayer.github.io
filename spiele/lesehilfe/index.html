@@ -437,7 +437,7 @@ function ende(){
     <div class="glossar">${Object.entries(FRAGEN).filter(([f])=>ALLE.some(k=>B[k].f===f)).map(([f,ft])=>`<section><h3>${ft}</h3><dl>${ALLE.filter(k=>B[k].f===f).map(k=>{ const b=B[k]; const also=(b.also||[]).map(s=>`<a href="${SPIELE[s].u}">${SPIELE[s].t}</a>`).join(", "); return `<div class="e"><dt>${esc(b.wort)}${st.mark[k]==="unsure"?` <span class="tag" style="color:var(--pink)">neu</span>`:""}</dt><dd>${esc(b.kurz)}</dd><div class="meta">Aufgenommen: ${esc(b.datum)} · ${esc(b.herkunft)}${also?` · Kommt vor in: ${also}`:""}</div></div>`; }).join("")}</dl></section>`).join("")}</div>
     <label for="mit">Was nimmst du mit? <span class="hint" style="font-weight:400">Nur für dich. Es bleibt in diesem Browser.</span></label>
     <textarea id="mit" placeholder="Beim nächsten Bericht achte ich darauf, …"></textarea>
-    <p class="sub">Weitere Begriffe zum Lernen mit KI findest du in den <a href="../../grundbegriffe.html">Grundbegriffen</a>.</p>
+    <p class="sub">Alle Wörter von A bis Z, mit einem kleinen Selbsttest, stehen in meinem <a href="../glossar/">Glossar Pflege und Digitales</a>. Weitere Begriffe zum Lernen mit KI findest du in den <a href="../../grundbegriffe.html">Grundbegriffen</a>.</p>
     <h3>Woher kommt das Wissen?</h3>
     <div class="source">
       Was Open Source heißt: <a href="https://opensource.org/osd">Open Source Initiative, The Open Source Definition</a>.<br>

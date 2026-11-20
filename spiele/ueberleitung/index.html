@@ -280,7 +280,7 @@ function term(k, label){ return `<button type="button" class="term" data-k="${k}
 function karte(k){
   const b = B[k];
   const also = (b.also||[]).filter(s=>s!=="ueberleitung").map(s=>`<a href="${SPIELE[s].u}">${SPIELE[s].t}</a>`).join(", ");
-  return `<div class="card"><span class="q">${FRAGEN[b.f]}</span><h3>${esc(b.wort)}</h3><p style="margin:0">${esc(b.kurz)}</p><div class="bsp"><b>Zum Beispiel</b>${esc(b.bsp)}</div>${also?`<p class="also" style="margin:0">Kommt auch vor in: ${also}</p>`:""}<p class="also" style="margin:0"><a href="../lesehilfe/">Zur Begriffsliste in der Lesehilfe</a></p></div>`;
+  return `<div class="card"><span class="q">${FRAGEN[b.f]}</span><h3>${esc(b.wort)}</h3><p style="margin:0">${esc(b.kurz)}</p><div class="bsp"><b>Zum Beispiel</b>${esc(b.bsp)}</div>${also?`<p class="also" style="margin:0">Kommt auch vor in: ${also}</p>`:""}<p class="also" style="margin:0"><a href="../glossar/">Alle Wörter im Glossar</a></p></div>`;
 }
 function kopf(){
   const n = Math.min(Math.max(st.stufe-1,0), STUFEN);
@@ -494,7 +494,7 @@ function ende(){
     <p>Du hast gemerkt, was fehlt, nachgefragt und begründet. Und beim ersten Besuch fragst du Person X selbst. Kein Formular ersetzt dieses Gespräch.</p>
     <h3>Diese Begriffe hast du unterwegs benutzt</h3>
     <ul class="end-list">${BENUTZT.map(k=>`<li><span class="mark mk-gut">${esc(B[k].wort)}</span><span>${esc(B[k].kurz)}</span></li>`).join("")}</ul>
-    <p class="sub">Alle Begriffe stehen gesammelt in der <a href="../lesehilfe/">Begriffsliste der Lesehilfe</a>, geordnet nach Fragen.</p>
+    <p class="sub">Alle Begriffe stehen gesammelt in meinem <a href="../glossar/">Glossar Pflege und Digitales</a>, von A bis Z.</p>
     <h3>Woher kommt das Wissen?</h3>
     <div class="source">
       Entlassung gut vorbereiten, Informationen weitergeben, Wünsche der Person einbeziehen: <a href="https://www.dnqp.de/fileadmin/HSOS/Homepages/DNQP/Dateien/Expertenstandards/Entlassungsmanagement_in_der_Pflege/Entlassung_2Akt_Auszug.pdf">DNQP, Expertenstandard Entlassungsmanagement in der Pflege, 2. Aktualisierung (Auszug, PDF)</a>.<br>

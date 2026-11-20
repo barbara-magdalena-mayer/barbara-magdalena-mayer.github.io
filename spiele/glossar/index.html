@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Was heißt das eigentlich? Mein Glossar Pflege und Digitales</title>
+<meta name="description" content="Lernjournal von Barbara Magdalena Mayer: Wörter aus der digitalen Welt, die in der Pflege, in Berichten und im Studium begegnen, einfach erklärt, von A bis Z, mit einem kleinen Spiel: erst selbst erklären, dann vergleichen.">
+<script src="../../spielende.js"></script>
+<script src="../begriffe.js"></script>
+<style>
+@font-face{font-family:"Literata";font-weight:600;font-display:swap;src:url("../../fonts/literata-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:400;font-display:swap;src:url("../../fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-weight:600;font-display:swap;src:url("../../fonts/source-sans-3-latin-600-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:400;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"IBM Plex Mono";font-weight:500;font-display:swap;src:url("../../fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2")}
+/* Layout: eine ruhige Spalte wie ein Pflegeformular auf Kurvenblatt-Papier; das "Innere" der Technik erscheint in Maschinenschrift. */
+:root{
+  --paper:#faeef1;
+  --grid:#f1dfe5;
+  --ink:#24382c;
+  --muted:#5e5459;
+  --line:#ead5db;
+  --card:#ffffff;
+  --pink:#b04e6b;
+  --pink-soft:#f6e1e8;
+  --ok:#1d7448;
+  --ok-soft:#e3f3ea;
+  --warn:#9a5a00;
+  --warn-soft:#fdf1dc;
+  --bad:#b42318;
+  --bad-soft:#fde8e6;
+  --machine:#0f1a30;
+  --machine-ink:#d6e4ff;
+  --display:"Literata", Georgia, serif;
+  --body:"Source Sans 3", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, "Consolas", monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1422; --grid:#172136; --ink:#e7edf7; --muted:#9ba8bf; --line:#2c3a55; --card:#141d30;
+    --pink:#ff5d9b; --pink-soft:#3a1527; --ok:#53c48d; --ok-soft:#10301f; --warn:#f2aa47; --warn-soft:#352409;
+    --bad:#ff7b70; --bad-soft:#3a1512; --machine:#060b16; --machine-ink:#c7d9ff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1422; --grid:#172136; --ink:#e7edf7; --muted:#9ba8bf; --line:#2c3a55; --card:#141d30;
+  --pink:#ff5d9b; --pink-soft:#3a1527; --ok:#53c48d; --ok-soft:#10301f; --warn:#f2aa47; --warn-soft:#352409;
+  --bad:#ff7b70; --bad-soft:#3a1512; --machine:#060b16; --machine-ink:#c7d9ff; color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:28px 28px;
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:20px;
+  line-height:1.55;
+}
+.wrap{max-width:780px;margin:0 auto;padding:24px 18px 64px;display:flex;flex-direction:column;gap:22px}
+header.brand{display:flex;align-items:center;gap:12px;font-size:16px;color:var(--muted)}
+.cross{width:30px;height:30px;flex:none}
+.notice{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--pink);border-radius:10px;padding:14px 16px;font-size:17px;color:var(--muted)}
+.notice strong{color:var(--ink)}
+h1{font-family:var(--display);font-size:clamp(34px,7vw,52px);line-height:1.08;margin:6px 0 0;letter-spacing:-0.01em;text-wrap:balance}
+h1 .q{color:var(--pink)}
+h2{font-size:28px;line-height:1.2;margin:0;text-wrap:balance}
+h3{font-size:21px;margin:0}
+.lead{font-size:22px;max-width:62ch;margin:0}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.tag{display:inline-block;font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* Übersicht */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.station{
+  text-align:left;font:inherit;color:inherit;cursor:pointer;
+  background:var(--card);border:2px solid var(--line);border-radius:12px;padding:16px;
+  display:flex;flex-direction:column;gap:6px;min-height:132px;
+  transition:border-color .15s, transform .15s;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;
+}
+.station *{pointer-events:none}
+@media(hover:hover){.station:hover{border-color:var(--pink);transform:translateY(-2px)}}
+.station:active{border-color:var(--pink);transform:scale(.97)}
+.station.hop{border-color:var(--pink)}
+@media(prefers-reduced-motion:no-preference){
+  .station.hop{animation:st-hop .22s ease-out}
+  @keyframes st-hop{40%{transform:translateY(-8px)}100%{transform:none}}
+  .grid .station{animation:st-hop .45s ease-out 1}
+  .grid .station:nth-child(2){animation-delay:.05s}.grid .station:nth-child(3){animation-delay:.1s}.grid .station:nth-child(4){animation-delay:.15s}
+  .grid .station:nth-child(5){animation-delay:.2s}.grid .station:nth-child(6){animation-delay:.25s}.grid .station:nth-child(7){animation-delay:.3s}.grid .station:nth-child(8){animation-delay:.35s}
+  .grid .station.hop.hop{animation:st-hop .22s ease-out 0s 1}
+}
+.station:focus-visible,button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+.station .num{font-family:var(--mono);font-size:14px;color:var(--pink);font-weight:600}
+.station .t{font-weight:700;font-size:20px;line-height:1.25}
+.station .s{font-size:16px;color:var(--muted)}
+.station.done{border-style:dashed}
+.station .state{margin-top:auto;font-size:15px;color:var(--muted)}
+.station.done .state{color:var(--ok);font-weight:700}
+
+/* Buttons */
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{
+  font:inherit;font-weight:700;font-size:19px;cursor:pointer;border-radius:10px;padding:12px 20px;
+  border:2px solid var(--ink);background:var(--ink);color:var(--paper);text-decoration:none;display:inline-block
+}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Situation */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.step{font-family:var(--mono);font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.step.on{border-color:var(--pink);color:var(--pink);font-weight:600}
+.input{
+  font-family:var(--mono);font-size:16px;line-height:1.5;background:var(--paper);border:1px dashed var(--line);
+  border-radius:8px;padding:12px 14px;white-space:pre-wrap;word-break:break-word
+}
+.ki{display:flex;gap:14px;align-items:flex-start;background:var(--pink-soft);border-radius:12px;padding:14px 16px}
+.ki .face{flex:none;width:44px;height:44px;border-radius:10px;background:var(--pink);color:#fff;font-family:var(--mono);font-weight:600;display:grid;place-items:center;font-size:15px}
+.ki .who{font-size:15px;color:var(--muted)}
+.ki p{margin:2px 0 0}
+.choice{
+  width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;background:var(--card);
+  border:2px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start
+}
+.choice:hover{border-color:var(--ink)}
+.choice .k{font-family:var(--mono);font-weight:600;color:var(--pink);flex:none;width:22px}
+.choice.picked{border-color:var(--pink);background:var(--pink-soft)}
+.list{display:flex;flex-direction:column;gap:10px}
+textarea{width:100%;min-height:90px;font:inherit;font-size:18px;padding:12px;border-radius:10px;border:2px solid var(--line);background:var(--paper);color:var(--ink)}
+label{font-weight:700}
+
+/* Auflösung */
+.verdict{border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.verdict .v{font-weight:700}
+.v-gut{background:var(--ok-soft)} .v-gut .v{color:var(--ok)}
+.v-geht,.v-teil{background:var(--warn-soft)} .v-geht .v,.v-teil .v{color:var(--warn)}
+.v-nein{background:var(--bad-soft)} .v-nein .v{color:var(--bad)}
+.rule{border:2px solid var(--ink);border-radius:12px;padding:14px 16px;font-weight:700;font-size:21px}
+.rule .tag{display:block;margin-bottom:4px;font-weight:400}
+
+/* Das Innere */
+.machine{background:var(--machine);color:var(--machine-ink);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.machine h3{color:#fff;font-family:var(--mono);font-size:16px;letter-spacing:.04em;text-transform:uppercase}
+.machine .hint{font-family:var(--body);font-size:16px;color:#9fb3d9;margin:0}
+.path{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.node{flex:1 1 120px;min-width:118px;border-radius:10px;padding:10px;border:1px solid #2a3b5e;background:#111d36;display:flex;flex-direction:column;gap:2px}
+.node .l{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8ea4cf}
+.node .val{font-family:var(--mono);font-size:15px;font-weight:500;color:#fff}
+.node .st{font-family:var(--mono);font-size:12px;margin-top:auto}
+.node.s-ok{border-color:#2f8f5f}.node.s-ok .st{color:#6fdc9f}
+.node.s-warn{border-color:#a8701a}.node.s-warn .st{color:#ffc56b}
+.node.s-bad{border-color:#c23b30}.node.s-bad .st{color:#ff8f86}
+.node.s-n .st{color:#8ea4cf}
+.arrow{align-self:center;color:#5a72a3;font-family:var(--mono)}
+pre.record{margin:0;font-family:var(--mono);font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word;background:#0a1224;border-radius:8px;padding:12px;color:var(--machine-ink)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{font-family:var(--mono);font-size:14px;cursor:pointer;border-radius:8px;padding:6px 12px;border:1px solid #2a3b5e;background:transparent;color:#c7d9ff}
+.tabs button.on{background:#c7d9ff;color:#0f1a30;font-weight:600}
+
+/* Ende */
+.end-list{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.end-list li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;gap:12px}
+.end-list .mark{flex:none;font-family:var(--mono);font-weight:600;width:96px;font-size:14px}
+.mk-gut{color:var(--ok)} .mk-geht{color:var(--warn)} .mk-nein{color:var(--bad)} .mk-offen{color:var(--muted)}
+footer{font-size:15px;color:var(--muted)}
+.top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-right:110px}
+.top a,.top button{font:inherit;font-size:16px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;cursor:pointer}
+.ziele{max-width:56ch;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:10px 14px;font-size:18px}
+.ziele summary{cursor:pointer;font-weight:600}
+.ziele ul{list-style:none;margin:6px 0 0;padding:0}
+.ziele li{display:flex;gap:8px;margin:4px 0;color:var(--muted)}
+.ziele li::before{content:"○";flex:none;width:1.2em}
+.ziele li.got{color:var(--ink)}
+.ziele li.got::before{content:"✓";color:var(--ok);font-weight:600}
+.eyebrow{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:600}
+@media (max-width:480px){ body{font-size:19px} .arrow{display:none} }
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+<link rel="icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/apple-touch-icon.png">
+<style>
+/* Lesehilfe: markierte Wörter im Bericht, Erklärkarten, Glossar nach Fragen */
+.report{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px}
+.report .src{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.report h2{font-family:var(--display);font-size:26px}
+.report p{margin:0;line-height:1.75}
+.term{font:inherit;font-size:inherit;line-height:inherit;color:inherit;background:var(--pink-soft);border:0;border-bottom:2px solid var(--pink);border-radius:4px 4px 0 0;padding:0 3px;cursor:pointer}
+.term.unsure{background:var(--warn-soft);border-bottom-color:var(--warn)}
+.term.known{background:var(--ok-soft);border-bottom-color:var(--ok)}
+.term.open{outline:2px solid var(--pink);outline-offset:1px}
+.term.read::after{content:" ✓";color:var(--ok);font-size:.8em;font-weight:700}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:16px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:-2px;background:var(--pink-soft);border-bottom:2px solid var(--pink)}
+.legend .lu::before{background:var(--warn-soft);border-bottom-color:var(--warn)}
+.legend .lk::before{background:var(--ok-soft);border-bottom-color:var(--ok)}
+.pick{display:flex;flex-wrap:wrap;gap:8px}
+.pick button{font:inherit;font-size:17px;cursor:pointer;border-radius:99px;padding:6px 14px;border:2px solid var(--line);background:var(--card);color:var(--ink)}
+.pick button.on{border-color:var(--pink);background:var(--pink-soft);font-weight:600}
+.card{background:var(--card);border:2px solid var(--pink);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.card h3{font-family:var(--display);font-size:24px}
+.card .q{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--pink)}
+.card .bsp{background:var(--paper);border-radius:10px;padding:10px 12px;font-size:18px}
+.card .bsp b{display:block;font-size:15px;color:var(--muted);font-weight:600}
+.card .also{font-size:16px;color:var(--muted)}
+.card .also a{color:var(--ink)}
+.count{font-family:var(--mono);font-size:15px;color:var(--muted)}
+.sortq{display:flex;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.sortq p{margin:0}
+.claim{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.claim.done{border-style:dashed}
+.claim p{margin:0}
+.glossar{display:flex;flex-direction:column;gap:18px}
+.glossar section{display:flex;flex-direction:column;gap:8px}
+.glossar h3{font-family:var(--display);font-size:22px}
+.glossar dl{margin:0;display:flex;flex-direction:column;gap:8px}
+.glossar .e{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.glossar dt{font-weight:700}
+.glossar dd{margin:2px 0 0;font-size:18px}
+.glossar .meta{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.glossar .meta a{color:var(--muted)}
+.source{font-size:17px;color:var(--muted);line-height:1.7}
+.source a{color:var(--ink)}
+.stepno{font-family:var(--mono);font-size:14px;color:var(--pink);font-weight:600;letter-spacing:.04em}
+.hint{font-size:17px;color:var(--muted);margin:0}
+.sub a{color:var(--ink)}
+
+/* Glossar */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+select,input[type=search]{font:inherit;font-size:18px;padding:8px 10px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);max-width:100%}
+input[type=search]{width:100%}
+.abc{display:flex;flex-wrap:wrap;gap:6px}
+.abc a{font-family:var(--mono);font-size:15px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:2px 9px}
+.buch{font-family:var(--display);font-size:26px;color:var(--pink);margin-top:8px;scroll-margin-top:16px}
+.glossar dd.bspl{color:var(--muted);font-size:17px}
+.mein{background:var(--ok-soft);border-radius:10px;padding:8px 12px;font-size:18px}
+.mein b{display:block;font-size:15px;color:var(--ok)}
+dd.mein b{display:inline}
+.task{margin:0}
+</style>
+</head>
+<body>
+<style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Arbeitsprobe.</b> Ein vereinfachtes Modell, um zu verstehen und Einblick zu bekommen. Es zeigt, was möglich ist. Keine Beratung, kein fertiges Produkt.</p>
+<div class="wrap" id="app"></div>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const {FRAGEN, B, SPIELE} = window.BEGRIFFE;
+const KEY = "glossar-v1";
+const ALLE = Object.keys(B).sort((a,b)=>B[a].wort.localeCompare(B[b].wort,"de",{sensitivity:"base"}));
+
+let st = load();
+function blank(){ return {erkl:{}, bew:{}, cur:null}; }
+function load(){ try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === "object") return Object.assign(blank(), s); } catch(e){} return blank(); }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e){} }
+
+const app = $("#app");
+const BEW = {passt:"Passt", teil:"Teilweise", noch:"Noch nicht"};
+function also(b){ return (b.also||[]).map(s=>SPIELE[s]?`<a href="${SPIELE[s].u}">${SPIELE[s].t}</a>`:"").filter(Boolean).join(", "); }
+
+function render(){
+  const fertig = ALLE.filter(k=>st.bew[k]).length;
+  app.innerHTML = `
+  <nav class="top" aria-label="Navigation"><a href="../../arbeitsproben.html">← Zurück zu den Arbeitsproben</a></nav>
+  <div><span class="eyebrow">Digitale Bildung · Lernjournal</span>
+  <h1>Was heißt das eigentlich? <span class="q">Mein Glossar Pflege und Digitales</span></h1></div>
+  <p class="lead">Hier sammle ich die Wörter aus der digitalen Welt, die mir in der Pflege, in Berichten und in meinem Studium begegnen. Jedes Wort steht hier mit einer einfachen Erklärung, einem Beispiel und dem Tag, an dem ich es aufgenommen habe. Die Liste wächst mit jedem Spiel.</p>
+  <details class="ziele"><summary>Das kannst du hier: ${fertig} von ${ALLE.length} Wörtern selbst erklärt</summary><ul>
+    <li class="${fertig>0?"got":""}">Du erklärst ein Wort zuerst in eigenen Worten und vergleichst dann.</li>
+    <li class="${fertig>=5?"got":""}">Du schätzt ehrlich ein, wo du schon sicher bist und wo noch nicht.</li>
+    <li class="${fertig>=ALLE.length?"got":""}">Du schlägst nach, wenn dir ein Wort begegnet.</li></ul></details>
+
+  <section class="panel" id="stage" aria-labelledby="h-spiel">
+    <div class="stepno">Erst selbst erklären, dann vergleichen</div>
+    <h2 id="h-spiel">Erklär es in deinen Worten</h2>
+    <p class="sub">Such dir ein Wort aus oder lass dir eins geben. Schreib auf, was es heißt, so wie du es einer Kollegin erklären würdest. Dann vergleichst du mit meiner Erklärung. Es gibt keine Punkte. Ehrlich einschätzen hilft dir.</p>
+    <div class="row">
+      <label for="wahl" class="sr">Wort wählen</label>
+      <select id="wahl"><option value="">Wort wählen …</option>${ALLE.map(k=>`<option value="${k}" ${st.cur===k?"selected":""}>${esc(B[k].wort)}${st.bew[k]?" ✓":""}</option>`).join("")}</select>
+      <button class="btn ghost" id="zufall" type="button">Gib mir eins</button>
+    </div>
+    <div id="spiel"></div>
+    <p class="count">${fertig} von ${ALLE.length} Wörtern selbst erklärt. ${ALLE.filter(k=>st.bew[k]==="passt").length} davon passen schon.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="h-liste">
+    <div class="stepno">Zum Nachschlagen</div>
+    <h2 id="h-liste">Alle Wörter von A bis Z</h2>
+    <label for="suche">Suchen</label>
+    <input id="suche" type="search" placeholder="z. B. Cloud" autocomplete="off">
+    <div class="abc" id="abc"></div>
+    <dl class="glossar" id="liste"></dl>
+    <p class="hint" id="leer" hidden>Dieses Wort steht noch nicht im Glossar. Vielleicht kommt es bald dazu.</p>
+  </section>
+
+  <h3>Woher kommen die Wörter?</h3>
+  <div class="source">Aus meinen Lernspielen, aus Berichten über Kliniken und KI und aus meinem Studium der Bildungswissenschaft. Die Erklärungen sind vereinfacht und in einfacher Sprache geschrieben. Wo es Quellen gibt, stehen sie in dem Spiel, aus dem das Wort kommt.</div>
+  <div id="spielende"></div>
+  <footer>Lernjournal von Barbara Magdalena Mayer · Wörter gesammelt und erklärt mit KI-Unterstützung · Deine eigenen Erklärungen bleiben in deinem Browser. Stand ${esc(B[ALLE[0]].datum)}.</footer>`;
+  spiel(); liste("");
+  $("#wahl").onchange = e => { st.cur = e.target.value || null; save(); spiel(); };
+  $("#zufall").onclick = () => { const offen = ALLE.filter(k=>st.bew[k]!=="passt" && k!==st.cur); const pool = offen.length ? offen : ALLE; st.cur = pool[Math.floor(Math.random()*pool.length)]; save(); $("#wahl").value = st.cur; spiel(); $("#erkl") && $("#erkl").focus(); };
+  $("#suche").oninput = e => liste(e.target.value);
+  spielEnde("#spielende", { titel:"Für heute fertig?", text:"Deine Erklärungen bleiben in diesem Browser gespeichert. Du kannst jederzeit weitermachen.", neu: () => { st = blank(); save(); render(); window.scrollTo({top:0,behavior:"smooth"}); } });
+}
+
+function spiel(){
+  const k = st.cur, box = $("#spiel");
+  if (!k) { box.innerHTML = ""; return; }
+  const b = B[k], gezeigt = st.bew[k] || st.show === k;
+  box.innerHTML = `
+    <div class="card"><span class="q">${esc(FRAGEN[b.f])}</span><h3>${esc(b.wort)}</h3>
+    <label for="erkl">So erkläre ich es:</label>
+    <textarea id="erkl" placeholder="Das ist …, das braucht man, wenn …"></textarea>
+    <div class="row"><button class="btn" id="vgl" type="button" disabled>Vergleichen</button></div>
+    <div id="aufl"></div></div>`;
+  const t = $("#erkl"); t.value = st.erkl[k] || "";
+  const upd = () => { $("#vgl").disabled = t.value.trim().length < 10; };
+  t.oninput = () => { st.erkl[k] = t.value; save(); upd(); };
+  const zeig = () => {
+    $("#aufl").innerHTML = `
+      <div class="bsp"><b>Meine Erklärung</b>${esc(b.kurz)}</div>
+      <div class="bsp"><b>Zum Beispiel</b>${esc(b.bsp)}</div>
+      ${b.mein?`<div class="mein"><b>Mein Satz dazu</b>${esc(b.mein)}</div>`:""}
+      <p class="task"><b>Wie nah war deine Erklärung dran?</b></p>
+      <div class="pick" id="bew">${Object.entries(BEW).map(([v,l])=>`<button type="button" data-v="${v}" class="${st.bew[k]===v?"on":""}">${l}</button>`).join("")}</div>
+      <div id="fbb"></div>`;
+    const fb = () => { const v = st.bew[k]; if (!v) return; $("#fbb").innerHTML = v==="passt" ? `<div class="verdict v-gut"><span class="v">Gut.</span><span>Dann kannst du dieses Wort anderen erklären. Nimm dir das nächste vor.</span></div>` : v==="teil" ? `<div class="verdict v-teil"><span class="v">Ein guter Anfang.</span><span>Was fehlte dir? Ergänze deine Erklärung oben in eigenen Worten.</span></div>` : `<div class="verdict v-teil"><span class="v">Ehrlich, das hilft.</span><span>Lies das Beispiel noch einmal und versuch es morgen wieder. Dann merkst du, was hängen geblieben ist.</span></div>`; };
+    app.querySelectorAll("#bew button").forEach(x => x.onclick = () => { st.bew[k] = x.dataset.v; save(); app.querySelectorAll("#bew button").forEach(y=>y.classList.toggle("on", y===x)); fb(); updCount(); });
+    fb();
+  };
+  $("#vgl").onclick = () => { st.show = k; save(); zeig(); };
+  if (gezeigt) zeig();
+  upd();
+}
+function updCount(){
+  const fertig = ALLE.filter(k=>st.bew[k]).length;
+  const c = app.querySelector("#stage .count"); if (c) c.textContent = `${fertig} von ${ALLE.length} Wörtern selbst erklärt. ${ALLE.filter(k=>st.bew[k]==="passt").length} davon passen schon.`;
+  const s = app.querySelector(".ziele summary"); if (s) s.textContent = `Das kannst du hier: ${fertig} von ${ALLE.length} Wörtern selbst erklärt`;
+}
+
+function liste(q){
+  q = (q||"").trim().toLowerCase();
+  const treffer = ALLE.filter(k => !q || B[k].wort.toLowerCase().includes(q) || B[k].kurz.toLowerCase().includes(q));
+  const buch = k => B[k].wort.charAt(0).toUpperCase().normalize("NFD").charAt(0);
+  const gruppen = {};
+  treffer.forEach(k => { (gruppen[buch(k)] = gruppen[buch(k)] || []).push(k); });
+  $("#abc").innerHTML = Object.keys(gruppen).map(L=>`<a href="#b-${L}">${L}</a>`).join("");
+  $("#liste").innerHTML = Object.entries(gruppen).map(([L,ks]) => `<div class="buch" id="b-${L}">${L}</div>` + ks.map(k => { const b = B[k], a = also(b); return `<div class="e"><dt>${esc(b.wort)}</dt><dd>${esc(b.kurz)}</dd><dd class="bspl">Zum Beispiel: ${esc(b.bsp)}</dd>${b.mein?`<dd class="mein"><b>Mein Satz:</b> ${esc(b.mein)}</dd>`:""}<div class="meta">Aufgenommen: ${esc(b.datum)} · ${esc(b.herkunft)} · Frage: ${esc(FRAGEN[b.f])}${a?` · Kommt vor in: ${a}`:""}</div></div>`; }).join("")).join("");
+  $("#leer").hidden = treffer.length > 0;
+}
+
+render();
+})();
+</script>
+<style>.bmm-figur{position:fixed;bottom:max(14px,env(safe-area-inset-bottom,0px));right:max(14px,env(safe-area-inset-right,0px));z-index:30;display:block;line-height:0}@media(min-width:641px){body{padding-bottom:210px}}.bmm-figur img{height:132px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur{-webkit-tap-highlight-color:transparent;touch-action:manipulation}.bmm-figur:active img{transform:scale(.94)}.bmm-figur:focus-visible{outline:3px solid #b04e6b;outline-offset:4px;border-radius:12px}.bmm-box{display:inline-flex;flex-direction:column;align-items:center;gap:6px}.bmm-figur img.bmm-plus{display:block;height:58px;width:58px;filter:drop-shadow(0 3px 6px #0004)}@media(prefers-reduced-motion:no-preference){.bmm-plus{animation:bmm-hop 4s ease-in-out 1s infinite}@keyframes bmm-hop{0%,78%,100%{transform:none}84%{transform:translateY(-14px)}90%{transform:none}95%{transform:translateY(-5px)}}.bmm-figur:hover .bmm-plus,.bmm-figur:focus-visible .bmm-plus{animation:bmm-hop-now .5s ease-out}@keyframes bmm-hop-now{40%{transform:translateY(-14px)}100%{transform:none}}}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:104px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="../../" aria-label="Barbara – zur Startseite"><span class="bmm-box"><img src="../../bilder/barbara-figur.webp" alt=""><img class="bmm-plus" src="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" alt=""></span></a>
+</body>
+</html>

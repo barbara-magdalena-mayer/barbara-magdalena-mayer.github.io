@@ -1,5 +1,6 @@
 /* Gemeinsame Begriffsliste aller Lesehilfen und Spiele (Barbaras Lernjournal).
-   Neue Begriffe hier ergänzen: Frage (f), Erklärung (kurz), Beispiel (bsp), Datum, Herkunft, Kommt vor in (also). */
+   Neue Begriffe hier ergänzen: Frage (f), Erklärung (kurz), Beispiel (bsp), Datum, Herkunft, Kommt vor in (also).
+   mein: ein Satz von Barbara in ihren eigenen Worten (nur von ihr, nie erfinden). Erscheint im Glossar spiele/glossar/. */
 (function(){
 const FRAGEN = {
   gehoert: "Wem gehört die Software?",
