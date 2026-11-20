@@ -233,6 +233,11 @@ footer{font-size:15px;color:var(--muted)}
 .sub a{color:var(--ink)}
 
 /* Glossar */
+.def{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--ink);border-radius:10px;padding:10px 12px;font-size:18px}
+.card .def b{display:block;font-size:15px;color:var(--muted)}
+.def .q2{display:block;font-size:14px;color:var(--muted);margin-top:4px}
+.def a{color:var(--ink)}
+dd.def{margin-top:6px}
 .stand{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--ok);border-radius:10px;padding:10px 14px;font-size:17px;max-width:62ch}
 .verlauf{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;border-left:3px solid var(--pink);padding-left:16px}
 .verlauf li{display:flex;flex-direction:column;gap:2px}
@@ -291,7 +296,7 @@ function render(){
   <section class="panel" id="stage" aria-labelledby="h-spiel">
     <div class="stepno">Erst selbst erklären, dann vergleichen</div>
     <h2 id="h-spiel">Erklär es in deinen Worten</h2>
-    <p class="sub">Such dir ein Wort aus oder lass dir eins geben. Schreib auf, was es heißt, so wie du es einer Kollegin erklären würdest. Dann vergleichst du mit meiner Erklärung. Es gibt keine Punkte. Ehrlich einschätzen hilft dir.</p>
+    <p class="sub">Such dir ein Wort aus oder lass dir eins geben. Schreib auf, was es heißt, so wie du es einer Kollegin erklären würdest. Dann vergleichst du mit der Erklärung und, wo es eine gibt, mit der Definition. Das geht auch zu zweit: Eine Person erklärt, die andere liest vor. Es gibt keine Punkte. Ehrlich einschätzen hilft dir.</p>
     <div class="row">
       <label for="wahl" class="sr">Wort wählen</label>
       <select id="wahl"><option value="">Wort wählen …</option>${ALLE.map(k=>`<option value="${k}" ${st.cur===k?"selected":""}>${esc(B[k].wort)}${st.bew[k]?" ✓":""}</option>`).join("")}</select>
@@ -318,7 +323,7 @@ function render(){
   </section>
 
   <h3>Woher kommen die Wörter?</h3>
-  <div class="source">Aus meinen Lernspielen, aus Berichten über Kliniken und KI und aus meinem Studium der Bildungswissenschaft. Die Erklärungen sind vereinfacht und in einfacher Sprache geschrieben. Wo es Quellen gibt, stehen sie in dem Spiel, aus dem das Wort kommt.</div>
+  <div class="source">Aus meinen Lernspielen, aus Berichten über Kliniken und KI und aus meinem Studium der Bildungswissenschaft. Jedes Wort hat eine Erklärung in einfacher Sprache und ein Beispiel. Wo es eine fachliche oder rechtliche Definition gibt, steht sie mit Quelle dabei, sinngemäß wiedergegeben. Weitere Quellen stehen in dem Spiel, aus dem das Wort kommt.</div>
   <div id="spielende"></div>
   <footer>Lernjournal von Barbara Magdalena Mayer · Wörter gesammelt und erklärt mit KI-Unterstützung · Deine eigenen Erklärungen bleiben in deinem Browser. Stand ${esc(B[ALLE[0]].datum)}.</footer>`;
   spiel(); liste("");
@@ -343,7 +348,8 @@ function spiel(){
   t.oninput = () => { st.erkl[k] = t.value; save(); upd(); };
   const zeig = () => {
     $("#aufl").innerHTML = `
-      <div class="bsp"><b>Meine Erklärung</b>${esc(b.kurz)}</div>
+      <div class="bsp"><b>Einfach erklärt</b>${esc(b.kurz)}</div>
+      ${b.def?`<div class="def"><b>Definition</b>${esc(b.def)}<span class="q2">Quelle: <a href="${b.quelle.u}">${esc(b.quelle.t)}</a></span></div>`:""}
       <div class="bsp"><b>Zum Beispiel</b>${esc(b.bsp)}</div>
       ${b.mein?`<div class="mein"><b>Mein Satz dazu</b>${esc(b.mein)}</div>`:""}
       <p class="task"><b>Wie nah war deine Erklärung dran?</b></p>
@@ -370,7 +376,7 @@ function liste(q){
   const gruppen = {};
   treffer.forEach(k => { (gruppen[buch(k)] = gruppen[buch(k)] || []).push(k); });
   $("#abc").innerHTML = Object.keys(gruppen).map(L=>`<a href="#b-${L}">${L}</a>`).join("");
-  $("#liste").innerHTML = Object.entries(gruppen).map(([L,ks]) => `<div class="buch" id="b-${L}">${L}</div>` + ks.map(k => { const b = B[k], a = also(b); return `<div class="e"><dt>${esc(b.wort)}</dt><dd>${esc(b.kurz)}</dd><dd class="bspl">Zum Beispiel: ${esc(b.bsp)}</dd>${b.mein?`<dd class="mein"><b>Mein Satz:</b> ${esc(b.mein)}</dd>`:""}<div class="meta">Aufgenommen: ${esc(b.datum)} · ${esc(b.herkunft)} · Frage: ${esc(FRAGEN[b.f])}${a?` · Kommt vor in: ${a}`:""}</div></div>`; }).join("")).join("");
+  $("#liste").innerHTML = Object.entries(gruppen).map(([L,ks]) => `<div class="buch" id="b-${L}">${L}</div>` + ks.map(k => { const b = B[k], a = also(b); return `<div class="e"><dt>${esc(b.wort)}</dt><dd>${esc(b.kurz)}</dd>${b.def?`<dd class="def"><b>Definition:</b> ${esc(b.def)} <span class="q2">Quelle: <a href="${b.quelle.u}">${esc(b.quelle.t)}</a></span></dd>`:""}<dd class="bspl">Zum Beispiel: ${esc(b.bsp)}</dd>${b.mein?`<dd class="mein"><b>Mein Satz:</b> ${esc(b.mein)}</dd>`:""}<div class="meta">Aufgenommen: ${esc(b.datum)} · ${esc(b.herkunft)} · Frage: ${esc(FRAGEN[b.f])}${a?` · Kommt vor in: ${a}`:""}</div></div>`; }).join("")).join("");
   $("#leer").hidden = treffer.length > 0;
 }
 

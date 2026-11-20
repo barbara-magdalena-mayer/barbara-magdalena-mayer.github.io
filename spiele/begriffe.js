@@ -1,6 +1,7 @@
 /* Gemeinsame Begriffsliste aller Lesehilfen und Spiele (Barbaras Lernjournal).
    Neue Begriffe hier ergänzen: Frage (f), Erklärung (kurz), Beispiel (bsp), Datum, Herkunft, Kommt vor in (also).
-   mein: ein Satz von Barbara in ihren eigenen Worten (nur von ihr, nie erfinden). Erscheint im Glossar spiele/glossar/. */
+   def + quelle: fachliche oder rechtliche Definition, sinngemäß, nur mit echter Quelle (Barbara: zum Vergleichen beim Üben mit anderen).
+   mein: optional ein Satz von Barbara in ihren eigenen Worten (nur von ihr, nie erfinden). */
 (function(){
 const FRAGEN = {
   gehoert: "Wem gehört die Software?",
@@ -100,6 +101,60 @@ Object.assign(B, {
     kurz:"Die Fähigkeit, KI zu verstehen, kritisch zu bewerten, sinnvoll mit ihr zusammenzuarbeiten und sie als Werkzeug zu nutzen. Einrichtungen, die KI einsetzen, müssen nach der EU-KI-Verordnung etwas dafür tun.",
     bsp:"Du merkst, dass die KI aus dem Wort „Tagesstruktur“ einen ganzen Tagesplan erfunden hat, und widersprichst mit Begründung. Das ist KI-Kompetenz.", also:["ueberleitung","darf-das-in-den-chat","lesehilfe"]}, MA)
 });
+
+/* Fachliche oder rechtliche Definitionen mit Quelle (sinngemäß, nicht wörtlich) */
+const DEF = {
+ "opensource": {
+  "def": "Software, deren Quellcode frei zugänglich ist und deren Lizenz erlaubt, sie zu nutzen, zu untersuchen, zu verändern und weiterzugeben, auch in veränderter Form, ohne bestimmte Personen, Gruppen oder Einsatzbereiche auszuschließen.",
+  "quelle": {
+   "t": "Open Source Initiative: The Open Source Definition",
+   "u": "https://opensource.org/osd"
+  }
+ },
+ "openweight": {
+  "def": "Ein KI-System gilt nach der Open Source AI Definition 1.0 nur dann als Open Source, wenn neben den Gewichten auch der Code und ausreichend genaue Informationen über die Trainingsdaten frei verfügbar sind. Modelle, bei denen nur die Gewichte frei sind, erfüllen diese Definition nicht. Sie werden meist als Open Weight bezeichnet.",
+  "quelle": {
+   "t": "Open Source Initiative: The Open Source AI Definition 1.0 (2024)",
+   "u": "https://opensource.org/ai/open-source-ai-definition"
+  }
+ },
+ "kikompetenz": {
+  "def": "Die Fähigkeiten, Kenntnisse und das Verständnis, die es Anbietern, Betreibern und Betroffenen ermöglichen, KI-Systeme sachkundig einzusetzen und sich der Chancen und Risiken von KI und möglicher Schäden bewusst zu werden (Art. 3 Nr. 56). In der Bildungsforschung: Fähigkeiten, mit denen Menschen KI kritisch bewerten, mit KI kommunizieren und zusammenarbeiten und KI als Werkzeug nutzen (Long & Magerko, 2020).",
+  "quelle": {
+   "t": "KI-Verordnung (EU) 2024/1689, Artikel 3; dazu Long & Magerko (2020): What is AI Literacy?",
+   "u": "https://ai-act-service-desk.ec.europa.eu/de/ai-act/article-3"
+  }
+ },
+ "trainingsdaten": {
+  "def": "Daten, die verwendet werden, um ein KI-System zu trainieren, indem seine lernbaren Parameter angepasst werden (Art. 3 Nr. 29).",
+  "quelle": {
+   "t": "KI-Verordnung (EU) 2024/1689, Artikel 3",
+   "u": "https://ai-act-service-desk.ec.europa.eu/de/ai-act/article-3"
+  }
+ },
+ "modell": {
+  "def": "Die KI-Verordnung definiert vor allem das KI-System: ein maschinengestütztes System, das in unterschiedlichem Grad selbstständig arbeitet und aus seinen Eingaben ableitet, wie es Ausgaben wie Vorhersagen, Inhalte, Empfehlungen oder Entscheidungen erzeugt (Art. 3 Nr. 1). Das KI-Modell ist der gelernte Kern eines solchen Systems.",
+  "quelle": {
+   "t": "KI-Verordnung (EU) 2024/1689, Artikel 3",
+   "u": "https://ai-act-service-desk.ec.europa.eu/de/ai-act/article-3"
+  }
+ },
+ "cloud": {
+  "def": "Ein Modell, das bei Bedarf über ein Netzwerk Zugriff auf einen gemeinsamen Vorrat an Rechenressourcen gibt, etwa Server, Speicher und Anwendungen, die schnell bereitgestellt und wieder freigegeben werden können, mit wenig Aufwand für die Nutzenden.",
+  "quelle": {
+   "t": "NIST Special Publication 800-145: The NIST Definition of Cloud Computing (2011)",
+   "u": "https://csrc.nist.gov/pubs/sp/800/145/final"
+  }
+ },
+ "dsgvo": {
+  "def": "Verordnung (EU) 2016/679 zum Schutz natürlicher Personen bei der Verarbeitung personenbezogener Daten. Gesundheitsdaten gehören nach Art. 9 zu den besonderen Kategorien, deren Verarbeitung grundsätzlich verboten und nur ausnahmsweise erlaubt ist.",
+  "quelle": {
+   "t": "Datenschutz-Grundverordnung, Artikel 9",
+   "u": "https://dsgvo-gesetz.de/art-9-dsgvo/"
+  }
+ }
+};
+Object.keys(DEF).forEach(k => { if (B[k]) Object.assign(B[k], DEF[k]); });
 const HERKUNFT_STD = {datum:"November 2026", herkunft:"Lesehilfe 1"};
 Object.keys(B).forEach(k => { B[k] = Object.assign({}, HERKUNFT_STD, B[k]); });
 window.BEGRIFFE = {FRAGEN, B, SPIELE};
