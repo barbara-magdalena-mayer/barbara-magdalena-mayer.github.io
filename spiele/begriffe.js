@@ -7,7 +7,8 @@ const FRAGEN = {
   daten:   "Wo liegen die Daten?",
   ki:      "Wie funktioniert die KI?",
   wechsel: "Kann man später wechseln?",
-  weg:     "Wie kommt die Information an?"
+  weg:     "Wie kommt die Information an?",
+  koennen: "Was muss ich können?"
 };
 const B = {
   proprietaer: {wort:"proprietäre Software", f:"gehoert",
@@ -75,6 +76,29 @@ Object.assign(B, {
   schnittstelle: Object.assign({wort:"Schnittstelle", f:"weg",
     kurz:"Die Stelle, an der zwei Programme Daten austauschen. Sie legt fest, welche Felder hinübergehen und wie. Was die Schnittstelle nicht vorsieht, kommt beim anderen Programm nicht oder nur versteckt an.",
     bsp:"Das Programm der Klinik schickt den Bogen an das Programm des Pflegedienstes. Dort erscheint in der Übersicht nur das angekreuzte Feld.", also:["ueberleitung","zucker"]}, UEB)
+});
+
+/* Aus Barbaras Master Bildungswissenschaft, Hausarbeit zu KI-gestützter Fallarbeit (November 2026) */
+const MA = {datum:"November 2026", herkunft:"Master Bildungswissenschaft, Hausarbeit"};
+Object.assign(B, {
+  generativeki: Object.assign({wort:"generative KI", f:"ki",
+    kurz:"KI, die neue Inhalte erzeugt: Texte, Bilder oder Töne. Sie setzt aus gelernten Mustern etwas zusammen, das wahrscheinlich passt. Das klingt oft richtig, auch wenn es falsch ist.",
+    bsp:"Du fragst nach Maßnahmen bei Atemnot, und die KI schreibt eine flüssige Liste. Ob sie stimmt, musst du selbst prüfen.", also:["ueberleitung"]}, MA),
+  chatbot: Object.assign({wort:"Chatbot", f:"ki",
+    kurz:"Ein Programm, mit dem man sich in Sätzen unterhält, wie in einem Chat. Viele Chatbots arbeiten heute mit generativer KI.",
+    bsp:"Ein Chatbot auf der Lernplattform beantwortet Fragen zum Pflegeprozess, auch spät am Abend.", also:["darf-das-in-den-chat"]}, MA),
+  llm: Object.assign({wort:"Sprachmodell (LLM)", f:"ki",
+    kurz:"LLM steht für Large Language Model, großes Sprachmodell. Es hat aus sehr vielen Texten gelernt, welches Wort wahrscheinlich als Nächstes kommt. Darauf beruhen die bekannten Chatbots.",
+    bsp:"Das Sprachmodell weiß nicht, wie es Person X geht. Es berechnet nur, welche Antwort zu deiner Frage passt.", also:["maschine"]}, MA),
+  prompt: Object.assign({wort:"Prompt", f:"ki",
+    kurz:"Die Eingabe, mit der du einer KI sagst, was sie tun soll. Wie genau du fragst, verändert die Antwort.",
+    bsp:"„Fasse zusammen“ ergibt etwas anderes als „Nenne nur, was im Bericht steht, und markiere, was fehlt“."}, MA),
+  leitplanken: Object.assign({wort:"Leitplanken (Guardrails)", f:"ki",
+    kurz:"Regeln, die eine KI begrenzen. Beim Lernen kann das heißen: Die KI gibt keine fertige Lösung, sondern Hinweise und Rückfragen, damit du selbst denkst.",
+    bsp:"Eine Studie mit Schülerinnen und Schülern zeigte: Wer ohne Leitplanken mit KI übte, schnitt später in der Prüfung ohne KI schlechter ab."}, MA),
+  kikompetenz: Object.assign({wort:"KI-Kompetenz", f:"koennen",
+    kurz:"Die Fähigkeit, KI zu verstehen, kritisch zu bewerten, sinnvoll mit ihr zusammenzuarbeiten und sie als Werkzeug zu nutzen. Einrichtungen, die KI einsetzen, müssen nach der EU-KI-Verordnung etwas dafür tun.",
+    bsp:"Du merkst, dass die KI aus dem Wort „Tagesstruktur“ einen ganzen Tagesplan erfunden hat, und widersprichst mit Begründung. Das ist KI-Kompetenz.", also:["ueberleitung","darf-das-in-den-chat","lesehilfe"]}, MA)
 });
 const HERKUNFT_STD = {datum:"November 2026", herkunft:"Lesehilfe 1"};
 Object.keys(B).forEach(k => { B[k] = Object.assign({}, HERKUNFT_STD, B[k]); });

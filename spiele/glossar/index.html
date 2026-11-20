@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Was heißt das eigentlich? Mein Glossar Pflege und Digitales</title>
+<title>Was heißt das eigentlich? Mein mitwachsendes Glossar Pflege und Digitales</title>
 <meta name="description" content="Lernjournal von Barbara Magdalena Mayer: Wörter aus der digitalen Welt, die in der Pflege, in Berichten und im Studium begegnen, einfach erklärt, von A bis Z, mit einem kleinen Spiel: erst selbst erklären, dann vergleichen.">
 <script src="../../spielende.js"></script>
 <script src="../begriffe.js"></script>
@@ -233,6 +233,12 @@ footer{font-size:15px;color:var(--muted)}
 .sub a{color:var(--ink)}
 
 /* Glossar */
+.stand{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--ok);border-radius:10px;padding:10px 14px;font-size:17px;max-width:62ch}
+.verlauf{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;border-left:3px solid var(--pink);padding-left:16px}
+.verlauf li{display:flex;flex-direction:column;gap:2px}
+.verlauf .vd{font-family:var(--mono);font-size:14px;color:var(--pink)}
+.verlauf li span:last-child{color:var(--muted);font-size:17px}
+
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 select,input[type=search]{font:inherit;font-size:18px;padding:8px 10px;border:2px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);max-width:100%}
 input[type=search]{width:100%}
@@ -255,6 +261,9 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const {FRAGEN, B, SPIELE} = window.BEGRIFFE;
 const KEY = "glossar-v1";
+const VERLAUF = [];
+Object.keys(B).forEach(k => { const h = B[k].herkunft; let v = VERLAUF.find(x=>x.herkunft===h); if (!v) { v = {herkunft:h, datum:B[k].datum, keys:[]}; VERLAUF.push(v); } v.keys.push(k); });
+const LETZTE = VERLAUF[VERLAUF.length-1];
 const ALLE = Object.keys(B).sort((a,b)=>B[a].wort.localeCompare(B[b].wort,"de",{sensitivity:"base"}));
 
 let st = load();
@@ -270,9 +279,10 @@ function render(){
   const fertig = ALLE.filter(k=>st.bew[k]).length;
   app.innerHTML = `
   <nav class="top" aria-label="Navigation"><a href="../../arbeitsproben.html">← Zurück zu den Arbeitsproben</a></nav>
-  <div><span class="eyebrow">Digitale Bildung · Lernjournal</span>
-  <h1>Was heißt das eigentlich? <span class="q">Mein Glossar Pflege und Digitales</span></h1></div>
-  <p class="lead">Hier sammle ich die Wörter aus der digitalen Welt, die mir in der Pflege, in Berichten und in meinem Studium begegnen. Jedes Wort steht hier mit einer einfachen Erklärung, einem Beispiel und dem Tag, an dem ich es aufgenommen habe. Die Liste wächst mit jedem Spiel.</p>
+  <div><span class="eyebrow">Digitale Bildung · Lernjournal · wächst mit</span>
+  <h1>Was heißt das eigentlich? <span class="q">Mein mitwachsendes Glossar Pflege und Digitales</span></h1></div>
+  <p class="lead">Hier sammle ich die Wörter aus der digitalen Welt, die mir in der Pflege, in Berichten und in meinem Studium begegnen. Jedes Wort steht hier mit einer einfachen Erklärung, einem Beispiel und dem Tag, an dem ich es aufgenommen habe. Die Liste wächst mit jedem Spiel und mit meinem Studium. Unten siehst du, wann welche Wörter dazugekommen sind.</p>
+  <div class="stand"><b>${ALLE.length} Wörter</b> · zuletzt ergänzt: ${esc(LETZTE.herkunft)}, ${esc(LETZTE.datum)} · neu: ${LETZTE.keys.map(k=>esc(B[k].wort)).join(", ")}</div>
   <details class="ziele"><summary>Das kannst du hier: ${fertig} von ${ALLE.length} Wörtern selbst erklärt</summary><ul>
     <li class="${fertig>0?"got":""}">Du erklärst ein Wort zuerst in eigenen Worten und vergleichst dann.</li>
     <li class="${fertig>=5?"got":""}">Du schätzt ehrlich ein, wo du schon sicher bist und wo noch nicht.</li>
@@ -299,6 +309,12 @@ function render(){
     <div class="abc" id="abc"></div>
     <dl class="glossar" id="liste"></dl>
     <p class="hint" id="leer" hidden>Dieses Wort steht noch nicht im Glossar. Vielleicht kommt es bald dazu.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="h-verlauf">
+    <div class="stepno">So ist das Glossar gewachsen</div>
+    <h2 id="h-verlauf">Verlauf</h2>
+    <ol class="verlauf">${VERLAUF.slice().reverse().map(v=>`<li><span class="vd">${esc(v.datum)}</span><b>${esc(v.herkunft)}</b><span>${v.keys.map(k=>esc(B[k].wort)).join(" · ")}</span></li>`).join("")}</ol>
   </section>
 
   <h3>Woher kommen die Wörter?</h3>
