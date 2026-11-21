@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Was kommt beim Pflegedienst an? Person X und der digitale Überleitungsbogen</title>
-<meta name="description" content="Lernspiel für die Pflegefachassistenz: Person X wird aus der Klinik entlassen. Du erlebst die Überleitung erst auf der Station, dann im ambulanten Pflegedienst, siehst im Inneren, was ein digitales Formular aus einem Gespräch macht, widersprichst einer KI und stellst eine gezielte Rückfrage.">
+<meta name="description" content="Lernspiel für die Pflegebildung: Person X wird aus der Klinik entlassen. Du erlebst die Überleitung erst auf der Station, dann im ambulanten Pflegedienst, siehst im Inneren, was ein digitales Formular aus einem Gespräch macht, widersprichst einer KI und stellst eine gezielte Rückfrage.">
 <script src="../../spielende.js"></script>
 <script src="../begriffe.js"></script>
 <style>
@@ -285,7 +285,7 @@ function karte(k){
 function kopf(){
   const n = Math.min(Math.max(st.stufe-1,0), STUFEN);
   return `<nav class="top" aria-label="Navigation"><a href="../../arbeitsproben.html">← Zurück zu den Arbeitsproben</a><button type="button" id="restart">↺ Neu beginnen</button></nav>
-  <div><span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflegefachassistenz</span>
+  <div><span class="eyebrow">Digitale Bildung · Lernen am Optimum: Pflegebildung</span>
   <h1>Was kommt beim Pflegedienst an? <span class="q">Person X und der digitale Überleitungsbogen</span></h1></div>
   <p class="lead">Person X wird aus der Klinik entlassen. Du erlebst die Überleitung von zwei Seiten: erst auf der Station, dann im ambulanten Pflegedienst. Dabei siehst du, was ein digitales Formular aus einem Gespräch macht.</p>
   <details class="ziele"><summary>Das kannst du danach: ${n} von ${STUFEN} geschafft</summary><ul>${ZIELE.map((z,i)=>`<li class="${i<n?"got":""}">${z}</li>`).join("")}</ul></details>
@@ -498,7 +498,6 @@ function ende(){
     <h3>Woher kommt das Wissen?</h3>
     <div class="source">
       Entlassung gut vorbereiten, Informationen weitergeben, Wünsche der Person einbeziehen: <a href="https://www.dnqp.de/fileadmin/HSOS/Homepages/DNQP/Dateien/Expertenstandards/Entlassungsmanagement_in_der_Pflege/Entlassung_2Akt_Auszug.pdf">DNQP, Expertenstandard Entlassungsmanagement in der Pflege, 2. Aktualisierung (Auszug, PDF)</a>.<br>
-      Die bundeseinheitliche Ausbildung zur Pflegefachassistenz: <a href="https://www.bundesgesundheitsministerium.de/presse/pressemitteilungen/bundestag-beschliesst-gesetz-fuer-neuen-pflege-beruf">Bundesgesundheitsministerium: Bundestag beschließt Gesetz für neuen Pflege-Beruf</a>.<br>
       Der Fall ist ausgedacht. Formular und Programme sind ein vereinfachtes Übungsmodell.
     </div>
     <div id="spielende"></div>`,
