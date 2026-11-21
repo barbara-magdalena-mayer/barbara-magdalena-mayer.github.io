@@ -27,7 +27,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font
 .wrap{width:min(440px,100%);margin:0 auto;padding-block:40px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
 .plus-mark{display:block;height:48px;width:auto}
 .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
-h1{font-family:var(--display);font-weight:600;font-size:1.6rem;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.25rem,5.6vw,1.6rem);line-height:1.15;margin:0;white-space:nowrap}
 .lead{margin:0;color:var(--muted);max-width:34ch}
 .motto{margin:0;font-family:var(--display);font-size:1.25rem;font-weight:600;color:var(--pink)}
 .links .feature{padding:20px 18px;font-size:1.08rem}
@@ -85,8 +85,8 @@ footer a{color:var(--green)}
     <li class="group">Arbeitsproben</li>
     <li><a class="night" href="https://barbara-magdalena-mayer.github.io/arbeitsproben.html">Alle Arbeitsproben<small>Lernspiele für helfende und handwerkliche Berufe</small></a></li>
     <li class="group">Kontakt</li>
-    <li><a href="https://bsky.app/profile/3armagmay.bsky.social" rel="me">Bluesky<small>Neue Prototypen zuerst dort</small></a></li>
-    <li><a href="https://www.instagram.com/3armagmay/" rel="me">Instagram<small>Einblicke und Werkstatt-Updates</small></a></li>
+    <li><a href="https://bsky.app/profile/3armagmay.bsky.social" rel="me">Bluesky<small>Hier zeige ich neue Spiele</small></a></li>
+    <li><a href="https://www.instagram.com/3armagmay/" rel="me">Instagram<small>Reels und Storys zu den Spielen</small></a></li>
     <li><button type="button" id="copy">E-Mail kopieren<small class="mail" id="mail">barbara.magdalena.mayer@web.de</small></button></li>
   </ul>
   <span class="copied" id="copied" hidden>Kopiert</span>
