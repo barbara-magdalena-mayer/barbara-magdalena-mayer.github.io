@@ -3,12 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Bildungswissenschaft und KI · Barbara Magdalena Mayer</title>
-<meta name="robots" content="noindex, nofollow">
+<title>Barbara Magdalena Mayer · Lernspiele für die Pflegebildung</title>
+<meta name="description" content="Ich baue Lernspiele für die Pflegebildung. Darin übt man, was im Alltag zählt, und prüft eine KI, die sich irren kann. Krankenschwester und Bildungswissenschaftlerin.">
+<link rel="canonical" href="https://barbara-magdalena-mayer.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Barbara Magdalena Mayer · Lernspiele für die Pflegebildung">
+<meta property="og:description" content="Lernspiele für die Pflegebildung. Darin übt man, was im Alltag zählt, und prüft eine KI, die sich irren kann.">
+<meta property="og:url" content="https://barbara-magdalena-mayer.github.io/">
+<meta property="og:image" content="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-1200.png">
+<meta property="og:locale" content="de_DE">
 <script>/* Alte Links auf Abschnitte der früheren Startseite (z. B. #impressum) führen zu „Über mich“. */(function(){var h=location.hash.slice(1),ids=["plus-title", "plus-game", "h-arbeiten", "h-uwert", "h-kontakt-spiel", "h-bias", "h-schulrechner", "h-zwischentoene", "h-handout", "h-kompass", "h-lernfall", "h-ki", "h-idee", "h-ueber", "h-kontakt", "impressum", "datenschutz"];if(h&&ids.indexOf(h)>-1)location.replace("ueber-mich.html#"+h)})();</script>
 <link rel="preload" href="fonts/source-sans-3-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Startseite: das Aktuelle zu Bildungswissenschaft und KI. Schmale, mobilfreundliche Linkseite mit den lokalen Schriften und Farben der Hauptseite. */
+/* Startseite (Nov. 2026, neu): klassische Landingpage mit Abschnitten. Kernsatz oben, „Was ich mache“, „Wie ein Skills Lab“, „Über mich“, Weg zu den Arbeitsproben. Ich-Form, ohne Anrede. */
 @font-face{font-family:"Literata";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/literata-latin-400-normal.woff2") format("woff2")}
 @font-face{font-family:"Literata";font-style:normal;font-weight:600;font-display:swap;src:url("fonts/literata-latin-600-normal.woff2") format("woff2")}
 @font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url("fonts/source-sans-3-latin-400-normal.woff2") format("woff2")}
@@ -23,76 +30,137 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
-.wrap{width:min(440px,100%);margin:0 auto;padding-block:40px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
-.plus-mark{display:block;height:48px;width:auto}
-.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
-h1{font-family:var(--display);font-weight:600;font-size:clamp(1.25rem,5.6vw,1.6rem);line-height:1.15;margin:0;white-space:nowrap}
-.lead{margin:0;color:var(--muted);max-width:34ch}
-.motto{margin:0;font-family:var(--display);font-size:1.25rem;font-weight:600;color:var(--pink)}
-.links .feature{padding:20px 18px;font-size:1.08rem}
-.links .feature small{font-size:.9rem}
-.links{list-style:none;margin:10px 0 0;padding:0;width:100%;display:flex;flex-direction:column;gap:12px}
-.links a,.links button{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;text-decoration:none;font:inherit;font-weight:600;border:0;border-radius:14px;padding:14px 18px;cursor:pointer;background:var(--surface);color:var(--ink);border:1px solid var(--line);box-shadow:0 3px 0 var(--line)}
-.links small{font-weight:400;font-size:.85rem;color:var(--muted)}
-.links .group{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin:10px 0 -4px}
-.links .night{background:var(--night);color:#fff;border-color:var(--night);box-shadow:0 3px 0 #2c3e43}
-.links .night small{color:var(--teal)}
-.links .pink{background:var(--pink);color:#fff;border-color:var(--pink);box-shadow:0 3px 0 var(--pink-dark)}
-.links .pink small{color:#fde4ec}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.55}
+.wrap{width:min(760px,100%);margin:0 auto;padding-block:28px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:44px}
+a{color:var(--green)}
 a:focus-visible,button:focus-visible{outline:3px solid #d4a373;outline-offset:2px}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green)}
+h1,h2{font-family:var(--display);font-weight:600;line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(2rem,6vw,2.9rem)}
+h2{font-size:1.6rem}
+p{margin:0;max-width:62ch}
+p.bmm-probe{max-width:none}
+/* Kopf */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 28px;align-items:center}
+.hero-text{display:flex;flex-direction:column;gap:14px;min-width:0}
+.plus-mark{display:block;height:44px;width:auto;align-self:flex-start}
+.lead{font-size:1.2rem;color:var(--muted)}
+.lead b{color:var(--ink)}
+.people{display:flex;align-items:flex-end;gap:10px}
+.people img{display:block;height:auto}
+.foto{width:150px;aspect-ratio:1;max-width:100%;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 4px 14px #24382c22}
+.figur{width:96px}
+.pf{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px}
+.pf figcaption{font-size:.72rem;color:var(--muted);font-family:var(--mono)}
+.btn{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;text-decoration:none;font-weight:600;font-size:1.05rem;background:var(--night);color:#fff;border-radius:14px;padding:14px 22px;box-shadow:0 3px 0 #2c3e43}
+.btn:hover{transform:translateY(-1px)}
+.btn.pink{background:var(--pink);box-shadow:0 3px 0 var(--pink-dark)}
+@media(max-width:600px){.hero{grid-template-columns:1fr}.people{order:-1}.foto{width:104px}.figur{width:76px}}
+/* Abschnitte */
+section{display:flex;flex-direction:column;gap:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--ink)}
+a.card:hover{border-color:var(--pink)}
+.card h3{font-family:var(--display);font-size:1.2rem;margin:0;line-height:1.25}
+.card p{font-size:1rem;color:var(--muted)}
+.card .go{font-weight:600;color:var(--pink);font-size:.95rem;margin-top:auto}
+.card.night{background:var(--night);border-color:var(--night);color:#fff}
+.card.night p{color:#cfe7e2}
+.card.night .go{color:var(--teal)}
+.tag{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--pink)}
+.card.night .tag{color:var(--teal)}
+.about{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+.facts{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.facts li{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:4px 12px;font-size:.95rem}
+.contact{display:flex;flex-wrap:wrap;gap:10px}
+.contact a,.contact button{font:inherit;font-size:1rem;font-weight:600;text-decoration:none;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.contact small{font-weight:400;color:var(--muted);font-size:.85rem}
 .mail{font-family:var(--mono);font-size:.85rem;color:var(--muted);user-select:all;word-break:break-all}
-.media-note{width:100%;align-self:stretch;text-align:left;border:2px solid var(--pink);background:#fff9f5;border-radius:14px;padding:14px;display:grid;gap:9px;box-shadow:0 4px 14px rgba(176,78,107,.1)}
-.media-note-head{display:flex;align-items:center;gap:9px}
-.media-note-icon{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--pink);color:#fff;font-size:1.2rem;line-height:1}
-.media-note h2{font-family:var(--body);font-size:1rem;line-height:1.25;margin:0;color:var(--pink-dark)}
-.media-note p{margin:0;font-size:.9rem}
-.media-note details{border-top:1px solid var(--line);padding-top:8px}
-.media-note summary{cursor:pointer;color:var(--green);font-weight:600}
-.browser-steps{display:grid;gap:8px;margin-top:8px}
-.browser-steps p{font-size:.85rem}
-.media-note a{color:var(--green);font-weight:600;text-decoration:underline}
-@media(prefers-reduced-motion:no-preference){.media-note-icon{animation:media-note-pulse .75s ease-out 1s 2}@keyframes media-note-pulse{50%{transform:scale(1.12);box-shadow:0 0 0 5px rgba(176,78,107,.17)}}}
-@media(prefers-reduced-motion:reduce){.media-note-icon{animation:none}}
 .copied{font-size:.85rem;color:var(--green)}
-footer{font-size:.8rem;color:var(--muted);margin-top:8px;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 12px}
-footer a{color:var(--green)}
+.end{background:var(--night);color:#fff;border-radius:18px;padding:24px 22px;display:flex;flex-direction:column;gap:14px}
+.end h2{color:#fff}
+.end p{color:#cfe7e2}
+.end .btn{background:var(--pink);box-shadow:0 3px 0 var(--pink-dark)}
+footer{font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px}
+.drei{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:12px;counter-reset:d}
+.drei li{counter-increment:d;background:#fff;border:1px solid rgba(36,56,44,.15);border-radius:14px;padding:14px 16px 14px 56px;position:relative;font-size:1.05rem;line-height:1.45}
+.drei li::before{content:counter(d);position:absolute;left:16px;top:14px;width:28px;height:28px;border-radius:50%;background:var(--pink);color:#fff;font-weight:700;display:grid;place-items:center;font-size:.95rem}
+.drei b{display:block;color:var(--ink);font-size:1.1rem;margin-bottom:2px}
+p.note{margin-top:14px;font-size:1rem;opacity:.8}
+@media(min-width:760px){.drei{grid-template-columns:repeat(3,1fr)}}
 </style>
 <link rel="icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="https://barbara-magdalena-mayer.github.io/bilder/logo/apple-touch-icon.png">
 </head>
 <body>
 <style>.bmm-probe{box-sizing:border-box;width:100%;background:#24382c;color:#fff;font:15px/1.45 "Source Sans 3",system-ui,sans-serif;text-align:center;padding:8px 16px;margin:0}.bmm-probe b{color:#ffd1df;font-weight:600}</style><p class="bmm-probe" role="note"><b>Alles hier sind Arbeitsproben.</b> Texte und vereinfachte Modelle, um zu verstehen und Einblick zu bekommen. Keine Beratung, keine fertigen Produkte.</p>
 <main class="wrap">
-  <img class="plus-mark" src="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus.svg" alt="BM+, Logo von Barbara Magdalena Mayer" width="125" height="48">
-  <span class="eyebrow">Barbara Magdalena Mayer</span>
-  <h1>Bildungswissenschaft und KI</h1>
-  <p class="motto">Das Plus ist die KI.</p>
-  <p class="lead">Ich baue digitale Lernorte, in denen eine KI mitredet, die sich irren kann. Mein Hintergrund: Bildungswissenschaft und Pflege.</p>
 
-  <ul class="links">
-    <li class="group">Ganz neu</li>
-    <li><a class="night" href="https://barbara-magdalena-mayer.github.io/spiele/ueberleitung/">▶ Was kommt beim Pflegedienst an? Person X und der digitale Überleitungsbogen<small>Lernspiel · Pflegebildung · Station und Pflegedienst · mit KI</small></a></li>
-    <li class="group">Mitwachsendes Glossar</li>
-    <li><a class="pink" href="https://barbara-magdalena-mayer.github.io/spiele/glossar/">Was heißt das eigentlich? Mein mitwachsendes Glossar Pflege und Digitales<small>Lernjournal · 23 Wörter von A bis Z · wächst mit jedem Spiel und meinem Studium</small></a></li>
-    <li class="group">Aktuell</li>
-    <li><a class="pink feature" href="https://barbara-magdalena-mayer.github.io/artikel/ki-an-der-berufsbildenden-schule/">Deine berufsbildende Schule will KI nutzen. Was ist erlaubt?<small>Handreichung · Datenschutz, Schweigepflicht, EU AI Act · mit Checklisten und PDF</small></a></li>
-    <li><a href="https://barbara-magdalena-mayer.github.io/spiele/darf-das-in-den-chat/">▶ Daten in der Ausbildung: Darf das in den Chat?<small>Lernspiel zur Handreichung · acht Situationen · mit KI</small></a></li>
-    <li><a href="https://barbara-magdalena-mayer.github.io/schulrechner.html">▶ Welche KI-Regeln braucht deine Schule?<small>Lernspiel · eine Woche, sieben Entscheidungen · Stand November 2026</small></a></li>
-    <li class="group">Grundlegendes</li>
-    <li><a href="https://barbara-magdalena-mayer.github.io/grundbegriffe.html#optimum">Lernen am Optimum<small>So baue ich meine Lernorte · Grundbegriffe</small></a></li>
-    <li><a href="https://barbara-magdalena-mayer.github.io/spiele/lernlinie/">▶ Deine Lernlinie: Was hat dich bis hierher gebracht?<small>Didaktik · für jeden Beruf · deine Stationen, Kraftquellen, nächstes Ziel</small></a></li>
-    <li><a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html#h-ueber">Über mich<small>Wer ich bin und was ich mache</small></a></li>
-    <li class="group">Arbeitsproben</li>
-    <li><a class="night" href="https://barbara-magdalena-mayer.github.io/arbeitsproben.html">Alle Arbeitsproben<small>Lernspiele für helfende und handwerkliche Berufe</small></a></li>
-    <li class="group">Kontakt</li>
-    <li><a href="https://bsky.app/profile/3armagmay.bsky.social" rel="me">Bluesky<small>Hier zeige ich neue Spiele</small></a></li>
-    <li><a href="https://www.instagram.com/3armagmay/" rel="me">Instagram<small>Reels und Storys zu den Spielen</small></a></li>
-    <li><button type="button" id="copy">E-Mail kopieren<small class="mail" id="mail">barbara.magdalena.mayer@web.de</small></button></li>
-  </ul>
-  <span class="copied" id="copied" hidden>Kopiert</span>
+  <header class="hero">
+    <div class="hero-text">
+      <img class="plus-mark" src="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus.svg" alt="BM+, Logo von Barbara Magdalena Mayer" width="115" height="44">
+      <span class="eyebrow">Barbara Magdalena Mayer · Krankenschwester und Bildungswissenschaftlerin</span>
+      <h1>Ich baue Lernspiele für die Pflegebildung.</h1>
+      <p class="lead">Darin übt man, was im Alltag zählt. Und man prüft eine KI, die sich irren kann.</p>
+      <a class="btn" href="https://barbara-magdalena-mayer.github.io/arbeitsproben.html">Arbeitsproben ansehen →</a>
+    </div>
+    <div class="people">
+      <figure class="pf"><img class="foto" src="https://barbara-magdalena-mayer.github.io/bilder/barbara-portraet.webp" alt="Porträt von Barbara Magdalena Mayer: Frau mit Brille, braunen Haaren und grauer Bluse" width="480" height="480"><figcaption>KI-bearbeitetes Porträt</figcaption></figure>
+            <a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html#h-ueber" aria-label="Über mich"><img class="figur" src="https://barbara-magdalena-mayer.github.io/bilder/barbara-figur.webp" alt="Gezeichnete Figur von Barbara: Frau mit Brille, graue Bluse, Jeans"></a>
+    </div>
+  </header>
+
+  <section aria-labelledby="h-was">
+    <span class="eyebrow">Was ich mache</span>
+    <h2 id="h-was">Keine Folienwüste. Ausprobieren.</h2>
+    <p>Meine Lernspiele laufen im Browser, ohne Anmeldung. Jedes beginnt bei dem, was man schon kann, und führt Schritt für Schritt zu dem, was das Fach verlangt. Ich nenne das <a href="https://barbara-magdalena-mayer.github.io/grundbegriffe.html#optimum">Lernen am Optimum</a>.</p>
+    <div class="cards">
+      <a class="card night" href="https://barbara-magdalena-mayer.github.io/spiele/ueberleitung/"><span class="tag">Ganz neu · Lernspiel</span><h3>Was kommt beim Pflegedienst an?</h3><p>Eine Entlassung aus zwei Blickwinkeln: erst auf der Station, dann im ambulanten Pflegedienst. Mit einem Blick ins Innere des digitalen Formulars.</p><span class="go">Spiel starten →</span></a>
+      <a class="card" href="https://barbara-magdalena-mayer.github.io/arbeitsproben.html"><span class="tag">Lernspiele für die Pflegebildung</span><h3>Fälle aus dem Pflegealltag</h3><p>Wunden messen, Werte dokumentieren, Daten schützen. Ich zeige auch, was im Inneren des Computers passiert, mit ein wenig Python.</p><span class="go">Alle Arbeitsproben →</span></a>
+      <div class="card"><span class="tag">In jedem Spiel</span><h3>Eine KI, die sich irren kann</h3><p>Sie klingt sicher und liegt trotzdem manchmal falsch. Man lernt, ihr mit Begründung zu widersprechen. Das ist für mich das Plus.</p></div>
+      <a class="card" href="https://barbara-magdalena-mayer.github.io/spiele/glossar/"><span class="tag">Lernjournal</span><h3>Mein mitwachsendes Glossar</h3><p>Ich lerne selbst mit. Jedes neue Wort aus Spielen, Berichten und Studium kommt dazu, einfach erklärt.</p><span class="go">Zum Glossar →</span></a>
+      <a class="card" href="https://barbara-magdalena-mayer.github.io/artikel/ki-an-der-berufsbildenden-schule/"><span class="tag">Handreichung</span><h3>Eine Schule will KI nutzen. Was ist erlaubt?</h3><p>Datenschutz, Schweigepflicht und EU-KI-Verordnung, verständlich und mit Checklisten.</p><span class="go">Lesen →</span></a>
+      <a class="card" href="https://barbara-magdalena-mayer.github.io/spiele/lernlinie/"><span class="tag">Für jeden Beruf</span><h3>Deine Lernlinie</h3><p>Was hat dich bis hierher gebracht? Stationen, Kraftquellen und ein nächstes Ziel.</p><span class="go">Ausprobieren →</span></a>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-lab">
+    <span class="eyebrow">Ein Übungsraum ohne Kamera</span>
+    <h2 id="h-lab">Wie ein Skills Lab. Nur ohne Kamera.</h2>
+    <p>Im Skills Lab übt man Pflege in nachgestellten Situationen. Oft läuft eine Kamera mit. Danach schaut man gemeinsam hin und spricht darüber, was man getan hat.</p>
+    <p>Meine Lernspiele sind auch so ein Übungsraum: ein dritter Lernort zwischen Schule und Praxis. Aber du übst allein, und es bleibt privat. Darum gibt es keine Kamera. Drei Dinge treten an ihre Stelle:</p>
+    <ol class="drei">
+      <li><b>Leitplanken</b>Das Spiel führt dich Schritt für Schritt durch den Fall.</li>
+      <li><b>Rückfragen</b>Das Spiel fragt: Warum? Und es stellt eine andere Antwort daneben, oft von einer KI, die sich irren kann.</li>
+      <li><b>Rückschau</b>Du siehst deine eigenen Begründungen noch einmal und vergleichst sie mit meiner Antwort. So beobachtest du dich selbst.</li>
+    </ol>
+    <p class="note">Was du schreibst, bleibt in deinem Browser. Niemand sonst sieht es.</p>
+  </section>
+
+  <section aria-labelledby="h-ich">
+    <span class="eyebrow">Über mich</span>
+    <div class="about">
+      <h2 id="h-ich">Praktikerin, keine Theoretikerin.</h2>
+      <p>Ich bin Krankenschwester und Bildungswissenschaftlerin. Ich kenne den Pflegealltag von innen und weiß, wie Lernen gelingt und woran es scheitert. Ich baue Lernorte so, wie ich sie selbst gebraucht hätte: in einfacher Sprache, im eigenen Tempo, zum Ausprobieren.</p>
+      <p>Idee und Didaktik sind von mir, programmiert wird mit KI-Unterstützung. Ich lerne dabei selbst mit.</p>
+      <ul class="facts"><li>Pflege</li><li>Bildungswissenschaft</li><li>Digitale Bildung</li><li>KI als Zweitstimme</li><li>Einfache Sprache</li></ul>
+      <div class="contact">
+        <a href="https://bsky.app/profile/3armagmay.bsky.social" rel="me">Bluesky<small>Hier zeige ich neue Spiele</small></a>
+        <a href="https://www.instagram.com/3armagmay/" rel="me">Instagram<small>Reels und Storys zu den Spielen</small></a>
+        <button type="button" id="copy">E-Mail kopieren<small class="mail" id="mail">barbara.magdalena.mayer@web.de</small></button>
+        <a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html#h-ueber">Mehr über mich<small>Alle Arbeiten ausführlich</small></a>
+      </div>
+      <span class="copied" id="copied" hidden>Kopiert</span>
+    </div>
+  </section>
+
+  <section class="end" aria-labelledby="h-end">
+    <h2 id="h-end">Am besten selbst ausprobieren.</h2>
+    <p>Alle Lernspiele und Prototypen, geordnet nach helfenden und handwerklichen Berufen.</p>
+    <a class="btn" href="https://barbara-magdalena-mayer.github.io/arbeitsproben.html">Arbeitsproben ansehen →</a>
+  </section>
+
   <footer><span>Stand: November 2026</span><a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html#impressum">Impressum</a><a href="https://barbara-magdalena-mayer.github.io/ueber-mich.html#datenschutz">Datenschutz</a></footer>
 </main>
-
 <script>
 document.getElementById('copy').addEventListener('click',function(){
   var el=document.getElementById('mail'),c=document.getElementById('copied'),t=el.textContent.trim();
@@ -100,6 +168,5 @@ document.getElementById('copy').addEventListener('click',function(){
   try{navigator.clipboard.writeText(t).then(function(){c.textContent='Kopiert';c.hidden=false;setTimeout(function(){c.hidden=true},2000)},fallback)}catch(e){fallback()}
 });
 </script>
-<style>.bmm-figur{position:fixed;bottom:max(14px,env(safe-area-inset-bottom,0px));right:max(14px,env(safe-area-inset-right,0px));z-index:30;display:block;line-height:0}@media(min-width:641px){body{padding-bottom:210px}}.bmm-figur img{height:132px;width:auto;filter:drop-shadow(0 5px 8px #0004);transition:transform .2s}.bmm-figur{-webkit-tap-highlight-color:transparent;touch-action:manipulation}.bmm-figur:active img{transform:scale(.94)}.bmm-figur:focus-visible{outline:3px solid #b04e6b;outline-offset:4px;border-radius:12px}.bmm-box{display:inline-flex;flex-direction:column;align-items:center;gap:6px}.bmm-figur img.bmm-plus{display:block;height:58px;width:58px;filter:drop-shadow(0 3px 6px #0004)}@media(prefers-reduced-motion:no-preference){.bmm-plus{animation:bmm-hop 4s ease-in-out 1s infinite}@keyframes bmm-hop{0%,78%,100%{transform:none}84%{transform:translateY(-14px)}90%{transform:none}95%{transform:translateY(-5px)}}.bmm-figur:hover .bmm-plus,.bmm-figur:focus-visible .bmm-plus{animation:bmm-hop-now .5s ease-out}@keyframes bmm-hop-now{40%{transform:translateY(-14px)}100%{transform:none}}}@media(max-width:640px){.bmm-figur{position:static;display:flex;justify-content:flex-end;padding:12px 16px 20px}.bmm-figur img{height:104px}}@media print{.bmm-figur{display:none}}</style><a class="bmm-figur" href="./" aria-label="Barbara – zur Startseite"><span class="bmm-box"><img src="bilder/barbara-figur.webp" alt=""><img class="bmm-plus" src="https://barbara-magdalena-mayer.github.io/bilder/logo/bm-plus-rund.svg" alt=""></span></a>
 </body>
 </html>

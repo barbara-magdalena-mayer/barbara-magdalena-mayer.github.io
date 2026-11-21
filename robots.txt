@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://barbara-magdalena-mayer.github.io/sitemap.xml
